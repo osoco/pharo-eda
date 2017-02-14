@@ -1,0 +1,21 @@
+{
+	"class" : {
+		"commandConsumer" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"commandConsumer:" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"commandDispatcher" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"commandDispatcher:" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"eventProducer" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"eventProducer:" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"eventStore" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"eventStore:" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"setup" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"setupCommandConsumer" : "JoseSanLeandro 9/25/2015 18:58",
+		"setupCommandConsumerWithCommandListener:" : "JoseSanLeandro 9/25/2015 18:57",
+		"setupCommandDispatcher" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"setupEventProducer" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"setupEventStore" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"setupProjectionRepository" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"start" : "JoseSanLeandro 9/20/2015 14:39:19",
+		"stop" : "JoseSanLeandro 9/20/2015 14:39:19" },
+	"instance" : {
+		 } }

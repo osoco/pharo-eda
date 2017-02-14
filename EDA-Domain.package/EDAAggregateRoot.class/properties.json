@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Domain",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "EDAAggregateRoot",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

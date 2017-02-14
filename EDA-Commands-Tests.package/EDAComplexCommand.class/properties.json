@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"levels" ],
+	"name" : "EDAComplexCommand",
+	"pools" : [
+		 ],
+	"super" : "EDAUserCommand",
+	"type" : "normal" }

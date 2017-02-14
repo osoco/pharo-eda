@@ -1,0 +1,9 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"setUp" : "JoseSanLeandro 9/24/2015 21:44:34",
+		"setUpAggregateRootClassMock" : "JoseSanLeandro 9/24/2015 21:44:34",
+		"setUpCommandHandlerSubclassMock:" : "JoseSanLeandro 9/24/2015 21:44:34",
+		"tearDown" : "JoseSanLeandro 9/24/2015 21:44:34",
+		"testHandleCommand" : "JoseSanLeandro 9/24/2015 21:44:34" } }

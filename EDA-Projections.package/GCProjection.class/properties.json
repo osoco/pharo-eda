@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Projections-Views",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"Repository" ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GCProjection",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

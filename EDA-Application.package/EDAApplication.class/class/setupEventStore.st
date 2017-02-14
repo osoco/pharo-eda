@@ -1,0 +1,3 @@
+initialization
+setupEventStore
+	self eventStore: EDAMongoEventStore new

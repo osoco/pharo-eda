@@ -1,0 +1,3 @@
+persistence
+findEventsOfAggregate: anAggregateRootClass whereId: aNumber
+	self subclassResponsibility

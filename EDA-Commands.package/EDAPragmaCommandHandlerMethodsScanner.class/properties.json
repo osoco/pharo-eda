@@ -1,0 +1,17 @@
+{
+	"category" : "EDA-Commands-Handlers",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"pragma",
+		"fromClass" ],
+	"name" : "EDAPragmaCommandHandlerMethodsScanner",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal" }

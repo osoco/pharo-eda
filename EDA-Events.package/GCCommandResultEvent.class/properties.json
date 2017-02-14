@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Events-Events",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"commandId" ],
+	"name" : "GCCommandResultEvent",
+	"pools" : [
+		 ],
+	"super" : "EDAEventSourcingEvent",
+	"type" : "normal" }

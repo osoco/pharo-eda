@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Events-Events",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"authorUsername" ],
+	"name" : "GCUserCommandResultEvent",
+	"pools" : [
+		 ],
+	"super" : "EDACommandResultEvent",
+	"type" : "normal" }

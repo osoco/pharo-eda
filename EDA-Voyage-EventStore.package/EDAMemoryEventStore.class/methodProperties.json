@@ -1,0 +1,8 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"allEvents" : "JoseSanLeandro 7/17/2015 14:31",
+		"findEventsOfAggregate:whereId:" : "JoseSanLeandro 7/17/2015 14:31",
+		"initBackendRepository" : "RafaelLuque 6/9/2015 15:38:15",
+		"saveEvents:onAggregate:" : "RafaelLuque 6/9/2015 15:38:15" } }

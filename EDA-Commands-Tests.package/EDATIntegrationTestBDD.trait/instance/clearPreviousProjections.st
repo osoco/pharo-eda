@@ -1,0 +1,3 @@
+lifecycle
+clearPreviousProjections
+    EDAProjection removeAllProjections.

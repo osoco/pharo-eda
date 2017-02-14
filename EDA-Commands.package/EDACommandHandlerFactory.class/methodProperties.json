@@ -1,0 +1,9 @@
+{
+	"class" : {
+		"factoryWithEventStore:eventBus:" : "JoseSanLeandro 7/17/2015 14:42:24" },
+	"instance" : {
+		"eventBus" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"eventBus:" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"eventStore" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"eventStore:" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"newFromHandlerMethod:" : "JoseSanLeandro 7/17/2015 14:42:24" } }

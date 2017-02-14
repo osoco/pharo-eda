@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Commands-Error-Strategies",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 7/21/2015 15:21",
+	"instvars" : [
+		 ],
+	"name" : "EDADebugErrorStrategy",
+	"pools" : [
+		 ],
+	"super" : "EDACommandErrorHandlingStrategy",
+	"type" : "normal" }

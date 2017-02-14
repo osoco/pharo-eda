@@ -1,0 +1,18 @@
+{
+	"category" : "EDA-Commands-Handlers",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"eventStore",
+		"eventBus",
+		"aggregateRootClass" ],
+	"name" : "EDACommandHandler",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal" }

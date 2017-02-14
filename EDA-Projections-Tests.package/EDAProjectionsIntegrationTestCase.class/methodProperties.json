@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"buildTestEvents:" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"injectPragmaIntoTestProjection" : "RafaelLuque 11/20/2015 12:19",
+		"removeProjections" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"restoreCurrentEnvironment" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"setUp" : "RafaelLuque 11/20/2015 12:18",
+		"setUpCurrentEnvironment" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"setUpProjectionRepository" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"tearDown" : "JoseSanLeandro 7/17/2015 14:42:24",
+		"testProjectionProcessing" : "JoseSanLeandro 7/17/2015 14:42:24" } }

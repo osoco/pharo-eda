@@ -1,0 +1,3 @@
+lifecycle
+clearPreviousEvents
+    EDAEventSourcingEvent removeAll.

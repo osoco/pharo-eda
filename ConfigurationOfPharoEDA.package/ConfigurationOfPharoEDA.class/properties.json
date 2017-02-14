@@ -1,0 +1,14 @@
+{
+	"category" : "ConfigurationOfPharoEDA",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"LastVersionLoad" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"project" ],
+	"name" : "ConfigurationOfPharoEDA",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

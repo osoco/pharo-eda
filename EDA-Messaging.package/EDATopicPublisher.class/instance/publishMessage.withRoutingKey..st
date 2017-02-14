@@ -1,0 +1,3 @@
+writing
+publishMessage: aMessage withRoutingKey: aRoutingKeyString
+	self subclassResponsibility

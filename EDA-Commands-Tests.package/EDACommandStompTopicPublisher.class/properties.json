@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 9/21/2015 10:59",
+	"instvars" : [
+		 ],
+	"name" : "EDACommandStompTopicPublisher",
+	"pools" : [
+		 ],
+	"super" : "EDAStompTopicPublisher",
+	"type" : "normal" }

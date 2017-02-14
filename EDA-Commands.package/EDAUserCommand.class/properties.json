@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Commands-Commands",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"authorUsername" ],
+	"name" : "EDAUserCommand",
+	"pools" : [
+		 ],
+	"super" : "EDACommand",
+	"type" : "normal" }

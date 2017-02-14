@@ -1,0 +1,17 @@
+{
+	"category" : "EDA-Events-Serializers",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"writer",
+		"errorWriter" ],
+	"name" : "EDAJsonEventSerializer",
+	"pools" : [
+		 ],
+	"super" : "EDAMessageSerializer",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal" }

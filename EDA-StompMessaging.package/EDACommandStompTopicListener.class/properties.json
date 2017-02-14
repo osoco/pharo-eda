@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-StompMessaging",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 9/22/2015 06:16",
+	"instvars" : [
+		 ],
+	"name" : "EDACommandStompTopicListener",
+	"pools" : [
+		 ],
+	"super" : "EDAStompTopicListener",
+	"type" : "normal" }

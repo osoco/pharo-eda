@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Messaging-Topic",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "EDATopicPublisher",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

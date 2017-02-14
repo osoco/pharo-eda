@@ -1,0 +1,16 @@
+{
+	"category" : "EDA-EventStore",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"repository" ],
+	"name" : "EDAEventStore",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal" }
