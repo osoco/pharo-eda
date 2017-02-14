@@ -1,0 +1,14 @@
+{
+	"class" : {
+		"busListener:commandMaterializer:commandDispatcher:" : "RafaelLuque 11/19/2015 11:12:33" },
+	"instance" : {
+		"busListener" : "RafaelLuque 11/19/2015 11:12:33",
+		"busListener:" : "RafaelLuque 11/19/2015 11:12:33",
+		"commandDispatcher" : "RafaelLuque 11/19/2015 11:12:33",
+		"commandDispatcher:" : "RafaelLuque 11/19/2015 11:12:33",
+		"commandMaterializer" : "RafaelLuque 11/19/2015 11:12:33",
+		"commandMaterializer:" : "RafaelLuque 11/19/2015 11:12:33",
+		"consumeCommandMessage:" : "RafaelLuque 11/19/2015 11:12:33",
+		"printOn:" : "RafaelLuque 11/19/2015 11:12:33",
+		"start" : "RafaelLuque 11/19/2015 11:12:33",
+		"stop" : "RafaelLuque 11/19/2015 11:12:33" } }

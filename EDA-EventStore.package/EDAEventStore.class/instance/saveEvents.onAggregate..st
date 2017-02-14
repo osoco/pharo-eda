@@ -1,0 +1,3 @@
+persistence
+saveEvents: anEventCollection onAggregate: aggregateRoot
+	self subclassResponsibility

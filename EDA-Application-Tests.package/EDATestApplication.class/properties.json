@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Application-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "EDATestApplication",
+	"pools" : [
+		 ],
+	"super" : "EDAApplication",
+	"type" : "normal" }

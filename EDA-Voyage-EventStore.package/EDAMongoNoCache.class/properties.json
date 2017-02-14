@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Voyage-EventStore",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 7/17/2015 14:37",
+	"instvars" : [
+		 ],
+	"name" : "EDAMongoNoCache",
+	"pools" : [
+		 ],
+	"super" : "VOMongoCache",
+	"type" : "normal" }

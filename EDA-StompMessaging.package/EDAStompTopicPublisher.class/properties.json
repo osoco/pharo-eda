@@ -1,0 +1,21 @@
+{
+	"category" : "EDA-StompMessaging",
+	"classinstvars" : [
+		"Host",
+		"Port",
+		"Username",
+		"Password",
+		"Exchange",
+		"RoutingKey",
+		"Durable",
+		"Timeout" ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 9/22/2015 06:16",
+	"instvars" : [
+		"client" ],
+	"name" : "EDAStompTopicPublisher",
+	"pools" : [
+		 ],
+	"super" : "EDATopicPublisher",
+	"type" : "normal" }

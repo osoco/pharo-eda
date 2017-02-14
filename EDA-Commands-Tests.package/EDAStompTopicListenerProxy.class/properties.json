@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "EDAStompTopicListenerProxy",
+	"pools" : [
+		 ],
+	"super" : "EDAStompTopicListener",
+	"type" : "normal" }

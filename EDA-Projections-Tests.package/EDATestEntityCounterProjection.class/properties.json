@@ -1,0 +1,15 @@
+{
+	"category" : "EDA-Projections-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"entityClassName",
+		"counter" ],
+	"name" : "EDATestEntityCounterProjection",
+	"pools" : [
+		 ],
+	"super" : "EDAProjection",
+	"type" : "normal" }

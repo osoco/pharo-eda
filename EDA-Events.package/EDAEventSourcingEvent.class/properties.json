@@ -1,0 +1,19 @@
+{
+	"category" : "EDA-Events-Events",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"id",
+		"aggregateRootClass",
+		"timestamp",
+		"aggregateRootVersion" ],
+	"name" : "EDAEventSourcingEvent",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal" }

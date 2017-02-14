@@ -1,0 +1,15 @@
+{
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"dispatcher",
+		"handlersRegistry" ],
+	"name" : "EDACommandDispatcherTestCase",
+	"pools" : [
+		 ],
+	"super" : "BabyMock2TestCase",
+	"type" : "normal" }

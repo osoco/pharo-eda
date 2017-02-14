@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 9/21/2015 10:38",
+	"instvars" : [
+		 ],
+	"name" : "EDATestSettings",
+	"pools" : [
+		 ],
+	"super" : "EDASettings",
+	"type" : "normal" }

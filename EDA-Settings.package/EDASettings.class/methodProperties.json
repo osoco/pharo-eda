@@ -1,0 +1,18 @@
+{
+	"class" : {
+		"DUEnvironmentClass" : "JoseSanLeandro 9/24/2015 10:49",
+		"DUEnvironmentClass:" : "JoseSanLeandro 9/24/2015 10:48",
+		"commandErrorHandlingStrategySettingsOn:under:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"commandListenerSettingsOn:under:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"edaSettingsOn:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"eventPublisherSettingsOn:under:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"eventStoreSettingsOn:under:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"initialize" : "JoseSanLeandro 9/24/2015 10:54",
+		"mongoSettingsOn:withConfig:under:populatedWithValuesFrom:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"projectionsRepositorySettingsOn:under:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"retrieveSettingAsDict:" : "JoseSanLeandro 9/24/2015 10:52",
+		"retrieveSettingAsDict:using:" : "JoseSanLeandro 9/24/2015 10:47",
+		"stompListenerSettingsOn:withConfig:under:populatedWithValuesFrom:" : "JoseSanLeandro 9/23/2015 14:22:32",
+		"stompPublisherSettingsOn:withConfig:under:populatedWithValuesFrom:" : "JoseSanLeandro 9/23/2015 14:22:32" },
+	"instance" : {
+		 } }

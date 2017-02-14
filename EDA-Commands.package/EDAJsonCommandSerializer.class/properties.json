@@ -1,0 +1,16 @@
+{
+	"category" : "EDA-Commands-Serializers",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"writer" ],
+	"name" : "EDAJsonCommandSerializer",
+	"pools" : [
+		 ],
+	"super" : "EDAMessageSerializer",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal" }

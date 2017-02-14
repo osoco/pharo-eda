@@ -1,0 +1,3 @@
+lifecycle
+prepareToStopApplication
+	"Compatibility purposes"

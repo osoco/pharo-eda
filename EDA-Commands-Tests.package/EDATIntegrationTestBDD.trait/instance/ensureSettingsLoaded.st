@@ -1,0 +1,4 @@
+lifecycle
+ensureSettingsLoaded
+	self checkSettingsLoaded.
+	self defaultSettingsCheck

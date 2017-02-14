@@ -1,0 +1,17 @@
+{
+	"category" : "EDA-Application",
+	"classinstvars" : [
+		"CommandConsumer",
+		"EventProducer",
+		"EventStore",
+		"CommandDispatcher" ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "EDAApplication",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
