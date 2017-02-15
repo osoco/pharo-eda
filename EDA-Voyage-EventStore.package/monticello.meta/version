@@ -1,2 +1,0 @@
-(name 'EDA-Voyage-EventStore-JoseSanLeandro.2' message '* OB-119: Replacing GC for EDA as class prefix' id 'ca681ad4-2cfe-461a-bca3-ca0a21308832' date '17 July 2015' time '2:46:34.478051 pm' author 'JoseSanLeandro' ancestors ((name 'EDA-Voyage-EventStore-RafaelLuque.1' message 'Rename GameCore-Voyage-EventStore package as EDA-Voyage-EventStore.
-' id '75973556-bcf9-5674-bb39-200b5199d0ce' date '9 June 2015' time '3:38:15 pm' author 'RafaelLuque' ancestors () stepChildren ())) stepChildren ())
