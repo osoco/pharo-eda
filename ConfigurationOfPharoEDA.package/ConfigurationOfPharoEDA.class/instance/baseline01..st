@@ -30,6 +30,7 @@ baseline01: spec
 		spec
 			package: #'EDA-Traits';
 			package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
+			package: #'EDA-Domain-Tests' with: [ spec requires: #('EDA-Domain') ];
 			package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
 			package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
 			package: #'EDA-Events' with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
@@ -47,10 +48,10 @@ baseline01: spec
 			package: #'EDA-Settings' with: [
 				spec requires: #('DeployUtils') ];
 			package: #'EDA-Commands-Tests' with: [
-				spec requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' ) ];
+				spec requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests' ) ];
 			package: #'EDA-Application' with: [
 				spec requires: #('EDA-Settings')].
 		spec
 			group: 'core' with: #(#'EDA-Application' #'EDA-Traits' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' );
-			group: 'tests' with: #(#'EDA-Projections-Tests' #'EDA-Commands-Tests' );
+			group: 'tests' with: #(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' );
 			group: 'default' with: #('core' 'tests' ). ].
