@@ -1,9 +1,0 @@
-{
-	"class" : {
-		"newFromHandlerMethod:eventStore:eventBus:" : "JoseSanLeandro 7/17/2015 14:42:24" },
-	"instance" : {
-		"aggregateRoot" : "JoseSanLeandro 7/17/2015 14:42:24",
-		"aggregateRoot:" : "JoseSanLeandro 7/17/2015 14:42:24",
-		"handlerMethod" : "JoseSanLeandro 7/17/2015 14:42:24",
-		"handlerMethod:" : "JoseSanLeandro 7/17/2015 14:42:24",
-		"invokeMethodHandlerWith:on:" : "JoseSanLeandro 7/17/2015 14:42:24" } }
