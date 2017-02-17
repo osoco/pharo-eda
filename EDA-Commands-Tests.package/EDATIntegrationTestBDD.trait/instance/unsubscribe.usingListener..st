@@ -6,7 +6,7 @@ unsubscribe: id usingListener: aListener
 	(frame := StampUnsubscribeFrame new) id: id.
 	client writeWithReceipt: frame ]
 		ensure: [ 
-			self client
+			client
 				ifNotNil:
 					[ [ client close ]
 						on: ConnectionTimedOut
