@@ -1,3 +1,4 @@
 persistence
 removeAllProjections
-    EDAProjection subclasses do: [ :aProjectionClass | Repository removeProjection: aProjectionClass. ]
+	(EDAProjection subclasses reject: [ :projectionClass | projectionClass = EDATestEntityCounterProjection ])
+		do: [ :aProjectionClass | Repository removeProjection: aProjectionClass ]
