@@ -7,5 +7,5 @@ insertPreviousEvents: eventsCollection
 	].
 	self application eventStore flush.
 	Transcript cr; flush.
-	self waitUntilEventsArePersisted: eventsCollection.
+	"self waitUntilEventsArePersisted: eventsCollection."
 	Transcript print: 'All ', eventsCollection size printString, ' events inserted'; cr; flush.

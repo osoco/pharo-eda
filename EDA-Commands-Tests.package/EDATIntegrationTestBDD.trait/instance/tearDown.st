@@ -5,5 +5,5 @@ tearDown
 	self unsubscribeToEvents.
 	self restoreCurrentEnvironment.
 	self prepareToStopApplication.
-	self stopApplication.
-	Transcript print: 'Finished ', thisContext; cr; flush.
+	"self stopApplication."
+	"Transcript print: 'Finished ', thisContext; cr; flush."
