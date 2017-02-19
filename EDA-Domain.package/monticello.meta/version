@@ -1,6 +1,0 @@
-(name 'EDA-Domain-RafaelLuque.6' message 'Use EDAMessageSerializer class>>eventClassPrefix: to find out the vent''s prefix.' id 'c74a9578-1c75-41d8-bce9-fd3bdcecbdfc' date '20 November 2015' time '4:31:57.877528 pm' author 'RafaelLuque' ancestors ((name 'EDA-Domain-JoseSanLeandro.5' message '* OB-119
-' id '7ef5b8d4-4f6e-525d-b6d6-fe03fd873b98' date '17 July 2015' time '2:42:24 pm' author 'JoseSanLeandro' ancestors ((name 'EDA-Domain-RafaelLuque.4' message 'Delete commands from EDA-Domain
-' id 'c33349b5-04b4-5b7e-b777-496ffd043a57' date '11 June 2015' time '2:11:26 pm' author 'RafaelLuque' ancestors ((name 'EDA-Domain-RafaelLuque.3' message 'Deleted command builders.
-' id '8a621098-ef3c-58f8-b5f8-2460ecfcadbc' date '11 June 2015' time '1:52:13 pm' author 'RafaelLuque' ancestors ((name 'EDA-Domain-RafaelLuque.2' message 'Move temporarily builders, materializer and commands to this package.
-' id '66d93fd8-0cb4-558f-8518-71849bf68e38' date '11 June 2015' time '1:11:33 pm' author 'RafaelLuque' ancestors ((name 'EDA-Domain-RafaelLuque.1' message 'Rename GameCore-Domain package as EDA-Domain.
-' id '4f707356-28a1-59a9-9814-c6faea14099c' date '9 June 2015' time '3:31:11 pm' author 'RafaelLuque' ancestors () stepChildren ())) stepChildren ())) stepChildren ())) stepChildren ())) stepChildren ())) stepChildren ())

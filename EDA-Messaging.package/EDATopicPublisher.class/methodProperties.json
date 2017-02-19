@@ -1,8 +1,0 @@
-{
-	"class" : {
-		 },
-	"instance" : {
-		"publishMessage:" : "RafaelLuque 11/19/2015 11:12:33",
-		"publishMessage:inTransaction:" : "RafaelLuque 11/19/2015 11:12:33",
-		"publishMessage:withRoutingKey:" : "RafaelLuque 11/19/2015 11:12:33",
-		"publishMessagesAtomically:" : "RafaelLuque 11/19/2015 11:12:33" } }
