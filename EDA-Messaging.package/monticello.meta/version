@@ -1,4 +1,0 @@
-(name 'EDA-Messaging-RafaelLuque.4' message 'Fix wrong method selector form publishEvent: to publishMessage:' id 'a48102b5-5470-47d0-862b-14af34f19e3a' date '20 November 2015' time '5:04:55.542478 pm' author 'RafaelLuque' ancestors ((name 'EDA-Messaging-RafaelLuque.3' message 'Fix EDAMessageSerializer to avoid the class prefix hardcoded.
-' id 'f3e63b07-b4a0-5cb5-b0b7-8d7d885e11d4' date '19 November 2015' time '11:12:33 am' author 'RafaelLuque' ancestors ((name 'EDA-Messaging-JoseSanLeandro.2' message '* OB-119
-' id '0143d046-3b0e-518a-bd47-506a23aa12d5' date '17 July 2015' time '2:42:24 pm' author 'JoseSanLeandro' ancestors ((name 'EDA-Messaging-RafaelLuque.1' message 'Rename GameCore-Messaging package as EDA-Messaging
-' id '4edb4a5a-a276-5cd4-9844-3955d6df824b' date '9 June 2015' time '3:34:24 pm' author 'RafaelLuque' ancestors () stepChildren ())) stepChildren ())) stepChildren ())) stepChildren ())
