@@ -1,0 +1,14 @@
+{
+	"category" : "EDA-StompMessaging",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "EDAJsonStampClient",
+	"pools" : [
+		 ],
+	"super" : "StampClient",
+	"type" : "normal" }
