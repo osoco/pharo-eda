@@ -1,0 +1,3 @@
+persistence
+findEventsOfAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary
+	self subclassResponsibility

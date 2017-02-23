@@ -3,7 +3,7 @@ handle: aCommand withErrorStrategy: strategy
 	| events aggregateRoot producedEvents |
 	[
 	Transcript print: 'Retrieving events for ', self aggregateRootClass name; cr; flush.
-	events := eventStore findEventsOfAggregate: self aggregateRootClass whereId: aCommand aggregateRootId.
+	events := eventStore findEventsOfAggregate: self aggregateRootClass whereCriteria: (aCommand aggregateSelectionCriteria).
 	Transcript print: 'Events retrieved (', events size printString , '):'.
 	events do: [ :e | Transcript print: ' ', e class name].
 	Transcript cr; flush.
