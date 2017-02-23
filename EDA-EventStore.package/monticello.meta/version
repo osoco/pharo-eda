@@ -1,3 +1,0 @@
-(name 'EDA-EventStore-JoseSanLeandro.3' message '* OB-119- EDAEventStore: Using EDAPrintOnHelper trait.' id 'e35b853a-6ce0-4ff8-a9e8-6ce67584b3b5' date '21 July 2015' time '8:51:15.530982 am' author 'JoseSanLeandro' ancestors ((name 'EDA-EventStore-JoseSanLeandro.2' message '* OB-119: Replacing GC for EDA as class prefix
-' id '23c6afc3-3b69-5e95-babb-014df53fa57a' date '17 July 2015' time '2:44:41 pm' author 'JoseSanLeandro' ancestors ((name 'EDA-EventStore-RafaelLuque.1' message 'Rename GameCore-EventStore package as EDA-EventStore.
-' id '070c9849-58d8-5023-963a-ff59ec35c159' date '9 June 2015' time '3:31:41 pm' author 'RafaelLuque' ancestors () stepChildren ())) stepChildren ())) stepChildren ())
