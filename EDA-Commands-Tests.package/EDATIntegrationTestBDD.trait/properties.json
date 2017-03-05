@@ -1,4 +1,6 @@
 {
 	"category" : "EDA-Commands-Tests",
+	"classtraitcomposition" : "EDATJsonMatchingHelper classTrait",
 	"commentStamp" : "RafaelLuque 3/18/2015 10:54",
-	"name" : "EDATIntegrationTestBDD" }
+	"name" : "EDATIntegrationTestBDD",
+	"traitcomposition" : "EDATJsonMatchingHelper" }
