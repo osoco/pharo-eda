@@ -1,3 +1,3 @@
 lifecycle
 restoreCurrentEnvironment
-	OSPlatform current environment at: EDADUEnvironment environmentVariableName put: self currentEnvironment
+	OSPlatform current environment at: EDADUEnvironment environmentVariableName put: (self currentEnvironment ifNil: [ ^ 'test' ] ifNotNil: [ ^ self currentEnvironment ])

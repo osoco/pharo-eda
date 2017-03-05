@@ -1,0 +1,16 @@
+{
+	"category" : "EDA-Commands-Tests-Tests",
+	"classinstvars" : [
+		 ],
+	"classtraitcomposition" : "EDATJsonMatchingHelper classTrait",
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "EDATJsonMatchingHelperTest",
+	"pools" : [
+		 ],
+	"super" : "TestCase",
+	"traitcomposition" : "EDATJsonMatchingHelper",
+	"type" : "normal" }
