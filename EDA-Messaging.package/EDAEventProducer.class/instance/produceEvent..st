@@ -7,4 +7,5 @@ produceEvent: anEvent
 	routingKey
 		ifNotNil: [ self publisher publishMessage: message withRoutingKey: routingKey ]
 		ifNil: [ self publisher publishMessage: message ].
+	self announcer announce: anEvent.
 	Transcript print: 'Event published.'; cr; flush

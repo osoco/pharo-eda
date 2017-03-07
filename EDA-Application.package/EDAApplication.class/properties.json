@@ -1,6 +1,7 @@
 {
 	"category" : "EDA-Application",
 	"classinstvars" : [
+		"EventAnnouncer",
 		"CommandConsumer",
 		"EventProducer",
 		"EventStore",
