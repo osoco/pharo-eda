@@ -6,5 +6,6 @@ commandErrorHandlingStrategySettingsOn: t1 under: parent
 		label: 'Command Error Handling' translated;
 		description: 'Strategy when dealing with errors processing commands' translated;
 		order: 1;
-		domainValues: (EDACommandErrorHandlingStrategy subclasses collect: [ :t2 | t2 description translated -> t2 asString ]).
+		domainValues: (EDACommandErrorHandlingStrategy subclasses collect: [ :t2 | t2 description translated -> t2 asString ]);
+		default: (EDAErrorAsEventStrategy asString).
 	^ self
