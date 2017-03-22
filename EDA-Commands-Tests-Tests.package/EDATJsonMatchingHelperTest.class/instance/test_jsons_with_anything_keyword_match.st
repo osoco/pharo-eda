@@ -8,7 +8,7 @@ test_jsons_with_anything_keyword_match
 	jsonRegex := '{ "a": 1,"b":3,  "c":       "<ANYTHING>"}'.
 	self assert: (self json: json matchesRegex: jsonRegex).
 	json := '{ "d": "bla",   "e ": "{}" }'.
-	jsonRegex := '{ "d": "<ANYTHING>", "e.*": ".*"    }'.
+	jsonRegex := '{ "d": "<ANYTHING>", "e ": ".*"    }'.
 	self assert: (self json: json matchesRegex: jsonRegex).
-	jsonRegex := '{ "d": "(.*)", "e.*": ".*"    }'.
-	self assert: (self json: json matchesRegex: jsonRegex).
+	jsonRegex := '{ "d": "(.*)", "e ": ".*"    }'.
+	self assert: (self json: json matchesRegex: jsonRegex)

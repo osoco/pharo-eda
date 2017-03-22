@@ -1,0 +1,3 @@
+code generation
+generateIntegrationTestMethodName
+	^ self generateDomainTestMethodName

@@ -6,5 +6,5 @@ givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCo
 	commandClassName := aCommand class name.
 	handlerSelectorSymbol := ('handle' , aCommand classNameWithoutPrefix, ':') asSymbol.
 	(aggregateRoot respondsTo: handlerSelectorSymbol)
-		ifTrue: [ self assertCollection: ( aggregateRoot perform: handlerSelectorSymbol with: aCommand ) equals: expectedResultingEvents asOrderedCollection  ]
+		ifTrue: [ | resultingEvents | resultingEvents := aggregateRoot perform: handlerSelectorSymbol with: aCommand. self assertCollection: resultingEvents equals: expectedResultingEvents asOrderedCollection  ]
 		ifFalse: [ self fail: 'Aggregate root ' , anAggregateRootSymbol , ' does not know how to handle command ' , commandClassName ]

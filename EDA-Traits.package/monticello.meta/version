@@ -1,3 +1,0 @@
-(name 'EDA-Traits-JoseSanLeandro.3' message '* OB-119- EDAPrintOnHelper: Added #printOn: method' id 'bfd7fd0a-0d6e-43de-8b73-ae44f7c8b509' date '21 July 2015' time '8:48:06.752659 am' author 'JoseSanLeandro' ancestors ((name 'EDA-Traits-JoseSanLeandro.2' message '* OB-119 - EDAPrintOnHelper: Redefining it as a Trait instead of a Class.
-' id '9cb538e2-9645-57b7-a6c6-0bcd31fa0901' date '20 July 2015' time '4:14:35 pm' author 'JoseSanLeandro' ancestors ((name 'EDA-Traits-JoseSanLeandro.1' message '* OB-119- EDAPrintOnHelper: Trait to add printOn: method to domain classes mainly to help while debugging.
-' id '1cbcfcdd-4a5b-519d-adf1-6360f778404f' date '20 July 2015' time '3:31:34 pm' author 'JoseSanLeandro' ancestors () stepChildren ())) stepChildren ())) stepChildren ())

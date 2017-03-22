@@ -4,7 +4,7 @@ baseline01: spec
 
 	spec for: #'common' do: [
 		spec blessing: #'baseline'.
-		spec repository: 'gitfiletree://' , FileSystem workingDirectory parent fullName , '/pharo-eda-common'.
+		spec repository: 'gitfiletree://' , FileSystem workingDirectory fullName , '/pharo-eda-common'.
 		spec
 			project: 'NeoJSON' with: [
 				spec
@@ -29,6 +29,8 @@ baseline01: spec
 		spec baseline: 'DeployUtils' with: [ spec repository: 'github://fstephany/DeployUtils/repository' ].
 		spec
 			package: #'EDA-Traits';
+			package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
+			package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools') ];
 			package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
 			package: #'EDA-Domain-Tests' with: [ spec requires: #('EDA-Domain') ];
 			package: #'EDA-Commands-Tests-Tests' with: [ spec requires: #('EDA-Commands-Tests') ];
@@ -53,6 +55,6 @@ baseline01: spec
 			package: #'EDA-Application' with: [
 				spec requires: #('EDA-Settings')].
 		spec
-			group: 'core' with: #(#'EDA-Application' #'EDA-Traits' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' );
-			group: 'tests' with: #(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' );
+			group: 'core' with: #(#'EDA-Application' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' );
+			group: 'tests' with: #(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests');
 			group: 'default' with: #('core' 'tests' ). ].

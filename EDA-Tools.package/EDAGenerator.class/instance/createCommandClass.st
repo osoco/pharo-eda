@@ -1,0 +1,10 @@
+compilation
+createCommandClass
+	| cls |
+	cls := self retrieveCommandClassName asSymbol.
+	(self containsAnyDisableRegenerationMethod: cls) ifFalse: [
+	^ EDACommand
+		subclass: self retrieveCommandClassName asSymbol
+		instanceVariableNames: (self concatenateCollection: (self retrieveCommandAttributesBut: EDAGenerator skippedCommandAttributes) with: ' ')
+		classVariableNames: ''
+		package: appName , '-Domain-Commands' ]

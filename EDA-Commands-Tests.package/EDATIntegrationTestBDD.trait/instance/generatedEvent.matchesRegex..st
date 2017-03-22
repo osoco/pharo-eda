@@ -1,4 +1,7 @@
 bdd
 generatedEvent: frame matchesRegex: eventMessageRegex
-	self assert: frame command equals: #MESSAGE.
-	self assert: (self event: frame body matchesEventRegex: eventMessageRegex)
+	| command body |
+	command := frame command.
+	body := frame body.
+	self assert: command equals: #MESSAGE.
+	self assert: (self event: body matchesEventRegex: eventMessageRegex)

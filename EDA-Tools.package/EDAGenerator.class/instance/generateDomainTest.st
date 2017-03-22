@@ -1,0 +1,6 @@
+api
+generateDomainTest
+	self createDomainTestClass.
+	self createDomainTestMethod.
+	self createDomainTestCommandHelperMethod.
+	self createDomainTestEventHelperMethod
