@@ -10,7 +10,7 @@ fromExampleFile: aFile appName: appName aggregate: aggregate
 	result commandName: ((result commandJson at: #meta) at: #type).
 	result fixCommandName.
 	result eventName: result retrieveEventName.
-	result eventFile: aFile parent parent / 'events' / (result toDotSeparated: result eventName , '.example.json').
+	result eventFile: aFile parent parent / 'events' / (result upcasedToDotSeparated: result eventName , '.example.json').
 	result eventRaw: result readEventExampleFile.
 	result eventJson: (NeoJSONReader fromString: result eventRaw).
 	^ result

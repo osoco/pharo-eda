@@ -9,7 +9,7 @@ generateDomainTestEventHelperMethod
 	eventAttrs do: [ :attr | method := method , ' evt' , attr capitalized ].
 	method := method , ' |' , String cr.
 	method := method , '    eventFile := (FileSystem disk workingDirectory / ' , $' asString , 'contracts' , $' asString , ' / ' , $' asString , 'BBVA-ATS' , $' asString , ' / ' , $' asString , 'v1'
-		, $' asString , ' / ' , $' asString , 'events' , $' asString , ' / ' , $' asString , (self toDotSeparated: self eventName) , '.example.json' , $' asString , ') readStream.' , String cr.
+		, $' asString , ' / ' , $' asString , 'events' , $' asString , ' / ' , $' asString , (self upcasedToDotSeparated: self eventName) , '.example.json' , $' asString , ') readStream.' , String cr.
 	method := method , '    eventMessage := eventFile contents.' , String cr.
 	method := method , '    eventJson := NeoJSONReader fromString: eventMessage.' , String cr.
 	method := method , '    eventFile close.' , String cr.
