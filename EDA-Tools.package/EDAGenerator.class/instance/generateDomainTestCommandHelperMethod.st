@@ -8,7 +8,7 @@ generateDomainTestCommandHelperMethod
 	commandAttrs do: [ :attr | method := method , ' cmd' , attr capitalized ].
 	method := method , ' |' , String cr.
 	method := method , '    commandFile := (FileSystem disk workingDirectory / ' , $' asString , 'contracts' , $' asString , ' / ' , $' asString , 'BBVA-ATS' , $' asString , ' / ' , $' asString , 'v1'
-		, $' asString , ' / ' , $' asString , 'commands' , $' asString , ' / ' , $' asString , (self toDotSeparated: self commandName) , '.example.json' , $' asString , ') readStream.' , String cr.
+		, $' asString , ' / ' , $' asString , 'commands' , $' asString , ' / ' , $' asString , (self upcasedToDotSeparated: self commandName) , '.example.json' , $' asString , ') readStream.' , String cr.
 	method := method , '    commandMessage := commandFile contents.' , String cr.
 	method := method , '    commandJson := NeoJSONReader fromString: commandMessage.' , String cr.
 	method := method , '    commandFile close.' , String cr.

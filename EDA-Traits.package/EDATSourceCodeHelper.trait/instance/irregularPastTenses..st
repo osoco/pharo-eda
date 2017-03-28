@@ -1,6 +1,7 @@
 helper
 irregularPastTenses: aVerb
 	| result dict |
-	dict := {('build' -> 'built')} asDictionary.
-	result := dict at: aVerb ifAbsent: [ nil ].
+	dict := {('build' -> 'built') . ('send' -> 'sent') . ('submit' -> 'submitted') } asDictionary.
+	result := dict at: aVerb asLowercase ifAbsent: [ nil ].
+	result ifNotNil: [ aVerb = aVerb asUppercase ifTrue: [ result := result asUppercase ] ].
 	^ result
