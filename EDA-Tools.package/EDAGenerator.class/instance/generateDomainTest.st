@@ -3,4 +3,9 @@ generateDomainTest
 	self createDomainTestClass.
 	self createDomainTestMethod.
 	self createDomainTestCommandHelperMethod.
-	self createDomainTestEventHelperMethod
+	self createDomainTestEventHelperMethod.
+	self createDomainTestEventClass.
+	self createDomainTestEventHelperMethod.
+	self createDomainTestEventEqualsMethod.
+	self createDomainTestEventAttributeMatchesMethod.
+	self createDomainTestEventClassBuilderMethod
