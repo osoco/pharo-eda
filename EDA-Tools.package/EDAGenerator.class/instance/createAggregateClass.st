@@ -7,4 +7,4 @@ createAggregateClass
 		subclass: cls
 		instanceVariableNames: (self concatenateCollection: self retrieveEventAttributes with: ' ')
 		classVariableNames: ''
-		package: self appName , '-Domain-Aggregates' ]
+		package: self appName , '-Domain-', (self toCamelCase: self aggregate) ]

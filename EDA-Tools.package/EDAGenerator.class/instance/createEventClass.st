@@ -8,4 +8,4 @@ createEventClass
 		uses: ATSTEvent
 		instanceVariableNames: (self concatenateCollection: (self retrieveEventAttributesBut: EDAGenerator skippedEventAttributes) with: ' ')
 		classVariableNames: ''
-		package: 'ATS-Domain-Events' ]
+		package: (self appName) , '-Domain-', (self toCamelCase: self aggregate) ]

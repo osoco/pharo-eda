@@ -16,5 +16,5 @@ generateDomainTestEventHelperMethod
 	method := method , '    eventBody := eventJson at: #body.' , String cr.
 	method := method , '    evtCommandId := commandId.' , String cr.
 	eventAttrs do: [ :attr | method := method , '    evt' , attr capitalized , ' := eventBody at: ' , $' asString , attr , $' asString , '.' , String cr ].
-	method := method , '    ^ ' , self appName , (self toCamelCase: self retrieveEventName) , ' ' , (self generateEventClassBuilderMethodNameWithArgPrefix: 'evt') , String cr.
+	method := method , '    ^ ' , (self appName) , 'Test' , (self toCamelCase: self retrieveEventName) , String cr, '        fromEvent:' , String cr , '(' , ((self appName), (self toCamelCase: self retrieveEventName)) , ' ' , (self generateEventClassBuilderMethodNameWithArgPrefix: 'evt') , ')' , String cr, '        andId: ' , $' asString , '<ANYTHING>' , $' asString , String cr.
 	^ method

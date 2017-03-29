@@ -8,4 +8,4 @@ createDomainTestClass
 		uses: EDATDomainBDD
 		instanceVariableNames: ''
 		classVariableNames: ''
-		package: self appName , '-Domain-Tests-' , self aggregate capitalized ]
+		package: self appName , '-Domain-Tests-' , (self toCamelCase: self aggregate) ]
