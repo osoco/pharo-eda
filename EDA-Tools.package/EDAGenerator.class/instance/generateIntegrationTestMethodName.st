@@ -1,3 +1,3 @@
-code generation
+code generation - integration test
 generateIntegrationTestMethodName
 	^ self generateDomainTestMethodName 

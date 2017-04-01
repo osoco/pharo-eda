@@ -1,6 +1,9 @@
 api
 generateAllButIntegrationTest
 	self generateCommand.
-	self generateAggregate.
 	self generateEvent.
+	self generateAggregate.
+	self generateEDAApplication.
+	self generateTestHelperTrait.
+	self generateTestEvent.
 	self generateDomainTest

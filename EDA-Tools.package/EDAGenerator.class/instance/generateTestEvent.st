@@ -1,0 +1,6 @@
+api
+generateTestEvent
+	self createTestEvent.
+	self createTestEventBuilderClassMethod.
+	self createTestEventEqualsMethod.
+	self createTestEventAttributeMatchesMethod

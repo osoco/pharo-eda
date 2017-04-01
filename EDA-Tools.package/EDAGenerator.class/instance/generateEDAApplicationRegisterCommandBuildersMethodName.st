@@ -1,3 +1,3 @@
-code generation
+code generation - EDAApplication
 generateEDAApplicationRegisterCommandBuildersMethodName
 	^ 'registerCommandBuilders'

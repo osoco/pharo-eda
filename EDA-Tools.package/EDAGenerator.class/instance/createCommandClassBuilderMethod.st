@@ -1,4 +1,4 @@
-compilation
+code generation - command
 createCommandClassBuilderMethod
 	| methodAssoc |
 	methodAssoc := self generateCommandClassBuilderMethod associations first.
