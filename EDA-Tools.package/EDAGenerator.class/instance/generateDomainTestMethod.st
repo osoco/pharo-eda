@@ -1,4 +1,4 @@
-code generation
+code generation - domain test
 generateDomainTestMethod
 	| method commandAttrs cmdName eventAttrs evtName |
 	commandAttrs := self retrieveCommandAttributes.

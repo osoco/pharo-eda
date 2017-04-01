@@ -1,9 +1,7 @@
 api
 generateCommand
-	self createCommandClass.
-	self createCommandClassAccessors.
+	self createCommand.
+	self createCommandAccessors.
 	self createCommandClassBuilderMethod.
-	self createCommandClassEqualsMethod.
-	self createCommandClassHashMethod.
-	self createDefaultCommandBuilderInitializeCommandBuilders.
-	self createEDAApplicationRegisterCommandBuilders
+	self createCommandEqualsMethod.
+	self createCommandHashMethod

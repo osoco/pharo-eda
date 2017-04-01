@@ -1,12 +1,8 @@
-code generation
+code generation - command
 generateCommandClassBuilderMethod
-	| commandClass method attrs result |
-	commandClass := self retrieveCommandClassName asSymbol.
-	method := self generateCommandClassBuilderMethodNameWithArgPrefix: 'new'.
+	| result attrs |
 	attrs := self retrieveCommandAttributes.
-	method := method , String cr , '    <' , appName asLowercase , 'CommandName: #' , self commandName , '>' , String cr , '    | result |' , String cr , '    result := ' , commandClass , ' new.'
-		, String cr , '    result commandId: newCommandId.'.
-	attrs do: [ :attr | method := method , String cr , '    result ' , attr , ': new' , attr capitalized , '.' ].
-	method := method , String cr , '    ^ result'.
-	result := {(self generateCommandClassBuilderMethodName -> method)} asDictionary.
-	^ result
+	attrs size > EDAGenerator maxMethodParams
+		ifTrue: [ result := self generateLongParamsCommandBuilderClassMethod ]
+		ifFalse: [ result := self generateShortParamsCommandBuilderClassMethod ].
+		^ result

@@ -1,4 +1,4 @@
-compilation
+code generation - integration test
 createIntegrationTestMethod
 	^ self
 		compileIfDoesNotExist: self generateIntegrationTestMethodName

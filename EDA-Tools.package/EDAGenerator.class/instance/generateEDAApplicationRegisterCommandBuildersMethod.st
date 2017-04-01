@@ -1,4 +1,4 @@
-code generation
+code generation - EDAApplication
 generateEDAApplicationRegisterCommandBuildersMethod
 	| result commands |
 	result := self generateEDAApplicationRegisterCommandBuildersMethodName , String cr.

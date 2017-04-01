@@ -1,4 +1,4 @@
-code generation
+helper
 expectedEventFromFile
 	| evtJson id body |
 	evtJson := NeoJSONReader fromString: self readEventExampleFile.

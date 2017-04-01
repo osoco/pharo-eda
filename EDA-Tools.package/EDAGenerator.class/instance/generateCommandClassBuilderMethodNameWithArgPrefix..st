@@ -1,5 +1,8 @@
-code generation
+code generation - command
 generateCommandClassBuilderMethodNameWithArgPrefix: prefix
-	^ self
-		generateCommandClassBuilderMethodNameWithCommandArg: prefix , 'CommandId'
-		andBlock: [ :attr | prefix , attr capitalized ]
+	| result attrs |
+	attrs := self retrieveCommandAttributes.
+		result := self
+				generateCommandClassBuilderMethodNameWithCommandArg: prefix , 'CommandId'
+				andBlock: [ :attr | prefix , attr capitalized ].
+	^ result

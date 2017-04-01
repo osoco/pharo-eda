@@ -1,4 +1,4 @@
-compilation
+code generation - domain test
 createDomainTestMethod
 	^ self
 		compileIfDoesNotExist: self generateDomainTestMethodName

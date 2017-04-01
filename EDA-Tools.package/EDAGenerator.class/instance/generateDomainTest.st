@@ -1,11 +1,4 @@
 api
 generateDomainTest
-	self createDomainTestClass.
-	self createDomainTestMethod.
-	self createDomainTestCommandHelperMethod.
-	self createDomainTestEventHelperMethod.
-	self createDomainTestEventClass.
-	self createDomainTestEventHelperMethod.
-	self createDomainTestEventEqualsMethod.
-	self createDomainTestEventAttributeMatchesMethod.
-	self createDomainTestEventClassBuilderMethod
+	self createDomainTest.
+	self createDomainTestMethod
