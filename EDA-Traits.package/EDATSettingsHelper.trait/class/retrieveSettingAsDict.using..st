@@ -1,4 +1,4 @@
-settings
+helpers
 retrieveSettingAsDict: entryName using: env
 	"Retrieves the setting found under given name"
 	| result |

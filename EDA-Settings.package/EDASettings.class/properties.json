@@ -2,6 +2,7 @@
 	"category" : "EDA-Settings",
 	"classinstvars" : [
 		"DUEnvironmentClass" ],
+	"classtraitcomposition" : "EDATSettingsHelper classTrait",
 	"classvars" : [
 		 ],
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:44",
@@ -11,4 +12,5 @@
 	"pools" : [
 		 ],
 	"super" : "Object",
+	"traitcomposition" : "EDATSettingsHelper",
 	"type" : "normal" }
