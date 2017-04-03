@@ -1,0 +1,14 @@
+{
+	"category" : "ConfigurationOfApplicantTrackingSystem",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"LastVersionLoad" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"project" ],
+	"name" : "ConfigurationOfApplicantTrackingSystem",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
