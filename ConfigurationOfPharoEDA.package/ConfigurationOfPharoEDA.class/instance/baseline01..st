@@ -49,7 +49,7 @@ baseline01: spec
 			package: #'EDA-Voyage-EventStore' with: [
 				spec requires: #('VoyageMongo' ) ];
 			package: #'EDA-Settings' with: [
-				spec requires: #('DeployUtils') ];
+				spec requires: #('DeployUtils' 'EDA-Traits') ];
 			package: #'EDA-Commands-Tests' with: [
 				spec requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests' ) ];
 			package: #'EDA-Application' with: [
