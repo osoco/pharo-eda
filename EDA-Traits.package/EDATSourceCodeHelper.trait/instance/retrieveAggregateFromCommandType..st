@@ -9,5 +9,5 @@ retrieveAggregateFromCommandType: json
 			type
 				do: [ :word |
 					(self isAggregate: word)
-						ifTrue: [ result := word asCamelCase ] ] ].
+						ifTrue: [ result := self toCamelCase: word asCamelCase ] ] ].
 	^ result
