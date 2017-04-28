@@ -1,4 +1,5 @@
 {
-	"category" : "EDA-Commands-Tests",
+	"name" : "EDATTestClassFactory",
 	"commentStamp" : "RafaelLuque 12/4/2014 11:43",
-	"name" : "EDATTestClassFactory" }
+	"category" : "EDA-Commands-Tests"
+}

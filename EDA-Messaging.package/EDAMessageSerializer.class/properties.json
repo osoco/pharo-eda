@@ -1,14 +1,11 @@
 {
-	"category" : "EDA-Messaging-Serializers",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "EDAMessageSerializer",
-	"pools" : [
-		 ],
 	"super" : "Object",
-	"type" : "normal" }
+	"category" : "EDA-Messaging-Serializers",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAMessageSerializer",
+	"type" : "normal"
+}

@@ -1,14 +1,11 @@
 {
-	"category" : "EDA-Commands-Tests",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "EDAComplexCommandBuilder",
-	"pools" : [
-		 ],
 	"super" : "EDABaseCommandBuilder",
-	"type" : "normal" }
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAComplexCommandBuilder",
+	"type" : "normal"
+}

@@ -1,4 +1,5 @@
 {
-	"category" : "EDA-Commands-Tests",
+	"name" : "EDATJsonMatchingHelper",
 	"commentStamp" : "",
-	"name" : "EDATJsonMatchingHelper" }
+	"category" : "EDA-Commands-Tests"
+}

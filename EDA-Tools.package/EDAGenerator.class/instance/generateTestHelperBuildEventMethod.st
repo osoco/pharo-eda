@@ -1,24 +1,55 @@
 code generation - test trait
 generateTestHelperBuildEventMethod
-	| method cmdName evtName eventAttrs |
-	eventAttrs := self retrieveEventAttributes.
-	cmdName := self toCamelCase: self commandName.
-	evtName := self toCamelCase: self eventName.
-	method := self generateTestHelperBuildEventMethodNameWithCommandArg: 'commandId'.
-	method := method , '    | evtCommandId eventMessage eventJson eventBody'.
-	eventAttrs do: [ :attr | method := method , ' evt' , attr capitalized ].
-	method := method , ' |' , String cr.
-	method := method , '    eventMessage := self '
-		, self generateReadEventFromFileTestHelperMethodName , '.' , String cr.
-	method := method , '    eventJson := NeoJSONReader fromString: eventMessage.' , String cr.
-	method := method , '    eventBody := eventJson at: #body.' , String cr.
-	method := method , '    evtCommandId := commandId.' , String cr.
+	| result eventAttrs cr |
+	cr := Character cr.
+	eventAttrs := self retrieveEventAttributesBut: self class skippedEventAttributes.
+	result := WriteStream on: String new.
+	result nextPutAll: (self generateTestHelperBuildEventMethodNameWithId: 'evtId' andCommandArg: 'evtCommandId').
+	result nextPut: cr.
+	result nextPutAll: self generateSignature.
+	result
+		nextPutAll: '	| eventMessage eventJson eventBody evtAttributes |';
+		nextPut: cr.
+	result
+		nextPutAll: '	eventMessage := self ';
+		nextPutAll: self generateReadEventFromFileTestHelperMethodName;
+		nextPut: $.;
+		nextPut: cr.
+	result
+		nextPutAll: '	eventJson := NeoJSONReader fromString: eventMessage.';
+		nextPut: cr.
+	result
+		nextPutAll: '	eventBody := eventJson at: #body.';
+		nextPut: cr.
+	result
+		nextPutAll: '	evtAttributes := Dictionary new.';
+		nextPut: cr.
 	eventAttrs
 		do: [ :attr |
-			method := method , '    evt' , attr capitalized , ' := eventBody at: ' , $' asString , attr
-				, $' asString , '.' , String cr ].
-	method := method , '    ^ ' , self appName , 'Test' , (self toCamelCase: self retrieveEventName)
-		, String cr , '        fromEvent:' , String cr , '('
-		, (self appName , (self toCamelCase: self retrieveEventName)) , ' '
-		, (self generateEventBuilderClassMethodNameWithArgPrefix: 'evt') , ')' , String cr.
-	^ method
+			result
+				nextPutAll: '	eventBody at: ''';
+				nextPutAll: attr uncapitalized;
+				nextPutAll: ''' ifPresent: [ :v | evtAttributes at: ''';
+				nextPutAll: attr uncapitalized;
+				nextPutAll: ''' put: v ].';
+				nextPut: cr ].
+	result
+		nextPutAll: '	^ ';
+		nextPutAll: self appName;
+		nextPutAll: 'Test';
+		nextPutAll: (self toCamelCase: self eventName);
+		nextPut: cr.
+	result
+		nextPutAll: '		fromEvent: (';
+		nextPut: cr.
+	result
+		nextPutAll: '			';
+		nextPut: cr.
+	result
+		nextPutAll: self appName;
+		nextPutAll: (self toCamelCase: self eventName);
+		nextPut: Character space;
+		nextPutAll: (self generateTestHelperBuildEventClassMethodNameWithArgPrefix: 'evt');
+		nextPut: $);
+		nextPut: cr.
+	^ result contents

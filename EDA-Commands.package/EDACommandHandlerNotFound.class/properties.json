@@ -1,14 +1,11 @@
 {
-	"category" : "EDA-Commands-Handlers",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "RafaelLuque 12/2/2014 13:22",
-	"instvars" : [
-		 ],
-	"name" : "EDACommandHandlerNotFound",
-	"pools" : [
-		 ],
 	"super" : "Error",
-	"type" : "normal" }
+	"category" : "EDA-Commands-Handlers",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDACommandHandlerNotFound",
+	"type" : "normal"
+}

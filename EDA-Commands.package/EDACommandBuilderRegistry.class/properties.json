@@ -1,14 +1,13 @@
 {
-	"category" : "EDA-Commands-Builders",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		"Mapping" ],
 	"commentStamp" : "JoseSanLeandro 7/17/2015 14:35",
-	"instvars" : [
-		 ],
-	"name" : "EDACommandBuilderRegistry",
-	"pools" : [
-		 ],
 	"super" : "Object",
-	"type" : "normal" }
+	"category" : "EDA-Commands-Builders",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Mapping"
+	],
+	"instvars" : [ ],
+	"name" : "EDACommandBuilderRegistry",
+	"type" : "normal"
+}

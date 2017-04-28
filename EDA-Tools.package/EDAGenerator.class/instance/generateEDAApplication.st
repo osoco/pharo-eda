@@ -1,4 +1,0 @@
-api
-generateEDAApplication
-	self createDefaultCommandBuilderRetrieveCommandBuilders.
-	self createEDAApplicationRegisterCommandBuilders

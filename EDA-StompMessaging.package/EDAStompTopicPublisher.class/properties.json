@@ -1,4 +1,6 @@
 {
+	"commentStamp" : "JoseSanLeandro 9/22/2015 06:16",
+	"super" : "EDATopicPublisher",
 	"category" : "EDA-StompMessaging",
 	"classinstvars" : [
 		"Host",
@@ -8,14 +10,13 @@
 		"Exchange",
 		"RoutingKey",
 		"Durable",
-		"Timeout" ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "JoseSanLeandro 9/22/2015 06:16",
+		"Timeout"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
-		"client" ],
+		"client"
+	],
 	"name" : "EDAStompTopicPublisher",
-	"pools" : [
-		 ],
-	"super" : "EDATopicPublisher",
-	"type" : "normal" }
+	"type" : "normal"
+}

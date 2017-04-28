@@ -1,15 +1,14 @@
 {
-	"category" : "EDA-Projections-Tests",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
+	"super" : "TestCase",
+	"category" : "EDA-Projections-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"currentEnvironment",
-		"repository" ],
+		"repository"
+	],
 	"name" : "EDAProjectionsIntegrationTestCase",
-	"pools" : [
-		 ],
-	"super" : "TestCase",
-	"type" : "normal" }
+	"type" : "normal"
+}

@@ -1,23 +1,25 @@
 helper
 asPharoSourceCode: anAttributeValue
-	| result |
+	| result cr |
+	cr := String with: Character cr.
 	(anAttributeValue isKindOf: Array)
-		ifTrue: [ result := String cr , '#('.
+		ifTrue: [ result := cr , '#('.
 			anAttributeValue
-				doWithIndex: [ :item :i |
+				keysAndValuesDo: [ :i :item |
 					i > 1
 						ifTrue: [ result := result , '.' ].
-					result := result , (self asPharoSourceCode: item) , String cr ].
+					result := result , (self asPharoSourceCode: item) , cr ].
 			result := result , ') asOrderedCollection' ]
 		ifFalse: [ (anAttributeValue isKindOf: Dictionary)
-				ifTrue: [ result := String cr , 'Dictionary newFrom: {'.
+				ifTrue: [ result := cr , 'Dictionary newFrom: {'.
 					anAttributeValue keys
-						doWithIndex: [ :item :i |
+						keysAndValuesDo: [ :i :item |
 							i > 1
 								ifTrue: [ result := result , '.' ].
-							result := result , String cr , (self asPharoSourceCode: item) , ' -> ' , (self asPharoSourceCode: (anAttributeValue at: item)) , String cr ].
-					result := result , '}' , String cr ]
-				ifFalse: [ (anAttributeValue isKindOf: String)
-						ifTrue: [ result := $' asString , anAttributeValue , $' asString ]
-						ifFalse: [ result := anAttributeValue asString ] ] ].
+							result := result , cr , (self asPharoSourceCode: item) , ' -> '
+								, (self asPharoSourceCode: (anAttributeValue at: item)) , cr ].
+					result := result , '}' , cr ]
+				ifFalse: [ result := (anAttributeValue isKindOf: String)
+						ifTrue: [ $' greaseString , anAttributeValue , $' greaseString ]
+						ifFalse: [ anAttributeValue greaseString ] ] ].
 	^ result

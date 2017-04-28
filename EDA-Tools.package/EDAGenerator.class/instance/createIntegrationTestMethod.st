@@ -3,5 +3,5 @@ createIntegrationTestMethod
 	^ self
 		compileIfDoesNotExist: self generateIntegrationTestMethodName
 		sourceCode: self generateIntegrationTestMethod
-		inClass: (self appName , self aggregate capitalized , 'IntegrationTestCase') asSymbol asClass
-		classifiedAs: #tests
+		inClass: (self class environment at: (self appName , self aggregate capitalized , 'IntegrationTestCase') asSymbol)
+		classifiedAs: self protocol

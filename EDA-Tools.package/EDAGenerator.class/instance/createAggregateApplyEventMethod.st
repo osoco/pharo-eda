@@ -1,7 +1,7 @@
 code generation - aggregate
 createAggregateApplyEventMethod
 	^ self
-		compileIfDoesNotExist: self generateApplyEventMethodName
-		sourceCode: self generateApplyEventMethod
-		inClass: (self appName , self aggregate capitalized) asSymbol asClass
-		classifiedAs: 'reconstructing aggregate from events' asSymbol
+		compileIfDoesNotExist: self generateAggregateApplyEventMethodName
+		sourceCode: self generateAggregateApplyEventMethod
+		inClass: (self class environment at: (self appName , self aggregate capitalized) asSymbol)
+		classifiedAs: self protocol

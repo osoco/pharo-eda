@@ -1,4 +1,6 @@
 {
+	"commentStamp" : "JoseSanLeandro 9/22/2015 06:15",
+	"super" : "EDATopicListener",
 	"category" : "EDA-StompMessaging",
 	"classinstvars" : [
 		"Host",
@@ -9,17 +11,16 @@
 		"Durable",
 		"Ack",
 		"PrefetchCount",
-		"Timeout" ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "JoseSanLeandro 9/22/2015 06:15",
+		"Timeout"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
 	"instvars" : [
 		"client",
 		"listenerProcess",
 		"subscriptionId",
-		"config" ],
+		"config"
+	],
 	"name" : "EDAStompTopicListener",
-	"pools" : [
-		 ],
-	"super" : "EDATopicListener",
-	"type" : "normal" }
+	"type" : "normal"
+}

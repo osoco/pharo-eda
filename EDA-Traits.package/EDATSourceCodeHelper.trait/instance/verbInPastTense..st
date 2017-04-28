@@ -2,9 +2,12 @@ helper
 verbInPastTense: aVerb
 	| result |
 	result := self irregularPastTenses: aVerb.
-	result ifNil: [
-		(aVerb matchesRegexIgnoringCase: '.*([aeiou])$')
-			ifTrue: [ result := aVerb , 'd' ]
-			ifFalse: [ result := aVerb , 'ed' ] ].
-	result ifNotNil: [ aVerb = aVerb asUppercase ifTrue: [ result := result asUppercase ] ].
+	result
+		ifNil: [ result := (aVerb matchesRegexIgnoringCase: '.*([aeiou])$')
+				ifTrue: [ aVerb , 'd' ]
+				ifFalse: [ aVerb , 'ed' ] ].
+	result
+		ifNotNil: [ :arg |
+			aVerb = aVerb asUppercase
+				ifTrue: [ result := result asUppercase ] ].
 	^ result

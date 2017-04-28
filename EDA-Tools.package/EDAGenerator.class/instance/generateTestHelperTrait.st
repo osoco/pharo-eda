@@ -3,5 +3,4 @@ generateTestHelperTrait
 	self createTestHelperTrait.
 	self createTestHelperBuildCommandMethod.
 	self createTestHelperBuildEventMethod.
-	self createReadEventFromFileTestHelperMethod.
-	self createReadCommandFromFileTestHelperMethod
+	self createReadEventFromFileTestHelperMethod

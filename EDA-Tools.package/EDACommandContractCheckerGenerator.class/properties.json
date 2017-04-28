@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATCheckerGenerator classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDACommandContractCheckerGenerator",
+	"commentStamp" : "",
+	"super" : "AbstractEDAGenerator",
+	"traitcomposition" : "EDATCheckerGenerator",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Tools"
+}

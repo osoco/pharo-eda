@@ -1,0 +1,25 @@
+{
+	"classtraitcomposition" : "EDATSourceCodeHelper classTrait + EDATCheckerHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"commandName",
+		"commandRaw",
+		"commandJson",
+		"commandFile",
+		"appName",
+		"aggregate",
+		"eventJson",
+		"eventRaw",
+		"eventFile",
+		"eventName",
+		"version"
+	],
+	"name" : "AbstractEDAGenerator",
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATSourceCodeHelper + EDATCheckerHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Tools"
+}

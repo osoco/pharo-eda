@@ -1,16 +1,13 @@
 {
-	"category" : "EDA-Commands-Tests",
-	"classinstvars" : [
-		 ],
 	"classtraitcomposition" : "EDATJsonRegexHelper classTrait",
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
-	"instvars" : [
-		 ],
+	"classvars" : [ ],
+	"instvars" : [ ],
 	"name" : "RegexJsonDictionary",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "Dictionary",
 	"traitcomposition" : "EDATJsonRegexHelper",
-	"type" : "normal" }
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Commands-Tests"
+}

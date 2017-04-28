@@ -1,3 +1,0 @@
-api
-generateDefaultCommandBuilder
-	self createDefaultCommandBuilderRetrieveCommandBuilders
