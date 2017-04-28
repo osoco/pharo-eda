@@ -1,16 +1,15 @@
 {
-	"category" : "EDA-Commands-Error-Strategies",
-	"classinstvars" : [
-		 ],
 	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
-	"classvars" : [
-		 ],
-	"commentStamp" : "JoseSanLeandro 7/21/2015 15:22",
+	"classvars" : [ ],
 	"instvars" : [
-		"context" ],
+		"context"
+	],
 	"name" : "EDACommandErrorHandlingStrategy",
-	"pools" : [
-		 ],
+	"commentStamp" : "JoseSanLeandro 7/21/2015 15:22",
 	"super" : "Object",
 	"traitcomposition" : "EDAPrintOnHelper",
-	"type" : "normal" }
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Commands-Error-Strategies"
+}

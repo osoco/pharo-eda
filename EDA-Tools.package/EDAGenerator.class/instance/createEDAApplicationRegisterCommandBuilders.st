@@ -1,7 +1,8 @@
 code generation - EDAApplication
 createEDAApplicationRegisterCommandBuilders
-	^ self
+	self flag: #TODO.
+"	^ self
 		compile: self generateEDAApplicationRegisterCommandBuildersMethodName
 		sourceCode: self generateEDAApplicationRegisterCommandBuildersMethod
-		inClass: (self appName , 'EDAApplication') asSymbol asClass class
-		classifiedAs: 'setup - commands' asSymbol
+		inClass: (self appName , 'EDAApplication') asSymbol asClass
+		classifiedAs: 'setup - commands' asSymbol"

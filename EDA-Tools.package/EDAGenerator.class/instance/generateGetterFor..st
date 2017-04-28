@@ -3,4 +3,4 @@ generateGetterFor: attribute
 	^ attribute
 		,
 			'
-	^ ' , attribute
+' , self generateSignature , '	^ ' , attribute

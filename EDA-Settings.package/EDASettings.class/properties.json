@@ -1,16 +1,15 @@
 {
-	"category" : "EDA-Settings",
-	"classinstvars" : [
-		"DUEnvironmentClass" ],
 	"classtraitcomposition" : "EDATSettingsHelper classTrait",
-	"classvars" : [
-		 ],
-	"commentStamp" : "JoseSanLeandro 9/22/2015 06:44",
-	"instvars" : [
-		 ],
+	"classvars" : [ ],
+	"instvars" : [ ],
 	"name" : "EDASettings",
-	"pools" : [
-		 ],
+	"commentStamp" : "JoseSanLeandro 9/22/2015 06:44",
 	"super" : "Object",
 	"traitcomposition" : "EDATSettingsHelper",
-	"type" : "normal" }
+	"type" : "normal",
+	"classinstvars" : [
+		"DUEnvironmentClass"
+	],
+	"pools" : [ ],
+	"category" : "EDA-Settings"
+}

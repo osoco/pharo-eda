@@ -1,18 +1,17 @@
 {
+	"commentStamp" : "",
+	"super" : "Object",
 	"category" : "EDA-Application",
 	"classinstvars" : [
 		"EventAnnouncer",
 		"CommandConsumer",
 		"EventProducer",
 		"EventStore",
-		"CommandDispatcher" ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
-	"instvars" : [
-		 ],
+		"CommandDispatcher"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
 	"name" : "EDAApplication",
-	"pools" : [
-		 ],
-	"super" : "Object",
-	"type" : "normal" }
+	"type" : "normal"
+}

@@ -1,18 +1,17 @@
 {
-	"category" : "EDA-Messaging-Event",
-	"classinstvars" : [
-		 ],
 	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
+	"classvars" : [ ],
 	"instvars" : [
 		"serializer",
 		"publisher",
-		"announcer" ],
+		"announcer"
+	],
 	"name" : "EDAEventProducer",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "Object",
 	"traitcomposition" : "EDAPrintOnHelper",
-	"type" : "normal" }
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Messaging-Event"
+}

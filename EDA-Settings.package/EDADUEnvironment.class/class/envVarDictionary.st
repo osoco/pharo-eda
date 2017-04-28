@@ -7,4 +7,4 @@ envVarDictionary
 			ifTrue: [ result := result union: (NeoJSONReader on: envFile readStream) parseMap ]].
 	
 	result ifEmpty: [ NotFound signal: (self envVarDictionaryFiles asCommaString) ]
-			 ifNotEmptyDo: [ :n | ^n ]
+			 ifNotEmpty: [ :n | ^n ]

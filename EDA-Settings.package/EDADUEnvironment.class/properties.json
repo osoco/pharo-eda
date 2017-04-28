@@ -1,14 +1,11 @@
 {
-	"category" : "EDA-Settings",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:46",
-	"instvars" : [
-		 ],
-	"name" : "EDADUEnvironment",
-	"pools" : [
-		 ],
 	"super" : "DUEnvironment",
-	"type" : "normal" }
+	"category" : "EDA-Settings",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDADUEnvironment",
+	"type" : "normal"
+}

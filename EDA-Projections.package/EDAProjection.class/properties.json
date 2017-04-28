@@ -1,14 +1,13 @@
 {
-	"category" : "EDA-Projections-Views",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		"Repository" ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "EDAProjection",
-	"pools" : [
-		 ],
 	"super" : "Object",
-	"type" : "normal" }
+	"category" : "EDA-Projections-Views",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Repository"
+	],
+	"instvars" : [ ],
+	"name" : "EDAProjection",
+	"type" : "normal"
+}

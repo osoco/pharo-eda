@@ -1,8 +1,45 @@
 code generation - command
 generateCommandClassBuilderMethod
-	| result attrs |
-	attrs := self retrieveCommandAttributes.
-	attrs size > EDAGenerator maxMethodParams
-		ifTrue: [ result := self generateLongParamsCommandBuilderClassMethod ]
-		ifFalse: [ result := self generateShortParamsCommandBuilderClassMethod ].
-		^ result
+	| commandClass method attrs result cr cls |
+	cr := Character cr.
+	method := WriteStream with: String new.
+	commandClass := self retrieveCommandClassName asSymbol.
+	method
+		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'the');
+		nextPut: cr.
+	cls := self class environment at: self retrieveCommandClassName asSymbol.
+	attrs := self allAttributesOf: cls including: (self retrieveCommandAttributesBut: self class skippedCommandAttributes).
+	method nextPutAll: self generateSignature.
+	method
+		nextPutAll: '	<';
+		nextPutAll: appName asLowercase;
+		nextPutAll: 'CommandName: #';
+		nextPutAll: self commandName;
+		nextPut: $>;
+		nextPut: cr.
+	method
+		nextPutAll: '	| result |';
+		nextPut: cr.
+	method
+		nextPutAll: '	result := ';
+		nextPutAll: commandClass;
+		nextPutAll: ' new.';
+		nextPut: cr.
+	method
+		nextPutAll: '	result commandId: theCommandId.';
+		nextPut: cr.
+	method nextPutAll: '	result aggregateRootVersion: theVersion.'.
+	attrs
+		do: [ :attr | 
+			method
+				nextPut: cr;
+				nextPutAll: '	theAttributes at: ''';
+				nextPutAll: attr;
+				nextPutAll: ''' ifPresent: [ :v | result ';
+				nextPutAll: attr;
+				nextPutAll: ': v ].' ].
+	method nextPut: cr.
+	method nextPutAll: '	^ result'.
+	result := Dictionary new.
+	result at: self generateCommandClassBuilderMethodName put: method contents.
+	^ result

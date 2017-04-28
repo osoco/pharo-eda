@@ -1,8 +1,3 @@
 code generation - command
 generateCommandClassBuilderMethodNameWithArgPrefix: prefix
-	| result attrs |
-	attrs := self retrieveCommandAttributes.
-		result := self
-				generateCommandClassBuilderMethodNameWithCommandArg: prefix , 'CommandId'
-				andBlock: [ :attr | prefix , attr capitalized ].
-	^ result
+	^ 'withCommandId: ' , prefix , 'CommandId aggregateRootVersion: ' , prefix , 'Version andAttributes:' , prefix , 'Attributes'

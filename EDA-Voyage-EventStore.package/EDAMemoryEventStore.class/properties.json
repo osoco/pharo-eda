@@ -1,14 +1,11 @@
 {
-	"category" : "EDA-Voyage-EventStore",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "EDAMemoryEventStore",
-	"pools" : [
-		 ],
 	"super" : "EDAEventStore",
-	"type" : "normal" }
+	"category" : "EDA-Voyage-EventStore",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAMemoryEventStore",
+	"type" : "normal"
+}

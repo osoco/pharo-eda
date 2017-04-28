@@ -5,5 +5,5 @@ createCommandClassBuilderMethod
 	^ self
 		compile: methodAssoc key
 		sourceCode: methodAssoc value
-		inClass: self retrieveCommandClassName asSymbol asClass class
-		classifiedAs: 'instance creation' asSymbol
+		inClass: (self class environment at: self retrieveCommandClassName asSymbol) class
+		classifiedAs: self protocol

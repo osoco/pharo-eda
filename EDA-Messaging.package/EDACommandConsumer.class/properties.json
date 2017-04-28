@@ -1,18 +1,17 @@
 {
-	"category" : "EDA-Messaging-Command",
-	"classinstvars" : [
-		 ],
 	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
+	"classvars" : [ ],
 	"instvars" : [
 		"busListener",
 		"commandMaterializer",
-		"commandDispatcher" ],
+		"commandDispatcher"
+	],
 	"name" : "EDACommandConsumer",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "Object",
 	"traitcomposition" : "EDAPrintOnHelper",
-	"type" : "normal" }
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Messaging-Command"
+}

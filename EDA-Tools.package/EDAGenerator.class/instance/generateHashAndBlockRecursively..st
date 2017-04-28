@@ -1,16 +1,21 @@
 code generation
 generateHashAndBlockRecursively: attributes
 	| result |
-	attributes size > 0
-		ifTrue: [ | wrap attribute |
+	result := WriteStream with: String new.
+	attributes isEmpty
+		ifFalse: [ | wrap attribute |
 			attribute := attributes first.
 			wrap := attributes size > 1.
 			wrap
-				ifTrue: [ result := '(' ]
-				ifFalse: [ result := '' ].
-			result := result , 'self ' , attribute , ' hash'.
+				ifTrue: [ result nextPut: $( ].
+			result
+				nextPutAll: 'self ';
+				nextPutAll: attribute;
+				nextPutAll: ' hash'.
 			attributes size > 1
-				ifTrue: [ result := result , ' bitXor: ' , (self generateHashAndBlockRecursively: attributes allButFirst) ].
+				ifTrue: [ result
+						nextPutAll: ' bitXor: ';
+						nextPutAll: (self generateHashAndBlockRecursively: attributes allButFirst) ].
 			wrap
-				ifTrue: [ result := result , ')' ] ].
-	^ result
+				ifTrue: [ result nextPut: $) ] ].
+	^ result contents

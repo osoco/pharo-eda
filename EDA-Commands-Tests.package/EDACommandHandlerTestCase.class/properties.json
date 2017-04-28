@@ -1,16 +1,15 @@
 {
-	"category" : "EDA-Commands-Tests",
-	"classinstvars" : [
-		 ],
 	"classtraitcomposition" : "EDATTestClassFactory classTrait",
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
+	"classvars" : [ ],
 	"instvars" : [
-		"classFactory" ],
+		"classFactory"
+	],
 	"name" : "EDACommandHandlerTestCase",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "BabyMock2TestCase",
 	"traitcomposition" : "EDATTestClassFactory",
-	"type" : "normal" }
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Commands-Tests"
+}

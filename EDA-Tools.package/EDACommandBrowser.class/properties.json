@@ -1,14 +1,13 @@
 {
-	"category" : "EDA-Tools",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		"list" ],
-	"name" : "EDACommandBrowser",
-	"pools" : [
-		 ],
 	"super" : "ComposableModel",
-	"type" : "normal" }
+	"category" : "EDA-Tools",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"list"
+	],
+	"name" : "EDACommandBrowser",
+	"type" : "normal"
+}

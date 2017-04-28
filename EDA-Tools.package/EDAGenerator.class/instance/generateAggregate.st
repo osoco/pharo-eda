@@ -1,8 +1,8 @@
 api
 generateAggregate
-	self createAggregate.
+	self createAggregateClass.
 	self createAggregateHandleCommandMethod.
 	self createAggregateApplyEventMethod.
-	self createAggregateAccessors.
-	self createAggregateEqualsMethod.
-	self createAggregateHashMethod
+	self createAggregateClassAccessors.
+	self createAggregateClassEqualsMethod.
+	self createAggregateClassHashMethod

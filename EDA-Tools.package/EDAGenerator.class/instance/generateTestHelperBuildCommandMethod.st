@@ -1,21 +1,59 @@
 code generation - test trait
 generateTestHelperBuildCommandMethod
-	| method commandAttrs cmdName |
+	| result cr commandAttrs cmdName |
+	cr := Character cr.
 	commandAttrs := self retrieveCommandAttributes.
-	cmdName := self toCamelCase: self commandName.
-	method := self generateTestHelperBuildCommandMethodName.
-	method := method , '    | commandMessage commandJson commandBody cmdCommandId'.
-	commandAttrs do: [ :attr | method := method , ' cmd' , attr capitalized ].
-	method := method , ' |' , String cr.
-	method := method , '    commandMessage := self ' , self generateReadCommandFromFileTestHelperMethodName , '.' , String cr.
-	method := method , '    commandJson := NeoJSONReader fromString: commandMessage.' , String cr.
-	"	method := method , '    theCommandMessage := ' , $' asString , self commandRaw , $' asString , '.' , String cr."
-	method := method , '    commandBody := commandJson at: #body.' , String cr.
-	method := method , '    cmdCommandId := UUID new asString.' , String cr.
+	cmdName := (self toCamelCase: self commandName).
+	result := WriteStream with: String new.
+	result nextPutAll: self generateTestHelperBuildCommandMethodName.
+	result nextPut: cr.
+	result nextPutAll: self generateSignature.
+	result
+		nextPutAll: '    | commandFile commandMessage commandJson commandMeta commandBody cmdCommandId cmdVersion cmdAttributes |';
+		nextPut: cr.
+	result
+		nextPutAll: '	commandFile := (FileSystem disk workingDirectory / ''contracts'' / ''BBVA-ATS'' / ''commands'' / ''v1'' / ''';
+		nextPutAll: (self upcasedToDotSeparated: self commandName);
+		nextPutAll: '.example.json'') readStream.';
+		nextPut: cr.
+	result
+		nextPutAll: '	commandMessage := commandFile contents.';
+		nextPut: cr.
+	result
+		nextPutAll: '	commandJson := NeoJSONReader fromString: commandMessage.';
+		nextPut: cr.
+	result
+		nextPutAll: '	commandMeta := commandJson at: #meta.';
+		nextPut: cr.
+	result
+		nextPutAll: '	commandFile close.';
+		nextPut: cr.
+	result
+		nextPutAll: '	commandBody := commandJson at: #body.';
+		nextPut: cr.
+	result
+		nextPutAll: '	cmdCommandId := commandMeta at: ''id'' ifPresent: [ :v | v ] ifAbsent: [ UUID new greaseString ].';
+		nextPut: cr.
+	result
+		nextPutAll: '	cmdVersion := commandBody at: ''version'' ifAbsent: [ 1 ].';
+		nextPut: cr.
+	result
+		nextPutAll: '	cmdAttributes := Dictionary new.';
+		nextPut: cr.
 	commandAttrs
-		do: [ :attr |
-			method := method , '    cmd' , attr capitalized , ' := commandBody at: ' , $' asString , attr
-				, $' asString , '.' , String cr ].
-	method := method , '    ^ ' , self appName , cmdName , ' '
-		, (self generateCommandClassBuilderMethodNameWithArgPrefix: 'cmd') , '' , String cr.
-	^ method
+		do: [ :attr | 
+			result
+				nextPutAll: '	commandBody at: ''';
+				nextPutAll: attr;
+				nextPutAll: ''' ifPresent: [ :v | cmdAttributes at: ''';
+				nextPutAll: attr;
+				nextPutAll: ''' put: v ].';
+				nextPut: cr ].
+	result
+		nextPutAll: '	^ ';
+		nextPutAll: self appName;
+		nextPutAll: cmdName;
+		nextPut: Character space;
+		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'cmd');
+		nextPut: cr.
+	^ result contents

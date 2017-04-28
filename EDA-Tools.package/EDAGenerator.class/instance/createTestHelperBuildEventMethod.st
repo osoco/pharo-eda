@@ -1,3 +1,5 @@
 code generation - test trait
 createTestHelperBuildEventMethod
-	^ (Smalltalk at: self retrieveTestHelperTraitName asSymbol) compile: self generateTestHelperBuildEventMethod classified: #helper
+	^ (Smalltalk at: self retrieveTestHelperTraitName asSymbol)
+		compile: self generateTestHelperBuildEventMethod
+		classified: self protocol

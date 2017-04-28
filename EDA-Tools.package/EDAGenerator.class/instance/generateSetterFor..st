@@ -3,4 +3,4 @@ generateSetterFor: attribute
 	^ attribute
 		,
 			': newValue
-	' , attribute , ' := newValue'
+',	self generateSignature, '	', attribute , ' := newValue'

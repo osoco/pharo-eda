@@ -2,4 +2,4 @@ code generation - test trait
 createReadEventFromFileTestHelperMethod
 	^ (Smalltalk at: self retrieveTestHelperTraitName asSymbol)
 		compile: self generateReadEventFromFileTestHelperMethod
-		classified: #helper
+		classified: self protocol

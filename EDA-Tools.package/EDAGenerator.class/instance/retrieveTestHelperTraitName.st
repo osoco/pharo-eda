@@ -1,3 +1,3 @@
-helper
+code generation - test trait
 retrieveTestHelperTraitName
-	^ self appName , 'T' , (self toCamelCase: self aggregate) , 'TestHelper'
+	^ self appName , 'T' , (self toCamelCase: self aggregate ) , 'TestHelper'

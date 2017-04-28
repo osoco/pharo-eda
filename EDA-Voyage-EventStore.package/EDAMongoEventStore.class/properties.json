@@ -1,18 +1,17 @@
 {
+	"commentStamp" : "",
+	"super" : "EDAEventStore",
 	"category" : "EDA-Voyage-EventStore",
 	"classinstvars" : [
 		"Host",
 		"Port",
 		"DatabaseName",
 		"Username",
-		"Password" ],
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
-	"instvars" : [
-		 ],
+		"Password"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
 	"name" : "EDAMongoEventStore",
-	"pools" : [
-		 ],
-	"super" : "EDAEventStore",
-	"type" : "normal" }
+	"type" : "normal"
+}

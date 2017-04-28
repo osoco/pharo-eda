@@ -1,16 +1,17 @@
 {
-	"category" : "EDA-Commands-Handlers",
-	"classinstvars" : [
-		"Strategy" ],
 	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
-	"classvars" : [
-		 ],
-	"commentStamp" : "",
+	"classvars" : [ ],
 	"instvars" : [
-		"handlersRegistry" ],
+		"handlersRegistry"
+	],
 	"name" : "EDACommandDispatcher",
-	"pools" : [
-		 ],
+	"commentStamp" : "",
 	"super" : "Object",
 	"traitcomposition" : "EDAPrintOnHelper",
-	"type" : "normal" }
+	"type" : "normal",
+	"classinstvars" : [
+		"Strategy"
+	],
+	"pools" : [ ],
+	"category" : "EDA-Commands-Handlers"
+}

@@ -1,14 +1,11 @@
 {
-	"category" : "EDA-Commands-Tests",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "EDATestDUEnvironment",
-	"pools" : [
-		 ],
 	"super" : "EDADUEnvironment",
-	"type" : "normal" }
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATestDUEnvironment",
+	"type" : "normal"
+}
