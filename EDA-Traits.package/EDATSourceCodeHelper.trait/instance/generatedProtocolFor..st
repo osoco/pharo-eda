@@ -1,3 +1,5 @@
 helper
 generatedProtocolFor: aNumber
-	^ ('generated-v' , aNumber greaseString) asSymbol
+	| result |
+	result := (aNumber ifNil: [ 'generated' ] ifNotNil: [ 'generated-v' , aNumber greaseString ]) asSymbol.
+	^ result
