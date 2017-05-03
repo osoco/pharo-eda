@@ -1,3 +1,4 @@
 accessing
 aggregateRootVersion: anObject
-	aggregateRootVersion := anObject
+	aggregateRootVersion := anObject.
+	version := anObject
