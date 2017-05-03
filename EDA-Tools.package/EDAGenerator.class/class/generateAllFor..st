@@ -1,0 +1,4 @@
+api
+generateAllFor: appName
+	self createEDAApplicationRegisterCommandBuildersFor: appName.
+	self createDefaultCommandBuilderInitializeCommandBuildersFor: appName
