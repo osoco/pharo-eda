@@ -5,7 +5,8 @@
 		"id",
 		"aggregateRootClass",
 		"timestamp",
-		"aggregateRootVersion"
+		"aggregateRootVersion",
+		"version"
 	],
 	"name" : "EDAEventSourcingEvent",
 	"commentStamp" : "RafaelLuque 3/7/2017 09:25",
