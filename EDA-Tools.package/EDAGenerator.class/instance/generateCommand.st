@@ -4,6 +4,4 @@ generateCommand
 	self createCommandClassAccessors.
 	self createCommandClassBuilderMethod.
 	self createCommandClassEqualsMethod.
-	self createCommandClassHashMethod.
-	self createDefaultCommandBuilderInitializeCommandBuilders.
-	self createEDAApplicationRegisterCommandBuilders
+	self createCommandClassHashMethod
