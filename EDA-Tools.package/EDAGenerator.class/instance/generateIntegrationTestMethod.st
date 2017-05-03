@@ -1,59 +1,43 @@
 code generation - integration test
 generateIntegrationTestMethod
-	| result evtAttrs evtName cr |
+	| result cr |
 	cr := Character cr.
 	result := WriteStream with: String new.
-	evtAttrs := self retrieveEventAttributes.
-	evtName := self toCamelCase: self eventName.
 	result
 		nextPutAll: self generateDomainTestMethodName;
 		nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '	| theCommandId commandFile commandMessage commandJson commandBody eventFile expectedMessage expectedRoutingKey '.
-	evtAttrs
-		do: [ :attr |
-			result
-				nextPutAll: 'evt';
-				nextPutAll: attr capitalized;
-				nextPut: Character space ].
-	result
-		nextPut: $|;
+		nextPutAll: '	| aggregateRootId previousEvents command commandMessage expectedEvent expectedMessage expectedRoutingKey | ';
 		nextPut: cr.
 	result
-		nextPutAll: '	commandFile := (FileSystem disk workingDirectory / ''contracts'' / ''BBVA-ATS'' / ''commands'' / ''v1'' / ''';
-		nextPutAll: (self upcasedToDotSeparated: self commandName);
-		nextPutAll: '.example.json'') readStream.';
+		nextPutAll: '	previousEvents := Array new.';
 		nextPut: cr.
 	result
-		nextPutAll: '	commandMessage := commandFile contents.';
+		nextPutAll: '	command := self build';
+		nextPutAll: (self toCamelCase: self commandName capitalized);
+		nextPutAll: 'SampleCommand.';
 		nextPut: cr.
 	result
-		nextPutAll: '	commandJson := NeoJSONReader fromString: commandMessage.';
+		nextPutAll: '	commandMessage := self read';
+		nextPutAll: (self toCamelCase: self commandName capitalized);
+		nextPutAll: 'FromFile.';
 		nextPut: cr.
 	result
-		nextPutAll: '	commandFile close.';
+		nextPutAll: '	aggregateRootId := command aggregateRootId.';
 		nextPut: cr.
 	result
-		nextPutAll: '	theCommandId := UUID new asString.';
+		nextPutAll: '	expectedEvent := self build';
+		nextPutAll: (self toCamelCase: self eventName capitalized);
+		nextPutAll: 'SampleEventWithId: aggregateRootId';
+		nextPutAll: ' andCommandId: command commandId.';
 		nextPut: cr.
 	result
-		nextPutAll: '	commandBody := commandJson at: #body.';
+		nextPutAll: '	expectedMessage := (EDAJsonEventSerializer new serialize: expectedEvent).';
 		nextPut: cr.
-	result
-		nextPutAll: '	eventFile := (FileSystem disk workingDirectory / ''contracts'' / ''BBVA-ATS'' / ''events'' / ''v1'' / ''';
-		nextPutAll: (self upcasedToDotSeparated: self eventName);
-		nextPutAll: '.example.json'') readStream.';
-		nextPut: cr.
-	result
-		nextPutAll: '	expectedMessage := eventFile contents.';
-		nextPut: cr.
-	result
-		nextPutAll: '	eventFile close.';
-		nextPut: Character cr.
 	result
 		nextPutAll: '	expectedRoutingKey := ''';
-		nextPutAll: (self upcasedToDotSeparated: self eventName);
+		nextPutAll: (self upcasedToDotSeparated: self commandName);
 		nextPut: $';
 		nextPut: $.;
 		nextPut: cr.
@@ -61,20 +45,13 @@ generateIntegrationTestMethod
 		nextPutAll: '	self';
 		nextPut: cr.
 	result
-		nextPutAll: '		givenPreviousEvents: {}';
+		nextPutAll: '		givenPreviousEvents: previousEvents';
 		nextPut: cr.
 	result
 		nextPutAll: '		whenReceiveCommandMessage: commandMessage';
 		nextPut: cr.
 	result
-		nextPutAll: '		thenStoreEvent: (';
-		nextPutAll: self appName;
-		nextPutAll: evtName;
-		nextPut: cr.
-	result
-		nextPutAll: '			';
-		nextPutAll: (self generateEventClassBuilderMethodNameWithArgPrefix: 'evt');
-		nextPut: $);
+		nextPutAll: '		thenStoreEvent: expectedEvent';
 		nextPut: cr.
 	result
 		nextPutAll: '		andPublishEventMessage: expectedMessage';
