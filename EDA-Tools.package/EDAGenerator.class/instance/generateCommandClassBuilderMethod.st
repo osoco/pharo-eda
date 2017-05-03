@@ -1,9 +1,8 @@
 code generation - command
 generateCommandClassBuilderMethod
-	| commandClass method attrs result cr cls |
+	| method attrs result cr cls |
 	cr := Character cr.
 	method := WriteStream with: String new.
-	commandClass := self retrieveCommandClassName asSymbol.
 	method
 		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'the');
 		nextPut: cr.
@@ -21,9 +20,7 @@ generateCommandClassBuilderMethod
 		nextPutAll: '	| result |';
 		nextPut: cr.
 	method
-		nextPutAll: '	result := ';
-		nextPutAll: commandClass;
-		nextPutAll: ' new.';
+		nextPutAll: '	result := self new.';
 		nextPut: cr.
 	method
 		nextPutAll: '	result commandId: theCommandId.';

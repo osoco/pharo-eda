@@ -3,30 +3,24 @@ generateTestHelperBuildCommandMethod
 	| result cr commandAttrs cmdName |
 	cr := Character cr.
 	commandAttrs := self retrieveCommandAttributes.
-	cmdName := (self toCamelCase: self commandName).
+	cmdName := self toCamelCase: self commandName.
 	result := WriteStream with: String new.
 	result nextPutAll: self generateTestHelperBuildCommandMethodName.
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '    | commandFile commandMessage commandJson commandMeta commandBody cmdCommandId cmdVersion cmdAttributes |';
+		nextPutAll: '    | commandMessage commandJson commandMeta commandBody cmdCommandId cmdVersion cmdAttributes |';
 		nextPut: cr.
 	result
-		nextPutAll: '	commandFile := (FileSystem disk workingDirectory / ''contracts'' / ''BBVA-ATS'' / ''commands'' / ''v1'' / ''';
-		nextPutAll: (self upcasedToDotSeparated: self commandName);
-		nextPutAll: '.example.json'') readStream.';
-		nextPut: cr.
-	result
-		nextPutAll: '	commandMessage := commandFile contents.';
+		nextPutAll: '	commandMessage := self read';
+		nextPutAll: (self toCamelCase: cmdName);
+		nextPutAll: 'FromFile.';
 		nextPut: cr.
 	result
 		nextPutAll: '	commandJson := NeoJSONReader fromString: commandMessage.';
 		nextPut: cr.
 	result
 		nextPutAll: '	commandMeta := commandJson at: #meta.';
-		nextPut: cr.
-	result
-		nextPutAll: '	commandFile close.';
 		nextPut: cr.
 	result
 		nextPutAll: '	commandBody := commandJson at: #body.';

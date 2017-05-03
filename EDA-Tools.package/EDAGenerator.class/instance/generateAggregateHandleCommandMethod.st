@@ -17,9 +17,10 @@ generateAggregateHandleCommandMethod
 	result
 		nextPutAll: '	| theId theCommandId theAttrs |';
 		nextPut: cr.
-	result
-		nextPutAll: '	theId := (self id) ifNil: [ UUID new greaseString ] ifNotNil: [ :v | v ].';
-		nextPut: cr.
+	(self commandContainsAttribute: 'id')
+		ifTrue: [ result nextPutAll: '	theId := aCommand aggregateRootId.' ]
+		ifFalse: [ result nextPutAll: '	theId := UUID new greaseString.' ].
+	result nextPut: cr.
 	result
 		nextPutAll: '	theCommandId := aCommand commandId.';
 		nextPut: cr.
