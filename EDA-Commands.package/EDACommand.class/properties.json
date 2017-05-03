@@ -6,7 +6,8 @@
 		"commandId",
 		"aggregateRootId",
 		"originalTimestamp",
-		"aggregateRootVersion"
+		"aggregateRootVersion",
+		"version"
 	],
 	"name" : "EDACommand",
 	"commentStamp" : "",
