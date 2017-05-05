@@ -3,7 +3,6 @@ buildWith: commandParams
 	"Builds a command from given parameters"
 
 	| command |
-	self halt.
 	command := super buildWith: commandParams.
 	(commandParams at: #params)
 		associationsDo: [ :assoc | 
