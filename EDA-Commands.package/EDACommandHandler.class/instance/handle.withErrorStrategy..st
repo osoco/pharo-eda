@@ -1,15 +1,15 @@
 handling
 handle: aCommand withErrorStrategy: strategy
 	| events aggregateRoot producedEvents |
-	[ Transcript
+	[
+	Transcript
 		print: 'Retrieving events for ' , self aggregateRootClass name;
 		cr;
 		flush.
 	events := eventStore
 		findEventsOfAggregate: self aggregateRootClass
 		whereCriteria: aCommand aggregateSelectionCriteria.
-	Transcript
-		print: 'Events retrieved (' , events size printString , '):'.
+	Transcript print: 'Events retrieved (' , events size printString , '):'.
 	events do: [ :e | Transcript print: ' ' , e class name ].
 	Transcript
 		cr;
@@ -23,17 +23,13 @@ handle: aCommand withErrorStrategy: strategy
 		print: 'Handling command ' , aCommand class name;
 		cr;
 		flush.
-	producedEvents := self
-		invokeMethodHandlerWith: aCommand
-		on: aggregateRoot.
+	producedEvents := self invokeMethodHandlerWith: aCommand on: aggregateRoot.
 	(producedEvents isKindOf: OrderedCollection)
 		ifFalse: [ producedEvents := OrderedCollection newFrom: {producedEvents} ].
 	producedEvents
-		do:
-			[ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
+		do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
 	Transcript print: 'Produced event(s):'.
-	producedEvents
-		do: [ :event | Transcript print: ' ' , event class name ].
+	producedEvents do: [ :event | Transcript print: ' ' , event class name ].
 	Transcript
 		cr;
 		flush.
@@ -51,7 +47,7 @@ handle: aCommand withErrorStrategy: strategy
 		on: Error
 		do: [ :exception | 
 			| errorHandler |
-			errorHandler := strategy asClass new
+			errorHandler := (self class environment at: strategy) new
 				context:
 					(Dictionary
 						newFrom:
