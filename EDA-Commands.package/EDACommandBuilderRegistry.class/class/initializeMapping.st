@@ -1,4 +1,5 @@
 initialization
 initializeMapping
-    "Initializes the mapping"
-    Mapping := { } asDictionary.
+	"Initializes the mapping"
+
+	Mapping := Dictionary new

@@ -1,3 +1,6 @@
-as yet unclassified
+aggregate selection
 aggregateSelectionCriteria
-	^ {('id' -> self aggregateRootId)} asDictionary
+	| result |
+	result := Dictionary new.
+	self aggregateRootId ifNil: [ result at: 'id' put: nil ] ifNotNil: [ :v |  result at: 'id' put: v ].
+	^ result
