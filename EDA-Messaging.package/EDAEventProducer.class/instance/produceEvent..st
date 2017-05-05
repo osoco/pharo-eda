@@ -3,9 +3,15 @@ produceEvent: anEvent
 	| message routingKey |
 	message := self serializer serialize: anEvent.
 	routingKey := self class routingKey: anEvent.
-	Transcript print: 'Publishing event: ', message; cr; flush.
+	Transcript
+		print: 'Publishing event: ' , message;
+		cr;
+		flush.
 	routingKey
 		ifNotNil: [ self publisher publishMessage: message withRoutingKey: routingKey ]
 		ifNil: [ self publisher publishMessage: message ].
 	self announcer announce: anEvent.
-	Transcript print: 'Event published.'; cr; flush
+	Transcript
+		print: 'Event published.';
+		cr;
+		flush
