@@ -3,11 +3,14 @@ buildWith: commandParams
 	"Builds a command from given parameters"
 
 	| command |
+	self halt.
 	command := super buildWith: commandParams.
 	(commandParams at: #params)
-		associationsDo: [ :assoc | | key |
+		associationsDo: [ :assoc | 
+			| key |
 			key := assoc key.
-			(key = 'id') ifTrue: [ key := 'aggregateRootId' ].
+			key = 'id'
+				ifTrue: [ key := 'aggregateRootId' ].
 			self class
 				instVarAt:
 					(self class
