@@ -47,7 +47,7 @@ handle: aCommand withErrorStrategy: strategy
 		on: Error
 		do: [ :exception | 
 			| errorHandler |
-			errorHandler := (self class environment at: strategy) new
+			errorHandler := (self class environment at: strategy asSymbol) new
 				context:
 					(Dictionary
 						newFrom:
