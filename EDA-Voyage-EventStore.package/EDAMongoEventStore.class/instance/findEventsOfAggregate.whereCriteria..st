@@ -6,5 +6,4 @@ findEventsOfAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary
 	^ EDAEventSourcingEvent
 		selectMany: eventsCriteria
 		sortBy:
-			{(#timestamp -> VOOrder ascending).
-			(#_id -> VOOrder ascending)} asDictionary
+			{(#timestamp -> VOOrder ascending)} asDictionary
