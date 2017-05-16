@@ -1,11 +1,14 @@
 {
-	"commentStamp" : "JoseSanLeandro 3/25/2017 16:47",
-	"super" : "AbstractEDAGenerator",
 	"category" : "EDA-Tools",
-	"classinstvars" : [ ],
-	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 3/25/2017 16:47",
+	"instvars" : [
+		 ],
 	"name" : "EDAGenerator",
-	"type" : "normal"
-}
+	"pools" : [
+		 ],
+	"super" : "AbstractEDAGenerator",
+	"type" : "normal" }

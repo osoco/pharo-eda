@@ -1,14 +1,15 @@
 {
-	"commentStamp" : "",
-	"super" : "EDACommandHandler",
 	"category" : "EDA-Commands-Handlers",
-	"classinstvars" : [ ],
-	"pools" : [ ],
-	"classvars" : [ ],
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
 	"instvars" : [
 		"handlerMethod",
-		"aggregateRoot"
-	],
+		"aggregateRoot" ],
 	"name" : "EDAMethodWrapperCommandHandler",
-	"type" : "normal"
-}
+	"pools" : [
+		 ],
+	"super" : "EDACommandHandler",
+	"type" : "normal" }

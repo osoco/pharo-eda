@@ -1,16 +1,16 @@
 code generation - aggregate
-generateAggregateApplyEventMethod
+generateAggregateApplyEventVersionMethod
 	| result attrs cr cls |
 	cr := Character cr.
 	cls := (self appName , (self underscoreSeparatedToCamelCase: self aggregate)) asSymbol.
-	attrs := self allAttributesOf: (self class environment at: cls) including: self retrieveEventAttributes.
+	attrs := self retrieveEventAttributesBut: self class skippedEventAttributes.
 	result := WriteStream with: String new.
 	result
-		nextPutAll: (self generateAggregateApplyEventMethodNameWithArg: 'anEvent');
+		nextPutAll: (self generateAggregateApplyEventVersionMethodNameWithArg: ' anEvent');
 		nextPut: cr.
 	result nextPutAll: self generateSignature.
 	attrs
-		do: [ :attr | 
+		do: [ :attr |
 			result
 				nextPutAll: '	self ';
 				nextPutAll: attr;

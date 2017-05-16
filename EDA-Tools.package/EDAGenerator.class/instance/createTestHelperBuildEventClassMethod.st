@@ -5,7 +5,7 @@ createTestHelperBuildEventClassMethod
 	method
 		associationsDo: [ :assoc | 
 			^ self
-				compileIfDoesNotExist: assoc key
+				compile: assoc key
 				sourceCode: assoc value
 				inClass: (self class environment at: self retrieveTestHelperTraitName asSymbol) class
 				classifiedAs: self protocol ]

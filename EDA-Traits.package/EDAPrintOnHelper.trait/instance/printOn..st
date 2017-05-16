@@ -1,13 +1,12 @@
 helpers
-printOn: t1
-	| t2 |
-	t2 := ''.
+printOn: stream
+	| firstVar |
+	firstVar := true.
 	self class allInstVarNames
-		do: [ :t4 | 
-			t2 isEmpty
-				ifTrue: [ t2 := '{ ' ]
-				ifFalse: [ t2 := t2 , ', ' ].
-			t2 := t2 , '"' , t4 , '": "' , (self instVarNamed: t4) asString , '"' ].
-	t2 := t2 , ' }'.
-	t1 nextPutAll: t2.
+		do: [ :varName |
+			firstVar
+				ifTrue: [ stream nextPutAll: '{ '. firstVar := false ]
+				ifFalse: [ stream nextPutAll: ', ' ].
+			stream nextPut: $"; nextPutAll: varName; nextPutAll: '": "'; nextPutAll: (self instVarNamed: varName) greaseString; nextPut: $" ].
+	stream nextPutAll: ' }'.
 	^ self

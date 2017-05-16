@@ -1,11 +1,14 @@
 {
-	"commentStamp" : "JoseSanLeandro 7/17/2015 14:34",
-	"super" : "Object",
 	"category" : "EDA-Commands-Builders",
-	"classinstvars" : [ ],
-	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 7/17/2015 14:34",
+	"instvars" : [
+		 ],
 	"name" : "EDABaseCommandBuilder",
-	"type" : "normal"
-}
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

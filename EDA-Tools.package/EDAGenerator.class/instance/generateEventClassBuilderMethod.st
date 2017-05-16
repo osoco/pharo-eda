@@ -5,7 +5,7 @@ generateEventClassBuilderMethod
 	methodName := self generateEventClassBuilderMethodName.
 	method := WriteStream with: String new.
 	method nextPutAll: (self generateEventClassBuilderMethodNameWithArgPrefix: 'the').
-	cls := (self class environment at: self retrieveEventClassName asSymbol).
+	cls := self class environment at: self retrieveEventClassName asSymbol.
 	attrs := self allAttributesOf: cls including: (self retrieveEventAttributesBut: self class skippedEventAttributes).
 	method nextPut: cr.
 	method nextPutAll: self generateSignature.
@@ -27,7 +27,9 @@ generateEventClassBuilderMethod
 		nextPutAll: self aggregate;
 		nextPut: $.;
 		nextPut: cr.
-	method nextPutAll: '	result timestamp: DateAndTime now asUTC.'.
+	method nextPutAll: '	result timestamp: DateAndTime now asUTC.'; nextPut: cr.
+	method nextPutAll: '	result version: (theAttrs at: ''version'').'; nextPut: cr.
+	method nextPutAll: '	result aggregateRootVersion: (theAttrs at: ''aggregateRootVersion'').'; nextPut: cr.
 	attrs
 		do: [ :attr | 
 			method

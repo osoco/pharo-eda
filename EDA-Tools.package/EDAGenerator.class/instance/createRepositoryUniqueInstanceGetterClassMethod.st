@@ -3,7 +3,7 @@ createRepositoryUniqueInstanceGetterClassMethod
 	| repositoryClass |
 	repositoryClass := self class environment at: self retrieveRepositoryClassName asSymbol.
 	self
-		compileIfDoesNotExist: self generateRepositoryUniqueInstanceGetterClassMethodName
+		compile: self generateRepositoryUniqueInstanceGetterClassMethodName
 		sourceCode: self generateRepositoryUniqueInstanceGetterClassMethod
-		inClass: repositoryClass  class
+		inClass: repositoryClass class
 		classifiedAs: self protocol

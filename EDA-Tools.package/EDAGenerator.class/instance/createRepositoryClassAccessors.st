@@ -5,7 +5,7 @@ createRepositoryClassAccessors
 	(self generateAccessorsFor: repositoryClass attributes: (self allAttributesOf: repositoryClass))
 		associationsDo: [ :assoc | 
 			self
-				compileIfDoesNotExist: assoc key
+				compile: assoc key
 				sourceCode: assoc value
 				inClass: repositoryClass
 				classifiedAs: self protocol ]

@@ -1,11 +1,14 @@
 {
-	"commentStamp" : "JoseSanLeandro 7/21/2015 15:21",
-	"super" : "EDACommandErrorHandlingStrategy",
 	"category" : "EDA-Commands-Error-Strategies",
-	"classinstvars" : [ ],
-	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "JoseSanLeandro 7/21/2015 15:21",
+	"instvars" : [
+		 ],
 	"name" : "EDAErrorAsEventStrategy",
-	"type" : "normal"
-}
+	"pools" : [
+		 ],
+	"super" : "EDACommandErrorHandlingStrategy",
+	"type" : "normal" }

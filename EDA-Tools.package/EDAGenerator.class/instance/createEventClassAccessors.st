@@ -5,7 +5,7 @@ createEventClassAccessors
 	(self generateAccessorsFor: eventClass attributes: (self allAttributesOf: eventClass including: (self retrieveEventAttributesBut: self class skippedEventAttributes)))
 		associationsDo: [ :assoc | 
 			self
-				compileIfDoesNotExist: assoc key
+				compile: assoc key
 				sourceCode: assoc value
 				inClass: eventClass
 				classifiedAs: self protocol ]

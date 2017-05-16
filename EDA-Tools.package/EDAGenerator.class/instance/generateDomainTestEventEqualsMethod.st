@@ -1,9 +1,7 @@
 code generation - domain test
 generateDomainTestEventEqualsMethod
 	| result cr eventAttributes |
-	eventAttributes := self
-		allAttributesOf: self retrieveDomainTestEventClass
-		including: (self retrieveEventAttributesBut: self class skippedEventAttributes).
+	eventAttributes := self allAttributesOf: self retrieveDomainTestEventClass including: (self retrieveEventAttributesBut: self class skippedEventAttributes).
 	result := WriteStream with: String new.
 	cr := Character cr.
 	result
@@ -19,15 +17,15 @@ generateDomainTestEventEqualsMethod
 		nextPutAll: '		(self attribute: self aggregateRootClass matches: anInstance aggregateRootClass) and: [';
 		nextPut: cr.
 	result
-		nextPutAll: '			(self attribute: self id matches: anInstance id) and: [';
+		nextPutAll: '			(self attribute: self id named: ''id'' matches: anInstance id) and: [';
 		nextPut: cr.
 	result
 		nextPutAll: '				(self attribute: self aggregateRootVersion matches: anInstance aggregateRootVersion) and: [';
 		nextPut: cr.
 	result
-		nextPutAll: '					(self attribute: self timestamp matches: anInstance timestamp) and: [';
+		nextPutAll: '					(self attribute: self timestamp named: ''timestamp'' matches: anInstance timestamp) and: [';
 		nextPut: cr.
-	result nextPutAll: '						(self attribute: self commandId matches: anInstance commandId) '.
+	result nextPutAll: '						(self attribute: self commandId named: ''correlationId'' matches: anInstance commandId) '.
 	eventAttributes isNotEmpty
 		ifTrue: [ result
 				nextPutAll: 'and: [';

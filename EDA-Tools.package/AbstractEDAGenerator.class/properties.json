@@ -1,6 +1,11 @@
 {
+	"category" : "EDA-Tools",
+	"classinstvars" : [
+		 ],
 	"classtraitcomposition" : "EDATSourceCodeHelper classTrait + EDATCheckerHelper classTrait",
-	"classvars" : [ ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
 	"instvars" : [
 		"commandName",
 		"commandRaw",
@@ -12,14 +17,10 @@
 		"eventRaw",
 		"eventFile",
 		"eventName",
-		"version"
-	],
+		"version" ],
 	"name" : "AbstractEDAGenerator",
-	"commentStamp" : "",
+	"pools" : [
+		 ],
 	"super" : "Object",
 	"traitcomposition" : "EDATSourceCodeHelper + EDATCheckerHelper",
-	"type" : "normal",
-	"classinstvars" : [ ],
-	"pools" : [ ],
-	"category" : "EDA-Tools"
-}
+	"type" : "normal" }

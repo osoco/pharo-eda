@@ -1,20 +1,21 @@
 {
+	"category" : "EDA-Commands-Commands",
+	"classinstvars" : [
+		 ],
 	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
-	"classvars" : [ ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
 	"instvars" : [
 		"applicationKey",
 		"commandId",
 		"aggregateRootId",
 		"originalTimestamp",
 		"aggregateRootVersion",
-		"version"
-	],
+		"version" ],
 	"name" : "EDACommand",
-	"commentStamp" : "",
+	"pools" : [
+		 ],
 	"super" : "Object",
 	"traitcomposition" : "EDAPrintOnHelper",
-	"type" : "normal",
-	"classinstvars" : [ ],
-	"pools" : [ ],
-	"category" : "EDA-Commands-Commands"
-}
+	"type" : "normal" }

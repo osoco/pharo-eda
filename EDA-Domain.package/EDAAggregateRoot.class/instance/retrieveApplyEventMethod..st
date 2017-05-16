@@ -5,19 +5,18 @@ retrieveApplyEventMethod: event
 	result := nil.
 	auxClass := event class.
 	auxClassName := auxClass greaseString.
-	aux := 'apply' , auxClassName , ':'.
+	aux := self buildApplyEventMethodNameForEvent: auxClassName andVersion: event version.
 	[ found ]
 		whileFalse: [ [ auxClassName isNotEmpty ]
-				whileTrue: [
-					self class methodDictionary
+				whileTrue: [ self class methodDictionary
 						at: aux asSymbol
 						ifPresent: [ :v | 
 							found := true.
 							^ aux ].
 					auxClassName := auxClassName allButFirst.
-					aux := 'apply' , auxClassName , ':' ].
+					aux := self buildApplyEventMethodNameForEvent: auxClassName andVersion: event version ].
 			auxClass := auxClass superclass.
 			auxClassName := auxClass greaseString.
 			found := auxClass ~= EDAEventSourcingEvent.
-			aux := 'apply' , auxClass greaseString , ':' ].
+			aux := self buildApplyEventMethodNameForEvent: auxClass greaseString andVersion: event version ].
 	^ result

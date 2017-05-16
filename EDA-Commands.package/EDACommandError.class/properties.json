@@ -1,11 +1,14 @@
 {
-	"commentStamp" : "RafaelLuque 12/2/2014 13:25",
-	"super" : "Error",
 	"category" : "EDA-Commands-Handlers",
-	"classinstvars" : [ ],
-	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "RafaelLuque 12/2/2014 13:25",
+	"instvars" : [
+		 ],
 	"name" : "EDACommandError",
-	"type" : "normal"
-}
+	"pools" : [
+		 ],
+	"super" : "Error",
+	"type" : "normal" }

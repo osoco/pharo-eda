@@ -1,6 +1,5 @@
 api
 generateEvent
-	Transcript print: 'Generating: Event'; cr.
 	self createEventClass.
 	self createEventClassAccessors.
 	self createEventClassBuilderMethod.

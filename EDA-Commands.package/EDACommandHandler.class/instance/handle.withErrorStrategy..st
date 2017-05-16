@@ -1,14 +1,11 @@
 handling
 handle: aCommand withErrorStrategy: strategy
 	| events aggregateRoot producedEvents |
-	[
-	Transcript
+	[ Transcript
 		print: 'Retrieving events for ' , self aggregateRootClass name;
 		cr;
 		flush.
-	events := eventStore
-		findEventsOfAggregate: self aggregateRootClass
-		whereCriteria: aCommand aggregateSelectionCriteria.
+	events := eventStore findEventsOfAggregate: self aggregateRootClass whereCriteria: aCommand aggregateSelectionCriteria.
 	Transcript print: 'Events retrieved (' , events size printString , '):'.
 	events do: [ :e | Transcript print: ' ' , e class name ].
 	Transcript
@@ -26,8 +23,7 @@ handle: aCommand withErrorStrategy: strategy
 	producedEvents := self invokeMethodHandlerWith: aCommand on: aggregateRoot.
 	(producedEvents isKindOf: OrderedCollection)
 		ifFalse: [ producedEvents := OrderedCollection newFrom: {producedEvents} ].
-	producedEvents
-		do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
+	producedEvents do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
 	Transcript print: 'Produced event(s):'.
 	producedEvents do: [ :event | Transcript print: ' ' , event class name ].
 	Transcript

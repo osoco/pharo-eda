@@ -1,5 +1,4 @@
 {
-	"name" : "EDATCheckerGenerator",
+	"category" : "EDA-Tools",
 	"commentStamp" : "",
-	"category" : "EDA-Tools"
-}
+	"name" : "EDATCheckerGenerator" }

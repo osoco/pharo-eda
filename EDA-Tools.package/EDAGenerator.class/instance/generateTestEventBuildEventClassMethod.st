@@ -27,7 +27,10 @@ generateTestEventBuildEventClassMethod
 		nextPut: $.;
 		nextPut: cr.
 	method
-		nextPutAll: '	result aggregateRootVersion: ''<ANYTHING>''.';
+		nextPutAll: '	result version: newEvent version.';
+		nextPut: cr.
+	method
+		nextPutAll: '	result aggregateRootVersion: newEvent aggregateRootVersion.';
 		nextPut: cr.
 	method nextPutAll: '	result timestamp: ''<ANYTHING>''.'.
 	attrs

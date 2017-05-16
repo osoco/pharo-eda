@@ -1,3 +1,3 @@
 code generation - domain test
 generateDomainTestEventAttributeMatchesMethodName
-	^ 'attribute:matches:'
+	^ 'attribute:named:matches:'
