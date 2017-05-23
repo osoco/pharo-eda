@@ -1,6 +1,7 @@
 compilation
 checkBytecodeHash: methodName sourceCode: method inClass: aClass
 	| existingClass existingMethod result |
+	self flag: #TODO. "Two methods with different comments generate different bytecodes for some reason"
 	existingClass := (self class environment at: aClass name asSymbol ifAbsent: nil).
 	existingMethod := existingClass ifNil: [ nil ] ifNotNil: [ :c | c methodDictionary at: methodName asSymbol ifAbsent: [ nil ] ].
 	result := existingMethod isNotNil.

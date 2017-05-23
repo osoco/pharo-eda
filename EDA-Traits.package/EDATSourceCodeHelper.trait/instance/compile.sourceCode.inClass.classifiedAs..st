@@ -1,10 +1,11 @@
 compilation
 compile: methodName sourceCode: method inClass: aClass classifiedAs: protocol
 	| compile |
+	self flag: #TODO. "Disabled checkBytecodeHash:sourceCode:inClass: since it doesn't help figuring out if a method changes only by a signature timestamp"
 	compile := (self isMethod: methodName markedAsDisableRegenerationInClass: aClass) not.
-	compile := compile
+	"compile := compile
 		ifTrue: [ (self checkBytecodeHash: methodName sourceCode: method inClass: aClass) not ]
-		ifFalse: [ false ].
+		ifFalse: [ false ]."
 	compile
 		ifTrue: [ | existingMethod |
 			existingMethod := aClass methodDictionary at: methodName asSymbol ifAbsent: [ nil ].
