@@ -8,9 +8,10 @@ produceEvent: anEvent
 		cr;
 		flush.
 	routingKey
-		ifNotNil: [ self publisher publishMessage: message withRoutingKey: routingKey ]
+		ifNotNil: [ :arg | self publisher publishMessage: message withRoutingKey: routingKey ]
 		ifNil: [ self publisher publishMessage: message ].
-	self announcer announce: anEvent.
+	(anEvent class inheritsFrom: Announcement)
+		ifTrue: [ self announcer announce: anEvent ].
 	Transcript
 		print: 'Event published.';
 		cr;
