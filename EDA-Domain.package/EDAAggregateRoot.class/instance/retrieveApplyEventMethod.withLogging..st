@@ -1,5 +1,5 @@
 helper
-retrieveApplyEventMethod: event
+retrieveApplyEventMethod: event withLogging: aFlag
 	| aux auxClass auxClassName result found |
 	found := false.
 	result := nil.
@@ -12,7 +12,14 @@ retrieveApplyEventMethod: event
 						at: aux asSymbol
 						ifPresent: [ :v | 
 							found := true.
-							^ aux ].
+							^ aux ]
+						ifAbsent: [ aFlag
+								ifTrue: [ Transcript
+										print: self class greaseString;
+										print: '>>';
+										print: aux;
+										print: ' not found.';
+										cr ] ].
 					auxClassName := auxClassName allButFirst.
 					aux := self buildApplyEventMethodNameForEvent: auxClassName andVersion: event version ].
 			auxClass := auxClass superclass.

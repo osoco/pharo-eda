@@ -2,7 +2,7 @@ event handling
 applyEvent: anEvent
 	| eventClassName applyEventSelector applyEventSelectorSymbol |
 	eventClassName := anEvent class name.
-	applyEventSelector := self retrieveApplyEventMethod: anEvent.
+	applyEventSelector := self retrieveApplyEventMethod: anEvent withLogging: false.
 	applyEventSelector
 		ifNotNil: [ applyEventSelectorSymbol := applyEventSelector asSymbol.
 			Transcript
@@ -10,4 +10,8 @@ applyEvent: anEvent
 				cr;
 				flush.
 			self perform: applyEventSelectorSymbol with: anEvent ]
-		ifNil: [ Transcript print: 'Not retrieved apply event method for ' , eventClassName; cr; flush. ]
+		ifNil: [ Transcript
+				print: 'ERROR: No way to apply event : ' , anEvent greaseString;
+				cr;
+				flush.
+			self retrieveApplyEventMethod: anEvent withLogging: true ]
