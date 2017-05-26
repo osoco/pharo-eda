@@ -3,7 +3,7 @@ applyEvent: anEvent onAggregateRoot: anAggregateRoot
 	| eventClassName applyEventSelector applyEventSelectorSymbol error |
 	eventClassName := anEvent class name.
 	error := false.
-	applyEventSelector := anAggregateRoot retrieveApplyEventMethod: anEvent.
+	applyEventSelector := anAggregateRoot retrieveApplyEventMethod: anEvent withLogging: false.
 	applyEventSelector
 		ifNil: [ error := true ]
 		ifNotNil: [ applyEventSelectorSymbol := applyEventSelector asSymbol.
