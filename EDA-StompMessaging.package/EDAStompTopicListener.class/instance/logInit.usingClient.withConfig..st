@@ -1,3 +1,9 @@
 initialization
 logInit: message usingClient: aClient withConfig: aConfig
-	Transcript print: 'Receiving message ', message , ' from ', aConfig queue; cr; flush.
+	Transcript
+		cr;
+		print: '>> Processing incoming message: ';
+		print: message;
+		print: ' from ';
+		print: aConfig queue;
+		cr
