@@ -1,14 +1,11 @@
 {
-	"category" : "EDA-Commands-Materializers",
-	"classinstvars" : [
-		 ],
-	"classvars" : [
-		 ],
 	"commentStamp" : "",
-	"instvars" : [
-		 ],
-	"name" : "EDAJsonCommandMaterializer",
-	"pools" : [
-		 ],
 	"super" : "EDACommandMaterializer",
-	"type" : "normal" }
+	"category" : "EDA-Commands-Materializers",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAJsonCommandMaterializer",
+	"type" : "normal"
+}

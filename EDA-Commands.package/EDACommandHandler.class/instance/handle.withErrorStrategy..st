@@ -5,7 +5,9 @@ handle: aCommand withErrorStrategy: strategy
 		print: 'Retrieving events for ' , self aggregateRootClass name;
 		cr;
 		flush.
-	events := eventStore findEventsOfAggregate: self aggregateRootClass whereCriteria: aCommand aggregateSelectionCriteria.
+	events := eventStore
+		findEventsOfAggregate: self aggregateRootClass
+		whereCriteria: aCommand aggregateSelectionCriteria.
 	Transcript print: 'Events retrieved (' , events size printString , '):'.
 	events do: [ :e | Transcript print: ' ' , e class name ].
 	Transcript
@@ -18,26 +20,20 @@ handle: aCommand withErrorStrategy: strategy
 	raise a concurrency error and reject the change"
 	Transcript
 		print: 'Handling command ' , aCommand class name;
-		cr;
-		flush.
+		cr.
 	producedEvents := self invokeMethodHandlerWith: aCommand on: aggregateRoot.
 	(producedEvents isKindOf: OrderedCollection)
 		ifFalse: [ producedEvents := OrderedCollection newFrom: {producedEvents} ].
-	producedEvents do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
+	producedEvents
+		do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
 	Transcript print: 'Produced event(s):'.
 	producedEvents do: [ :event | Transcript print: ' ' , event class name ].
-	Transcript
-		cr;
-		flush.
-	Transcript
-		print: 'Projecting events...';
-		cr;
-		flush.
+	Transcript cr.
+	Transcript print: 'Projecting events...'.
 	EDAProjectionProcessor projectEvents: producedEvents.
 	Transcript
-		print: 'Events projected';
-		cr;
-		flush.
+		print: ' done';
+		cr.
 	"TODO: transaction including eventstore and eventbus operations"
 	eventStore saveEvents: producedEvents onAggregate: aggregateRoot ]
 		on: Error
@@ -50,13 +46,5 @@ handle: aCommand withErrorStrategy: strategy
 							{(#producedEvents -> producedEvents).
 							(#context -> thisContext)}).
 			producedEvents := errorHandler handleError: exception ].
-	Transcript
-		print: 'Publishing event(s)';
-		cr;
-		flush.
 	eventBus produceEvents: producedEvents.
-	Transcript
-		print: 'Generated event(s) published';
-		cr;
-		flush.
 	^ self
