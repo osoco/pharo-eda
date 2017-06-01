@@ -15,4 +15,7 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 						print: ex description;
 						cr.
 					conf ack = #'client-individual'
-						ifTrue: [ aClient writeWithReceipt: message nackFrame ] ] ] .
+						ifTrue: [ | nack |
+							nack := message nackFrame.
+							nack headers at: 'requeue' put: 'False'.
+							aClient writeWithReceipt: nack ] ] ]
