@@ -1,6 +1,6 @@
 private
 envVarDictionaryFiles
-	^ { FileLocator imageDirectory 
+	^ { FileLocator imageDirectory fullPath asFileReference 
 		/ 'config' 
 		/ (self currentEnvironment , '.json').
 	  	"This leads to key conflicts. It was an initial attempt to support
