@@ -4,7 +4,7 @@ findAll
 	result := OrderedCollection new.
 	aggregateClass := self aggregateClass.
 	aux := Dictionary new.
-	events := self eventStore findEventsOfAggregate: ATSApplicant whereCriteria: Dictionary new.
+	events := self eventStore findEventsOfAggregate: aggregateClass whereCriteria: Dictionary new.
 	events
 		do: [ :evt | 
 			| list id |
@@ -15,7 +15,7 @@ findAll
 	aux
 		keysAndValuesDo: [ :key :eventList | 
 			| applicant |
-			applicant := ATSApplicant new.
+			applicant := aggregateClass new.
 			applicant applyEvents: eventList.
 			result add: applicant ].
 	^ result
