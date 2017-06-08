@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATLanguageHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATLanguageHelperTest",
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"traitcomposition" : "EDATLanguageHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Traits-Tests"
+}
