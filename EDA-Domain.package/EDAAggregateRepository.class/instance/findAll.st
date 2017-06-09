@@ -14,8 +14,8 @@ findAll
 			aux at: id put: list ].
 	aux
 		keysAndValuesDo: [ :key :eventList | 
-			| applicant |
-			applicant := aggregateClass new.
-			applicant applyEvents: eventList.
-			result add: applicant ].
+			| aggregate |
+			aggregate := aggregateClass new.
+			aggregate applyEvents: eventList.
+			result add: aggregate ].
 	^ result
