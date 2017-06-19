@@ -9,8 +9,10 @@ generateAggregateApplyEventVersionMethod
 		nextPutAll: (self generateAggregateApplyEventVersionMethodNameWithArg: ' anEvent');
 		nextPut: cr.
 	result nextPutAll: self generateSignature.
+	result nextPutAll: '	self id: anEvent id.';
+		nextPut: cr.
 	attrs
-		do: [ :attr |
+		do: [ :attr | 
 			result
 				nextPutAll: '	self ';
 				nextPutAll: attr;
