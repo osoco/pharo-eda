@@ -1,7 +1,12 @@
-as yet unclassified
+initialization
 setUp
 	self showTranscript.
-	Transcript clear; print: 'Running ', thisContext receiver className, '#', thisContext receiver selector; cr; flush.
+	Transcript
+		print: 'Running ';
+		print: thisContext receiver className;
+		print: $#;
+		print: thisContext receiver selector;
+		cr.
 	self setUpCurrentEnvironment.
 	self ensureSettingsLoaded.
 	self prepareToLaunchApplication.

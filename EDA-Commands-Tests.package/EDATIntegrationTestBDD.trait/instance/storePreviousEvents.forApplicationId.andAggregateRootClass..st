@@ -1,5 +1,5 @@
 bdd
-insertPreviousEvents: eventsCollection
+storePreviousEvents: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass
 	Transcript print: 'Inserting (', eventsCollection size printString, ') events...'; cr; flush.
 	eventsCollection do: [ :event |
 		event save.
@@ -7,5 +7,5 @@ insertPreviousEvents: eventsCollection
 	].
 	self application eventStore flush.
 	Transcript cr; flush.
-	"self waitUntilEventsArePersisted: eventsCollection."
+	self waitUntilEventsArePersisted: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass.
 	Transcript print: 'All ', eventsCollection size printString, ' events inserted'; cr; flush.

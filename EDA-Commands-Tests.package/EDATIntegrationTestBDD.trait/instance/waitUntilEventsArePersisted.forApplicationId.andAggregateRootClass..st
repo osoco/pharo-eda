@@ -5,7 +5,7 @@ waitUntilEventsArePersisted: eventsCollection forApplicationId: appId andAggrega
 	| events extraEvents |
 	eventsCollection
 		do: [ :event | 
-			(self wait: 10 until: [ ^ self isEventPersisted: event ] evaluatesTo: true)
+			(self wait: 10 until: [ ^ self isEventStored: event ] evaluatesTo: true)
 				ifFalse: [ self fail: 'Event ' , event class name , ' could not be persisted' ] ].
 	events :=
 		self

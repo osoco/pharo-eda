@@ -1,5 +1,5 @@
 as yet unclassified
-insertPreviousEvents: eventsCollection forApplicationId: appId
+storePreviousEvents: eventsCollection forApplicationId: appId
 	Transcript print: 'Inserting (', eventsCollection size printString, ') events...'; cr; flush.
 	eventsCollection do: [ :event |
 		event save.

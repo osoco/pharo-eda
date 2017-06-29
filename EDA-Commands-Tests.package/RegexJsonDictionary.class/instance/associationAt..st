@@ -1,3 +1,7 @@
-as yet unclassified
+accessing
 associationAt: key
-	^ self associationAt: key ifAbsent: [ ^ key -> '(.*)' ]
+	| result |
+	result := key = 'id'
+		ifTrue: [ '(.*)' ]
+		ifFalse: [ self dict associationAt: key ifAbsent: [ ^ key -> '(.*)' ] ].
+	^ result

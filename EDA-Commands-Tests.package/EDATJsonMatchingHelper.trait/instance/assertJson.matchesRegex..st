@@ -1,5 +1,5 @@
 helpers
-json: jsonText matchesRegex: regex
+assertJson: jsonText matchesRegex: regex
 	"Checks whether given JSON match the regex-enhanced JSON text"
 
 	^ jsonText isNil
@@ -8,5 +8,5 @@ json: jsonText matchesRegex: regex
 				ifTrue: [ ^ regex isEmpty ]
 				ifFalse: [ | json regexJson |
 					json := NeoJSONReader fromString: jsonText.
-					regexJson := RegexJson fromString: regex.
-					^ regexJson matches: json ] ]
+					regexJson := RegexJson fromString: regex andTestCase: self.
+					^ regexJson assertMatches: json ] ]

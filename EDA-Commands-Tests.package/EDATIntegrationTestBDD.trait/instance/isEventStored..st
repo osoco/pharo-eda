@@ -1,5 +1,5 @@
 as yet unclassified
-isEventPersisted: event
+isEventStored: event
 	| events result |
 	"Checks if the event is indeed persisted"
 	Transcript print: 'Searching for stored events for aggregate root ', event aggregateRootClass, ' and id ', event id; cr; flush.

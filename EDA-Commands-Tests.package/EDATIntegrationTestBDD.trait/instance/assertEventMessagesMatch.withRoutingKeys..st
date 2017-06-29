@@ -1,12 +1,11 @@
 bdd
-eventMessagesMatch: expectedEventMessages withRoutingKeys: expectedRoutingKeys
+assertEventMessagesMatch: expectedEventMessages withRoutingKeys: expectedRoutingKeys
 	| anyEventGenerated |
-	[ 
-	anyEventGenerated := false.
+	[ anyEventGenerated := false.
 	expectedEventMessages
 		doWithIndex: [ :eventMessageRegex :index | 
 			| frame |
-			frame := self nextReceivedEventMessage: self eventListener matches: eventMessageRegex.
+			frame := self assertNextReceivedEventMessage: self eventListener matches: eventMessageRegex.
 			anyEventGenerated := true.
 			expectedRoutingKeys size >= index
 				ifTrue: [ self assert: (self routingKeyFromDestination: frame destination) equals: (expectedRoutingKeys at: index) ] ] ]
