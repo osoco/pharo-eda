@@ -11,7 +11,7 @@ generateIntegrationTestMethod
 		nextPutAll: '	| aggregateRootId previousEvents command commandMessage expectedEvent expectedMessage expectedRoutingKey | ';
 		nextPut: cr.
 	result
-		nextPutAll: '	previousEvents := Array new.';
+		nextPutAll: '	previousEvents := OrderedCollection new.';
 		nextPut: cr.
 	result
 		nextPutAll: '	command := self build';
@@ -33,11 +33,13 @@ generateIntegrationTestMethod
 		nextPutAll: ' andCommandId: command commandId.';
 		nextPut: cr.
 	result
-		nextPutAll: '	expectedMessage := (EDAJsonEventSerializer new serialize: expectedEvent).';
+		nextPutAll: '	expectedMessage := self read';
+		nextPutAll: (self toCamelCase: self eventName capitalized);
+		nextPutAll: 'FromFile.';
 		nextPut: cr.
 	result
 		nextPutAll: '	expectedRoutingKey := ''';
-		nextPutAll: (self upcasedToDotSeparated: self commandName);
+		nextPutAll: (self upcasedToDotSeparated: self eventName);
 		nextPut: $';
 		nextPut: $.;
 		nextPut: cr.
