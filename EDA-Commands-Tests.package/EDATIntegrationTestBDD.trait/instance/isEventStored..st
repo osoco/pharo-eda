@@ -10,4 +10,3 @@ isEventStored: event
 	result ifFalse: [ Transcript print: 'NOT ' ].
 	Transcript print: ' found in the event store'; cr.
 	^ result
-	

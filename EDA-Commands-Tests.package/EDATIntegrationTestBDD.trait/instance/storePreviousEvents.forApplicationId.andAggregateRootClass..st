@@ -1,10 +1,11 @@
-as yet unclassified
+bdd
 storePreviousEvents: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass
-	Transcript print: 'Storing ', eventsCollection size greaseString; print: ') event(s) ...'; cr.
+	Transcript print: 'Inserting (', eventsCollection size printString, ') events...'; cr; flush.
 	eventsCollection do: [ :event |
 		event save.
-		Transcript print: event className; print: ' inserted'; cr.
+		Transcript print: event className, ' inserted'; cr; flush.
 	].
 	self application eventStore flush.
+	Transcript cr; flush.
 	self waitUntilEventsArePersisted: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass.
-	Transcript print: 'All '; print: eventsCollection size greaseString; print: ' events stored'; cr.
+	Transcript print: 'All ', eventsCollection size printString, ' events inserted'; cr; flush.

@@ -1,10 +1,18 @@
-as yet unclassified
+helper
 unsubscribeToEvents
+	Transcript
+		print: 'Unsubscribing to events (eventsSubscribed is ';
+		print: self eventsSubscribed;
+		print: ').';
+		cr.
 	self eventsSubscribed
-		ifTrue: [
+		ifTrue: [ Transcript
+				print: 'eventsSubscribed is true. subscriptionId is ';
+				print: self subscriptionId;
+				print: $.;
+				cr.
 			self unsubscribe: self subscriptionId usingListener: self eventListener.
 			self eventsSubscribed: false ]
-		ifFalse: [
-			Transcript
-				print: 'Already unsubscribed to events.';
+		ifFalse: [ Transcript
+				print: 'Not unsubscribing to events.';
 				cr ]
