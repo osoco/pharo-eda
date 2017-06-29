@@ -6,9 +6,9 @@ test_jsons_with_anything_keyword_match
 	date := DateAndTime now.
 	json := '{ "a": 1, "b": 3,    "c": "' , date asString , '" }'.
 	jsonRegex := '{ "a": 1,"b":3,  "c":       "<ANYTHING>"}'.
-	self assert: (self json: json matchesRegex: jsonRegex).
+	self assert: (self assertJson: json matchesRegex: jsonRegex).
 	json := '{ "d": "bla",   "e ": "{}" }'.
 	jsonRegex := '{ "d": "<ANYTHING>", "e ": ".*"    }'.
-	self assert: (self json: json matchesRegex: jsonRegex).
+	self assert: (self assertJson: json matchesRegex: jsonRegex).
 	jsonRegex := '{ "d": "(.*)", "e ": ".*"    }'.
-	self assert: (self json: json matchesRegex: jsonRegex)
+	self assert: (self assertJson: json matchesRegex: jsonRegex)

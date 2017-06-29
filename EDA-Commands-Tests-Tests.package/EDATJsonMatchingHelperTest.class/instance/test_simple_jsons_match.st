@@ -6,4 +6,4 @@ test_simple_jsons_match
 	json1 := '{ "a"    :            1 
 	}'.
 	json2 := '{"a":1}'.
-	self assert: (self json: json1 matchesRegex: json2)
+	self assert: (self assertJson: json1 matchesRegex: json2)
