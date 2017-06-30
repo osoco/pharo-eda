@@ -1,22 +1,21 @@
-bdd
+as yet unclassified
 storePreviousEvents: eventsCollection
 	Transcript
-		print: 'Storing (' , eventsCollection size printString , ') events...';
-		cr;
-		flush.
+		print: 'Storing ' ; print: eventsCollection size greaseString; print: ' event(s)...';
+		cr.
 	eventsCollection
 		do: [ :event | 
 			event save.
 			Transcript
-				print: event className , ' stored';
+				print: event className;
+				print: ' stored.';
 				cr;
-				flush ].
+				print: event greaseString;
+				cr ].
 	self application eventStore flush.
-	Transcript
-		cr;
-		flush.
 	"self waitUntilEventsArePersisted: eventsCollection."
 	Transcript
-		print: 'All ' , eventsCollection size printString , ' events stored';
-		cr;
-		flush
+		print: 'All ';
+		print: eventsCollection size greaseString;
+		print: ' event(s) stored';
+		cr

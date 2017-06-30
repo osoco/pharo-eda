@@ -1,5 +1,6 @@
 initialization
 setUp
+	super setUp.
 	self showTranscript.
 	Transcript
 		print: 'Running ';

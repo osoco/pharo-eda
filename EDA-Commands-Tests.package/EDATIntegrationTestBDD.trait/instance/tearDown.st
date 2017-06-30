@@ -1,5 +1,6 @@
 running
 tearDown
+	super tearDown.
 	self clearPreviousEvents.
 	self clearPreviousProjections.
 	self unsubscribeToEvents.
