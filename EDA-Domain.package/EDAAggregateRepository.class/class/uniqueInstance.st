@@ -4,7 +4,7 @@ uniqueInstance
 	result := uniqueInstance.
 	result ifNil: [
 		result := self new.
-		self uniqueInstance: result
+		self uniqueInstance: result.
+		result eventStore ifNil: [ result eventStore: eventStore ]
 	].
-	result eventStore ifNil: [ result eventStore: eventStore ].
 	^ result
