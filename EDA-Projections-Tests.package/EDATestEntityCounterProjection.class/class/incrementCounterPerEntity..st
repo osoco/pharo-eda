@@ -5,4 +5,3 @@ incrementCounterPerEntity: anEntityClass
 	projection ifNil: [ 
 		projection := EDATestEntityCounterProjection withEntityClassName: anEntityClass asString ].
 	projection counter: (projection counter + 1).
-	Repository save: projection.
