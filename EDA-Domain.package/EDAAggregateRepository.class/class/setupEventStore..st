@@ -1,3 +1,4 @@
 setup
 setupEventStore: anEventStore
-	eventStore := anEventStore
+	eventStore := anEventStore.
+	self uniqueInstance: nil
