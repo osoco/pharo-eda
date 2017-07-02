@@ -16,7 +16,7 @@ givenPreviousEvents: previousEventsCollection whenReceiveCommandMessages: aComma
 		givenPreviousEvents: previousEventsCollection.
 	[ [ frame := self eventListener client readMessage ]
 		on: Error
-		do: [ :err | 
+		do: [ :err |
 			Transcript
 				print: 'ERROR reading event from queue: ';
 				print: err greaseString;

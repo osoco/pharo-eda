@@ -3,7 +3,7 @@ imageCommandMessagesMatch: expectedCommandMessages
 	| anyCommandGenerated |
 	[ anyCommandGenerated := true.
 	expectedCommandMessages
-		keysAndValuesDo: [ :index :eventMessageRegex | 
+		keysAndValuesDo: [ :index :eventMessageRegex |
 			| frame |
 			frame := self imageListener client readMessage.
 			anyCommandGenerated := true.
