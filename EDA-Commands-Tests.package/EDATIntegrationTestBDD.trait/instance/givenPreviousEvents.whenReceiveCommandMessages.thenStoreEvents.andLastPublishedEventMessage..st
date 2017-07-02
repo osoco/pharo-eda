@@ -4,12 +4,24 @@ givenPreviousEvents: previousEventsCollection whenReceiveCommandMessages: aComma
 	event := previousEventsCollection first.
 	appId := event id.
 	rootClass := event aggregateRootClass.
-	self storePreviousEvents: previousEventsCollection forApplicationId: appId andAggregateRootClass: rootClass.
-	aCommandMessageCollection do: [ :aCommandMessage | self publishCommand: aCommandMessage ].
+	self
+		storePreviousEvents: previousEventsCollection
+		forApplicationId: appId
+		andAggregateRootClass: rootClass.
+	aCommandMessageCollection
+		do: [ :aCommandMessage | self publishCommand: aCommandMessage ].
 	self subscribeToEvents.
-	self checkNewStoredEvents: expectedNewStoredEvents givenPreviousEvents: previousEventsCollection.
+	self
+		checkNewStoredEvents: expectedNewStoredEvents
+		givenPreviousEvents: previousEventsCollection.
 	[ [ frame := self eventListener client readMessage ]
 		on: Error
-		do: [ frame := nil ].
+		do: [ :err | 
+			Transcript
+				print: 'ERROR reading event from queue: ';
+				print: err greaseString;
+				print: ' ';
+				cr.
+			frame := nil ].
 	frame notNil ] whileTrue: [ lastFrame := frame ].
-	self generatedEvent: lastFrame matchesRegex: expectedLastEventMessage
+	self generatedEvent: lastFrame matchesRegex: expectedLastEventMessage 

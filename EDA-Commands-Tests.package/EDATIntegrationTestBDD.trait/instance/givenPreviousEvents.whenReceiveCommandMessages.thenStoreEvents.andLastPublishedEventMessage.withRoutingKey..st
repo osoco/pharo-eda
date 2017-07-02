@@ -8,9 +8,17 @@ givenPreviousEvents: previousEventsCollection whenReceiveCommandMessages: aComma
 	aCommandMessageCollection do: [ :aCommandMessage | self publishCommand: aCommandMessage ].
 	self subscribeToEvents.
 	self checkNewStoredEvents: expectedNewStoredEvents givenPreviousEvents: previousEventsCollection.
-	[ [ frame := self imageListener client readMessage ]
+	[
+		[ frame := self imageListener client readMessage ]
 		on: Error
-		do: [ frame := nil ].
-	frame notNil ] whileTrue: [ lastFrame := frame ].
+		do: [ :err | 
+			Transcript
+				print: 'ERROR reading event from queue: ';
+				print: err greaseString;
+				print: ' ';
+				cr.
+			frame := nil ].
+		frame notNil
+	] whileTrue: [ lastFrame := frame ].
 	self generatedEvent: lastFrame matchesRegex: expectedLastEventMessage.
 	self assert: (self routingKeyFromDestination: lastFrame destination) equals: expectedRoutingKey
