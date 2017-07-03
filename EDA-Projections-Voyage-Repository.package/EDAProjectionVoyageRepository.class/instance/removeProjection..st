@@ -1,3 +1,3 @@
 persistence
 removeProjection: aProjectionClass
-	repository removeCollection: aProjectionClass
+	repository removeAll: aProjectionClass
