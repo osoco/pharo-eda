@@ -6,5 +6,5 @@ totalProjectedEvents
 		ifTrue: [ 0 ]
 		ifFalse: [ allProjectionsOfThisKind size = 1
 				ifTrue: [ allProjectionsOfThisKind first numProjectedEvents ]
-				ifFalse: [ allProjectionsOfThisKind reduce: [ :a :b | a numProjectedEvents + b numProjectedEvents ] ] ].
+				ifFalse: [ (allProjectionsOfThisKind collect: [ :proj | proj numProjectedEvents ]) reduce: [ :a :b | a + b ] ] ].
 	^ totalProjectedEvents
