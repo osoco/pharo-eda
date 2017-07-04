@@ -7,7 +7,7 @@ projectEvent: anEvent
 	projectionHandlerMethodsForEvent := projectionHandlers
 		select: [ :pragma |
 			pragma arguments first
-				contains: [ :supportedEvent | supportedEvent asClass == anEvent class ] ]
+				contains: [ :supportedEvent | supportedEvent = anEvent class name ] ]
 		thenCollect: [ :pragma | pragma method ].
 	projectionHandlerMethodsForEvent
 		do: [ :projectionMethod |
