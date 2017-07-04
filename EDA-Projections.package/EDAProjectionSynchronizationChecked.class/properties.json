@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "EDAProjectionLogEvent",
+	"category" : "EDA-Projections",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"synchronized",
+		"projectionSourceEventsSize"
+	],
+	"name" : "EDAProjectionSynchronizationChecked",
+	"type" : "normal"
+}

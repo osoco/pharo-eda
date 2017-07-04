@@ -7,5 +7,5 @@ printOn: stream
 		print: self projectionSourceEventsSize;
 		<< '] ';
 		print: self event class name;
-		<< 'projected to ';
+		<< ' projected to ';
 		print: self projection class name

@@ -1,3 +1,3 @@
 accessing
-event: anObject
-	event := anObject
+event: anEvent
+	event := anEvent copy
