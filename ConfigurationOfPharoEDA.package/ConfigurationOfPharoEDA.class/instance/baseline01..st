@@ -19,7 +19,7 @@ baseline01: spec
 				project: 'VoyageMongo'
 					with: [ spec
 						className: #ConfigurationOfVoyageMongo;
-						versionString: #stable;
+						versionString: #mongo;
 						repository: 'github://pharo-nosql/voyage:1.5/mc' ];
 				project: 'Stamp'
 					with: [ spec
