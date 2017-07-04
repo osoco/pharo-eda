@@ -45,13 +45,10 @@ setupProjections
 						flush.
 					projectionSourceEvents
 						doWithIndex: [ :event :index |
-							Transcript
-								print: 'Projecting event ';
-								print: index;
-								print: '/';
-								print: projectionSourceEvents size;
-								print: ' to ';
-								print: projection class name;
-								cr;
-								flush.
-							event updateProjection: projection ] ] ]
+							event updateProjection: projection.
+							EDAEventProjected new
+								projection: projection;
+								event: event;
+								index: index;
+								projectionSourceEventsSize: projectionSourceEvents size;
+								emit ] ] ]

@@ -1,5 +1,6 @@
 initialization
 setup
+	self setupLogging.
 	self setupEventAnnouncer.
 	self setupProjectionRepository.
 	self setupEventProducer.
