@@ -7,4 +7,5 @@ setupLogging
 				crShow: '[';
 				show: event timestamp;
 				show: '] ';
-				show: event ]
+				show: event;
+				flush ]

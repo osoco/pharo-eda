@@ -10,39 +10,11 @@ setupProjections
 		flush.
 	projections
 		do: [ :projection |
-			projectionSourceEvents := projection sourceEvents: EDAMongoEventStore new.	"self eventStore"
-			projectionSourceEvents size > projection totalProjectedEvents
-				ifFalse: [ Transcript
-						print: 'Projection ';
-						print: projection class name;
-						print: ' seems synchronized with ';
-						print: projection totalProjectedEvents;
-						print: ' projected events';
-						cr;
-						flush ]
-				ifTrue: [ Transcript
-						print: '[WARNING] Projection ';
-						print: projection class name;
-						print: ' seems NOT synchronized with ';
-						print: projection totalProjectedEvents;
-						print: ' projected events';
-						print: ' of ';
-						print: projectionSourceEvents size;
-						print: ' total source events';
-						cr;
-						flush.
-					self flag: #TODO.	"configure options (abort, recreate, warning) via settings"
-					Transcript
-						print: 'Removing projection ';
-						print: projection class name;
-						cr;
-						flush.
+			projectionSourceEvents := projection sourceEvents: self eventStore.
+			(projection isSynchronized: projectionSourceEvents)
+				ifFalse: [
+					self flag: #TODO.	"configure different options in this case (abort, recreate, warning) via settings"
 					projection removeProjection.
-					Transcript
-						print: 'Creating projection ';
-						print: projection class name;
-						cr;
-						flush.
 					projectionSourceEvents
 						doWithIndex: [ :event :index |
 							event updateProjection: projection.
