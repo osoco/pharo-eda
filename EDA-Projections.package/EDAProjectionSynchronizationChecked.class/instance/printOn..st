@@ -4,7 +4,7 @@ printOn: stream
 		ifFalse: [ stream << '[WARNING] ' ].
 	stream
 		<< 'Projection ';
-		print: self projection class name.
+		print: self projection name.
 	self synchronized
 		ifTrue: [ stream << ' seems synchronized' ]
 		ifFalse: [ stream << ' seems NOT synchronized ' ].

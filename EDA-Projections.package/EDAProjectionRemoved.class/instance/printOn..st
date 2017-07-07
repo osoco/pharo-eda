@@ -2,5 +2,5 @@ printing
 printOn: stream
 	stream
 		<< 'Projection ';
-		print: self projection class name;
+		print: self projection name;
 		<< ' removed'

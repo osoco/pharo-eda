@@ -8,4 +8,4 @@ printOn: stream
 		<< '] ';
 		print: self event class name;
 		<< ' projected to ';
-		print: self projection class name
+		print: self projection name
