@@ -10,7 +10,7 @@ printOn: stream
 		ifFalse: [ stream << ' seems NOT synchronized ' ].
 	stream
 		<< ' with ';
-		print: self projection totalProjectedEvents;
+		print: self totalProjectedEventsSize;
 		<< ' of ';
 		print: self projectionSourceEventsSize;
 		<< ' total events'
