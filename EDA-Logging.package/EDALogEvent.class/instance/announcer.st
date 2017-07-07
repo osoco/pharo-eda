@@ -1,3 +1,3 @@
 accessing
 announcer
-	^ EDALogEventAnnouncer
+	^ self class announcer
