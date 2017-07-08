@@ -13,4 +13,4 @@ printOn: stream
 		print: self totalProjectedEventsSize;
 		<< ' of ';
 		print: self projectionSourceEventsSize;
-		<< ' total events'
+		<< ' total event(s).'
