@@ -1,12 +1,10 @@
-BDD
+as yet unclassified
 givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents
 	| aggregateRoot handlerSelectorSymbol commandClassName |
-		self flag: #TODO.	"Refactor EDACommandHandler and inherit from it to avoid unnecessary conventions on command-handling methods"
-
 	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
 	commandClassName := aCommand class name.
-	handlerSelectorSymbol := ('handle' , aCommand classNameWithoutPrefix , ':') asSymbol.
+	handlerSelectorSymbol := self retrieveHandlerSelectorSymbol: aCommand.
 	(aggregateRoot respondsTo: handlerSelectorSymbol)
 		ifTrue: [ | resultingEvents |
 			resultingEvents := aggregateRoot perform: handlerSelectorSymbol with: aCommand.
