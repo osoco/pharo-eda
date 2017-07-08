@@ -26,13 +26,13 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 					print: '<< Error consuming message: ';
 					print: ex description;
 					cr;
-					print: thisContext stackList last
+					print: thisContext stack last;
 					cr.
 				(conf ack = #'client-individual')
 					ifTrue: [ | nack |
 						Transcript
 							print: 'DEBUG: NACK message ';
-							print: message id;
+							print: message;
 							cr.
 						nack := message nackFrame.
 						nack headers at: 'requeue' put: 'False'.
