@@ -14,5 +14,10 @@ projectEvent: anEvent
 			[aProjection := self perform: projectionMethod selector with: anEvent.
 			aProjection incProjectedEvents.
 			aProjection saveProjection.] 
-		on: Exception do: [ :exception | self halt ].
+		on: Exception do: [ :exception | 
+			Transcript
+				print: 'WARNING: Projection of event failed with error ';
+				print: exception description;
+				cr
+			].
  ]
