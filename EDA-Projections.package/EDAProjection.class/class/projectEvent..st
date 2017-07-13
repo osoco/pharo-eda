@@ -11,7 +11,8 @@ projectEvent: anEvent
 		thenCollect: [ :pragma | pragma method ].
 	projectionHandlerMethodsForEvent
 		do: [ :projectionMethod |
-			aProjection := self perform: projectionMethod selector with: anEvent.
+			[aProjection := self perform: projectionMethod selector with: anEvent.
 			aProjection incProjectedEvents.
-			aProjection saveProjection.
+			aProjection saveProjection.] 
+		on: Exception do: [ :exception | self halt ].
  ]
