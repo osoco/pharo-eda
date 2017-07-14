@@ -38,11 +38,12 @@ handle: aCommand withErrorStrategy: strategy
 		Transcript print: 'Produced event(s):'.
 		producedEvents do: [ :event | Transcript print: ' '; print: event class name ].
 		Transcript cr.
+		self flag: #TODO. "TODO: transaction including eventstore and eventbus operations"
+		eventStore saveEvents: producedEvents onAggregate: aggregateRoot.
+		
 		Transcript print: 'Projecting events...'.
 		EDAProjectionProcessor projectEvents: producedEvents.
 		Transcript print: ' done'; cr.
-		"TODO: transaction including eventstore and eventbus operations"
-		eventStore saveEvents: producedEvents onAggregate: aggregateRoot
 	]
 	on: Error
 	do: [ :exception | 
