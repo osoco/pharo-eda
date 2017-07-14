@@ -19,12 +19,12 @@ setupProjections
 						doWithIndex: [ :event :index | 
 							| aProjection |
 							aProjection := event updateProjection: projection.
-							projectedEvents at: aProjection contestId put: aProjection numProjectedEvents.
-							"self haltIf: [ (projectedEvents values sum = index) not ]."
-							self flag: #TODO. "clean this mesh required to fix the number of projected events in case it is not incremented"
-							projectedEvents values sum < index
-								ifFalse: [ aProjection incProjectedEvents.
-									aProjection saveProjection ].
+							aProjection class = ATSApplicationsByContestIdProjection
+								ifTrue: [ projectedEvents at: aProjection contestId put: aProjection numProjectedEvents.
+									self flag: #TODO.	"clean this mesh required to fix the number of projected events in case it is not incremented"
+									projectedEvents values sum < index
+										ifFalse: [ aProjection incProjectedEvents.
+											aProjection saveProjection ] ].
 							EDAEventProjected new
 								projection: projection;
 								event: event;
