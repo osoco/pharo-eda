@@ -15,4 +15,5 @@ projectEvent: anEvent
 						print: exception description;
 						cr ].
 			aProjection incProjectedEvents.
-			aProjection saveProjection ]
+			aProjection saveProjection ].
+	^ aProjection
