@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "EDA-Domain",
+	"classinstvars" : [
+		"eventStore",
+		"uniqueInstance"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"eventStore"
+	],
+	"name" : "EDAAggregateRepository",
+	"type" : "normal"
+}

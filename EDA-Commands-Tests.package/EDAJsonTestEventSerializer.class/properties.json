@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "EDAJsonEventSerializer",
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAJsonTestEventSerializer",
+	"type" : "normal"
+}
