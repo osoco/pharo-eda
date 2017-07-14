@@ -8,4 +8,4 @@ subscribe: id usingClient: aClient withConfig: config
 	subscribeFrame id: id.
 	subscribeFrame prefetchCount: config prefetchCount.
 	subscribeFrame ack: config ack.
-	aClient writeWithReceipt: subscribeFrame
+	aClient writeWithReceipt: subscribeFrame	

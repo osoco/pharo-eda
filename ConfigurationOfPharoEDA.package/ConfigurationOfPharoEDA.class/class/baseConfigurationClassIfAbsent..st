@@ -3,6 +3,6 @@ baseConfigurationClassIfAbsent: aBlock
 
 	^Smalltalk
 		at: #MetacelloBaseConfiguration
-		ifAbsent: [
+		ifAbsent: [ 
 			self ensureMetacelloBaseConfiguration.
 			Smalltalk at: #MetacelloBaseConfiguration ifAbsent: aBlock ].

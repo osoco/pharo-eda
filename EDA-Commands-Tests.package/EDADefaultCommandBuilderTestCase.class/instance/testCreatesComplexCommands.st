@@ -4,7 +4,7 @@ testCreatesComplexCommands
       actualCommand expectedCommand |
     level1 := GCLevel new levelName: 'first'; levelRangeSize: 100.
     level2 := GCLevel new levelName: 'second'.
-    map := {
+    map := { 
         'name' -> 'COMPLEX_COMMAND'.
         'commandId' -> 'command-1'.
         'aggregateRootVersion' -> '2'.

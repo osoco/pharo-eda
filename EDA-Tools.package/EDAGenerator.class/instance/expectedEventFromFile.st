@@ -7,12 +7,12 @@ expectedEventFromFile
 	body at: #id put: '<ANYTHING>'.
 	self flag: #TODO.	"Use the aggregate names instead of a hard-coded list"
 	#('contestId' 'roundId' 'accountId' 'evaluatorId' 'applicantId') asOrderedCollection
-		do: [ :aux |
+		do: [ :aux | 
 			| var |
 			var := body at: aux asSymbol ifAbsent: [ nil ].
 			var ifNotNil: [ body at: aux asSymbol put: '<ANYTHING>' ] ].
 	^ String
-		streamContents: [ :stream |
+		streamContents: [ :stream | 
 			(NeoJSONWriter on: stream)
 				for: DateAndTime customDo: [ :mapping | mapping encoder: [ :dateAndTime | '<ANYTHING>' ] ];
 				nextPut: evtJson ]

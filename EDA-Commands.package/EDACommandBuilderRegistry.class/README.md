@@ -19,7 +19,7 @@ Public API:
 
 Usage:
 
-When a serialized command is received,
+When a serialized command is received, 
 the corresponding /materializer/
 uses this class to find out which /builder/ to use
 in order to create the command instance

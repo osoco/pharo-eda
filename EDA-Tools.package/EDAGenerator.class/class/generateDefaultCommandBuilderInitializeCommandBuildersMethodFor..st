@@ -11,7 +11,7 @@ generateDefaultCommandBuilderInitializeCommandBuildersMethodFor: appName
 	result nextPutAll: '	commandDictionary := {'.
 	commands := generator retrieveImplementedCommandsFor: appName.
 	commands keys asOrderedCollection
-		keysAndValuesDo: [ :i :key |
+		keysAndValuesDo: [ :i :key | 
 			i > 1
 				ifTrue: [ result nextPut: $. ].
 			result

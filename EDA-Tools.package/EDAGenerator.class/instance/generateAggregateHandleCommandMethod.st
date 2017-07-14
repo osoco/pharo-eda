@@ -27,8 +27,14 @@ generateAggregateHandleCommandMethod
 	result
 		nextPutAll: '	theAttrs := Dictionary new.';
 		nextPut: cr.
+	result
+		nextPutAll: '	theAttrs at: ''version'' put: aCommand version.';
+		nextPut: cr.
+	result
+		nextPutAll: '	theAttrs at: ''aggregateRootVersion'' put: aCommand aggregateRootVersion.';
+		nextPut: cr.
 	(attrs reject: [ :attr | self class skippedEventAttributes anySatisfy: [ :skipped | attr = skipped ] ])
-		do: [ :attr |
+		do: [ :attr | 
 			result
 				nextPutAll: '	aCommand ';
 				nextPutAll: attr;

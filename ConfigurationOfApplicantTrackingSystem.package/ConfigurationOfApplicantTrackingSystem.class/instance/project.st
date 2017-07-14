@@ -1,7 +1,7 @@
 accessing
 project
     ^ project
-        ifNil: [
+        ifNil: [ 
             "Bootstrap Metacello if it is not already loaded"
             self class ensureMetacello.
             project := MetacelloMCProject new projectAttributes: self customProjectAttributes.	"Create the Metacello project"

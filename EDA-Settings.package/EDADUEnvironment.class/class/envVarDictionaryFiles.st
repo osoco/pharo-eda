@@ -1,9 +1,9 @@
 private
 envVarDictionaryFiles
-	^ { FileLocator imageDirectory
-		/ 'config'
+	^ { FileLocator imageDirectory fullPath asFileReference 
+		/ 'config' 
 		/ (self currentEnvironment , '.json').
-		"This leads to key conflicts. It was an initial attempt to support
+	  	"This leads to key conflicts. It was an initial attempt to support
 		running more than one application in the same image.
 		If that approach is resumed, this could be used as a reminder
 		of the initial steps. Meanwhile it skips reading config
@@ -11,10 +11,10 @@ envVarDictionaryFiles
 		are not unique.
 		FileLocator imageDirectory parent
 		/ 'game-core'
-		/ 'config'
+		/ 'config' 
 		/ (self currentEnvironment , '.json').
 		FileLocator imageDirectory parent
 		/ 'game-image-processor'
-		/ 'config'
+		/ 'config' 
 		/ (self currentEnvironment , '.json')."
 		} asOrderedCollection.

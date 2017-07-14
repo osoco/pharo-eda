@@ -33,13 +33,13 @@ stompPublisherSettingsOn: aBuilder withConfig: container under: parent populated
 		target: container;
 		label: 'Exchange name' translated;
 		description: 'Exchange name' translated;
-		default: (stompConfig  at: 'exchange').
+		default: (stompConfig  at: 'exchange').		
 	(aBuilder setting: #routingKey)
 		parent: parent;
 		target: container;
 		label: 'Routing key' translated;
 		description: 'Routing key' translated;
-		default: (stompConfig  at: 'routingKey').
+		default: (stompConfig  at: 'routingKey').						
 	(aBuilder setting: #durable)
 		parent: parent;
 		target: container;

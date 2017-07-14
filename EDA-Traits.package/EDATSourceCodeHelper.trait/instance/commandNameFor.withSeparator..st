@@ -10,7 +10,7 @@ commandNameFor: anEventName withSeparator: separator
 			present := self verbInPresentTense: past.
 			result := ''.
 			rest
-				keysAndValuesDo: [ :i :noun |
+				keysAndValuesDo: [ :i :noun | 
 					i < rest size
 						ifTrue: [ result := result , separator ].
 					result := result , noun ].

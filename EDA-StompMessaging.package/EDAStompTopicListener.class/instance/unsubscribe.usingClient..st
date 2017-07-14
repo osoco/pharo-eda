@@ -2,18 +2,18 @@ lifecycle
 unsubscribe: id usingClient: aClient
 	| unsubscribeFrame |
 	listenerProcess
-		ifNotNil: [
+		ifNotNil: [ 
 			listenerProcess terminate.
 			unsubscribeFrame := StampUnsubscribeFrame new id: id.
 			aClient isConnected
 				ifFalse: [ aClient open ].
 			[ aClient writeWithReceipt: unsubscribeFrame ]
 				on: StampError
-					do: [
+					do: [ 
 						"ignore this error"
 						 ];
 				on: ConnectionTimedOut
-					do: [
+					do: [ 
 						"ignore this as well"
 						 ].
 			aClient close ]

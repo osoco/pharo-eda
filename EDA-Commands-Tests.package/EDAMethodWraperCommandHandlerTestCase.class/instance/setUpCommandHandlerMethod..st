@@ -3,7 +3,7 @@ setUpCommandHandlerMethod: resultingEventsCollection
 	| aMethod handlerMethodSource aCommandHandlerReceiver |
 	aCommandHandlerReceiver := self newClass.
 	handlerMethodSource := String
-		streamContents: [ :stream |
+		streamContents: [ :stream | 
 			stream
 				nextPutAll: 'handlerMethod: aCommand';
 				cr;

@@ -6,3 +6,4 @@ eventPublisherSettingsOn: aBuilder under: parent
 		parent: parent.
 
 	^ self stompPublisherSettingsOn: aBuilder withConfig: EDAEventStompTopicPublisher under: #eventPublisher populatedWithValuesFrom: 'eventPublisher'
+		

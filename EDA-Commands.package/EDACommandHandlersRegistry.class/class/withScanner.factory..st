@@ -4,7 +4,7 @@ withScanner: aCommandHandlersScanner factory: aCommandHandlerFactory
 	registry := EDACommandHandlersRegistry emptyRegistry.
 	handlerAssocs := aCommandHandlersScanner allCommandHandlerMethods.
 	handlerAssocs
-		do: [ :assoc |
+		do: [ :assoc | 
 			commandClass := assoc key.
 			handlerMethod := assoc value.
 			commandHandler := aCommandHandlerFactory newFromHandlerMethod: handlerMethod.

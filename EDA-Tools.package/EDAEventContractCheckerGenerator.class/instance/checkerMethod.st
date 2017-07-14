@@ -47,7 +47,7 @@ checkerMethod
 		nextPutAll: '	self assert: (event attribute: event commandId matches: commandId).';
 		nextPut: cr.
 	(body associations reject: [ :assoc | self class skippedEventAttributes anySatisfy: [ :attr | attr = assoc key ] ])
-		do: [ :assoc |
+		do: [ :assoc | 
 			result
 				nextPutAll: '	self assert: (event attribute: event ';
 				nextPutAll: assoc key;

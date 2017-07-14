@@ -3,7 +3,7 @@ printOn: t1
 	| t2 |
 	t2 := ''.
 	self class allInstVarNames
-		do: [ :t4 |
+		do: [ :t4 | 
 			t2 isEmpty
 				ifTrue: [ t2 := '{ ' ]
 				ifFalse: [ t2 := t2 , ', ' ].

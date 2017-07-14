@@ -7,8 +7,8 @@ readBodyString: length
 	totalRead := 0.
 	[ readStream atEnd ] whileFalse: [
 		[ read := encoder readInto: buffer startingAt: 1 count: buffer size fromStream: readStream ]
-			on: ZnByteStringBecameWideString
-			do: [ :notification |
+			on: ZnByteStringBecameWideString 
+			do: [ :notification | 
 					buffer := notification wideString.
 					bufferStream ifNotNil: [ | wideString position |
 						position := bufferStream position.
@@ -18,7 +18,7 @@ readBodyString: length
 		totalRead := totalRead + read.
 		totalRead > StampConstants maxBodySize
 			ifTrue: [ self error: 'Body too large' ].
-		bufferStream ifNil: [
+		bufferStream ifNil: [ 
 			readStream atEnd
 				ifTrue: [ self readEndFrame. ^ buffer copyFrom: 1 to: read ]
 				ifFalse: [ bufferStream := (length ifNil: [ buffer species new ] ifNotNil: [ buffer species new: length ]) writeStream ] ].

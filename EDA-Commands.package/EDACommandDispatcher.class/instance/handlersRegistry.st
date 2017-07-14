@@ -1,3 +1,3 @@
 accessing
 handlersRegistry
-	^ handlersRegistry
+	^ handlersRegistry 

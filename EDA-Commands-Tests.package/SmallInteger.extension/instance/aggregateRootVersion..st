@@ -1,3 +1,3 @@
 *EDA-Commands-Tests
 aggregateRootVersion: aVersionNumber
-	"Do noting, only for test purposes"
+	"Do nothing, only for test purposes"

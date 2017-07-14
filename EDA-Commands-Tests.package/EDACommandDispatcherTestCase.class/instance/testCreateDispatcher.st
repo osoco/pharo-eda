@@ -1,3 +1,3 @@
 tests
 testCreateDispatcher
-	self assert: dispatcher handlersRegistry equals: handlersRegistry.
+	self assert: dispatcher handlersRegistry equals: handlersRegistry. 

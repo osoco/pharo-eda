@@ -10,6 +10,6 @@ testCreation
 		newFromHandlerMethod: aMethod eventStore: anEventStore eventBus: anEventBus.
 	self assert: handler isNotNil.
 	self assert: handler eventStore equals: anEventStore.
-	self assert: handler eventBus equals: anEventBus.
+	self assert: handler eventBus equals: anEventBus.	
 	self assert: handler handlerMethod equals: aMethod.
 	self assert: handler aggregateRootClass equals: aMethod methodClass.

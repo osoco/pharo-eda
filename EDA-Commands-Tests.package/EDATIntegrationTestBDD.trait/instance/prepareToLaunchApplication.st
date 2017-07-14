@@ -1,4 +1,4 @@
 lifecycle
 prepareToLaunchApplication
-	"Compatibility purposes"
+	"Compatibility purposes"	
 	self shouldBeImplemented.

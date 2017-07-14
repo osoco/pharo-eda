@@ -1,4 +1,4 @@
-Class: EDATestSettings
+Class: EDATestSettings 
 
 Adds some explicit configuration settings for integration tests.
 

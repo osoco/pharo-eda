@@ -9,7 +9,7 @@ generateTestHelperBuildCommandMethod
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '    | commandMessage commandJson commandMeta commandBody cmdCommandId cmdVersion cmdAttributes |';
+		nextPutAll: '    | commandMessage commandJson commandMeta commandBody cmdCommandId cmdVersion cmdContractVersion cmdAttributes result |';
 		nextPut: cr.
 	result
 		nextPutAll: '	commandMessage := self read';
@@ -29,13 +29,24 @@ generateTestHelperBuildCommandMethod
 		nextPutAll: '	cmdCommandId := commandMeta at: ''id'' ifPresent: [ :v | v ] ifAbsent: [ UUID new greaseString ].';
 		nextPut: cr.
 	result
-		nextPutAll: '	cmdVersion := commandBody at: ''version'' ifAbsent: [ 1 ].';
-		nextPut: cr.
-	result
 		nextPutAll: '	cmdAttributes := Dictionary new.';
 		nextPut: cr.
-	commandAttrs
-		do: [ :attr |
+	result
+		nextPutAll: '	cmdContractVersion := commandMeta at: ''version'' ifAbsent: [ ';
+		nextPutAll: self version greaseString;
+		nextPutAll: ' ].';
+		nextPut: cr.
+	result
+		nextPutAll: '	cmdAttributes at: ''version'' put: cmdContractVersion.';
+		nextPut: cr.
+	result
+		nextPutAll: '	cmdVersion := commandBody at: ''version'' ifAbsent: [ 0 ].';
+		nextPut: cr.
+	result
+		nextPutAll: '	cmdAttributes at: ''aggregateRootVersion'' put: cmdVersion.';
+		nextPut: cr.
+	(commandAttrs select: [ :a | a ~= 'version' ])
+		do: [ :attr | 
 			result
 				nextPutAll: '	commandBody at: ''';
 				nextPutAll: attr;
@@ -44,10 +55,23 @@ generateTestHelperBuildCommandMethod
 				nextPutAll: ''' put: v ].';
 				nextPut: cr ].
 	result
-		nextPutAll: '	^ ';
+		nextPutAll: '	result := ';
 		nextPutAll: self appName;
 		nextPutAll: cmdName;
 		nextPut: Character space;
 		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'cmd');
+		nextPut: $.;
 		nextPut: cr.
+	result
+		nextPutAll: '	commandBody at: ''id'' ifPresent: [ :v | result aggregateRootId: v ].';
+		nextPut: cr.
+	result
+		nextPutAll: '	result version: cmdContractVersion.';
+		nextPut: cr.
+	result
+		nextPutAll: '	result aggregateRootVersion: cmdVersion.';
+		nextPut: cr.
+	result
+		nextPutAll: '	^ result';
+			nextPut: cr.
 	^ result contents

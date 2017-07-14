@@ -6,3 +6,4 @@ commandPublisherSettingsOn: aBuilder
 		parent: #edatests.
 
 	^ self stompPublisherSettingsOn: aBuilder withConfig: EDACommandStompTopicPublisher under: #testCommandPublisher populatedWithValuesFrom: 'testCommandPublisher'
+		

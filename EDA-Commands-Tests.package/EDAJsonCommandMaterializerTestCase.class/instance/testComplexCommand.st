@@ -14,7 +14,7 @@ testComplexCommand
 	  "authorUsername": "' , authorUsername , '",
 	  "params": {
 	    "applicationKey": "' , applicationKey , '",
-		 "levels": [ {
+		 "levels": [ { 
 			   "levelName": "first",
 			   "levelRangeSize": 100
 		     },{
@@ -29,7 +29,7 @@ testComplexCommand
 	        aggregateRootVersion: aggregateRootVersion;
 	        authorUsername: authorUsername;
 	        applicationKey: applicationKey;
-	        levels: {
+	        levels: { 
 	            GCLevel new
 	                levelName: 'first';
 	                levelRangeSize: 100.

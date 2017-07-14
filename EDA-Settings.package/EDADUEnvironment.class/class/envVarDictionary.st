@@ -3,8 +3,8 @@ envVarDictionary
 	| result |
 	result := Dictionary new.
 	self envVarDictionaryFiles do: [ :envFile |
-		envFile exists
+		envFile exists 
 			ifTrue: [ result := result union: (NeoJSONReader on: envFile readStream) parseMap ]].
-
+	
 	result ifEmpty: [ NotFound signal: (self envVarDictionaryFiles asCommaString) ]
 			 ifNotEmpty: [ :n | ^n ]

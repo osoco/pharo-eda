@@ -1,6 +1,6 @@
 initialization
 initializeErrorWriter
-	errorWriter := [ :error |
+	errorWriter := [ :error | 
 	| aux paramsDict |
 	aux := Dictionary new.
 	aux at: #name put: (EDAMessageSerializer nameWithoutPrefixForMessageClass: error).

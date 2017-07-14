@@ -13,7 +13,7 @@ generateEDAApplicationRegisterCommandBuildersMethodFor: appName
 	result nextPutAll: '	EDACommandBuilderRegistry'; nextPut: cr.
 	commands := generator retrieveImplementedCommandsFor: appName.
 	commands keys asOrderedCollection
-		keysAndValuesDo: [ :i :key |
+		keysAndValuesDo: [ :i :key | 
 			i > 1
 				ifTrue: [ result nextPut: $; ; nextPut: cr ].
 			result

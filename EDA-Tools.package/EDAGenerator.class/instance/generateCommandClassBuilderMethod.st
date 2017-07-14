@@ -25,9 +25,16 @@ generateCommandClassBuilderMethod
 	method
 		nextPutAll: '	result commandId: theCommandId.';
 		nextPut: cr.
-	method nextPutAll: '	result aggregateRootVersion: theVersion.'.
+	method
+		nextPutAll: '	result aggregateRootVersion: theVersion.';
+		nextPut: cr.
+	method
+		nextPutAll: '	result version: (theAttributes at: ''version'' ifAbsent: [ ';
+		nextPutAll: self version greaseString;
+		nextPutAll: ' ]).';
+		nextPut: cr.
 	attrs
-		do: [ :attr |
+		do: [ :attr | 
 			method
 				nextPut: cr;
 				nextPutAll: '	theAttributes at: ''';

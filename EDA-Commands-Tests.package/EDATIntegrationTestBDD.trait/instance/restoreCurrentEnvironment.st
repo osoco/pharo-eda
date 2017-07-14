@@ -1,7 +1,7 @@
 lifecycle
 restoreCurrentEnvironment
 	self currentEnvironment
-		ifNotNil: [ :environmentValueToRestore |
+		ifNotNil: [ :environmentValueToRestore | 
 			OSPlatform current environment
 				at: EDADUEnvironment environmentVariableName
 				put: environmentValueToRestore ]

@@ -30,3 +30,4 @@ testDeleteAchievementType
 	    EDAJsonCommandMaterializer new
 	    materialize: deleteCommandMessage.
 	self assert: actualCommand equals: expectedCommand.
+	

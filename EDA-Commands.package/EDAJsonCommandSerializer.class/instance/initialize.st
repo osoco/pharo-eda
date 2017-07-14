@@ -1,7 +1,7 @@
 initialization
 initialize
 	| paramsDictionary |
-	writer := [ :aCommand |
+	writer := [ :aCommand | 
 	| aux |
 	aux := Dictionary new.
 	aux at: #name put: (EDAMessageSerializer nameForMessageClass: aCommand class).
@@ -12,7 +12,7 @@ initialize
 		newFrom: (aCommand class instanceVariables collect: [ :instVar | instVar -> (aCommand instVarNamed: instVar) ]).
 	aux at: #params put: paramsDictionary.
 	String
-		streamContents: [ :stream |
+		streamContents: [ :stream | 
 			(NeoJSONWriter on: stream)
 				for: DateAndTime customDo: [ :mapping | mapping encoder: [ :dateAndTime | dateAndTime printString ] ];
 				nextPut: aux ] ]

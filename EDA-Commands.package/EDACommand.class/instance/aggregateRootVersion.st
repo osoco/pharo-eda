@@ -2,5 +2,5 @@ accessing
 aggregateRootVersion
   | result |
   result := aggregateRootVersion.
-  result ifNil: [ result := 1. self aggregateRootVersion: result ].
+  result ifNil: [ result := 0. self aggregateRootVersion: result ].
   ^ result

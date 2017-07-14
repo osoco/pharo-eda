@@ -13,7 +13,9 @@ generateReadFromFileTestHelperMethod: methodName for: resourceName ofType: type
 	result
 		nextPutAll: '	file := (FileSystem disk workingDirectory / ''contracts'' / ''BBVA-ATS'' / ''';
 		nextPutAll: type;
-		nextPutAll: ''' / ''v1'' / ''';
+		nextPutAll: ''' / ''v';
+		nextPutAll: self version greaseString;
+		nextPutAll: ''' / ''';
 		nextPutAll: (self upcasedToDotSeparated: resourceName);
 		nextPutAll: '.example.json'') readStream.';
 		nextPut: cr.

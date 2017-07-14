@@ -1,3 +1,3 @@
 *EDA-Projections-Processing
 updateProjection: aProjectionClass
-	aProjectionClass projectEvent: self.
+	^ aProjectionClass projectEvent: self.

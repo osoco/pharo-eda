@@ -6,6 +6,6 @@ edaTestSettingsOn: aBuilder
 		description: 'EDA tests' translated;
 		noOrdering;
 		parent: #eda.
-
+		
 	self commandPublisherSettingsOn: aBuilder.
 	self eventListenerSettingsOn: aBuilder.

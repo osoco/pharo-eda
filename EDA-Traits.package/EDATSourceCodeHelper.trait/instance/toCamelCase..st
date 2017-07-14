@@ -1,3 +1,3 @@
 helper
 toCamelCase: aString
-	^ self underscoreSeparatedToCamelCase: aString asCamelCase
+	^ self underscoreSeparatedToCamelCase: aString asCamelCase 

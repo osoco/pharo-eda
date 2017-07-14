@@ -5,7 +5,7 @@ buildWith: commandParams
 	| command |
 	command := super buildWith: commandParams.
 	(commandParams at: #params)
-		associationsDo: [ :assoc |
+		associationsDo: [ :assoc | 
 			| key |
 			key := assoc key.
 			key = 'id'

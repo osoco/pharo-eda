@@ -4,7 +4,7 @@ publishMessage: aMessage usingClient: aClient withConfig: config
 	self logInit: aMessage usingClient: aClient withConfig: config.
 	aClient isConnected
 		ifFalse: [ aClient open ].
-	[
+	[ 
 	sendFrame := StampSendFrame new.
 	sendFrame destination: config destination.
 	sendFrame text: aMessage.

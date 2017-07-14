@@ -37,7 +37,7 @@ checkerMethod
 	cls := self class environment at: commandClassName asSymbol.
 	attrs := self allAttributesOf: cls including: attrs.
 	attrs
-		do: [ :attr |
+		do: [ :attr | 
 			result
 				nextPut: $#;
 				nextPutAll: attr;

@@ -1,3 +1,3 @@
 persistence
 removeProjection
-    Repository removeProjection: self class.
+    self class removeProjection.

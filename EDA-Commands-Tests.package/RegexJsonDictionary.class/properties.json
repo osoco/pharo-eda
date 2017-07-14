@@ -1,7 +1,10 @@
 {
 	"classtraitcomposition" : "EDATJsonRegexHelper classTrait",
 	"classvars" : [ ],
-	"instvars" : [ ],
+	"instvars" : [
+		"testCase",
+		"dict"
+	],
 	"name" : "RegexJsonDictionary",
 	"commentStamp" : "",
 	"super" : "Dictionary",

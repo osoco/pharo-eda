@@ -10,7 +10,7 @@ retrieveEventName
 			past := self verbInPastTense: verb.
 			result := ''.
 			rest
-				keysAndValuesDo: [ :i :noun |
+				keysAndValuesDo: [ :i :noun | 
 					i > 1
 						ifTrue: [ result := result , '_' ].
 					result := result , noun ].

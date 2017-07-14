@@ -1,3 +1,8 @@
 accessing
 version
-  ^ version ifNil: [ self aggregateRootVersion  ] ifNotNil: [ :v | v ].
+	| result |
+	result := version.
+	result
+		ifNil: [ result := 1.
+			self version: result ].
+	^ result

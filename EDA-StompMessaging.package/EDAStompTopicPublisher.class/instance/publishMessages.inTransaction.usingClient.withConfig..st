@@ -3,11 +3,11 @@ publishMessages: messageCollection inTransaction: transactionId usingClient: aCl
 	| beginFrame commitFrame |
 	aClient isConnected
 		ifFalse: [ aClient open ].
-	[
+	[ 
 	beginFrame := StampBeginFrame transaction: transactionId.
 	aClient writeWithReceipt: beginFrame.
 	messageCollection
-		do: [ :message |
+		do: [ :message | 
 			self
 				publishMessage: message
 				inTransaction: transactionId

@@ -1,3 +1,3 @@
 lifecycle
 checkSettingsLoaded
-	"Compatibility purposes"
+	"Compatibility purposes"	

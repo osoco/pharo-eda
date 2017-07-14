@@ -10,7 +10,7 @@ edaSettingsOn: aBuilder
 		description: 'Event-Driven Architecture' translated;
 		noOrdering;
 		parent: #osoco.
-
+		
 	self commandListenerSettingsOn: aBuilder under: #eda.
 	self eventPublisherSettingsOn: aBuilder under: #eda.
 	self eventStoreSettingsOn: aBuilder under: #eda.

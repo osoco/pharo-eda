@@ -4,9 +4,9 @@ publishMessage: aMessage withRoutingKey: aRoutingKeyString usingClient: aClient 
 	self logInit: aMessage usingClient: aClient withConfig: config.
 	aClient isConnected
 		ifFalse: [ aClient open ].
-	[
+	[ 
 	sendFrame := StampSendFrame new.
-	sendFrame destination: (config destinationWithRoutingKey: aRoutingKeyString).
+	sendFrame destination: (config destinationWithRoutingKey: aRoutingKeyString). 
 	sendFrame text: aMessage.
 	sendFrame persistent: config durable.
 	aClient writeWithReceipt: sendFrame ]

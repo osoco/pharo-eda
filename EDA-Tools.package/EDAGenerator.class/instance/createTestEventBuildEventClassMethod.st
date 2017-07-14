@@ -3,9 +3,9 @@ createTestEventBuildEventClassMethod
 	| method |
 	method := self generateTestEventBuildEventClassMethod.
 	method
-		associationsDo: [ :assoc |
+		associationsDo: [ :assoc | 
 			^ self
-				compileIfDoesNotExist: assoc key
+				compile: assoc key
 				sourceCode: assoc value
 				inClass: (self class environment at: (self appName , 'Test' , (self toCamelCase: self eventName)) asSymbol) class
 				classifiedAs: self protocol ]

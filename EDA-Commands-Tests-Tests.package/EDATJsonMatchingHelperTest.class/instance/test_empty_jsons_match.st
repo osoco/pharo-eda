@@ -5,4 +5,4 @@ test_empty_jsons_match
 	| json1 json2 |
 	json1 := ''.
 	json2 := ''.
-	self assert: (self json: json1 matchesRegex: json2).
+	self assert: (self assertJson: json1 matchesRegex: json2).

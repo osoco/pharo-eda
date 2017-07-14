@@ -2,7 +2,7 @@ as yet unclassified
 routingKey: anEvent
 	| applicationId |
 	^ (anEvent isKindOf: EDAEventSourcingEvent)
-		ifTrue: [
+		ifTrue: [ 
 			applicationId := (anEvent respondsTo: 'applicationId' asSymbol)
 				ifTrue: [ anEvent applicationId ]
 				ifFalse: [ anEvent id ].

@@ -1,3 +1,3 @@
 accessing
-port: val
+port: val	
 	Port := val

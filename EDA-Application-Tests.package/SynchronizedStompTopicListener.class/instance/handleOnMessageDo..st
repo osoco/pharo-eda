@@ -1,9 +1,9 @@
 logic
 handleOnMessageDo: ctx
 	| proc |
-	proc := [
+	proc := [ 
 		[ self eventsReady ]
-		whileFalse: [
+		whileFalse: [ 
 			Transcript
 				print: 'Waiting 1.5s';
 				cr;

@@ -5,3 +5,4 @@ projectionsRepositorySettingsOn: aBuilder under: parent
 		parent: parent.
 
 	^ self mongoSettingsOn: aBuilder withConfig: EDAProjectionMongoRepository under: #projectionsRepository populatedWithValuesFrom: 'projectionsRepository'
+		

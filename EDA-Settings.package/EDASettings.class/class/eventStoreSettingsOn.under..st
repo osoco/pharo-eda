@@ -5,3 +5,4 @@ eventStoreSettingsOn: aBuilder under: parent
 		parent: parent.
 
 	^ self mongoSettingsOn: aBuilder withConfig: EDAMongoEventStore under: #eventStore populatedWithValuesFrom: 'eventStore'
+		

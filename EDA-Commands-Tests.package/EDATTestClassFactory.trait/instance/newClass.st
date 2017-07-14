@@ -1,5 +1,5 @@
 class-factory
 newClass
-	^ self newSubclassOf: Object
-		instanceVariableNames: ''
+	^ self newSubclassOf: Object 
+		instanceVariableNames: '' 
 		classVariableNames: ''

@@ -20,16 +20,16 @@ mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValue
 		target: container;
 		label: 'Mongo username' translated;
 		description: 'Mongo username' translated;
-		default: (mongoConfig at: 'username').
+		default: (mongoConfig at: 'username').	
 	(aBuilder setting: #password)
 		parent: parent;
 		target: container;
 		label: 'Mongo password' translated;
 		description: 'Mongo password' translated;
-		default: (mongoConfig at: 'password').
+		default: (mongoConfig at: 'password').	
 	(aBuilder setting: #databaseName)
 		parent: parent;
 		target: container;
 		label: 'Mongo database' translated;
 		description: 'Mongo database name' translated;
-		default: (mongoConfig at: 'database').
+		default: (mongoConfig at: 'database').								

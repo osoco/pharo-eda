@@ -2,7 +2,7 @@ private
 ensureMetacelloBaseConfiguration
   Smalltalk
     at: #'ConfigurationOf'
-    ifAbsent: [
+    ifAbsent: [ 
       | repository version |
       repository := MCHttpRepository
         location: 'http://smalltalkhub.com/mc/dkh/metacello/main'
@@ -10,7 +10,7 @@ ensureMetacelloBaseConfiguration
         password: ''.
       repository
         versionReaderForFileNamed: 'Metacello-Base-dkh.107'
-        do: [ :reader |
+        do: [ :reader | 
           version := reader version.
           version load.
           version workingCopy repositoryGroup addRepository: repository ] ]

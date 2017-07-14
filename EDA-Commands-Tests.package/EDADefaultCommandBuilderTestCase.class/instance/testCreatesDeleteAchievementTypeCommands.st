@@ -4,8 +4,8 @@ testCreatesDeleteAchievementTypeCommands
       actualCommand expectedCommand |
     params := {
         'applicationKey' -> 'app-1'
-    } asDictionary.
-    map := {
+    } asDictionary. 
+    map := { 
         'name' -> 'DELETE_ACHIEVEMENT_TYPE'.
         'commandId' -> 'c1'.
         'aggregateRootVersion' -> '2'.

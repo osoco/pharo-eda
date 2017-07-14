@@ -1,16 +1,17 @@
 bdd
 imageCommandMessagesMatch: expectedCommandMessages
 	| anyCommandGenerated |
-	[
-	anyCommandGenerated := true.
+	[ anyCommandGenerated := true.
 	expectedCommandMessages
-		doWithIndex: [ :eventMessageRegex :index |
+		keysAndValuesDo: [ :index :eventMessageRegex |
 			| frame |
 			frame := self imageListener client readMessage.
 			anyCommandGenerated := true.
-			self generatedEvent: frame matchesRegex: eventMessageRegex. ] ]
+			self generatedEvent: frame matchesRegex: eventMessageRegex ] ]
 		on: ConnectionTimedOut
-		do: [ :ex |
+		do: [ :ex | 
 			anyCommandGenerated
-				ifTrue: [ self fail: 'At least one of the generated commands do not match the expected regular expression' ]
+				ifTrue: [ self
+						fail:
+							'At least one of the generated commands do not match the expected regular expression' ]
 				ifFalse: [ self fail: 'No commands generated' ] ]

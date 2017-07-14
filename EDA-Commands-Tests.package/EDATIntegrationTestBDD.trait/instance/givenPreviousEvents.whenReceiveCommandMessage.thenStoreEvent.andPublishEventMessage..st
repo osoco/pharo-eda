@@ -1,10 +1,19 @@
 bdd
 givenPreviousEvents: previousEventsCollection whenReceiveCommandMessage: aCommandMessage thenStoreEvent: expectedStoredEvent andPublishEventMessage: expectedEventMessage
 	| expectedStoredEvents aCommandMessageCollection |
-	expectedStoredEvents := expectedStoredEvent ifNotNil: [ OrderedCollection newFrom: {expectedStoredEvent} ].
-	aCommandMessageCollection := aCommandMessage ifNotNil: [ OrderedCollection newFrom: {aCommandMessage} ].
+	expectedStoredEvents :=
+		expectedStoredEvent
+			ifNil: [ OrderedCollection new ]
+			ifNotNil: [ :event | OrderedCollection with: event ].
+	aCommandMessageCollection :=
+		aCommandMessage
+			ifNil: [ OrderedCollection new ]
+			ifNotNil: [ :message | OrderedCollection with: message ].
 	self
 		givenPreviousEvents: previousEventsCollection
 		whenReceiveCommandMessages: aCommandMessageCollection
 		thenStoreEvents: expectedStoredEvents
-		andPublishEventMessages: (expectedEventMessage ifNotNil: [ OrderedCollection newFrom: {expectedEventMessage} ]).
+		andPublishEventMessages:
+			(expectedEventMessage
+				ifNil: [ OrderedCollection new ]
+				ifNotNil: [ :message | OrderedCollection with: message ]).

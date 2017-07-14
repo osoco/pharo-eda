@@ -1,4 +1,4 @@
-Class: EDAEventStompTopicListener
+Class: EDAEventStompTopicListener 
 
 Used in integration tests, to be able to verify the correctness of the generated events.
 

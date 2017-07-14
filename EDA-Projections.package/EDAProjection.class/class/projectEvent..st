@@ -1,8 +1,19 @@
 projection
 projectEvent: anEvent
-	| projectionHandlers projectionHandlerMethodsForEvent |
+	| projectionHandlers projectionHandlerMethodsForEvent aProjection |
 	projectionHandlers := Pragma allNamed: #projectionForEvents: in: self class.
 	projectionHandlerMethodsForEvent := projectionHandlers
-		select: [ :pragma | pragma arguments first contains: [ :supportedEvent | supportedEvent asClass == anEvent class ] ]
+		select: [ :pragma | pragma arguments first anySatisfy: [ :supportedEvent | supportedEvent = anEvent class name ] ]
 		thenCollect: [ :pragma | pragma method ].
-	projectionHandlerMethodsForEvent do: [ :projectionMethod | self perform: projectionMethod selector with: anEvent ]
+	projectionHandlerMethodsForEvent
+		do: [ :projectionMethod | 
+			[ aProjection := self perform: projectionMethod selector with: anEvent ]
+				on: Exception
+				do: [ :exception | 
+					Transcript
+						print: 'WARNING: Projection of event failed with error ';
+						print: exception description;
+						cr ].
+			aProjection incProjectedEvents.
+			aProjection saveProjection ].
+	^ aProjection

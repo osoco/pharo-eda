@@ -8,7 +8,7 @@ generateTestHelperBuildEventMethod
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '	| eventMessage eventJson eventBody evtAttributes |';
+		nextPutAll: '	| eventMessage eventJson eventMeta eventBody evtAttributes |';
 		nextPut: cr.
 	result
 		nextPutAll: '	eventMessage := self ';
@@ -19,13 +19,22 @@ generateTestHelperBuildEventMethod
 		nextPutAll: '	eventJson := NeoJSONReader fromString: eventMessage.';
 		nextPut: cr.
 	result
+		nextPutAll: '	eventMeta := eventJson at: #meta.';
+		nextPut: cr.
+	result
 		nextPutAll: '	eventBody := eventJson at: #body.';
 		nextPut: cr.
 	result
 		nextPutAll: '	evtAttributes := Dictionary new.';
 		nextPut: cr.
+	result
+		nextPutAll: '	evtAttributes at: ''version'' put: (eventMeta at: ''version'').';
+		nextPut: cr.
+	result
+		nextPutAll: '	evtAttributes at: ''aggregateRootVersion'' put: (eventBody at: ''version'').';
+		nextPut: cr.
 	eventAttrs
-		do: [ :attr |
+		do: [ :attr | 
 			result
 				nextPutAll: '	eventBody at: ''';
 				nextPutAll: attr uncapitalized;

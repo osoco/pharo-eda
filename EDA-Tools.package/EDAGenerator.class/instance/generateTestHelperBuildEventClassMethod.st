@@ -28,7 +28,7 @@ generateTestHelperBuildEventClassMethod
 		nextPut: cr.
 	method nextPutAll: '	result timestamp: DateAndTime now asUTC.'.
 	attrs
-		do: [ :attr |
+		do: [ :attr | 
 			method
 				nextPut: cr;
 				nextPutAll: '	result ';

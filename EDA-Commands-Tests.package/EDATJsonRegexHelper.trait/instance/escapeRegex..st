@@ -1,6 +1,7 @@
-as yet unclassified
+regex logic
 escapeRegex: aRegex
-	| escaped |
-	escaped := aRegex copyWithRegex: '<ANYTHING>' matchesReplacedWith: '(.*)'.
-	escaped := escaped copyWithRegex: '\:' matchesReplacedWith: '\:'.
-	^ escaped
+	| result |
+	result := aRegex copyWithRegex: '<ANYTHING>' matchesReplacedWith: '(.*)'.
+	result := result copyWithRegex: '1970-01-01T00\:00\:00' matchesReplacedWith: '(.*)'.
+	result := result copyWithRegex: '\:' matchesReplacedWith: '\:'.
+	^ result
