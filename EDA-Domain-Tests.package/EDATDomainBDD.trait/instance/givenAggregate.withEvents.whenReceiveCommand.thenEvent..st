@@ -1,4 +1,4 @@
-as yet unclassified
+BDD
 givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvent: expectedEvent
 	| aggregateRoot handlerSelectorSymbol commandClassName |
 	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
