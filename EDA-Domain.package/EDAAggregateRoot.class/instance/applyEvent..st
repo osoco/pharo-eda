@@ -12,7 +12,7 @@ applyEvent: anEvent
 	].
 	delete
 		ifTrue: [ ^ self ].
-	eventClassName := anEvent class name.
+	eventClassName := anEvent class greaseString.
 	applyEventSelector := self
 		retrieveApplyEventMethod: anEvent
 		withLogging: false.

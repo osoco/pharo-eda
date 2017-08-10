@@ -1,6 +1,6 @@
 handling
 handle: aCommand withErrorStrategy: strategy
-	| aggregateRoot producedEvents |
+	| aggregateRoot processedEvents producedEvents |
 	[
 		aggregateRoot := self buildAggregateRootFromCommand: aCommand.
 		aggregateRoot isDeleted
@@ -16,12 +16,14 @@ handle: aCommand withErrorStrategy: strategy
 					cr.
 			] ifFalse: [
 				producedEvents := self delegateHandlingOfCommand: aCommand toAggregate: aggregateRoot.
-				self processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: aggregateRoot.
+				processedEvents := self processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: aggregateRoot.
 			]
 		]
 	on: Error
 	do: [ :exception |
-		producedEvents := self manageCommandHandlingError: exception withEvents: producedEvents usingErrorStrategy: strategy
+		producedEvents ifNotNil: [ :evts |
+			processedEvents := self manageCommandHandlingError: exception withEvents: evts usingErrorStrategy: strategy
+		]
 	].
-	eventBus produceEvents: producedEvents.
+	eventBus produceEvents: processedEvents.
 	^ self

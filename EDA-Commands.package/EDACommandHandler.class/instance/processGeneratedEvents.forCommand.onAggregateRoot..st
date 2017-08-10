@@ -17,3 +17,4 @@ processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: anA
 	Transcript print: 'Projecting events...'.
 	EDAProjectionProcessor projectEvents: events.
 	Transcript print: ' done'; cr.
+	^ events

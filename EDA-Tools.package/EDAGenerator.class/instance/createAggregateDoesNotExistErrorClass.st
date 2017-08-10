@@ -5,7 +5,7 @@ createAggregateDoesNotExistErrorClass
 	attributes := OrderedCollection new.
 	(self classExists: cls)
 		ifTrue: [ attributes := self allAttributesOf: (self class environment at: cls) ].
-	^ Error
+	^ EDAAggregateRootDoesNotExist
 		subclass: cls
 		instanceVariableNames: (self concatenateCollection: attributes with: ' ')
 		classVariableNames: ''
