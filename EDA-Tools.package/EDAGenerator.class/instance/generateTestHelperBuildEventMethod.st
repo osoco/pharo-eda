@@ -2,13 +2,19 @@ code generation - test trait
 generateTestHelperBuildEventMethod
 	| result eventAttrs cr |
 	cr := Character cr.
-	eventAttrs := self retrieveEventAttributesBut: self class skippedEventAttributes.
+	eventAttrs := self
+		retrieveEventAttributesBut: self class skippedEventAttributes.
 	result := WriteStream on: String new.
-	result nextPutAll: (self generateTestHelperBuildEventMethodNameWithId: 'evtId' andCommandArg: 'evtCommandId').
+	result
+		nextPutAll:
+			(self
+				generateTestHelperBuildEventMethodNameWithId: 'evtId'
+				andCommandArg: 'inputCommandId').
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '	| eventMessage eventJson eventMeta eventBody evtAttributes |';
+		nextPutAll:
+			'	| eventMessage eventJson eventMeta eventBody evtAttributes evtCommandId |';
 		nextPut: cr.
 	result
 		nextPutAll: '	eventMessage := self ';
@@ -31,8 +37,12 @@ generateTestHelperBuildEventMethod
 		nextPutAll: '	evtAttributes at: ''version'' put: (eventMeta at: ''version'').';
 		nextPut: cr.
 	result
-		nextPutAll: '	evtAttributes at: ''aggregateRootVersion'' put: (eventBody at: ''version'').';
+		nextPutAll:
+			'	evtAttributes at: ''aggregateRootVersion'' put: (eventBody at: ''version'').';
 		nextPut: cr.
+	result
+		nextPutAll: '	evtCommandId := inputCommandId.';
+		nextPut: Character cr.
 	eventAttrs
 		do: [ :attr | 
 			result
@@ -53,10 +63,9 @@ generateTestHelperBuildEventMethod
 		nextPut: cr.
 	result
 		nextPutAll: '			';
-		nextPut: cr.
-	result
 		nextPutAll: self appName;
-		nextPutAll: (self toCamelCase: self eventName);
+		nextPutAll: (self toCamelCase: self eventName).
+	result
 		nextPut: Character space;
 		nextPutAll: (self generateTestHelperBuildEventClassMethodNameWithArgPrefix: 'evt');
 		nextPut: $);

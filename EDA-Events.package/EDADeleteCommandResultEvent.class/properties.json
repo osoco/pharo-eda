@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "EDACommandResultEvent",
+	"category" : "EDA-Events-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDADeleteCommandResultEvent",
+	"type" : "normal"
+}

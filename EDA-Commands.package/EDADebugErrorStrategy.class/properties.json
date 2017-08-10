@@ -2,7 +2,9 @@
 	"commentStamp" : "JoseSanLeandro 7/21/2015 15:21",
 	"super" : "EDACommandErrorHandlingStrategy",
 	"category" : "EDA-Commands-Error-Strategies",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"errors"
+	],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],

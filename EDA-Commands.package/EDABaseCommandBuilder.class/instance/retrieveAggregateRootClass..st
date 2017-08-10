@@ -1,0 +1,3 @@
+protected
+retrieveAggregateRootClass: jsonDict
+	self subclassResponsibility

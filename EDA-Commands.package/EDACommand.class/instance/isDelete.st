@@ -1,0 +1,3 @@
+helpers
+isDelete
+	^ false

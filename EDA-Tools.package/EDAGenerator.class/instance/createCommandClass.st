@@ -5,7 +5,7 @@ createCommandClass
 	attributes := self retrieveCommandAttributesBut: self class skippedCommandAttributes.
 	(self classExists: cls)
 		ifTrue: [ attributes := (self allAttributesOf: (self class environment at: cls) including: attributes) ].
-	^ EDACommand
+	EDACommand
 		subclass: self retrieveCommandClassName asSymbol
 		instanceVariableNames: (self concatenateCollection: attributes with: ' ')
 		classVariableNames: ''

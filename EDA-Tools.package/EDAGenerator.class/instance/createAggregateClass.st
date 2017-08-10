@@ -1,7 +1,7 @@
 code generation - aggregate
 createAggregateClass
 	| cls attributes |
-	cls := (self appName , (self underscoreSeparatedToCamelCase: self aggregate)) asSymbol.
+	cls := self aggregateClass asSymbol.
 	attributes := self retrieveAggregateAttributesBut: self class skippedAggregateAttributes.
 		(self classExists: cls)
 		ifTrue: [ attributes := self allAttributesOf: (self class environment at: cls) including: attributes ].

@@ -1,0 +1,3 @@
+code generation - command
+generateCommandClassRetrieveAggregateRootClassMethodName
+	^ 'retrieveAggregateRootClass'

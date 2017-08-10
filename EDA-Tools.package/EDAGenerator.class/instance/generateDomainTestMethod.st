@@ -17,9 +17,19 @@ generateDomainTestMethod
 		nextPutAll: 'SampleCommand.';
 		nextPut: cr.
 	result
-		nextPutAll: '	event := self build';
-		nextPutAll: evtName;
-		nextPutAll: 'SampleEventWithId: ''<ANYTHING>'' andCommandId: command commandId.';
+		nextPutAll: '	event := self build'.
+	self isDeleteEvent
+		ifTrue: [
+			result
+				nextPutAll: 'DeletedEventWithId: ''<ANYTHING>'' ';
+				nextPutAll: 'andCommand: command.'
+		] ifFalse: [
+			result
+				nextPutAll: evtName;
+				nextPutAll: 'SampleEventWithId: ''<ANYTHING>'' ';
+				nextPutAll: 'andCommandId: command commandId.'
+		].
+	result
 		nextPut: cr.
 	result
 		nextPutAll: '	self';
@@ -30,7 +40,7 @@ generateDomainTestMethod
 		nextPutAll: self aggregate capitalized;
 		nextPut: cr.
 	result
-		nextPutAll: '			withEvents: {}';
+		nextPutAll: '			withEvents: OrderedCollection new';
 		nextPut: cr.
 	result
 		nextPutAll: '			whenReceiveCommand: command';

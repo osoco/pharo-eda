@@ -1,3 +1,5 @@
 code generation - test trait
 generateTestHelperBuildEventMethodNameWithId: idArg andCommandArg: commandArg
-	^ 'build' , (self toCamelCase: self eventName ) , 'SampleEventWithId:' , idArg , ' andCommandId: ' , commandArg
+	| evtName |
+	evtName := self toCamelCase: self eventName.
+	^ 'build' , evtName , 'SampleEventWithId: ' , idArg , ' andCommandId: ' , commandArg

@@ -3,8 +3,7 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"eventStore",
-		"eventBus",
-		"aggregateRootClass"
+		"eventBus"
 	],
 	"name" : "EDACommandHandler",
 	"commentStamp" : "",

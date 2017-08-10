@@ -7,7 +7,8 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"handlerMethod",
-		"aggregateRoot"
+		"aggregateRoot",
+		"aggregateRootClass"
 	],
 	"name" : "EDAMethodWrapperCommandHandler",
 	"type" : "normal"

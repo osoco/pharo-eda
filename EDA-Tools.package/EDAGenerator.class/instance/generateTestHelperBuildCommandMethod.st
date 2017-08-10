@@ -54,10 +54,17 @@ generateTestHelperBuildCommandMethod
 				nextPutAll: attr;
 				nextPutAll: ''' put: v ].';
 				nextPut: cr ].
+	result nextPutAll: '	result := '.
+	self isDeleteCommand
+		ifTrue: [ 
+			result
+				nextPutAll: 'EDADeleteAggregateCommand'
+		] ifFalse: [
+			result
+				nextPutAll: self appName;
+				nextPutAll: cmdName
+		].
 	result
-		nextPutAll: '	result := ';
-		nextPutAll: self appName;
-		nextPutAll: cmdName;
 		nextPut: Character space;
 		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'cmd');
 		nextPut: $.;

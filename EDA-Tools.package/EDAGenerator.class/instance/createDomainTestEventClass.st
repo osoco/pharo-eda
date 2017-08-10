@@ -1,10 +1,16 @@
 code generation - domain test
 createDomainTestEventClass
-	| cls |
+	| cls parent |
+	parent :=
+		self isDeleteEvent ifTrue: [
+				EDADeleteCommandResultEvent
+			] ifFalse: [
+				self class environment at: self retrieveEventClassName asSymbol
+			].
 	cls := (self appName , 'Test' , (self toCamelCase: self eventName)) asSymbol.
-^ (self class environment at: self retrieveEventClassName asSymbol)
-				subclass: cls
-				uses: EDATTestEvent
-				instanceVariableNames: ''
-				classVariableNames: ''
-				package: self appName , '-Domain-Tests-' , (self toCamelCase: self aggregate)
+	parent
+		subclass: cls
+		uses: EDATTestEvent
+		instanceVariableNames: ''
+		classVariableNames: ''
+		package: self appName , '-Domain-Tests-' , (self toCamelCase: self aggregate)

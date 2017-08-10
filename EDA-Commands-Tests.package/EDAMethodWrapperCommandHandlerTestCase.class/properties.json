@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATTestClassFactory classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAMethodWrapperCommandHandlerTestCase",
+	"commentStamp" : "",
+	"super" : "BabyMock2TestCase",
+	"traitcomposition" : "EDATTestClassFactory",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Commands-Tests"
+}

@@ -1,7 +1,7 @@
 instance creation
 withScanner: aCommandHandlersScanner factory: aCommandHandlerFactory
 	| handlerAssocs commandClass   commandHandler registry handlerMethod |
-	registry := EDACommandHandlersRegistry emptyRegistry.
+	registry := self emptyRegistry.
 	handlerAssocs := aCommandHandlersScanner allCommandHandlerMethods.
 	handlerAssocs
 		do: [ :assoc | 

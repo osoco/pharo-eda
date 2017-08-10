@@ -1,7 +1,8 @@
 code generation - integration test
 generateIntegrationTestMethod
-	| result cr routingKey createdTest |
+	| result cr routingKey createdTest evtName |
 	cr := Character cr.
+	evtName := self toCamelCase: self eventName.
 	routingKey := self camelCaseToDotSeparated: (self toCamelCase: self eventName capitalized).
 	result := WriteStream with: String new.
 	result
@@ -36,11 +37,17 @@ generateIntegrationTestMethod
 	result
 		nextPutAll: '	aggregateRootId := command aggregateRootId.';
 		nextPut: cr.
-	result
-		nextPutAll: '	expectedEvent := self build';
-		nextPutAll: (self toCamelCase: self eventName capitalized);
-		nextPutAll: 'SampleEventWithId: aggregateRootId andCommandId: command commandId.';
-		nextPut: cr.
+	self isDeleteEvent ifTrue: [
+			result
+				nextPutAll: '	expectedEvent := self buildDeletedEventWithId: aggregateRootId andCommand: command.'
+		] ifFalse: [
+			result
+				nextPutAll: '	expectedEvent := self build';
+				nextPutAll: evtName;
+				nextPutAll: 'SampleEventWithId: aggregateRootId ';
+				nextPutAll: 'andCommandId: command commandId.'
+		].
+	result nextPut: cr.
 	result
 		nextPutAll: '	expectedMessage := self read';
 		nextPutAll: (self toCamelCase: self eventName capitalized);

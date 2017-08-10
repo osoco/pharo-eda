@@ -6,7 +6,8 @@
 		"aggregateRootClass",
 		"timestamp",
 		"aggregateRootVersion",
-		"version"
+		"version",
+		"delete"
 	],
 	"name" : "EDAEventSourcingEvent",
 	"commentStamp" : "RafaelLuque 3/7/2017 09:25",

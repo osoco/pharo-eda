@@ -1,3 +1,3 @@
 registry
 handlerForCommand: aCommand
-	^ self handlers at: aCommand class ifAbsent: [  ]
+	^ self handlers at: aCommand class ifAbsent: [ nil ]

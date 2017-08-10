@@ -1,4 +1,11 @@
 helper
 retrieveHandlerSelectorSymbol: aCommand
-	self flag: #TODO. "Use the pragma instead"
-	^ ('handle' , aCommand classNameWithoutPrefix , ':') asSymbol
+	| result |
+	(aCommand isDelete)
+		ifTrue: [
+			result := #handleDeleteCommand:.
+		] ifFalse: [
+			self flag: #TODO. "Use the pragma instead"
+			result := ('handle' , aCommand classNameWithoutPrefix , ':') asSymbol
+		].
+	^ result
