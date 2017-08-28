@@ -1,4 +1,4 @@
-as yet unclassified
+lifecycle
 eventListener
 	"Compatibility purposes"
 	self shouldBeImplemented

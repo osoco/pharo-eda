@@ -8,22 +8,12 @@ generateReadFromFileTestHelperMethod: methodName for: resourceName ofType: type
 		nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '	| file result |';
-		nextPut: cr.
-	result
-		nextPutAll: '	file := (FileSystem disk workingDirectory / ''contracts'' / ''BBVA-ATS'' / ''';
+		nextPutAll: '	^ self readFile: (FileSystem disk workingDirectory / ''contracts'' / ''BBVA-ATS'' / ''';
 		nextPutAll: type;
 		nextPutAll: ''' / ''v';
 		nextPutAll: self version greaseString;
 		nextPutAll: ''' / ''';
 		nextPutAll: (self upcasedToDotSeparated: resourceName);
-		nextPutAll: '.example.json'') readStream.';
+		nextPutAll: '.example.json'')';
 		nextPut: cr.
-	result
-		nextPutAll: '	result := file contents.';
-		nextPut: cr.
-	result
-		nextPutAll: '	file close.';
-		nextPut: cr.
-	result nextPutAll: '	^ result'.
 	^ result contents

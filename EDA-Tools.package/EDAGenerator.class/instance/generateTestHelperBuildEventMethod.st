@@ -13,61 +13,26 @@ generateTestHelperBuildEventMethod
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll:
-			'	| eventMessage eventJson eventMeta eventBody evtAttributes evtCommandId |';
+		nextPutAll: '	| result |';
 		nextPut: cr.
 	result
-		nextPutAll: '	eventMessage := self ';
+		nextPutAll: '	result := self ';
+		nextPutAll: (self generateTestHelperBuildEventFromArbitraryFileMethodName);
+		nextPutAll: ' self ';
 		nextPutAll: self generateReadEventFromFileTestHelperMethodName;
-		nextPut: $.;
+		nextPut: $.;		
 		nextPut: cr.
 	result
-		nextPutAll: '	eventJson := NeoJSONReader fromString: eventMessage.';
+		nextPutAll: '	result id: evtId.';
 		nextPut: cr.
 	result
-		nextPutAll: '	eventMeta := eventJson at: #meta.';
+		nextPutAll: '	result commandId: inputCommandId.';
 		nextPut: cr.
-	result
-		nextPutAll: '	eventBody := eventJson at: #body.';
-		nextPut: cr.
-	result
-		nextPutAll: '	evtAttributes := Dictionary new.';
-		nextPut: cr.
-	result
-		nextPutAll: '	evtAttributes at: ''version'' put: (eventMeta at: ''version'').';
-		nextPut: cr.
-	result
-		nextPutAll:
-			'	evtAttributes at: ''aggregateRootVersion'' put: (eventBody at: ''version'').';
-		nextPut: cr.
-	result
-		nextPutAll: '	evtCommandId := inputCommandId.';
-		nextPut: Character cr.
-	eventAttrs
-		do: [ :attr | 
-			result
-				nextPutAll: '	eventBody at: ''';
-				nextPutAll: attr uncapitalized;
-				nextPutAll: ''' ifPresent: [ :v | evtAttributes at: ''';
-				nextPutAll: attr uncapitalized;
-				nextPutAll: ''' put: v ].';
-				nextPut: cr ].
 	result
 		nextPutAll: '	^ ';
 		nextPutAll: self appName;
 		nextPutAll: 'Test';
 		nextPutAll: (self toCamelCase: self eventName);
-		nextPut: cr.
-	result
-		nextPutAll: '		fromEvent: (';
-		nextPut: cr.
-	result
-		nextPutAll: '			';
-		nextPutAll: self appName;
-		nextPutAll: (self toCamelCase: self eventName).
-	result
-		nextPut: Character space;
-		nextPutAll: (self generateTestHelperBuildEventClassMethodNameWithArgPrefix: 'evt');
-		nextPut: $);
+		nextPutAll: ' fromEvent: result';
 		nextPut: cr.
 	^ result contents

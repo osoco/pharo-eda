@@ -1,4 +1,4 @@
-as yet unclassified
+lifecycle
 findAllEventsForId: id andAggregateRootClass: aggregateRootClass inEventStore: eventStore
 	"Retrieves all events for given aggregate root"
 	| result |

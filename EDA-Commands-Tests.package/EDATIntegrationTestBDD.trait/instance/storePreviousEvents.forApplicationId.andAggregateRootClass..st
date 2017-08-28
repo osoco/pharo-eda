@@ -1,4 +1,4 @@
-as yet unclassified
+lifecycle
 storePreviousEvents: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass
 	Transcript print: 'Storing ', eventsCollection size greaseString; print: ') event(s) ...'; cr.
 	eventsCollection do: [ :event |

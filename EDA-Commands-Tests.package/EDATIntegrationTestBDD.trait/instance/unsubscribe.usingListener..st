@@ -1,4 +1,4 @@
-as yet unclassified
+lifecycle
 unsubscribe: id usingListener: aListener
 	| frame client |
 	client := aListener client.

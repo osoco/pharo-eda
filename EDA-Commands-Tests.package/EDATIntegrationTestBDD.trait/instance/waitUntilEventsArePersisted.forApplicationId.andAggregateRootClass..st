@@ -1,4 +1,4 @@
-as yet unclassified
+lifecycle
 waitUntilEventsArePersisted: eventsCollection forApplicationId: appId andAggregateRootClass: aggregateRootClass
 	"Waits until all events are persisted"
 

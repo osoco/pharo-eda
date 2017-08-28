@@ -1,4 +1,4 @@
-as yet unclassified
+lifecycle
 subscribeToEvents
 	self eventListener: EDAEventStompTopicListener new.
 	self subscriptionId: self eventListener subscribe.
