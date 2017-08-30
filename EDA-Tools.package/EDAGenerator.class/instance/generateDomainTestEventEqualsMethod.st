@@ -9,7 +9,8 @@ generateDomainTestEventEqualsMethod
 		nextPut: Character cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '	^ '.
+		nextPutAll: '	^ ';
+		nextPutAll: ' (anInstance class isKindOf: '.
 	self isDeleteEvent
 		ifTrue: [
 			result nextPutAll: 'EDADeleteCommandResultEvent'
@@ -17,7 +18,7 @@ generateDomainTestEventEqualsMethod
 			result nextPutAll: self retrieveEventClassName
 		].
 	result
-		nextPutAll: ' = anInstance class and: [';
+		nextPutAll: ' class) and: [';
 		nextPut: cr.
 	result
 		nextPutAll: '		(self attribute: self aggregateRootClass matches: anInstance aggregateRootClass) and: [';

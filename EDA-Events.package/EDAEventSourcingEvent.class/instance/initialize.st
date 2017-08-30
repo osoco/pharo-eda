@@ -1,4 +1,5 @@
-accessing
+initialization
 initialize
 	super initialize.
-	self delete: false
+	self delete: false.
+	self timestamp ifNil: [ self timestamp: DateAndTime now asUTC ]

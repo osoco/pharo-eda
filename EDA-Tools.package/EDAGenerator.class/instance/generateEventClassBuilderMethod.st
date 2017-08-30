@@ -21,13 +21,7 @@ generateEventClassBuilderMethod
 	method
 		nextPutAll: '	result commandId: theCommandId.';
 		nextPut: cr.
-	method
-		nextPutAll: '	result aggregateRootClass: #';
-		nextPutAll: self appName;
-		nextPutAll: self aggregate;
-		nextPut: $.;
-		nextPut: cr.
-	method nextPutAll: '	result timestamp: DateAndTime now asUTC.'; nextPut: cr.
+	method nextPutAll: '	result timestamp: (theAttrs at: ''timestamp'' ifAbsent: [ DateAndTime now asUTC ]).'; nextPut: cr.
 	method nextPutAll: '	result version: (theAttrs at: ''version'').'; nextPut: cr.
 	method nextPutAll: '	result aggregateRootVersion: (theAttrs at: ''aggregateRootVersion'').'; nextPut: cr.
 	attrs

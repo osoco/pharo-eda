@@ -1,19 +1,18 @@
 api
 findById: anId
-	| result events criteria cls |
-	cls := self aggregateClass.
-	criteria := Dictionary new.
-	criteria at: 'id' put: anId.
-	events := self eventStore findEventsOfAggregate: cls whereCriteria: criteria.
+	| result events |
+	events := self findEventsById: anId.
 	events
-		ifEmpty: [ Transcript
+		ifEmpty: [
+			Transcript
 				print: 'WARNING: No ';
-				print: cls;
+				print: self aggregateClass;
 				print: ' found with ';
 				print: (anId ifNil: [ 'null id' ] ifNotNil: [ :v | 'id ' , v ]);
 				cr.
-			result := nil ]
-		ifNotEmpty: [ :evts | 
-			result := cls new.
-			result applyEvents: evts ].
+			result := nil
+		] ifNotEmpty: [ :evts | 
+			result := self aggregateClass new.
+			result applyEvents: evts
+		].
 	^ result

@@ -4,7 +4,7 @@ findAll
 	result := OrderedCollection new.
 	aggregateClass := self aggregateClass.
 	aux := Dictionary new.
-	events := self eventStore findEventsOfAggregate: aggregateClass whereCriteria: Dictionary new.
+	events := self findAllEvents.
 	events
 		do: [ :evt | 
 			| list id |

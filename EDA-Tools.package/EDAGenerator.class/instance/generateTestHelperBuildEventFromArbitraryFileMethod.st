@@ -12,12 +12,10 @@ generateTestHelperBuildEventFromArbitraryFileMethod
 	result nextPutAll: self generateSignature.
 	result
 		nextPutAll:
-			'	| eventMessage eventJson eventMeta eventBody evtAttributes evtCommandId evtId |';
+			'	| eventMessage eventJson eventMeta eventBody evtAttributes evtCommandId evtId evtTimestamp |';
 		nextPut: cr.
 	result
-		nextPutAll: '	eventMessage := self ';
-		nextPutAll: self generateReadEventFromFileTestHelperMethodName;
-		nextPut: $.;
+		nextPutAll: '	eventMessage := self readFile: aFile.';
 		nextPut: cr.
 	result
 		nextPutAll: '	eventJson := NeoJSONReader fromString: eventMessage.';
@@ -43,7 +41,16 @@ generateTestHelperBuildEventFromArbitraryFileMethod
 		nextPut: cr.
 	result
 		nextPutAll: '	evtCommandId := eventMeta at: ''correlationId'' ifAbsent: [ ''missing'' ].';
-		nextPut: Character cr.
+		nextPut: cr.
+	result
+		nextPutAll: '	evtTimestamp := eventBody at: ''timestamp'' ifAbsent: [ nil ].';
+		nextPut: cr.
+	result
+		nextPutAll: '	evtTimestamp ifNil: [ evtTimestamp := eventMeta at: ''timestamp'' ifAbsent: [ nil ] ].';
+		nextPut: cr.
+	result
+		nextPutAll: '	evtTimestamp ifNotNil: [ :t | evtAttributes at: ''timestamp'' put: evtTimestamp ].';
+		nextPut: cr.
 	eventAttrs
 		do: [ :attr | 
 			result
