@@ -6,7 +6,7 @@ setup
 	self setupEventProducer.
 	self setupEventStore.
 	self setupRepositories.
-	self setupProjections.
+	self projectionSynchronizationEnabled ifTrue: [ self setupProjections ].
 	self setupCommandDispatcher.
 	self setupCommandConsumer.
 	self setupEventSubscriptions
