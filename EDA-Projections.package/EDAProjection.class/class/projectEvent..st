@@ -7,13 +7,18 @@ projectEvent: anEvent
 		thenCollect: [ :pragma | pragma method ].
 	projectionHandlerMethodsForEvent
 		do: [ :projectionMethod | 
-			[ aProjection := self perform: projectionMethod selector with: anEvent ]
-				on: Exception
-				do: [ :exception | 
-					Transcript
-						print: 'WARNING: Projection of event failed with error ';
-						print: exception description;
-						cr ].
-			aProjection incProjectedEvents.
-			aProjection saveProjection ].
+			[
+				aProjection := self perform: projectionMethod selector with: anEvent ]
+					on: Exception
+					do: [ :exception | 
+						Transcript
+							print: 'WARNING: Projection of event failed with error ';
+							print: exception description;
+							cr
+					].
+				aProjection ifNotNil: [ :prj |
+					prj incProjectedEvents.
+					prj saveProjection
+				]
+		].
 	^ aProjection
