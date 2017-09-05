@@ -10,7 +10,7 @@ writeEvent: event
 	dateCreated isString ifFalse: [ dateCreated := dateCreated asUTC rounded ].
 	body at: #dateCreated put: dateCreated.
 	eventDict at: #body put: body.
-	String
+	^ String
 		streamContents: [ :stream | 
 			| jsonWriter |
 			jsonWriter := NeoJSONWriter on: stream.

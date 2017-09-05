@@ -8,4 +8,4 @@ writeError: error
 			{('error' -> true).
 			('description' -> error description)}.
 	aux at: #params put: paramsDict.
-	String streamContents: [ :stream | (NeoJSONWriter on: stream) nextPut: aux ]
+	^ String streamContents: [ :stream | (NeoJSONWriter on: stream) nextPut: aux ]
