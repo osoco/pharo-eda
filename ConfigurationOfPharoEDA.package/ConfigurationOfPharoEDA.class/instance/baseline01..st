@@ -4,7 +4,7 @@ baseline01: spec
 	spec
 		for: #common
 		do: [ spec blessing: #baseline.
-			spec repository: 'gitfiletree://' , FileSystem workingDirectory fullName , '/pharo-eda-common'.
+			spec repository: self class pharoEdaRepository.
 			spec
 				project: 'NeoJSON'
 					with: [ spec
