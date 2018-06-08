@@ -14,7 +14,12 @@ projectEvent: anEvent
 						print: 'WARNING: Projection of event failed with error ';
 						print: exception description;
 						cr ].
-			projections ifNotNil: [ projections				do: [ :prj | 
-					prj incProjectedEvents.
-					prj saveProjection ] ]].
+			projections ifNotNil: [
+				 projections do: [ :prj | 
+					prj incProjectedEvents .
+					prj updateLastProjectedEvent: anEvent timestamp .
+					prj saveProjection .
+				] 
+			]
+		].
 	^ projections
