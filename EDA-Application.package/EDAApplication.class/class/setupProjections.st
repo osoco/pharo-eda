@@ -1,33 +1,54 @@
 initialization
 setupProjections
-	| projections projectionSourceEvents projectedEvents |
-	projections := EDAProjection subclasses reject: [ :projectionClass | projectionClass name beginsWith: 'EDATest' ].
+	| projectionsClasses projectionSourceEvents filteredProjectionSourceEvents projectedEvents lastProjectedEvent currentProjections |
+	projectionsClasses := EDAProjection subclasses reject: [ :projectionClass | projectionClass name beginsWith: 'EDATest' ].
 	Transcript
 		print: 'Setting up ';
-		print: (projections ifNil: [ '0 projections ' ] ifNotNil: [ :prjs | prjs size asString , ' projections ' ]);
+		print: (projectionsClasses ifNil: [ '0 projections ' ] ifNotNil: [ :prjs | prjs size asString , ' projections ' ]);
 		print: 'for this application...';
 		cr;
 		flush.
-	projections
-		do: [ :projection | 
-			projectionSourceEvents := projection sourceEvents: self eventStore.
-			(projection isSynchronized: projectionSourceEvents)
+	projectionsClasses
+		do: [ :projectionClass | 
+			Transcript
+				print: '';
+				cr;
+				print: 'Starting projections for projection: ';
+				print: projectionClass;
+				cr;
+				flush.
+			projectionSourceEvents := projectionClass sourceEvents: self eventStore.
+			(projectionClass isSynchronized: projectionSourceEvents)
 				ifFalse: [ self flag: #TODO.	"configure different options in this case (abort, recreate, warning) via settings"
-					projection removeProjection.
+					currentProjections := projectionClass new selectManyWhere: Dictionary new.
+					currentProjections ifEmpty: [ lastProjectedEvent := Date new ] ifNotEmpty: [ lastProjectedEvent := (currentProjections collect: [ :each | each lastProjectedEvent ]) asSortedCollection last ].
+					Transcript
+						print: '';
+						cr;
+						print: 'Last projected event: ';
+						print: lastProjectedEvent;
+						cr;
+						flush.
+					filteredProjectionSourceEvents := (projectionSourceEvents select: [ :each | each timestamp > lastProjectedEvent ]) asSortedCollection: [ :i :j | i timestamp < j timestamp ].
 					projectedEvents := Dictionary new.
-					projectionSourceEvents
+					filteredProjectionSourceEvents
 						doWithIndex: [ :event :index | 
 							| aProjection |
-							aProjection := event updateProjection: projection.
+							aProjection := event updateProjection: projectionClass.
 							aProjection class = ATSApplicationsByContestIdProjection
-								ifTrue: [ projectedEvents at: aProjection contestId put: aProjection numProjectedEvents.
+								ifTrue: [ 
+									projectedEvents at: aProjection contestId put: aProjection numProjectedEvents.
 									self flag: #TODO.	"clean this mesh required to fix the number of projected events in case it is not incremented"
 									projectedEvents values sum < index
-										ifFalse: [ aProjection incProjectedEvents.
-											aProjection saveProjection ] ].
+										ifFalse: [ 
+											aProjection incProjectedEvents. 
+											aProjection updateLastProjectedEvent: event timestamp .
+											aProjection saveProjection .
+										]
+								].
 							EDAEventProjected new
-								projection: projection;
+								projection: projectionClass;
 								event: event;
 								index: index;
-								projectionSourceEventsSize: projectionSourceEvents size;
+								projectionSourceEventsSize: filteredProjectionSourceEvents size;
 								emit ] ] ]
