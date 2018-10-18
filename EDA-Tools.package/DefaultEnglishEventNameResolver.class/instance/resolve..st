@@ -1,5 +1,5 @@
-helper
-eventNameFor: aCommandName
+resolving
+resolve: aCommandName
 	| result aux |
 	result := nil.
 	aux := aCommandName allRegexMatches: '([^_]*)'.
