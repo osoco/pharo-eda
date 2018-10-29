@@ -14,9 +14,6 @@ buildWith: commandParams
 				instVarAt:
 					(self class
 						instVarIndexFor: key
-						ifAbsent: [ Transcript
-								print: 'No such inst var: ';
-								print: key;
-								cr ])
+						ifAbsent: [ self logErrorMessage: 'No such inst var: ', key, '.'])
 				put: assoc value ].
 	^ command

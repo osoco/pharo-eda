@@ -1,12 +1,14 @@
 testing
 isEventStored: event
-	| events result |
+	| events result message |
 	"Checks if the event is indeed persisted"
-	Transcript print: 'Searching for stored events for aggregate root ', event aggregateRootClass, ' and id ', event id; cr.
+	self logDebugMessage: 'Searching for stored events for aggregate root ' , event aggregateRootClass , ' and id ' , event id.
 	events := self application eventStore findEventsOfAggregate: event aggregateRootClass whereId: event id.
-	Transcript print: 'Found: ', events size greaseString, ' event(s).'; cr.
+	self logDebugMessage: 'Found ' , events size greaseString , ' event(s).'.
 	result := self isEvent: event inCollection: events.
-	Transcript print: 'Event ', event class.
-	result ifFalse: [ Transcript print: 'NOT ' ].
-	Transcript print: ' found in the event store'; cr.
+	message := 'Event ' , event class.
+	result
+		ifFalse: [ message := message , 'NOT ' ].
+	message := message , ' found in the event store'.
+	self logDebugMessage: message.
 	^ result

@@ -1,9 +1,5 @@
 {
-	"commentStamp" : "",
-	"super" : "Object",
-	"category" : "EDA-Domain",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "EDATLogging classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"id",
@@ -11,5 +7,11 @@
 		"isDeleted"
 	],
 	"name" : "EDAAggregateRoot",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Domain"
 }

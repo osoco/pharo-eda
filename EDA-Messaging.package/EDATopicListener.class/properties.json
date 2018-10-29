@@ -1,11 +1,13 @@
 {
-	"commentStamp" : "",
-	"super" : "Object",
-	"category" : "EDA-Messaging-Topic",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "EDATLogging classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "EDATopicListener",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Messaging-Topic"
 }

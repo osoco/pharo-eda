@@ -17,11 +17,7 @@ givenPreviousEvents: previousEventsCollection whenReceiveCommandMessages: aComma
 	[ [ frame := self eventListener client readMessage ]
 		on: Error
 		do: [ :err |
-			Transcript
-				print: 'ERROR reading event from queue: ';
-				print: err greaseString;
-				print: ' ';
-				cr.
+			self logErrorMessage: 'Error reading event from queue: ', err greaseString.
 			frame := nil ].
 	frame notNil ] whileTrue: [ lastFrame := frame ].
 	self generatedEvent: lastFrame matchesRegex: expectedLastEventMessage 

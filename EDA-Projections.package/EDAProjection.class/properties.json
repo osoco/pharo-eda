@@ -1,9 +1,5 @@
 {
-	"commentStamp" : "",
-	"super" : "Object",
-	"category" : "EDA-Projections-Views",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "EDATLogging classTrait",
 	"classvars" : [
 		"Repository"
 	],
@@ -12,5 +8,11 @@
 		"lastProjectedEvent"
 	],
 	"name" : "EDAProjection",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Projections-Views"
 }

@@ -1,14 +1,7 @@
 lifecycle
 stop
-	Transcript
-		print: 'WARN: Stopping Command Consumer...';
-		cr;
-		flush.
+	self logWarningMessage: 'Stopping Command Consumer...'.
 	[ self busListener forceUnsubscribe ]
 		on: Error
 		do: [ :ex | 
-			Transcript
-				print: 'ERROR: Error stopping Command Consumer: ';
-				print: ex description;
-				cr;
-				flush ]
+			self logErrorMessage: 'Error stopping Command Consumer: ', ex description, '.' ]

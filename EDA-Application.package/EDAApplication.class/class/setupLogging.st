@@ -3,9 +3,4 @@ setupLogging
 	EDALogEvent announcer
 		subscribe: EDALogEvent
 		do: [ :event |
-			Transcript
-				crShow: '[';
-				show: event timestamp;
-				show: '] ';
-				show: event;
-				flush ]
+			self logInfoMessage: '[', event timestamp, '] ', event ]

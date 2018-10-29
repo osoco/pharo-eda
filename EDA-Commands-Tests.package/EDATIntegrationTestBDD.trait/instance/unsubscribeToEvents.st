@@ -5,6 +5,4 @@ unsubscribeToEvents
 			self unsubscribe: self subscriptionId usingListener: self eventListener.
 			self eventsSubscribed: false ]
 		ifFalse: [
-			Transcript
-				print: 'Already unsubscribed to events.';
-				cr ]
+			self logDebugMessage: 'Already unsubscribed to events.']

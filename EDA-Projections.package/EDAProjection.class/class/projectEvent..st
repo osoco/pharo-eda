@@ -10,10 +10,7 @@ projectEvent: anEvent
 			[ projections := self perform: projectionMethod selector with: anEvent ]
 				on: Exception
 				do: [ :exception | 
-					Transcript
-						print: 'WARNING: Projection of event failed with error ';
-						print: exception description;
-						cr ].
+					self logWarningMessage: 'Projection of event failed with error ', exception description, '.'].
 			projections ifNotNil: [
 				 projections do: [ :prj | 
 					prj incProjectedEvents .

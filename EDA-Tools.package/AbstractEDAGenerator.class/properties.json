@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDATSourceCodeHelper classTrait + EDATCheckerHelper classTrait",
+	"classtraitcomposition" : "EDATSourceCodeHelper classTrait + EDATCheckerHelper classTrait + EDATLogging classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"commandName",
@@ -17,7 +17,7 @@
 	"name" : "AbstractEDAGenerator",
 	"commentStamp" : "",
 	"super" : "Object",
-	"traitcomposition" : "EDATSourceCodeHelper + EDATCheckerHelper",
+	"traitcomposition" : "EDATSourceCodeHelper + EDATCheckerHelper + EDATLogging",
 	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],

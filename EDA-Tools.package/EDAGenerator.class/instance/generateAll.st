@@ -1,9 +1,5 @@
 api
 generateAll
-	Transcript
-		print: '** Generation started for ';
-		print: self aggregate;
-		cr;
-		flush.
+	self logInfoMessage: '** Generation started for ', self aggregate, '.'.
 	self generateAllButIntegrationTest.
 	self generateIntegrationTest

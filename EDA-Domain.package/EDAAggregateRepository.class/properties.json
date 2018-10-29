@@ -1,16 +1,18 @@
 {
-	"commentStamp" : "",
-	"super" : "Object",
-	"category" : "EDA-Domain",
-	"classinstvars" : [
-		"eventStore",
-		"uniqueInstance"
-	],
-	"pools" : [ ],
+	"classtraitcomposition" : "EDATLogging classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"eventStore"
 	],
 	"name" : "EDAAggregateRepository",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [
+		"eventStore",
+		"uniqueInstance"
+	],
+	"pools" : [ ],
+	"category" : "EDA-Domain"
 }

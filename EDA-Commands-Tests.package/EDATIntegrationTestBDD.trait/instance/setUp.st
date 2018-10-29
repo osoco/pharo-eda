@@ -2,12 +2,7 @@ initialization
 setUp
 	super setUp.
 	self showTranscript.
-	Transcript
-		print: 'Running ';
-		print: thisContext receiver className;
-		print: $#;
-		print: thisContext receiver selector;
-		cr.
+	self logInfoMessage: 'Running ', thisContext receiver className, '#' , thisContext receiver selector.
 	self setUpCurrentEnvironment.
 	self ensureSettingsLoaded.
 	self prepareToLaunchApplication.

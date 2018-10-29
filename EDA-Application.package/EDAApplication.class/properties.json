@@ -1,7 +1,12 @@
 {
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAApplication",
 	"commentStamp" : "",
 	"super" : "Object",
-	"category" : "EDA-Application",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
 	"classinstvars" : [
 		"EventAnnouncer",
 		"CommandConsumer",
@@ -10,8 +15,5 @@
 		"CommandDispatcher"
 	],
 	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
-	"name" : "EDAApplication",
-	"type" : "normal"
+	"category" : "EDA-Application"
 }

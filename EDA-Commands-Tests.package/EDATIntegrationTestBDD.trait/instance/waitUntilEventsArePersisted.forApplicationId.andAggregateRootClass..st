@@ -14,6 +14,4 @@ waitUntilEventsArePersisted: eventsCollection forApplicationId: appId andAggrega
 			inEventStore: self application eventStore.
 	extraEvents := events collect: [ :e | eventsCollection anySatisfy: [ :ev | e = ev ] not ].
 	(extraEvents size > 0) ifTrue: [ self fail: 'Unexpected events found in the event store. Please clean up any prior event or command' ].
-	Transcript
-		print: 'All events persisted. We can now go on';
-		cr
+	self logDebugMessage: 'All events persisted. We can now go on.'

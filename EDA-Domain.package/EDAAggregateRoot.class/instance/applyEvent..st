@@ -2,27 +2,20 @@ event handling
 applyEvent: anEvent
 	| eventClassName applyEventSelector applyEventSelectorSymbol delete |
 	delete := anEvent delete.
-	delete ifNil: [
-		Transcript
-			print: 'WARNING: ';
-			print: anEvent class greaseString;
-			print: ' implements an invalid #initialize method. Make sure it calls parent''s initialize.';
-			cr.
-			delete := false
-	].
+	delete
+		ifNil: [ self logWarningMessage: anEvent class greaseString , ' implements an invalid #initialize method. Make sure it calls parent''s initialize.'.
+			delete := false ].
 	delete
 		ifTrue: [ ^ self ].
 	eventClassName := anEvent class greaseString.
-	applyEventSelector := self
-		retrieveApplyEventMethod: anEvent
-		withLogging: false.
+	applyEventSelector := self retrieveApplyEventMethod: anEvent withLogging: false.
 	applyEventSelector
 		ifNotNil: [ :arg | 
 			| text max last suffix |
 			max := 50.
 			suffix := ''.
 			text := anEvent greaseString.
-			(text size > max)
+			text size > max
 				ifTrue: [ last := max.
 					suffix := '...' ]
 				ifFalse: [ last := text size ].
@@ -38,8 +31,5 @@ applyEvent: anEvent
 				print: suffix;
 				cr.
 			self perform: applyEventSelectorSymbol with: anEvent ]
-		ifNil: [
-			Transcript
-				print: 'ERROR: No way to apply event : ' , anEvent greaseString;
-				cr.
+		ifNil: [ self logErrorMessage: 'No way to apply event : ' , anEvent greaseString, '.'.
 			self retrieveApplyEventMethod: anEvent withLogging: true ]

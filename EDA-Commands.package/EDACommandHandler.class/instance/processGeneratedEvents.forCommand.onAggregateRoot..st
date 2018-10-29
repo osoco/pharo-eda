@@ -1,6 +1,6 @@
 handling
 processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: anAggregateRoot
-	| events |
+	| events message |
 	events := 
 		(producedEvents isKindOf: OrderedCollection)
 			ifTrue: [ producedEvents ]
@@ -8,13 +8,12 @@ processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: anA
 				(producedEvents isKindOf: Array)
 					ifTrue: [ OrderedCollection withAll: producedEvents ]
 					ifFalse: [ OrderedCollection with: producedEvents ] ].
-	events do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
-	Transcript print: 'Produced event(s):'.
-	events do: [ :event | Transcript print: ' '; print: event class name ].
-	Transcript cr.
+	message := ''.
+	events do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1. message := message , ' ', event class name ].
+	self logInfoMessage: 'Produced event(s): ', message, '.'.
 	self flag: #TODO. "TODO: transaction including eventstore and eventbus operations"
 	eventStore saveEvents: events onAggregate: anAggregateRoot.
-	Transcript print: 'Projecting events...'.
+	self logInfoMessage: 'Projecting events...'.
 	EDAProjectionProcessor projectEvents: events.
-	Transcript print: ' done'; cr.
+	self logInfoMessage: 'Done'.
 	^ events

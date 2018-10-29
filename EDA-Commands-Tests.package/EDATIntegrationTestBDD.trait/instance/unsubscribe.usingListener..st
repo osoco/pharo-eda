@@ -7,6 +7,7 @@ unsubscribe: id usingListener: aListener
 		ensure: [ client
 				ifNotNil: [ [ client close ]
 						on: ConnectionTimedOut
-							do: [ Transcript print: 'ERROR: Timeout while unsubscribing '; print: id greaseString; cr ];
+							do: [ self logErrorMessage: 'Timeout while unsubscribing ' , id greaseString , '.' ];
 						on: StampError
-							do: [ Transcript print: 'ERROR: Cannot unsubscribe '; print: id greaseString; cr ] ] ]
+							do: [ self logErrorMessage: 'Cannot unsubscribe ', id greaseString , '.'
+									 ] ] ]

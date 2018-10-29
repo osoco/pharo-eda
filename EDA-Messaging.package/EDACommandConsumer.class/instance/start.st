@@ -1,9 +1,7 @@
 lifecycle
 start
 	| listener |
-	Transcript
-		print: 'WARN: Starting Command Consumer...';
-		cr.
+	self logWarningMessage: 'Starting Command Consumer...'.
 	self busListener resetClient.
 	listener := self busListener
 		subscribe;
@@ -11,8 +9,5 @@ start
 	listener
 		on: Error
 		do: [ :error | 
-			Transcript
-				print: 'ERROR: Error in Command Consumer''s listener: ';
-				print: error description;
-				cr.
+			self logErrorMessage: 'Error in Command Consumer''s listener: ', error description, '.'.
 			self restart ]

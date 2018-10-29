@@ -1,10 +1,10 @@
 lifecycle
 storePreviousEvents: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass
-	Transcript print: 'Storing ', eventsCollection size greaseString; print: ') event(s) ...'; cr.
-	eventsCollection do: [ :event |
-		event save.
-		Transcript print: event className; print: ' inserted'; cr.
-	].
+	self logDebugMessage: 'Storing ' , eventsCollection size greaseString , ') event(s) ...'.
+	eventsCollection
+		do: [ :event |
+			event save.
+			self logDebugMessage: event className , ' inserted' ].
 	self application eventStore flush.
 	self waitUntilEventsArePersisted: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass.
-	Transcript print: 'All '; print: eventsCollection size greaseString; print: ' events stored'; cr.
+	self logDebugMessage: 'All ',eventsCollection size greaseString, ' events stored'.

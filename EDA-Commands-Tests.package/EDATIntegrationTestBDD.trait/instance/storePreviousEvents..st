@@ -1,21 +1,11 @@
 bdd
 storePreviousEvents: eventsCollection
-	Transcript
-		print: 'Storing ' ; print: eventsCollection size greaseString; print: ' event(s)...';
-		cr.
+	self logDebugMessage: 'Storing ' , eventsCollection size greaseString , ' event(s)...'.
 	eventsCollection
 		do: [ :event | 
 			event save.
-			Transcript
-				print: event className;
-				print: ' stored.';
-				cr;
-				print: event greaseString;
-				cr ].
+			self logDebugMessage: event className , ' stored.'.
+			self logDebugMessage: event greaseString ].
 	self application eventStore flush.
 	"self waitUntilEventsArePersisted: eventsCollection."
-	Transcript
-		print: 'All ';
-		print: eventsCollection size greaseString;
-		print: ' event(s) stored';
-		cr
+	self logDebugMessage: 'All ',eventsCollection size greaseString, ' event(s) stored'.

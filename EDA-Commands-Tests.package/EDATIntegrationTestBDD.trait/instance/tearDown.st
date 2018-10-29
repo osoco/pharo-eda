@@ -7,10 +7,4 @@ tearDown
 	self restoreCurrentEnvironment.
 	self prepareToStopApplication.
 	"self stopApplication."
-	Transcript
-		print: 'Finished ';
-		print: thisContext receiver className;
-		print: '#';
-		print: thisContext receiver selector;
-		cr;
-		flush
+	self logInfoMessage: 'Finished ', thisContext receiver className, '#', thisContext receiver selector.

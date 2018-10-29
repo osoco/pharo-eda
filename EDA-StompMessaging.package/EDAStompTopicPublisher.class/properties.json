@@ -1,7 +1,14 @@
 {
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"client"
+	],
+	"name" : "EDAStompTopicPublisher",
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:16",
 	"super" : "EDATopicPublisher",
-	"category" : "EDA-StompMessaging",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
 	"classinstvars" : [
 		"Host",
 		"Port",
@@ -13,10 +20,5 @@
 		"Timeout"
 	],
 	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [
-		"client"
-	],
-	"name" : "EDAStompTopicPublisher",
-	"type" : "normal"
+	"category" : "EDA-StompMessaging"
 }

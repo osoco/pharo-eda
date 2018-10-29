@@ -1,7 +1,5 @@
 lifecycle
 restart
-	Transcript
-		print: 'WARN: Restarting Command Consumer...';
-		cr.
+	self logWarningMessage: 'Restarting Command Consumer...'.
 	[ self stop ]
 		ensure: [ self start ]
