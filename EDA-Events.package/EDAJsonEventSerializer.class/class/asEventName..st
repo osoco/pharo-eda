@@ -8,6 +8,6 @@ asEventName: event
 			OrderedCollection with: aggregateRootName with: 'DELETED'
 		] ifFalse: [
 			(EDAMessageSerializer nameWithoutPrefixForMessageClass: event class)
-				regex: '[A-Z][a-z]+' matchesCollect: [ :word | word greaseString asUppercase ].
+				regex: '[A-Z][a-z0-9]+' matchesCollect: [ :word | word greaseString asUppercase ].
 		].
 	^ String streamContents: [ :stream | words asStringOn: stream delimiter: '_' ]
