@@ -10,7 +10,7 @@ processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: anA
 					ifFalse: [ OrderedCollection with: producedEvents ] ].
 	message := ''.
 	events do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1. message := message , ' ', event class name ].
-	self logInfoMessage: 'Produced event(s): ', message, '.'.
+	self logInfoMessage: 'Produced event(s): ', message greaseString , '.'.
 	self flag: #TODO. "TODO: transaction including eventstore and eventbus operations"
 	eventStore saveEvents: events onAggregate: anAggregateRoot.
 	self logInfoMessage: 'Projecting events...'.

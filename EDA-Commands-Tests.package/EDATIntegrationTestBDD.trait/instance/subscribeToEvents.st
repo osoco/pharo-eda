@@ -4,4 +4,4 @@ subscribeToEvents
 	self subscriptionId: self eventListener subscribe.
 	self eventsSubscribed: true.
 	self
-		logInfoMessage: 'Subscribed to events. subscriptionId is ' , self subscriptionId , '.'
+		logInfoMessage: 'Subscribed to events. subscriptionId is ' , self subscriptionId greaseString , '.'

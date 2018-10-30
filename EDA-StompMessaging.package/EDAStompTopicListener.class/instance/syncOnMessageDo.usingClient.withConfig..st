@@ -16,11 +16,11 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 				do: [ :ex | 
 					((ex isKindOf: StampError) and: ex messageText = 'AMQP channel died')
 						ifTrue: [ ex signal ].
-					self logErrorMessage: '<< Error consuming message: ' , ex description , ' (' , thisContext stack last , ').'.
+					self logErrorMessage: '<< Error consuming message: ' , ex description greaseString, ' (' , thisContext stack last greaseString, ').'.
 					conf ack = #'client-individual'
 						ifTrue: [ | nack |
-							self logDebugMessage: 'Sending NACK message... ' , message , '.'.
+							self logDebugMessage: 'Sending NACK message... ' , message greaseString , '.'.
 							nack := message nackFrame.
 							nack headers at: 'requeue' put: 'False'.
 							aClient writeWithReceipt: nack.
-							self logDebugMessage: 'NACK message sent ', message, '.'] ] ]
+							self logDebugMessage: 'NACK message sent ', message greaseString , '.'] ] ]

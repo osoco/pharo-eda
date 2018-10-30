@@ -4,7 +4,7 @@ storePreviousEvents: eventsCollection forApplicationId: appId andAggregateRootCl
 	eventsCollection
 		do: [ :event |
 			event save.
-			self logDebugMessage: event className , ' inserted' ].
+			self logDebugMessage: event className greaseString , ' inserted.' ].
 	self application eventStore flush.
 	self waitUntilEventsArePersisted: eventsCollection forApplicationId: appId andAggregateRootClass: rootClass.
-	self logDebugMessage: 'All ',eventsCollection size greaseString, ' events stored'.
+	self logDebugMessage: 'All ', eventsCollection size greaseString, ' events stored.'.

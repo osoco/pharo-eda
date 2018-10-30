@@ -5,13 +5,13 @@ setupProjections
 	self logInfoMessage: 'Setting up ' , (projectionsClasses ifNil: [ '0 projections' ] ifNotNil: [ :prjs | prjs size asString , ' projections' ]) , ' for this application...'.
 	projectionsClasses
 		do: [ :projectionClass | 
-			self logInfoMessage: 'Starting projections for projection: ' , projectionClass , '.'.
+			self logInfoMessage: 'Starting projections for projection: ' , projectionClass greaseString, '.'.
 			projectionSourceEvents := projectionClass sourceEvents: self eventStore.
 			(projectionClass isSynchronized: projectionSourceEvents)
 				ifFalse: [ self flag: #TODO.	"configure different options in this case (abort, recreate, warning) via settings"
 					currentProjections := projectionClass new selectManyWhere: Dictionary new.
 					currentProjections ifEmpty: [ lastProjectedEvent := Date new ] ifNotEmpty: [ lastProjectedEvent := (currentProjections collect: [ :each | each lastProjectedEvent ]) asSortedCollection last ].
-					self logInfoMessage: 'Last projected event: ', lastProjectedEvent, '.'.
+					self logInfoMessage: 'Last projected event: ', lastProjectedEvent greaseString, '.'.
 					filteredProjectionSourceEvents := (projectionSourceEvents select: [ :each | each timestamp > lastProjectedEvent ]) asSortedCollection: [ :i :j | i timestamp < j timestamp ].
 					projectedEvents := Dictionary new.
 					filteredProjectionSourceEvents

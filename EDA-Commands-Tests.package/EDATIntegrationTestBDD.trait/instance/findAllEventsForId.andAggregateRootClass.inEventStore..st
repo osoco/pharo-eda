@@ -4,7 +4,7 @@ findAllEventsForId: id andAggregateRootClass: aggregateRootClass inEventStore: e
 
 	| result |
 	self
-		logDebugMessage: 'Searching for all stored events for aggregate root ' aggregateRootClass , ' and id ' , id.
+		logDebugMessage: 'Searching for all stored events for aggregate root ' aggregateRootClass greaseString , ' and id ' , id greaseString , '.'.
 	result := eventStore findEventsOfAggregate: aggregateRootClass whereId: id.
 	self logDebugMessage: 'Found: ' , result size greaseString , ' event(s).'.
 	^ result

@@ -15,5 +15,5 @@ buildAggregateRootFromCommand: aCommand andAggregateRootClass: anAggregateRootCl
 	self logDebugMessage: 'Applying ' , events size greaseString , ' event(s) to an empty ' , anAggregateRootClass greaseString , '.'.
 	result applyEvents: events.
 	result version = aCommand aggregateRootVersion
-		ifFalse: [ self logWarningMessage: 'Aggregate root''s version (' , result version , ') does not match command''s (' , aCommand aggregateRootVersion , ').' ].
+		ifFalse: [ self logWarningMessage: 'Aggregate root''s version (' , result version greaseString , ') does not match command''s (' , aCommand aggregateRootVersion greaseString , ').' ].
 	^ result

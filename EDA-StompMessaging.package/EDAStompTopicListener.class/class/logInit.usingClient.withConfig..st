@@ -1,3 +1,3 @@
 accessing
 logInit: message usingClient: aClient withConfig: aConfig
-	self logInfoMessage: 'Publishing message in ', aConfig destination, '.'
+	self logInfoMessage: 'Publishing message in ', aConfig destination greaseString , '.'

@@ -6,12 +6,12 @@ assertNextReceivedEventMessage: stompListener matches: eventMessageRegex
 	ack := frame ackFrame.
 	nack := frame nackFrame.
 	stompListener client write: ack.
-	self logDebugMessage: 'Received event: ' , frame body.
+	self logDebugMessage: 'Received event: ' , frame body greaseString.
 	self assertGeneratedEvent: frame matchesRegex: eventMessageRegex.
 	^ frame ]
 		on: Error
 		do: [ :ex |
-			self logErrorMessage: 'Error consuming message: ' , ex description.
+			self logErrorMessage: 'Error consuming message: ' , ex description greaseString.
 			"nack ifNotNil: [ :arg |
 			arg headers at: 'requeue' put: 'False'.
 			stompListener client writeWithReceipt: arg.

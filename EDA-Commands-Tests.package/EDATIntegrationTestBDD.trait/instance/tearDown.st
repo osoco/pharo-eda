@@ -7,4 +7,4 @@ tearDown
 	self restoreCurrentEnvironment.
 	self prepareToStopApplication.
 	"self stopApplication."
-	self logInfoMessage: 'Finished ', thisContext receiver className, '#', thisContext receiver selector.
+	self logInfoMessage: 'Finished ', thisContext receiver className greaseString , '>>', thisContext receiver selector greaseString

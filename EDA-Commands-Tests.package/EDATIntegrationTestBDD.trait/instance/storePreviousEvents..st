@@ -4,8 +4,8 @@ storePreviousEvents: eventsCollection
 	eventsCollection
 		do: [ :event | 
 			event save.
-			self logDebugMessage: event className , ' stored.'.
+			self logDebugMessage: event className greaseString , ' stored.'.
 			self logDebugMessage: event greaseString ].
 	self application eventStore flush.
 	"self waitUntilEventsArePersisted: eventsCollection."
-	self logDebugMessage: 'All ',eventsCollection size greaseString, ' event(s) stored'.
+	self logDebugMessage: 'All ', eventsCollection size greaseString, ' event(s) stored'.

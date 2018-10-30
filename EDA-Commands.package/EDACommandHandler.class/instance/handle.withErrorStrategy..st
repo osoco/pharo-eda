@@ -5,7 +5,7 @@ handle: aCommand withErrorStrategy: strategy
 		aggregateRoot := self buildAggregateRootFromCommand: aCommand.
 		aggregateRoot isDeleted
 			ifTrue: [
-				self logInfoMessage: 'Discarding command ', aCommand commandName, ' since ', aCommand aggregateRootClass greaseString, ' with id ', aCommand aggregateRootId, ' is already deleted.'
+				self logInfoMessage: 'Discarding command ', aCommand commandName greaseString, ' since ', aCommand aggregateRootClass greaseString, ' with id ', aCommand aggregateRootId greaseString , ' is already deleted.'
 			] ifFalse: [
 				producedEvents := self delegateHandlingOfCommand: aCommand toAggregate: aggregateRoot.
 				processedEvents := self processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: aggregateRoot.

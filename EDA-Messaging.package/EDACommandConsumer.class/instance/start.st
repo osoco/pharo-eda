@@ -9,5 +9,5 @@ start
 	listener
 		on: Error
 		do: [ :error | 
-			self logErrorMessage: 'Error in Command Consumer''s listener: ', error description, '.'.
+			self logErrorMessage: 'Error in Command Consumer''s listener: ', error description greaseString, '.'.
 			self restart ]
