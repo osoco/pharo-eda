@@ -1,0 +1,3 @@
+api
+generateEDAApplicationRegisterCommandBuilders
+	self createEDAApplicationRegisterCommandBuilders

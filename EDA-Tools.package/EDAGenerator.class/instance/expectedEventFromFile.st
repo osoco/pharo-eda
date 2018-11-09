@@ -5,8 +5,7 @@ expectedEventFromFile
 	body := evtJson at: #body.
 	id := body at: #id ifAbsent: [ nil ].
 	body at: #id put: '<ANYTHING>'.
-	self flag: #TODO.	"Use the aggregate names instead of a hard-coded list"
-	#('contestId' 'roundId' 'accountId' 'evaluatorId' 'applicantId') asOrderedCollection
+	self retrieveAggregateIdNames
 		do: [ :aux | 
 			| var |
 			var := body at: aux asSymbol ifAbsent: [ nil ].

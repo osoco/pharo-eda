@@ -1,11 +1,11 @@
 {
 	"commentStamp" : "",
-	"super" : "TestCase",
+	"super" : "EDAAggregateRoot",
 	"category" : "EDA-Tools-Tests",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "EDAGeneratorTest",
+	"name" : "EDADummyAggregateRoot",
 	"type" : "normal"
 }

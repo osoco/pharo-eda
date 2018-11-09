@@ -1,3 +1,6 @@
 code generation - test trait
 generateReadEventFromArbitraryFileTestHelperMethod
-	^ self generateReadFromArbitraryFileTestHelperMethod: self generateReadEventFromArbitraryFileTestHelperMethodName for: self eventName ofType: 'events'
+	^ self
+		generateReadFromFileTestHelperMethod: self generateReadEventFromArbitraryFileTestHelperMethodName
+		for: self eventName
+		ofType: 'events'

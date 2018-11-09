@@ -1,15 +1,14 @@
 code generation - DefaultCommandBuilder
-generateDefaultCommandBuilderInitializeCommandBuildersMethodFor: appName
-	| result commands cr generator |
-	generator := self new.
+generateDefaultCommandBuilderInitializeCommandBuildersMethodFor: anAppName
+	| result commands cr |
 	cr := Character cr.
 	result := WriteStream with: String new.
 	result
 		nextPutAll: self generateDefaultCommandBuilderInitializeCommandBuildersMethodName;
 		nextPut: cr.
-	result nextPutAll: generator generateSignature.
+	result nextPutAll: self generateSignature.
 	result nextPutAll: '	commandDictionary := {'.
-	commands := generator retrieveImplementedCommandsFor: appName.
+	commands := self retrieveImplementedCommandsFor: anAppName.
 	commands keys asOrderedCollection
 		keysAndValuesDo: [ :i :key | 
 			i > 1
@@ -19,9 +18,7 @@ generateDefaultCommandBuilderInitializeCommandBuildersMethodFor: appName
 				nextPutAll: '		(#';
 				nextPutAll: key;
 				nextPutAll: ' -> ';
-				nextPutAll:
-					(generator
-						removeClassLiteralFromMetaClassName: (commands at: key) name);
+				nextPutAll: (self removeClassLiteralFromMetaClassName: (commands at: key) name);
 				nextPut: $) ].
 	result
 		nextPut: cr;

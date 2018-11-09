@@ -6,4 +6,6 @@ generateAllButIntegrationTest
 	self generateRepository.
 	self generateErrors.
 	self generateTestHelperTrait.
-	self generateDomainTest
+	self generateDomainTest.
+	self generateEDAApplicationRegisterCommandBuilders.
+	self generateDefaultCommandBuilderInitializeCommandBuilders

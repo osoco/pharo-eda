@@ -1,7 +1,7 @@
-test
+tests
 testVerbInPastTense
 	| instance |
-	instance := EDAGenerator new.
+	instance := AbstractEDAGenerator new.
 	self assert: (instance verbInPastTense: 'work') equals: 'worked'.
 	self assert: (instance verbInPastTense: 'create') equals: 'created'.
 	self assert: (instance verbInPastTense: 'submit') equals: 'submitted'.

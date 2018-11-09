@@ -1,5 +1,5 @@
-test
+tests
 testToDotSeparated
 	| instance |
-	instance := EDAGenerator new.
+	instance := AbstractEDAGenerator new.
 	self assert: (instance upcasedToDotSeparated: 'CREATE_ROUND') equals: 'create.round'
