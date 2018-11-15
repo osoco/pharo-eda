@@ -1,0 +1,3 @@
+event retrieval
+sourceEvents: anEventStore
+	self subclassResponsibility

@@ -1,3 +1,3 @@
 accessing
 eventProducer: anObject
-	EventProducer := anObject
+	eventProducer := anObject

@@ -6,5 +6,5 @@ initBackendRepository
 		database: EDAProjectionMongoRepository databaseName
 		username: EDAProjectionMongoRepository username
 		password: EDAProjectionMongoRepository password.
-	"repository cache: EDAMongoNoCache new."
+		"repository cache: EDAMongoNoCache new."
 	repository enableSingleton

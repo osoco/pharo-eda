@@ -1,3 +1,3 @@
 accessing
 eventProducer
-	^ EventProducer
+	^ eventProducer

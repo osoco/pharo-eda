@@ -1,3 +1,3 @@
 persistence
 selectOneWhere: aDictionary
-	^ Repository selectOne: self class where: aDictionary
+	^ self class repository selectOne: self class where: aDictionary

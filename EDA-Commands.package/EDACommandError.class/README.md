@@ -1,1 +1,1 @@
-A GCCommandError is an error.
+A EDACommandError is an error.

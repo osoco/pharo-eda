@@ -14,6 +14,6 @@ processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: anA
 	self flag: #TODO. "TODO: transaction including eventstore and eventbus operations"
 	eventStore saveEvents: events onAggregate: anAggregateRoot.
 	self logInfoMessage: 'Projecting events...'.
-	EDAProjectionProcessor projectEvents: events.
+	(EDACompositeProjector withAllProjectorsAndEventStore: eventStore) projectEvents: events.
 	self logInfoMessage: 'Done'.
 	^ events

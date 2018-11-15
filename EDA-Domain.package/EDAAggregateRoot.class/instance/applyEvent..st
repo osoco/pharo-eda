@@ -20,16 +20,7 @@ applyEvent: anEvent
 					suffix := '...' ]
 				ifFalse: [ last := text size ].
 			applyEventSelectorSymbol := applyEventSelector asSymbol.
-			Transcript
-				print: self class greaseString;
-				print: '(';
-				print: self id;
-				print: ')>>';
-				print: applyEventSelectorSymbol;
-				print: ' ''';
-				print: (text copyFrom: 1 to: last);
-				print: suffix;
-				cr.
+			self logDebugMessage: self class greaseString , '(' , self id greaseString, ')>>' , applyEventSelectorSymbol greaseString, ' ''' , (text copyFrom: 1 to: last) greaseString, suffix greaseString.
 			self perform: applyEventSelectorSymbol with: anEvent ]
-		ifNil: [ self logErrorMessage: 'No way to apply event : ' , anEvent greaseString, '.'.
+		ifNil: [ self logErrorMessage: 'No way to apply event : ' , anEvent greaseString , '.'.
 			self retrieveApplyEventMethod: anEvent withLogging: true ]

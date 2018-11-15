@@ -1,3 +1,3 @@
 accessing
 commandDispatcher
-	^ CommandDispatcher
+	^ commandDispatcher

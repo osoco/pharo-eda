@@ -1,0 +1,3 @@
+accessing
+projectionSynchronizationEnabled: aBoolean
+	projectionSynchronizationEnabled := aBoolean

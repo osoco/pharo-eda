@@ -1,7 +1,5 @@
 settings
-mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: configEntry
-	| mongoConfig |
-	mongoConfig := self retrieveSettingAsDict: configEntry.
+mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: mongoConfig
 	(aBuilder setting: #host)
 		parent: parent;
 		target: container;

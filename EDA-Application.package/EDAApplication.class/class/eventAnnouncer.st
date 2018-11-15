@@ -1,3 +1,3 @@
 accessing
 eventAnnouncer
-	^ EventAnnouncer
+	^ eventAnnouncer

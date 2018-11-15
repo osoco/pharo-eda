@@ -7,4 +7,4 @@ initBackendRepository
 		username: EDAMongoEventStore username
 		password: EDAMongoEventStore password.
 	"repository cache: EDAMongoNoCache new."
-	repository enableSingleton.
+	repository enableSingleton

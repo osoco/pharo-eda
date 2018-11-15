@@ -1,3 +1,3 @@
 accessing
 commandDispatcher: anObject
-	CommandDispatcher := anObject
+	commandDispatcher := anObject

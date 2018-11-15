@@ -10,7 +10,7 @@
 	"traitcomposition" : "EDAPrintOnHelper",
 	"type" : "normal",
 	"classinstvars" : [
-		"Strategy"
+		"strategy"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Commands-Handlers"

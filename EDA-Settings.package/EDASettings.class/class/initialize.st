@@ -1,3 +1,3 @@
 settings
 initialize
-	self DUEnvironmentClass: EDADUEnvironment
+	self duEnvironmentClass: EDADUEnvironment

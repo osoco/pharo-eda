@@ -1,3 +1,3 @@
 accessing
 eventStore: anObject
-	EventStore := anObject
+	eventStore := anObject

@@ -1,0 +1,17 @@
+{
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"eventStore"
+	],
+	"name" : "EDAProjector",
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [
+		"errorStrategy"
+	],
+	"pools" : [ ],
+	"category" : "EDA-Projections-Projectors"
+}

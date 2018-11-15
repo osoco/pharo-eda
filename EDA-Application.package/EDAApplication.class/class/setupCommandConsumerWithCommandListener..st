@@ -1,9 +1,7 @@
 initialization
 setupCommandConsumerWithCommandListener: listener
 	| materializer |
-	self flag: #TODO. "Convert debug value into a project's setting"
-	listener client debug: true.
+	listener client debug: self commandListenerClientDebug.
 	materializer := EDAJsonCommandMaterializer new.
 	self
-		commandConsumer:
-			(EDACommandConsumer busListener: listener commandMaterializer: materializer commandDispatcher: self commandDispatcher)
+		commandConsumer: (EDACommandConsumer busListener: listener commandMaterializer: materializer commandDispatcher: self commandDispatcher)

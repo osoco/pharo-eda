@@ -1,3 +1,3 @@
 initialization
 setupRepositories
-	self shouldBeImplemented
+	self subclassResponsibility 

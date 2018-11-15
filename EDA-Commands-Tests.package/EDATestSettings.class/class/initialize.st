@@ -1,3 +1,3 @@
 settings
 initialize
-	self DUEnvironmentClass: EDATestDUEnvironment
+	self duEnvironmentClass: EDATestDUEnvironment

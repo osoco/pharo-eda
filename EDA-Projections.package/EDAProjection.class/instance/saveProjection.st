@@ -1,3 +1,3 @@
 persistence
 saveProjection
-	Repository save: self.
+	self class repository save: self

@@ -8,7 +8,7 @@ Any strategy must extend this class and implement #handleError:.
 
 Collaborators:
 
-GCApplication or any EDAAggregateRoot that is accepting input commands should react upon errors by retrieving the selected strategy and delegating the error to it.
+A EDAAggregateRoot that is accepting input commands should react upon errors by retrieving the selected strategy and delegating the error to it.
 The Settings framework allows the user to review and choose among all defined strategies.
 
 Public API and Key Messages:

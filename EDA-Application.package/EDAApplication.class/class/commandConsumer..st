@@ -1,3 +1,3 @@
 accessing
 commandConsumer: anObject
-	CommandConsumer := anObject
+	commandConsumer := anObject

@@ -1,1 +1,1 @@
-A GCCommandHandlerNotFound is an error.
+A EDACommandHandlerNotFound is an error.

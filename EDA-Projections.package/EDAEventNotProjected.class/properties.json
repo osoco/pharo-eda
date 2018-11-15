@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "EDAProjectionLogEvent",
+	"category" : "EDA-Projections-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"index",
+		"projectionSourceEventsSize",
+		"event"
+	],
+	"name" : "EDAEventNotProjected",
+	"type" : "normal"
+}

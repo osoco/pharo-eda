@@ -8,11 +8,13 @@
 	"traitcomposition" : "EDATLogging",
 	"type" : "normal",
 	"classinstvars" : [
-		"EventAnnouncer",
-		"CommandConsumer",
-		"EventProducer",
-		"EventStore",
-		"CommandDispatcher"
+		"eventStore",
+		"eventAnnouncer",
+		"commandConsumer",
+		"projectionSynchronizationEnabled",
+		"commandDispatcher",
+		"eventProducer",
+		"commandListenerClientDebug"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Application"

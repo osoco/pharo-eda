@@ -6,9 +6,9 @@ testScanningMultipleMethodsAndSubclasses
 		newSubclassOf: aCommandHandlerSuperclass
 		instanceVariableNames: ''
 		classVariableNames: ''.
-	aCommandHandlerClass duringTestCompileSilently: 'handlerCommandMethod: aCommand <pragmaTest: GCCommandClassStub> ^nil'.
+	aCommandHandlerClass duringTestCompileSilently: 'handlerCommandMethod: aCommand <pragmaTest: EDACommandClassStub> ^nil'.
 	anotherCommandHandlerClass
-		duringTestCompileSilently: 'handlerOtherCommandMethod: aCommand <pragmaTest: GCAnotherCommandClassStub> ^nil'.
+		duringTestCompileSilently: 'handlerOtherCommandMethod: aCommand <pragmaTest: EDAAnotherCommandClassStub> ^nil'.
 	scanner := EDAPragmaCommandHandlerMethodsScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
 	self
 		assert: scanner allCommandHandlerMethods

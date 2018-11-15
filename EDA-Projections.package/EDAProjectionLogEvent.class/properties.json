@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "EDALogEvent",
-	"category" : "EDA-Projections",
+	"category" : "EDA-Projections-Events",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],

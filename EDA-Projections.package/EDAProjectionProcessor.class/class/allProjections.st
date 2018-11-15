@@ -1,3 +1,0 @@
-projections
-allProjections
-	^ EDAProjection allSubclasses

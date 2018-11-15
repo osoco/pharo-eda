@@ -1,3 +1,0 @@
-projection
-sourceEvents: anEventStore
-	self shouldBeImplemented

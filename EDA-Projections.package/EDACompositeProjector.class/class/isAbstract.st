@@ -1,0 +1,3 @@
+design
+isAbstract
+	^ false

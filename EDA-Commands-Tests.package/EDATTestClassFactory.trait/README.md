@@ -1,1 +1,1 @@
-A TGCTestClassFactory is a trait.
+A EDATTestClassFactory is a trait.

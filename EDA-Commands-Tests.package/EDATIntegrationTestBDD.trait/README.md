@@ -1,6 +1,6 @@
 Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:
 
-For the Class part:  State the name of the class with one line description: For example, I'm TGCIntegrationTestBDD the root of the hierarchy of visitor objects.
+For the Class part:  State the name of the class with one line description: For example, I'm EDATIntegrationTestBDD the root of the hierarchy of visitor objects.
 
 For the Responsibility part: Three sentences about my main responsibility, what I'm doing, what services do I offer.
 

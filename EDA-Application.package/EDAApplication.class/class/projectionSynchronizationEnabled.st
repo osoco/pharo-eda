@@ -1,3 +1,4 @@
-configuration
+accessing
 projectionSynchronizationEnabled
-	^ true
+	projectionSynchronizationEnabled ifNil: [ self projectionSynchronizationEnabled: true ].
+	^ projectionSynchronizationEnabled

@@ -1,18 +1,21 @@
 {
 	"classtraitcomposition" : "EDATLogging classTrait",
-	"classvars" : [
-		"Repository"
-	],
+	"classvars" : [ ],
 	"instvars" : [
 		"numProjectedEvents",
-		"lastProjectedEvent"
+		"lastProjectedEvent",
+		"unprojectedEvents",
+		"lastModified",
+		"createdAt"
 	],
 	"name" : "EDAProjection",
-	"commentStamp" : "",
+	"commentStamp" : "JoseSanLeandro 11/20/2018 10:09",
 	"super" : "Object",
 	"traitcomposition" : "EDATLogging",
 	"type" : "normal",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"Repository"
+	],
 	"pools" : [ ],
 	"category" : "EDA-Projections-Views"
 }

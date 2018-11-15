@@ -1,0 +1,3 @@
+projection creation
+createNewProjectionFromEvent: anEvent
+	self subclassResponsibility 

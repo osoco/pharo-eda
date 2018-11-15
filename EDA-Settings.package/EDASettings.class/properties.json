@@ -8,7 +8,7 @@
 	"traitcomposition" : "EDATSettingsHelper",
 	"type" : "normal",
 	"classinstvars" : [
-		"DUEnvironmentClass"
+		"duEnvironmentClass"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Settings"

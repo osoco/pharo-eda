@@ -1,3 +1,3 @@
 initialization
 setupEventSubscriptions
-	self shouldBeImplemented
+	self subclassResponsibility 

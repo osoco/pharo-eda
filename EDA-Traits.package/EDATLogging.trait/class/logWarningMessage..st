@@ -1,3 +1,3 @@
 logging
 logWarningMessage: aMessage
-	self logMessage: aMessage inCategory: 'WARNING'
+	self logMessage: aMessage inCategory: 'WARN '

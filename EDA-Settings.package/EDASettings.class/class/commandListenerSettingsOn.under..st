@@ -4,5 +4,8 @@ commandListenerSettingsOn: aBuilder under: parent
 		label: 'Command Listener' translated;
 		description: 'Command listener' translated;
 		parent: parent.
-
-	^ self stompListenerSettingsOn: aBuilder withConfig: EDACommandStompTopicListener under: #commandListener populatedWithValuesFrom: 'commandListener'
+	self
+		stompListenerSettingsOn: aBuilder
+		withConfig: EDACommandStompTopicListener
+		under: #commandListener
+		populatedWithValuesFrom: 'commandListener'

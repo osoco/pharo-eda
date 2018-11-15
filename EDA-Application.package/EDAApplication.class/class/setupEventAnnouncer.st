@@ -1,3 +1,3 @@
 initialization
 setupEventAnnouncer
-	EventAnnouncer := Announcer new
+	eventAnnouncer := Announcer new

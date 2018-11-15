@@ -1,7 +1,6 @@
 settings
 stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: configEntry
 	| stompConfig |
-
 	stompConfig := self retrieveSettingAsDict: configEntry.
 	(aBuilder setting: #host)
 		parent: parent;
@@ -46,9 +45,9 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		label: 'Ack policy' translated;
 		description: 'Acknowledgement policy' translated;
 		domainValues:
-				{('Auto' translated -> #auto).
-					('Client' translated -> #client).
-					('Client Individual' translated -> #'client-individual')};
+			{('Auto' translated -> #auto).
+			('Client' translated -> #client).
+			('Client Individual' translated -> #'client-individual')};
 		default: (stompConfig at: 'ack') asSymbol.
 	(aBuilder setting: #prefetchCount)
 		parent: parent;
@@ -61,4 +60,10 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		target: container;
 		label: 'Timeout' translated;
 		description: 'Timeout (in seconds)' translated;
-		default: (stompConfig at: 'timeout')
+		default: (stompConfig at: 'timeout').
+			(aBuilder setting: #commandListenerClientDebug)
+		parent: parent;
+		target: EDAApplication;
+		label: 'STOMP client in debug mode' translated;
+		description: 'Whether enable debug mode in the STOMP client' translated;
+		default: (stompConfig at: 'debug')
