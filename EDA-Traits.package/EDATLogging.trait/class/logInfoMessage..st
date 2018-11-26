@@ -1,3 +1,3 @@
 logging
 logInfoMessage: aMessage
-	self logMessage: aMessage inCategory: 'INFO '
+	self logMessage: aMessage inCategory: 'INFO ' inStream: FileStream stdout

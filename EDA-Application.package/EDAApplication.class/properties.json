@@ -3,7 +3,7 @@
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "EDAApplication",
-	"commentStamp" : "",
+	"commentStamp" : "JoseSanLeandro 11/26/2018 19:35",
 	"super" : "Object",
 	"traitcomposition" : "EDATLogging",
 	"type" : "normal",
