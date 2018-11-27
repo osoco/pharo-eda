@@ -12,8 +12,7 @@ logMessage: aMessage inCategory: aString inStream: aStream
 	stream << '] '.
 	stream << aMessage.
 	stream << '.'.
-	aStream
-		print: stream contents;
+	aStream << stream contents;
 		nextPut: Character cr.
 	(aString = 'DEBUG' or: [ DateAndTime now seconds % 10 = 0 ])
 		ifTrue: [ aStream flush ]
