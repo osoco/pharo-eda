@@ -1,3 +1,3 @@
 persistence
 selectOne: aProjectionClass where: aDictionary
-	^ aProjectionClass selectOne: aDictionary
+	^ aProjectionClass selectOne: (self convertDictonaryToConditionalBlock: aDictionary)
