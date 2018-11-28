@@ -4,9 +4,12 @@ projectEvent: anEvent usingEmittingBlock: aBlock
 	projection := self retrieveProjectionForEvent: anEvent.
 	projection := projection ifNil: [ self createNewProjectionForEvent: anEvent ].
 	projectionHandlers := self retrieveProjectionHandlerMethodsForEvent: anEvent.
-	(projectionHandlers size > 1) ifTrue: [ self logErrorMessage: 'Event ', anEvent class greaseString, '(', anEvent id greaseString, ') will be projected twice in projection ', self projectionClass greaseString, '.' ].
+	projectionHandlers ifEmpty: [ 
+		self logErrorMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') cannot be projected since projector ' , self class greaseString , ' doesn''t support it.' ].
+	projectionHandlers size > 1
+		ifTrue: [ self logErrorMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') will be projected twice in projection ' , self projectionClass greaseString , '.' ].
 	projectionHandlers
-		do: [ :projectionMethod |
+		do: [ :projectionMethod | 
 			self
 				delegateEventProjectionOf: anEvent
 				in: projection
