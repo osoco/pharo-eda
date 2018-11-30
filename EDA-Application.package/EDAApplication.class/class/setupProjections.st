@@ -2,6 +2,5 @@ initialization
 setupProjections
 	| projectionClasses |
 	self projectionSynchronizationEnabled
-		ifTrue: [ projectionClasses := EDAProjection subclasses
-				reject: [ :projectionClass | projectionClass name beginsWith: 'EDATest' ].
+		ifTrue: [ projectionClasses := EDAProjection allSubclasses reject: [ :projectionClass | (projectionClass name beginsWith: 'EDATest') or: [ projectionClass isAbstract ] ].
 			projectionClasses do: [ :projectionClass | self setupProjectionRepositoryForProjection: projectionClass ] ]

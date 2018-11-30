@@ -1,3 +1,3 @@
 accessing
 repository: anObject
-	Repository := anObject
+	repository := anObject

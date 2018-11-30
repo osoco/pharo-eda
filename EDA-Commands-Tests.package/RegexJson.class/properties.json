@@ -1,6 +1,6 @@
 {
 	"commentStamp" : "",
-	"super" : "Dictionary",
+	"super" : "Object",
 	"category" : "EDA-Commands-Tests",
 	"classinstvars" : [ ],
 	"pools" : [ ],

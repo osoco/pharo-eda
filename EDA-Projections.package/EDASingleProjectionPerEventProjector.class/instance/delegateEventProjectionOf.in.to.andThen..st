@@ -4,7 +4,7 @@ delegateEventProjectionOf: anEvent in: aProjection to: aProjectionMethod andThen
 	[ | eventToEmitClass eventToEmit |
 	succeed := self delegateEventProjectionOf: anEvent in: aProjection to: aProjectionMethod.
 	succeed
-		ifTrue: [ aProjection incProjectedEvents.
+		ifTrue: [
 			aProjection updateLastProjectedEvent: anEvent timestamp ]
 		ifFalse: [ aProjection unprojectedEvents add: anEvent ].
 	aProjection saveProjection.

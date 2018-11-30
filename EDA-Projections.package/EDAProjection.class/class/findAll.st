@@ -1,3 +1,3 @@
 persistence
 findAll
-	^ Repository findAll: self
+	^ repository findAll: self

@@ -1,6 +1,6 @@
 persistence
 removeProjection
-	Repository removeProjection: self.
+	repository removeProjection: self.
 	EDAProjectionRemoved new
 		projection: self;
 		emit

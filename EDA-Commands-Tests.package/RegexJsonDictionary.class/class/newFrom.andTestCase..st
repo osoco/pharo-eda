@@ -1,7 +1,6 @@
 instance creation
-newFrom: aString andTestCase: aTestCase
+newFrom: aDictionary andTestCase: aTestCase
 	| result |
-	result := self new.
-	result dict: (Dictionary newFrom: aString).
+	result := self withAll: aDictionary.
 	result testCase: aTestCase.
 	^ result

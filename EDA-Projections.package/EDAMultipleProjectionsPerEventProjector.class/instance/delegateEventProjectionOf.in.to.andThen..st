@@ -2,14 +2,11 @@ projecting
 delegateEventProjectionOf: anEvent in: aProjectionCollection to: aProjectionMethod andThen: aBlock
 	| succeed |
 	[ | eventToEmitClass eventToEmit |
-	succeed := self
-		perform: aProjectionMethod selector
-		with: anEvent
-		with: aProjectionCollection.
+	succeed := self perform: aProjectionMethod selector with: anEvent with: aProjectionCollection.
 	aProjectionCollection
 		do: [ :projection | 
 			succeed
-				ifTrue: [ projection incProjectedEvents.
+				ifTrue: [
 					projection updateLastProjectedEvent: anEvent timestamp ]
 				ifFalse: [ projection unprojectedEvents add: anEvent ].
 			projection saveProjection.
@@ -21,6 +18,11 @@ delegateEventProjectionOf: anEvent in: aProjectionCollection to: aProjectionMeth
 				event: anEvent.
 			aBlock value: eventToEmit.
 			eventToEmit emit ] ]
-			on: Exception
-		do: [ :exception | succeed := self manageProjectingError: exception withEvent: anEvent andProjections: aProjectionCollection usingErrorStrategy: EDAProjector errorStrategy ].
+		on: Exception
+		do: [ :exception | 
+			succeed := self
+				manageProjectingError: exception
+				withEvent: anEvent
+				andProjections: aProjectionCollection
+				usingErrorStrategy: EDAProjector errorStrategy ].
 	^ succeed
