@@ -1,3 +1,4 @@
 logging
 logInfoMessage: aMessage
-	self logMessage: aMessage inCategory: 'INFO ' inStream: FileStream stdout
+	EDALoggingSettings infoEnabled ifTrue: [ 
+	self logMessage: aMessage inCategory: 'INFO ' inStream: FileStream stdout ]

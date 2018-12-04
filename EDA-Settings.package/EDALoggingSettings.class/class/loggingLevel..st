@@ -2,16 +2,11 @@ accessing
 loggingLevel: aLevel
 	| failed |
 	failed := true.
-	aLevel = 'debug'
-		ifTrue: [ self debugEnabled.
-			failed := false ].
-	aLevel = 'info'
-		ifTrue: [ self infoEnabled.
-			failed := false ].
-	aLevel = 'warning'
-		ifTrue: [ self warningEnabled.
-			failed := false ].
-	aLevel = 'error'
-		ifTrue: [ self errorEnabled.
-			failed := false ].
-	failed ifTrue: [ InvalidLoggingLevel signal ] ifFalse: [ loggingLevel := aLevel ]
+	self debugEnabled: (aLevel = 'debug').
+	self infoEnabled: (self debugEnabled or: [ (aLevel = 'info') ]).
+	self warningEnabled: (self infoEnabled or: [  (aLevel = 'warning') ]).
+	self errorEnabled: (self warningEnabled or: [ (aLevel = 'error' ) ]).
+	failed := (self debugEnabled or: [ self infoEnabled or: [ self warningEnabled or: [ self errorEnabled  ] ] ]) not.
+	failed
+		ifTrue: [ InvalidLoggingLevel signal ]
+		ifFalse: [ loggingLevel := aLevel ]

@@ -1,3 +1,4 @@
 logging
 logErrorMessage: aMessage
-	self logMessage: aMessage inCategory: 'ERROR' inStream: FileStream stderr
+	EDALoggingSettings errorEnabled ifTrue: [ 
+	self logMessage: aMessage inCategory: 'ERROR' inStream: FileStream stderr ]
