@@ -1,3 +1,3 @@
 helper
 removePrefix: prefix from: value
-	^ ('^' , prefix copyReplaceAll: ':' with: '\:') asRegexIgnoringCase copy: value replacingMatchesWith: ''
+	^ self class removePrefix: prefix from: value

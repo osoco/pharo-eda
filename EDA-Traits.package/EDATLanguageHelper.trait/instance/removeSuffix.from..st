@@ -1,3 +1,3 @@
 helper
 removeSuffix: suffix from: value
-	^ ((suffix copyReplaceAll: ':' with: '\:') , '$') asRegexIgnoringCase copy: value replacingMatchesWith: ''
+	^ self class removeSuffix: suffix from: value

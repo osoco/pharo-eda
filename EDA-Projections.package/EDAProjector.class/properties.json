@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDATLogging classTrait",
+	"classtraitcomposition" : "EDATLogging classTrait + EDATCollectionHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"eventStore"
@@ -7,7 +7,7 @@
 	"name" : "EDAProjector",
 	"commentStamp" : "",
 	"super" : "Object",
-	"traitcomposition" : "EDATLogging",
+	"traitcomposition" : "EDATLogging + EDATCollectionHelper",
 	"type" : "normal",
 	"classinstvars" : [
 		"errorStrategy"
