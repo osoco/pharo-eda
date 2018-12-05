@@ -1,6 +1,8 @@
 {
 	"classtraitcomposition" : "EDATLogging classTrait",
-	"classvars" : [ ],
+	"classvars" : [
+		"ProjectionSynchronizationEnabled"
+	],
 	"instvars" : [ ],
 	"name" : "EDAApplication",
 	"commentStamp" : "JoseSanLeandro 11/26/2018 19:35",
@@ -11,7 +13,6 @@
 		"eventStore",
 		"eventAnnouncer",
 		"commandConsumer",
-		"projectionSynchronizationEnabled",
 		"commandDispatcher",
 		"eventProducer",
 		"commandListenerClientDebug"
