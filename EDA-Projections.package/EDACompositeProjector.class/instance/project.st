@@ -1,8 +1,9 @@
 api
 project
-	Smalltalk isHeadless ifTrue: [ 	self projectors
-		do: [ :projector | projector project ]
- ] ifFalse: [ 
-	self projectors
-		do: [ :projector | projector project ]
-		displayingProgress: [ :projector | 'Projection ' , projector class projectionClass greaseString ] ]
+	| start end |
+	start := DateAndTime now.
+	self class concurrentSynchronization
+		ifTrue: [ self projectInParallel ]
+		ifFalse: [ self projectSequentially ].
+	end := DateAndTime now.
+	self class annotateDuration: (end - start) forProjector: self class greaseString

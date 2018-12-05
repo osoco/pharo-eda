@@ -9,7 +9,10 @@
 	"super" : "EDAProjector",
 	"traitcomposition" : "EDATLogging",
 	"type" : "normal",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"concurrentSynchronization",
+		"executions"
+	],
 	"pools" : [ ],
 	"category" : "EDA-Projections-Projectors"
 }

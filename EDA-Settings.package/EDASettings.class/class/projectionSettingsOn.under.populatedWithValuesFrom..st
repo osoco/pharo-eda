@@ -9,7 +9,7 @@ projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEnt
 	(aBuilder setting: #projectionSynchronizationEnabled)
 		parent: #projections;
 		target: EDAApplication;
-		label: 'Synchronize projections on startup' translated;
+		label: 'Synchronize on startup' translated;
 		description: 'When the EDAApplication starts, this setting enables a check and conditional automatic synchronization of projections' translated;
 		default: (extSettings at: 'synchronizationEnabled').
 	(aBuilder pickOne: #errorStrategy)
@@ -19,4 +19,12 @@ projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEnt
 		description: 'Strategy when dealing with errors projecting events' translated;
 		order: 1;
 		domainValues: (EDAProjectionErrorHandlingStrategy subclasses collect: [ :strategy | strategy description translated -> strategy greaseString ]);
-		default: EDAJustLoggingProjectionErrorHandlingStrategy asString
+		default: EDAJustLoggingProjectionErrorHandlingStrategy greaseString.
+	(aBuilder pickOne: #concurrentSynchronization)
+		parent: #projections;
+		target: EDACompositeProjector;
+		label: 'Synchronization in parallel' translated;
+		description: 'Whether enable or disable concurrent projection synchronization' translated;
+		order: 2;
+		domainValues: #(false true);
+		default: (extSettings at: 'concurrentSynchronization')
