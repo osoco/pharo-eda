@@ -9,7 +9,7 @@ givenPreviousEvents: previousEventsCollection whenReceiveCommandMessages: aComma
 	self subscribeToEvents.
 	self checkNewStoredEvents: expectedNewStoredEvents givenPreviousEvents: previousEventsCollection.
 	[
-		[ frame := self imageListener client readMessage ]
+		[ frame := self client readMessage ]
 		on: Error
 		do: [ :err |
 			self logErrorMessage: 'Error reading event from queue: ', err greaseString.

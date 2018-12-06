@@ -12,6 +12,7 @@ assertNextReceivedEventMessage: stompListener matches: eventMessageRegex
 		on: Error
 		do: [ :ex |
 			self logErrorMessage: 'Error consuming message: ' , ex description greaseString.
+			self fail: 'Error consuming message: ', ex description greaseString.
 			"nack ifNotNil: [ :arg |
 			arg headers at: 'requeue' put: 'False'.
 			stompListener client writeWithReceipt: arg.
