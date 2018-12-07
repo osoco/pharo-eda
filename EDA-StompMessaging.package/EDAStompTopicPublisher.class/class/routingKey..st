@@ -1,3 +1,3 @@
 accessing
 routingKey: val
-	RoutingKey := val
+	routingKey := val

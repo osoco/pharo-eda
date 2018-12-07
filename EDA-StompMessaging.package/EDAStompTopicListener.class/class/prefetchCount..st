@@ -1,3 +1,3 @@
 accessing
 prefetchCount: val
-	PrefetchCount := val
+	prefetchCount := val

@@ -1,3 +1,3 @@
 accessing
 username: val
-	Username := val
+	username := val

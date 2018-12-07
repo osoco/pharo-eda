@@ -1,3 +1,3 @@
 accessing
 durable: val
-	Durable := val
+	durable := val

@@ -1,3 +1,3 @@
 accessing
 exchange
-	^ Exchange
+	^ exchange

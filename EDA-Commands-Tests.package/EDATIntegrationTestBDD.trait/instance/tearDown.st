@@ -1,4 +1,4 @@
-running
+lifecycle
 tearDown
 	super tearDown.
 	self clearPreviousEvents.
@@ -8,4 +8,6 @@ tearDown
 	self prepareToStopApplication.
 	"self stopApplication."
 	self application eventStore repository resolver debug: false.
-	self logInfoMessage: 'Finished ' , thisContext receiver className greaseString , '>>' , thisContext receiver selector greaseString
+	EDADUEnvironment currentEnvironment: self originalEnvironment.
+	self
+		logInfoMessage: 'Finished ' , thisContext receiver className greaseString , '>>' , thisContext receiver selector greaseString

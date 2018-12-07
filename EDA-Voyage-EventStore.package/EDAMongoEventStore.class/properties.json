@@ -3,11 +3,11 @@
 	"super" : "EDAEventStore",
 	"category" : "EDA-Voyage-EventStore",
 	"classinstvars" : [
-		"Host",
-		"Port",
-		"DatabaseName",
-		"Username",
-		"Password"
+		"username",
+		"password",
+		"databaseName",
+		"host",
+		"port"
 	],
 	"pools" : [ ],
 	"classvars" : [ ],

@@ -1,3 +1,3 @@
 accessing
 host: val
-	Host := val
+	host := val

@@ -1,3 +1,3 @@
 accessing
 durable: flag
-	Durable := flag
+	durable := flag

@@ -1,3 +1,3 @@
 accessing
 timeout: val
-	Timeout := val
+	timeout := val

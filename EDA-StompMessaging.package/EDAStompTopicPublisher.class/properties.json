@@ -10,14 +10,14 @@
 	"traitcomposition" : "EDATLogging",
 	"type" : "normal",
 	"classinstvars" : [
-		"Host",
-		"Port",
-		"Username",
-		"Password",
-		"Exchange",
-		"RoutingKey",
-		"Durable",
-		"Timeout"
+		"username",
+		"routingKey",
+		"password",
+		"exchange",
+		"durable",
+		"host",
+		"port",
+		"timeout"
 	],
 	"pools" : [ ],
 	"category" : "EDA-StompMessaging"

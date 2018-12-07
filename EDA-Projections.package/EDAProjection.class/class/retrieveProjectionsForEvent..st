@@ -1,3 +1,0 @@
-persistence
-retrieveProjectionsForEvent: anEvent
-	self subclassResponsibility 

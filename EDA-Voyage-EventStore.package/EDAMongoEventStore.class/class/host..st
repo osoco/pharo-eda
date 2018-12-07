@@ -1,3 +1,3 @@
 accessing
 host: anObject
-	Host := anObject
+	host := anObject

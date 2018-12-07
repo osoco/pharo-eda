@@ -1,3 +1,3 @@
 accessing
 port: anObject
-	Port := anObject
+	port := anObject

@@ -1,4 +1,4 @@
 accessing
 ack: val
 	self assert: (#(#auto #client #'client-individual') includes: val).
-	Ack := val
+	ack := val

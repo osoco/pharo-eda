@@ -1,3 +1,3 @@
 accessing
 port: val
-	Port := val
+	port := val

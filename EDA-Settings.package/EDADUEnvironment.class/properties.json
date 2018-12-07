@@ -1,11 +1,13 @@
 {
-	"commentStamp" : "JoseSanLeandro 9/22/2015 06:46",
-	"super" : "DUEnvironment",
-	"category" : "EDA-Settings",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "EDATLanguageHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "EDADUEnvironment",
-	"type" : "normal"
+	"commentStamp" : "JoseSanLeandro 9/22/2015 06:46",
+	"super" : "DUEnvironment",
+	"traitcomposition" : "EDATLanguageHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Settings"
 }

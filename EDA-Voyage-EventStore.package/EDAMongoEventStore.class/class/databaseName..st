@@ -1,3 +1,3 @@
 accessing
 databaseName: anObject
-	DatabaseName := anObject
+	databaseName := anObject

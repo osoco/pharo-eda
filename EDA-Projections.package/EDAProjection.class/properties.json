@@ -14,7 +14,8 @@
 	"traitcomposition" : "EDATLogging",
 	"type" : "normal",
 	"classinstvars" : [
-		"repository"
+		"repository",
+		"errorStrategy"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Projections-Views"
