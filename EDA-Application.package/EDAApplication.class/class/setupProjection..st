@@ -1,3 +1,0 @@
-initialization
-setupProjection: aProjectionClass
-	aProjectionClass setupProjectionUsingEventStore: self eventStore

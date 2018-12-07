@@ -1,3 +1,3 @@
 persistence
 findAll
-	^ repository findAll: self
+	^ repository ifNil: [ OrderedCollection new ] ifNotNil: [ :r | r findAll: self ]
