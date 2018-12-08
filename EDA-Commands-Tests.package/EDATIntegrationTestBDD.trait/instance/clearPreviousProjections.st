@@ -1,3 +1,6 @@
 lifecycle
 clearPreviousProjections
-    EDAProjection removeAllProjections.
+	self isEnvironmentIntegrationTest
+		ifTrue: [ EDAProjection removeAllProjections ]
+		ifFalse: [ self fail: 'Not in integration test environment' ]
+	

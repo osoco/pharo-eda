@@ -1,5 +1,5 @@
 lifecycle
-clearPreviousEvents
+clearQueues
 	self isEnvironmentIntegrationTest
-		ifTrue: [ EDAEventSourcingEvent removeAll ]
+		ifTrue: [ EDAQueueCleaner new deleteAllQueues ]
 		ifFalse: [ self fail: 'Not in integration test environment' ]

@@ -1,8 +1,9 @@
 lifecycle
 tearDown
 	super tearDown.
-	self clearPreviousEvents.
+	"self clearPreviousEvents.
 	self clearPreviousProjections.
+	self clearQueues."
 	self unsubscribeToEvents.
 	self restoreCurrentEnvironment.
 	self prepareToStopApplication.

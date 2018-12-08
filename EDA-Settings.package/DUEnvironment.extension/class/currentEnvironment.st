@@ -1,3 +1,0 @@
-*EDA-Settings
-currentEnvironment
-	^ CurrentEnvironment

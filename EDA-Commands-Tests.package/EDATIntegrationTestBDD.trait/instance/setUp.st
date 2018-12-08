@@ -12,4 +12,5 @@ setUp
 	self application eventStore repository resolver debug: true.
 	self clearPreviousEvents.
 	self clearPreviousProjections.
+	self clearQueues.
 	self launchApplication

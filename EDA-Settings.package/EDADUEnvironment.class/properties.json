@@ -1,6 +1,8 @@
 {
 	"classtraitcomposition" : "EDATLanguageHelper classTrait",
-	"classvars" : [ ],
+	"classvars" : [
+		"CurrentEnvironment"
+	],
 	"instvars" : [ ],
 	"name" : "EDADUEnvironment",
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:46",

@@ -61,7 +61,7 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		label: 'Timeout' translated;
 		description: 'Timeout (in seconds)' translated;
 		default: (stompConfig at: 'timeout').
-			(aBuilder setting: #commandListenerClientDebug)
+	(aBuilder setting: #commandListenerClientDebug)
 		parent: parent;
 		target: EDAApplication;
 		label: 'STOMP client in debug mode' translated;

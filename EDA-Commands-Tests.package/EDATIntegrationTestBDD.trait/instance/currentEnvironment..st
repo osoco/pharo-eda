@@ -1,4 +1,3 @@
 accessing
 currentEnvironment: env
-	"Compatibility purposes"
-	self shouldBeImplemented
+	EDADUEnvironment currentEnvironment: env
