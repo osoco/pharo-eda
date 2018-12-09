@@ -1,5 +1,4 @@
 lifecycle
 setUpCurrentEnvironment
-	self currentEnvironment: (OSPlatform current environment at: EDADUEnvironment environmentVariableName ifAbsent: [ 'integration-tests' ]).
-	self currentEnvironment = 'integration-tests'
+	self isEnvironmentIntegrationTest
 		ifFalse: [ OSPlatform current environment at: EDADUEnvironment environmentVariableName put: 'integration-tests' ]

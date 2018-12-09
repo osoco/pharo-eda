@@ -5,10 +5,8 @@ tearDown
 	self clearPreviousProjections.
 	self clearQueues."
 	self unsubscribeToEvents.
-	self restoreCurrentEnvironment.
+	self restoreOriginalEnvironment.
 	self prepareToStopApplication.
 	"self stopApplication."
 	self application eventStore repository resolver debug: false.
-	EDADUEnvironment currentEnvironment: self originalEnvironment.
-	self
-		logInfoMessage: 'Finished ' , thisContext receiver className greaseString , '>>' , thisContext receiver selector greaseString
+	self logInfoMessage: 'Finished ' , thisContext receiver className greaseString , '>>' , thisContext receiver selector greaseString

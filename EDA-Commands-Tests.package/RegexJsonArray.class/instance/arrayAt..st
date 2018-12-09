@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 arrayAt: index
 	"Answer the element at given index."
 

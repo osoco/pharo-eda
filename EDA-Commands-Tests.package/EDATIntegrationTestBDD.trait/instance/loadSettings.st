@@ -1,3 +1,4 @@
-lifecycle
+menu
 loadSettings
-	EDADUEnvironment currentEnvironment: 'integration-tests'
+	self isEnvironmentIntegrationTest
+		ifFalse: [ self currentEnvironment: 'integration-tests' "This triggers reloading of SettingBrowser" ]

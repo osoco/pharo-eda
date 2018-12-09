@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 assertMatches: anArray
 	| result |
 	result := true.

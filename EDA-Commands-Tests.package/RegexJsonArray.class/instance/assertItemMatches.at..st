@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 assertItemMatches: anItem at: anIndex
 	| result |
 	result := true.

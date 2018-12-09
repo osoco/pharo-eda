@@ -6,7 +6,8 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"testCase"
+		"testCase",
+		"array"
 	],
 	"name" : "RegexJsonArray",
 	"type" : "variable"

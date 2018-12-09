@@ -1,4 +1,4 @@
-helpers
+helper
 assertJson: jsonText matchesRegex: regex
 	"Checks whether given JSON match the regex-enhanced JSON text"
 

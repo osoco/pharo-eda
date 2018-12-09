@@ -1,0 +1,3 @@
+copying
+copyEmpty
+	^ self new
