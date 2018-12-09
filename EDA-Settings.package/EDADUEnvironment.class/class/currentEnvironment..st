@@ -3,7 +3,8 @@ currentEnvironment: aString
 	| previousEnvironment |
 	previousEnvironment := self currentEnvironment.
 	CurrentEnvironment := aString.
-	(previousEnvironment = aString) ifFalse: [ 
-		EDASettings resetSettings.
-		self reloadSettingBrowser
-	]
+	(previousEnvironment isNil or: [ previousEnvironment = aString ])
+		ifTrue: [ ^ self ].
+	EDASettings resetSettings.
+	self reloadSettingBrowser
+

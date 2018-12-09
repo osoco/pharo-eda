@@ -6,7 +6,7 @@
 		"Host",
 		"Port",
 		"DatabaseName",
-		"User",
+		"Username",
 		"Password"
 	],
 	"pools" : [ ],
