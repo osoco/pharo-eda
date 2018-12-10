@@ -1,3 +1,3 @@
-accessing
+initialization
 repository
 	^ repository

@@ -7,7 +7,14 @@
 		"Port",
 		"DatabaseName",
 		"Username",
-		"Password"
+		"Password",
+		"enableReplication",
+		"debug",
+		"enableSingleton",
+		"ensuringCurrentOnSave",
+		"ensuringCurrentReferencesOnQueries",
+		"forceEager",
+		"lazySynchronize"
 	],
 	"pools" : [ ],
 	"classvars" : [ ],

@@ -20,11 +20,10 @@ projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEnt
 		order: 1;
 		domainValues: (EDAProjectionErrorHandlingStrategy subclasses collect: [ :strategy | strategy description translated -> strategy greaseString ]);
 		default: EDAJustLoggingProjectionErrorHandlingStrategy greaseString.
-	(aBuilder pickOne: #concurrentSynchronization)
+	(aBuilder setting: #concurrentSynchronization)
 		parent: #projections;
 		target: EDACompositeProjector;
 		label: 'Synchronization in parallel' translated;
 		description: 'Whether enable or disable concurrent projection synchronization' translated;
 		order: 2;
-		domainValues: #(false true);
 		default: (extSettings at: 'concurrentSynchronization')

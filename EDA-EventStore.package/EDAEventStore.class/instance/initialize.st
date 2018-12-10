@@ -1,3 +1,3 @@
-persistence
+initialization
 initialize
-	self initBackendRepository
+	self doInitialize
