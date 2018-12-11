@@ -6,11 +6,7 @@ baseline01: spec
 		do: [ spec blessing: #baseline.
 			spec repository: self class pharoEdaRepository.
 			spec
-				project: 'NeoJSON'
-					with: [ spec
-						className: #ConfigurationOfNeoJSON;
-						versionString: #stable;
-						repository: 'http://mc.stfx.eu/Neo' ];
+				baseline: 'NeoJSON' with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 				project: 'BabyMock2'
 					with: [ spec
 						className: #ConfigurationOfBabyMock2;
