@@ -1,10 +1,9 @@
 baselines
-baseline01: spec
-	<version: '0.1-baseline'>
+baseline: spec
+	<baseline>
 	spec
 		for: #common
 		do: [ spec blessing: #baseline.
-			"self declarePharoEdaIn: spec."
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
 			self declareVoyageMongoIn: spec.

@@ -1,6 +1,7 @@
 dependencies
 declareNeoJSONIn: spec
 	spec
-				baseline: 'NeoJSON';
-				repository: 'github://svenvc/NeoJSON/repository'.
+		baseline: 'NeoJSON'
+		with: [ spec
+				repository: 'github://svenvc/NeoJSON/repository' ].
 	^ spec

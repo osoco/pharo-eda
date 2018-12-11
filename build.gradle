@@ -1,0 +1,251 @@
+version = "0.1.0-SNAPSHOT" // do not forget to update the version also in docker.gradle
+apply plugin: PharoPlugin
+
+pharo {
+    imageVersion = '61'
+}
+
+def imageName = "${project.name}-${project.version}"
+
+def Properties properties = new Properties()
+properties.load(project.rootProject.file('gradle-local.properties').newDataInputStream())
+def customPharoPath = properties.getProperty('pharoPath')
+def customPharoUiPath = properties.getProperty('pharoUiPath')
+def customPharoArgs = properties.getProperty('pharoArgs').split(",").toList()
+
+task removePreviousPharoImage(type: RemovePreviousPharoImageTask)
+
+task downloadFreshImage(type: DownloadPharoImageTask, dependsOn: removePreviousPharoImage)
+
+task loadGitFileTree(type: LoadMetacelloConfigTask, dependsOn: downloadFreshImage) {
+    repository = "http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo60/main"
+    configuration = 'ConfigurationOfGitFileTree'
+    version = 'development'
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+task upgradeTonel(type: UpgradeTonelTask, dependsOn: downloadFreshImage) {
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task upgradeMetacello(type: UpgradeMetacelloTask, dependsOn: upgradeTonel) {
+    repository = "github://metacello/metacello:pharo-6.1_dev/repository"
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task loadPharoEDA(type: LoadMetacelloConfigTask, dependsOn: upgradeMetacello) {
+    repository = "gitfiletree://${project.projectDir}"
+    configuration = 'ConfigurationOfPharoEDA'
+    version = 'development'
+    group = 'default'
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task customizeImage(type: RunSmalltalkScriptTask, dependsOn: loadPharoEDA) {
+    script = "customize.st"
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task assemble(type: SavePharoImageTask, dependsOn: customizeImage) {
+    toImageName = imageName
+    shouldDeleteOldImage = true
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task loadPharoEDATests(type: LoadMetacelloConfigTask, dependsOn: assemble) {
+    image = imageName
+    repository = "gitfiletree://${project.projectDir}"
+    configuration = 'BaselineOfPharoEDA'
+    group = 'CompleteWithTests'
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task test(type: RunPharoTestsTask, dependsOn: loadPharoEDATests) {
+    image = imageName
+    packageName = "EDA-**-Tests"
+    shouldOutputAsJUnit = true
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task clean(type: Delete) {
+    def foldersToDelete = []
+    new File('.').eachDir {
+        if (it.name.startsWith('image.')) {
+            foldersToDelete << it.name
+        }
+    }
+    delete foldersToDelete +
+            ["${imageName}.image", "${imageName}.changes", 'package-cache', 'play-cache', 'pharo-local', 'github-cache', '.gradle', 'PharoDebug.log']
+}
+
+class PharoPlugin implements Plugin<Project> {
+    void apply(Project project) {
+        project.extensions.create("pharo", PharoPluginExtension)
+    }
+}
+
+class PharoPluginExtension {
+    String zeroConfUrl = "http://get.pharo.org"
+    String imageVersion = 'stable'
+}
+
+class RemovePreviousPharoImageTask extends DefaultTask {
+    @TaskAction
+    def removePreviousPharoImage() {
+        project.exec {
+            commandLine "bash", "-c", "rm -f Pharo.image Pharo.changes"
+        }
+    }
+}
+
+class DownloadPharoImageTask extends DefaultTask {
+    @TaskAction
+    def downloadFreshImage() {
+        def cmd = (System.getProperty('os.name').startsWith('Mac') ? 'curl' : 'wget -O-')
+        project.exec {
+            commandLine "bash", "-c", "${cmd} ${project.pharo.zeroConfUrl}/64/${project.pharo.imageVersion} | bash"
+        }
+    }
+}
+
+class SavePharoImageTask extends DefaultTask {
+    String fromImageName = "Pharo.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+    String toImageName
+    boolean shouldDeleteOldImage
+
+    @TaskAction
+    def renamePharoImage() {
+        def pharoArgs = []
+        pharoArgs.addAll(commonPharoArgs)
+        pharoArgs.addAll([fromImageName, "save", toImageName])
+        if (shouldDeleteOldImage) {
+            pharoArgs << "--delete-old"
+        }
+        project.exec {
+            executable "${pharoPath}"
+            args pharoArgs
+        }
+    }
+}
+
+class LoadMetacelloConfigTask extends DefaultTask {
+    String image = "Pharo.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+    String repository
+    String configuration
+    String version
+
+    @TaskAction
+    def loadMetacelloConfig() {
+        def pharoArgs = []
+        pharoArgs.addAll(commonPharoArgs)
+        pharoArgs.addAll([image, "config", repository, configuration, "--install=${version}"])
+        project.exec {
+            executable "${pharoPath}"
+            args pharoArgs
+        }
+    }
+}
+
+class UpgradeMetacelloTask extends DefaultTask {
+    String image = "Pharo.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+    String repository
+
+    @TaskAction
+    def upgradeMetacelloTask() {
+        def pharoArgs = []
+        pharoArgs.addAll(commonPharoArgs)
+        pharoArgs.addAll([image, "eval", "--save", "Metacello new baseline: 'Metacello'; repository: '${repository}'; onConflict: [ :ex | ex allow ]; load." ])
+        project.exec {
+            executable "${pharoPath}"
+            args pharoArgs
+        }
+    }
+}
+
+class UpgradeTonelTask extends DefaultTask {
+    String image = "Pharo.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+
+    @TaskAction
+    def upgradeMetacelloTask() {
+        def pharoArgs = []
+        pharoArgs.addAll(commonPharoArgs)
+        pharoArgs.addAll([image, "eval", "--save", "Metacello new repository: 'github://pharo-vcs/tonel'; baseline: 'Tonel'; load." ])
+        project.exec {
+            executable "${pharoPath}"
+            args pharoArgs
+        }
+    }
+}
+
+class EvalSmalltalkExpressionTask extends DefaultTask {
+    String image = "Pharo.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+    String expression
+
+    @TaskAction
+    def evalSmalltalkExpression() {
+        def pharoArgs = []
+        pharoArgs.addAll(commonPharoArgs)
+        pharoArgs.addAll([image, "eval", "--save", expression])
+        project.exec {
+            executable "${pharoPath}"
+            args pharoArgs
+        }
+    }
+}
+
+class RunSmalltalkScriptTask extends DefaultTask {
+    String image = "Pharo.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+    String script
+
+    @TaskAction
+    def runSmalltalkScript() {
+       def pharoArgs = []
+       pharoArgs.addAll(commonPharoArgs)
+       pharoArgs.addAll([image, "st", "--quit", "--save", script])
+       project.exec {
+           executable "${pharoPath}"
+           args pharoArgs
+       }
+    }
+}
+
+class RunPharoTestsTask extends DefaultTask {
+    String image = "Pharo.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+    String packageName
+    boolean shouldOutputAsJUnit
+
+    @TaskAction
+    def runTests() {
+        def pharoArgs = []
+        pharoArgs.addAll(commonPharoArgs)
+        pharoArgs.addAll([image, "test", packageName])
+        if (shouldOutputAsJUnit) {
+            pharoArgs << "--junit-xml-output"
+        }
+        project.exec {
+            executable "${pharoPath}"
+            args pharoArgs
+        }
+    }
+}
