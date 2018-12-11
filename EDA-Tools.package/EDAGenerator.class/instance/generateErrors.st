@@ -1,4 +1,0 @@
-api
-generateErrors
-	self createInvalidAggregateErrorClass.
-	self createAggregateDoesNotExistErrorClass

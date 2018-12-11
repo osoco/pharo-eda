@@ -1,7 +1,0 @@
-{
-	"commentStamp" : "RafaelLuque 3/18/2015 10:54",
-	"traitcomposition" : "EDATJsonMatchingHelper + EDATLogging",
-	"classtraitcomposition" : "EDATJsonMatchingHelper classTrait + EDATLogging classTrait",
-	"category" : "EDA-Commands-Tests",
-	"name" : "EDATIntegrationTestBDD"
-}

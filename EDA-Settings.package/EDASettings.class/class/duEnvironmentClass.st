@@ -1,3 +1,0 @@
-accessing
-duEnvironmentClass
-	^ duEnvironmentClass

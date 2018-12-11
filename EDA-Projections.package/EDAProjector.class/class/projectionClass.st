@@ -1,3 +1,0 @@
-projection retrieval
-projectionClass
-	self subclassResponsibility 

@@ -1,3 +1,0 @@
-accessing
-projectionClass
-	^ self shouldBeImplemented

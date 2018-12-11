@@ -1,3 +1,0 @@
-initialisation
-initialize
-	self doInitialize
