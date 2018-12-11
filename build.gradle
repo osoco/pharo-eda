@@ -36,7 +36,7 @@ task upgradeMetacello(type: UpgradeMetacelloTask, dependsOn: upgradeTonel) {
 }
 
 task loadPharoEDA(type: LoadMetacelloConfigTask, dependsOn: upgradeMetacello) {
-    repository = "gitfiletree://${project.projectDir}"
+    repository = "github://osoco/pharo-eda:feature/projection-refactoring"
     configuration = 'ConfigurationOfPharoEDA'
     version = 'development'
     group = 'default'
