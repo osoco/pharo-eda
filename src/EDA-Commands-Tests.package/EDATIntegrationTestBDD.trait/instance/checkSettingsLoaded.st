@@ -1,0 +1,3 @@
+lifecycle
+checkSettingsLoaded
+	"Compatibility purposes"	

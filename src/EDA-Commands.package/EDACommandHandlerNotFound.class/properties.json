@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "RafaelLuque 12/2/2014 13:22",
+	"super" : "Error",
+	"category" : "EDA-Commands-Handlers",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDACommandHandlerNotFound",
+	"type" : "normal"
+}

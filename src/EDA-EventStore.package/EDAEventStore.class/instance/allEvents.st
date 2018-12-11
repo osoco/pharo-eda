@@ -1,0 +1,3 @@
+persistence
+allEvents
+	self subclassResponsibility

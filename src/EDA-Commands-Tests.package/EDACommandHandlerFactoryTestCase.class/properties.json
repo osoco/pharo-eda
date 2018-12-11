@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "BabyMock2TestCase",
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDACommandHandlerFactoryTestCase",
+	"type" : "normal"
+}

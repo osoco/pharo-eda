@@ -1,0 +1,17 @@
+{
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"id",
+		"version",
+		"isDeleted"
+	],
+	"name" : "EDAAggregateRoot",
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Domain"
+}

@@ -1,0 +1,7 @@
+{
+	"commentStamp" : "",
+	"traitcomposition" : "EDATLanguageHelper",
+	"classtraitcomposition" : "EDATLanguageHelper classTrait",
+	"category" : "EDA-Traits",
+	"name" : "EDATSourceCodeHelper"
+}

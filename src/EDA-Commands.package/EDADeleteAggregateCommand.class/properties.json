@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "EDACommand",
+	"category" : "EDA-Commands-Commands",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDADeleteAggregateCommand",
+	"type" : "normal"
+}

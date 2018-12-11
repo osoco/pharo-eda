@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATopicListener",
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Messaging-Topic"
+}

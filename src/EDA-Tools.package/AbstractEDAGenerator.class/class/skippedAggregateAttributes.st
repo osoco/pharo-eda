@@ -1,0 +1,3 @@
+customization
+skippedAggregateAttributes
+	^ #('id' 'version')

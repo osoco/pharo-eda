@@ -1,0 +1,3 @@
+accessing
+routingKey
+	^ routingKey

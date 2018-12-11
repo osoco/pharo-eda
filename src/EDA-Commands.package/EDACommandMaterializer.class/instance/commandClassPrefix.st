@@ -1,0 +1,3 @@
+parsing
+commandClassPrefix
+	self subclassResponsibility

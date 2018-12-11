@@ -1,0 +1,3 @@
+helper
+retrieveAggregateAttributes
+	^ self retrieveEventAttributes

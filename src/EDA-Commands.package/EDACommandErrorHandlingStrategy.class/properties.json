@@ -1,0 +1,15 @@
+{
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"context"
+	],
+	"name" : "EDACommandErrorHandlingStrategy",
+	"commentStamp" : "JoseSanLeandro 7/21/2015 15:22",
+	"super" : "Object",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Commands-Error-Strategies"
+}

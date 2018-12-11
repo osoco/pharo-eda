@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATReflectionHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATReflectionHelperTest",
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"traitcomposition" : "EDATReflectionHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Traits-Tests"
+}

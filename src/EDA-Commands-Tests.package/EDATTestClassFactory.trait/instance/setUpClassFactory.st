@@ -1,0 +1,3 @@
+running
+setUpClassFactory
+	self classFactory: ClassFactoryForTestCase new

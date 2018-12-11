@@ -1,0 +1,3 @@
+testing
+isDelete
+	^ true

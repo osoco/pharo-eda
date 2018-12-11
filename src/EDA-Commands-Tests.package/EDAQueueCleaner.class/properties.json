@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "EDA-Commands-Tests",
+	"classinstvars" : [
+		"host",
+		"port",
+		"username",
+		"password",
+		"queues"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAQueueCleaner",
+	"type" : "normal"
+}

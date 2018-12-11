@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "EDACommandResultEvent",
+	"category" : "EDA-Events-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"authorUsername"
+	],
+	"name" : "EDAUserCommandResultEvent",
+	"type" : "normal"
+}

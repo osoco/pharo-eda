@@ -1,0 +1,16 @@
+{
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"eventStore",
+		"eventBus"
+	],
+	"name" : "EDACommandHandler",
+	"commentStamp" : "",
+	"super" : "Object",
+	"traitcomposition" : "EDAPrintOnHelper + EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Commands-Handlers"
+}

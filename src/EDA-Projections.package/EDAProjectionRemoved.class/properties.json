@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "EDAProjectionLogEvent",
+	"category" : "EDA-Projections-Events",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAProjectionRemoved",
+	"type" : "normal"
+}

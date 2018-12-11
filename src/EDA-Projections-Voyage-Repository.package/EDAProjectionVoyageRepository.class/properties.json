@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "EDAProjectionRepository",
+	"category" : "EDA-Projections-Voyage-Repository",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"repository"
+	],
+	"name" : "EDAProjectionVoyageRepository",
+	"type" : "normal"
+}

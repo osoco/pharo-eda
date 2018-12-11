@@ -1,0 +1,20 @@
+{
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"id",
+		"aggregateRootClass",
+		"timestamp",
+		"aggregateRootVersion",
+		"version",
+		"delete"
+	],
+	"name" : "EDAEventSourcingEvent",
+	"commentStamp" : "RafaelLuque 3/7/2017 09:25",
+	"super" : "Announcement",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Events-Events"
+}

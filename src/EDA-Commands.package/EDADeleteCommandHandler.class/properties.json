@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "EDACommandHandler",
+	"category" : "EDA-Commands-Handlers",
+	"classinstvars" : [
+		"uniqueInstance",
+		"eventBus",
+		"eventStore"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDADeleteCommandHandler",
+	"type" : "normal"
+}

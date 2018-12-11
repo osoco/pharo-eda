@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "AbstractMethodIconAction",
+	"category" : "EDA-Projections-Widgets",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "MethodProjectsEventAction",
+	"type" : "normal"
+}

@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "Announcement",
+	"category" : "EDA-Logging",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"EDALogEventAnnouncer"
+	],
+	"instvars" : [
+		"timestamp"
+	],
+	"name" : "EDALogEvent",
+	"type" : "normal"
+}

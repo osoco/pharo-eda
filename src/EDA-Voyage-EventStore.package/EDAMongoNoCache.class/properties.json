@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "VOCache",
+	"category" : "EDA-Voyage-EventStore",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAMongoNoCache",
+	"type" : "normal"
+}
