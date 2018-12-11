@@ -4,7 +4,7 @@ baseline01: spec
 	spec
 		for: #common
 		do: [ spec blessing: #baseline.
-			"self declarePharoEdaIn: spec."
+			self declarePharoEdaIn: spec.
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
 			self declareVoyageMongoIn: spec.

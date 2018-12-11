@@ -1,4 +1,4 @@
 dependencies
 declarePharoEdaIn: spec
-	spec repository: self class pharoEdaRepository.
+	spec repository: 'github://osoco/pharo-eda:projection-refactoring'
 	^ spec
