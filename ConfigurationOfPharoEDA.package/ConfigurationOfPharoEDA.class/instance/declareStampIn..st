@@ -1,5 +1,5 @@
-baselines
-commonSpecForStamp: spec
+dependencies
+declareStampIn: spec
 			spec
 				project: 'Stamp'
 				with: [ spec

@@ -4,12 +4,12 @@ baseline01: spec
 	spec
 		for: #common
 		do: [ spec blessing: #baseline.
-			"self commonSpecForPharoEdaRepository: spec."
-			self commonSpecForNeoJSON: spec.
-			self commonSpecForBabyMock2: spec.
-			self commonSpecForVoyageMongo: spec.
-			self commonSpecForStamp: spec.
-			self commonSpecForDeployUtils: spec.
+			self declarePharoEdaIn: spec.
+			"self commonSpecForNeoJSON: spec."
+			self declareBabyMock2In: spec.
+			self declareVoyageMongoIn: spec.
+			self declareStampIn: spec.
+			self declareDeployUtilsIn: spec.
 			spec
 				package: #'EDA-Traits';
 				package: #'EDA-Traits-Tests' with: [ spec requires: #('EDA-Traits') ];
@@ -22,7 +22,7 @@ baseline01: spec
 				package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
 				package: #'EDA-Events' with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
 				"package: #'EDA-Commands' with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];"
-				package: #'EDA-Commands' with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
+					package: #'EDA-Commands' with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
 				package: #'EDA-Logging';
 				package: #'EDA-Projections';
 				package: #'EDA-Projections-Tests' with: [ spec requires: #('EDA-Traits') ];

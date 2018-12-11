@@ -1,5 +1,5 @@
-baselines
-commonSpecForBabyMock2: spec
+dependencies
+declareBabyMock2In: spec
 	spec
 				project: 'BabyMock2'
 					with: [ spec

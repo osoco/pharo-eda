@@ -1,4 +1,4 @@
-baselines
-commonSpecForPharoEdaRepository: spec
+dependencies
+declarePharoEdaIn: spec
 	spec repository: self class pharoEdaRepository.
 	^ spec

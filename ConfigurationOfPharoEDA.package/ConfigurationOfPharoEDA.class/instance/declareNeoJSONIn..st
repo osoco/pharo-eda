@@ -1,5 +1,5 @@
-baselines
-commonSpecForNeoJSON: spec
+dependencies
+declareNeoJSONIn: spec
 	spec
 				baseline: 'NeoJSON';
 				repository: 'github://svenvc/NeoJSON/repository'.

@@ -1,5 +1,5 @@
-baselines
-commonSpecForVoyageMongo: spec
+dependencies
+declareVoyageMongoIn: spec
 			spec
 				project: 'VoyageMongo'
 					with: [ spec
