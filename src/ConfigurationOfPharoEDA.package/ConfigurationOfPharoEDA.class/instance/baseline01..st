@@ -4,7 +4,7 @@ baseline01: spec
 	spec
 		for: #common
 		do: [ spec blessing: #baseline.
-			spec repository: 'github://osoco/pharo-eda/src'.
+			spec repository: 'github://osoco/pharo-eda:BATS-1725__Migration_to_Iceberg/src'.
 			spec
 				baseline: 'NeoJSON' with: [ spec repository: 'github://svenvc/NeoJSON/repository' ];
 				project: 'BabyMock2'
