@@ -1,0 +1,18 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "EDA-Settings",
+	"classinstvars" : [
+		"debugEnabled",
+		"infoEnabled",
+		"errorEnabled",
+		"warningEnabled",
+		"loggingLevel",
+		"traceEnabled"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDALoggingSettings",
+	"type" : "normal"
+}
