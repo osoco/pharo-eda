@@ -72,4 +72,10 @@ mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValue
 		target: container;
 		label: 'Lazy synchronize' translated;
 		description: 'Lazy synchronize' translated;
-		default: (mongoConfig at: 'lazySynchronize')
+		default: (mongoConfig at: 'lazySynchronize').
+	(aBuilder setting: #wireProtocolEnabled)
+		parent: parent;
+		target: container;
+		label: 'Wire protocol' translated;
+		description: 'Whether to enable wire protocol' translated;
+		default: (mongoConfig at: 'wireProtocolEnabled')

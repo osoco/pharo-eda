@@ -7,7 +7,15 @@
 		"password",
 		"databaseName",
 		"host",
-		"port"
+		"port",
+		"debug",
+		"enableReplication",
+		"enableSingleton",
+		"ensuringCurrentOnSave",
+		"ensuringCurrentReferencesOnQueries",
+		"forceEager",
+		"lazySynchronize",
+		"wireProtocolEnabled"
 	],
 	"pools" : [ ],
 	"classvars" : [ ],

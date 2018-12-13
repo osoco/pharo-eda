@@ -1,3 +1,6 @@
 accessing
 username: anObject
-	Username := anObject
+	username = anObject
+		ifTrue: [ ^ self ].
+	username := anObject.
+	self refreshVoyageSettings

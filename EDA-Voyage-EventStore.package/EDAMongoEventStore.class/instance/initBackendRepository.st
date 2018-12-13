@@ -1,10 +1,10 @@
 persistence
 initBackendRepository
-	repository := VOMongoRepository
-		host: EDAMongoEventStore host
-		port: EDAMongoEventStore port
-		database: EDAMongoEventStore databaseName
-		username: EDAMongoEventStore username
-		password: EDAMongoEventStore password.
+	repository := EDAVOMongoRepository
+		host: self class host
+		port: self class port
+		database: self class databaseName
+		username: self class username
+		password: self class password.
+	self class refreshVoyageSettingsOn: repository
 	"repository cache: EDAMongoNoCache new."
-	repository enableSingleton

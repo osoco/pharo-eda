@@ -1,3 +1,6 @@
 accessing
-password: val
-	Password := val
+password: anObject
+	password = anObject
+		ifTrue: [ ^ self ].
+	password := anObject.
+	self refreshVoyageSettings

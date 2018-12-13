@@ -1,9 +1,9 @@
 persistence
 initBackendRepository
-	repository := VOMongoRepository
-		host: EDAProjectionMongoRepository host
-		port: EDAProjectionMongoRepository port
-		database: EDAProjectionMongoRepository databaseName
-		username: EDAProjectionMongoRepository username
-		password: EDAProjectionMongoRepository password.
-	repository enableSingleton.
+	repository := EDAVOProjectionMongoRepository
+		host: self class host
+		port: self class port
+		database: self class databaseName
+		username: self class username
+		password: self class password.
+	self class refreshVoyageSettingsOn: repository

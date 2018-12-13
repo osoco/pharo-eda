@@ -1,4 +1,4 @@
-accessing
+initialization
 doInitialize
 	self host: nil.
 	self port: nil.
@@ -10,4 +10,4 @@ doInitialize
 	self ensuringCurrentOnSave: false.
 	self ensuringCurrentReferencesOnQueries: false.
 	self lazySynchronize: true.
-	self wireProtocolEnabled: true.
+	self wireProtocolEnabled: true
