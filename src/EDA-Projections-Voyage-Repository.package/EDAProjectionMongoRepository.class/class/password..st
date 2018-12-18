@@ -1,3 +1,3 @@
 accessing
 password: val
-	Password := val
+	password := val

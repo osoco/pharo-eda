@@ -1,3 +1,3 @@
 accessing
 databaseName: val
-	DatabaseName := val
+	databaseName := val
