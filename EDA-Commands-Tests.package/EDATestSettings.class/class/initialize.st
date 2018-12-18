@@ -1,3 +1,0 @@
-settings
-initialize
-	self DUEnvironmentClass: EDATestDUEnvironment

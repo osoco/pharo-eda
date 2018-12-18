@@ -1,3 +1,0 @@
-persistence
-initialize
-	self initBackendRepository

@@ -1,0 +1,3 @@
+accessing
+currentEnvironment
+	^ EDADUEnvironment currentEnvironment

@@ -1,3 +1,0 @@
-lifecycle
-clearPreviousProjections
-    EDAProjection removeAllProjections.

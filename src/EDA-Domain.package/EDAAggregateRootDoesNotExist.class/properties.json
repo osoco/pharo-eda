@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "Error",
+	"category" : "EDA-Domain",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"aggregateRootClass"
+	],
+	"name" : "EDAAggregateRootDoesNotExist",
+	"type" : "normal"
+}

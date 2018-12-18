@@ -1,3 +1,0 @@
-test - fixture
-removeProjections
-	repository removeProjection: EDATestEntityCounterProjection

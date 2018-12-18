@@ -1,3 +1,0 @@
-accessing
-queue
-	^ Queue

@@ -1,3 +1,0 @@
-configuration
-projectionSynchronizationEnabled
-	^ true

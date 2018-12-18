@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATCollectionHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATCollectionHelperTest",
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"traitcomposition" : "EDATCollectionHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Traits-Tests"
+}

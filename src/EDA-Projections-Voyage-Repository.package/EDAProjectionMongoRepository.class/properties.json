@@ -1,0 +1,24 @@
+{
+	"commentStamp" : "",
+	"super" : "EDAProjectionVoyageRepository",
+	"category" : "EDA-Projections-Voyage-Repository",
+	"classinstvars" : [
+		"Host",
+		"Port",
+		"DatabaseName",
+		"Username",
+		"Password",
+		"enableReplication",
+		"debug",
+		"enableSingleton",
+		"ensuringCurrentOnSave",
+		"ensuringCurrentReferencesOnQueries",
+		"forceEager",
+		"lazySynchronize"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAProjectionMongoRepository",
+	"type" : "normal"
+}
