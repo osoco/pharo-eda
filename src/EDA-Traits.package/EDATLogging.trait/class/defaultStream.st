@@ -1,0 +1,3 @@
+logging
+defaultStream
+	^ self stdout

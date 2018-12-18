@@ -1,4 +1,4 @@
-initialization
+setup
 setup
 	self setupLogging.
 	self setupEventAnnouncer.

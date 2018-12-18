@@ -10,7 +10,7 @@ logMessage: aMessage inCategory: aString inStream: aStream
 	stream << ']['.
 	stream << aString asUppercase.
 	stream << '] '.
-	stream << aMessage.
+	aMessage ifNotNil: [ :msg | msg printOn: stream ].
 	stream << '.'.
 	aStream << stream contents;
 		nextPut: Character cr.

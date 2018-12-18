@@ -1,4 +1,4 @@
-initialization
+setup - events
 setupEventProducer
 	| eventPublisher eventSerializer |
 	eventPublisher := EDAEventStompTopicPublisher new.

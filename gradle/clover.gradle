@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-clover-plugin:2.2.0'
+    }
+}
+
+apply plugin: 'com.bmuschko.clover'
+
+dependencies {
+    clover 'org.openclover:clover:4.2.0'
+}
+
+clover {
+    licenseLocation = File.createTempFile('clover', '.license').absolutePath
+
+    excludes = ['**/Application.groovy',
+                '**/BootStrap.groovy',
+                '**/UrlMappings.groovy',
+                '**/*GrailsPlugin.groovy',
+                '**/*Mock.groovy',
+    ]
+
+    testIncludes = ['**/*Spec.groovy']
+
+    additionalSourceSet {
+        srcDirs = sourceSets.main.groovy.srcDirs
+        classesDir = sourceSets.main.groovy.outputDir
+    }
+
+    report {
+        html = true
+        xml = true
+    }
+}

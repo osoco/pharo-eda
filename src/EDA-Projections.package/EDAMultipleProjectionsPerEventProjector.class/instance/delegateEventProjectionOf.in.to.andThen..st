@@ -8,7 +8,7 @@ delegateEventProjectionOf: anEvent in: aProjectionCollection to: aProjectionMeth
 			succeed
 				ifTrue: [
 					projection updateLastProjectedEvent: anEvent timestamp ]
-				ifFalse: [ projection unprojectedEvents add: anEvent ].
+				ifFalse: [ projection addUnprojectedEvent: anEvent ].
 			projection saveProjection.
 			eventToEmitClass := succeed
 				ifTrue: [ EDAEventProjected ]

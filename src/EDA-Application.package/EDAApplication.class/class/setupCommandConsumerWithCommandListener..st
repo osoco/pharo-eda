@@ -1,4 +1,4 @@
-initialization
+setup - commands
 setupCommandConsumerWithCommandListener: listener
 	| materializer |
 	listener client debug: self commandListenerClientDebug.

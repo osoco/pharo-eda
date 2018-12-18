@@ -5,4 +5,4 @@ findEventsOfType: anEventClass whereCriteria: aCriteria
 	criteria addAll: aCriteria.
 	^ self
 		findEventsOfAggregate: anEventClass aggregateRootClass
-		whereCriteria: aCriteria
+		whereCriteria: criteria

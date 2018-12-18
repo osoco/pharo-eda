@@ -1,0 +1,3 @@
+accessing
+traceEnabled
+	^ traceEnabled

@@ -1,4 +1,5 @@
 accessing
 debugEnabled: aBoolean
 	debugEnabled := aBoolean.
-	aBoolean ifTrue: [ self infoEnabled: true ]
+	aBoolean
+		ifTrue: [ self infoEnabled: true ]

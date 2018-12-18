@@ -1,4 +1,4 @@
-initialization
+setup
 setupProjectionRepositoryForProjection: aProjectionClass
 	| repository |
 	repository := EDAProjectionMongoRepository new.

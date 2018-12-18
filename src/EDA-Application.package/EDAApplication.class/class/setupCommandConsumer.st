@@ -1,3 +1,3 @@
-initialization
+setup - commands
 setupCommandConsumer
 	^ self setupCommandConsumerWithCommandListener: EDACommandStompTopicListener new

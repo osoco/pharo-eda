@@ -1,3 +1,3 @@
-initialization
+setup
 setupProjectors
 	(EDACompositeProjector withAllProjectorsAndEventStore: self eventStore) project

@@ -1,4 +1,4 @@
-initialization
+setup
 setupCommandDispatcher
 	| handlerScanner  handlerFactory commandRegistry |
 	EDADeleteCommandHandler eventStore: self eventStore; eventBus: self eventProducer.

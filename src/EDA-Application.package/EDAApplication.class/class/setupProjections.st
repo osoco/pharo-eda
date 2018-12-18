@@ -1,4 +1,4 @@
-initialization
+setup
 setupProjections
 	| projectionClasses |
 	self projectionSynchronizationEnabled

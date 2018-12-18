@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATLoggingStub",
+	"commentStamp" : "JoseSanLeandro 12/14/2018 18:23",
+	"super" : "Object",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Traits"
+}

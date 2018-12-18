@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "VOMongoRepository",
+	"category" : "EDA-Projections-Voyage-Repository",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAVOProjectionMongoRepository",
+	"type" : "normal"
+}
