@@ -1,5 +1,5 @@
 def tag = 'hotfix-1733'
-def branch = '1733-logging'
+def branch = 'develop'
 version = "${tag}-SNAPSHOT" // do not forget to update the version also in docker.gradle
 apply plugin: PharoPlugin
 
