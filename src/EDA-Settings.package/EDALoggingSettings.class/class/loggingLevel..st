@@ -2,7 +2,8 @@ accessing
 loggingLevel: aLevel
 	| failed |
 	failed := true.
-	self debugEnabled: (aLevel = 'debug').
+	self traceEnabled: (aLevel = 'trace').
+	self debugEnabled: (self traceEnabled or: [ aLevel = 'debug') ]).
 	self infoEnabled: (self debugEnabled or: [ (aLevel = 'info') ]).
 	self warningEnabled: (self infoEnabled or: [  (aLevel = 'warning') ]).
 	self errorEnabled: (self warningEnabled or: [ (aLevel = 'error' ) ]).
