@@ -1,3 +1,3 @@
 accessing
 levels
-	^ #('debug' 'info' 'warning' 'error')
+	^ #('trace' 'debug' 'info' 'warning' 'error')
