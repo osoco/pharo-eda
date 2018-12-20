@@ -1,3 +1,3 @@
-initialization
+setup - events
 setupRepositories
-	self subclassResponsibility 
+	EDAAggregateRepository allSubclassesDo: [ :repo | repo setupEventStore: self eventStore ]
