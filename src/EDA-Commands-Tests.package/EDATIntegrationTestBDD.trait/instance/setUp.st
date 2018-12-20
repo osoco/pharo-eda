@@ -7,7 +7,6 @@ setUp
 	self loadSettings.
 	self prepareToLaunchApplication.
 	self setUpApplication.
-	self application eventStore repository resolver debug: true.
 	self clearPreviousEvents.
 	self clearPreviousProjections.
 	self clearQueues.
