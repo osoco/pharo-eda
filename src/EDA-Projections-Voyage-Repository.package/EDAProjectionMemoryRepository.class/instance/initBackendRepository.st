@@ -1,4 +1,6 @@
 persistence
 initBackendRepository
-	repository := VOMemoryRepository new.
-	repository enableSingleton.
+	| result |
+	result := VOMemoryRepository new.
+	result enableSingleton.
+	^ result

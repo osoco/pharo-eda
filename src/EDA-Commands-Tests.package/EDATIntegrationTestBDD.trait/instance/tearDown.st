@@ -8,4 +8,6 @@ tearDown
 	self restoreOriginalEnvironment.
 	self prepareToStopApplication.
 	"self stopApplication."
-	self logInfoMessage: 'Finished ' , thisContext receiver className greaseString , '>>' , thisContext receiver selector greaseString
+	self application eventStore repository resolver debug: false.
+	self
+		logInfoMessage: 'Finished ' , thisContext receiver className greaseString , '>>' , thisContext receiver selector greaseString
