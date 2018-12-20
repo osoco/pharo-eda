@@ -27,4 +27,4 @@ edaSettingsOn: aBuilder
 		under: #eda
 		populatedWithValuesFrom: 'projections'.
 	self commandErrorHandlingStrategySettingsOn: aBuilder under: #eda.
-	self loggingSettingsOn: aBuilder under: parent
+	self loggingSettingsOn: aBuilder under: #eda
