@@ -10,10 +10,11 @@ checkNewStoredEvents: expectedNewStoredEvents givenPreviousEvents: previousEvent
 			self assert: storedEvents isNotEmpty.
 			self assert: storedEvents size equals: expectedStoredEvents size.
 			expectedStoredEvents
-				keysAndValuesDo: [ :index :eventMessageRegex |
+				keysAndValuesDo: [ :index :eventMessageRegex | | serializer |
+					serializer := EDAJsonEventSerializer new.
 					self
-						assertEvent: (storedEvents at: index) greaseString
-						matchesEventRegex: eventMessageRegex greaseString ] ]
+						assertEvent: (serializer writeEvent: (storedEvents at: index))
+						matchesEventRegex: (serializer writeEvent: eventMessageRegex) ] ]
 		ifNil: [ allEvents := self application eventStore allEvents.
 			self
 				assert: allEvents
