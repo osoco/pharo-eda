@@ -12,4 +12,5 @@ setUp
 	self clearPreviousProjections.
 	self clearQueues.
 	self application eventStore repository resolver debug: true.
-	self launchApplication
+	self launchApplication.
+	self maxTimeForTest: 60 seconds

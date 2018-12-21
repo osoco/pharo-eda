@@ -1,3 +1,3 @@
-initialisation
+initialization
 doInitialize
 	self errorStrategy: nil
