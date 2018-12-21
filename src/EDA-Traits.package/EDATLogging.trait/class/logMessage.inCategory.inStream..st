@@ -10,9 +10,10 @@ logMessage: aMessage inCategory: aString inStream: aStream
 	stream << ']['.
 	stream << aString asUppercase.
 	stream << '] '.
-	aMessage ifNotNil: [ :msg | msg printOn: stream ].
+	aMessage ifNotNil: [ :msg | stream nextPutAll: msg ].
 	stream << '.'.
-	aStream << stream contents;
+	aStream
+		<< stream contents;
 		nextPut: Character cr.
-	(aString = 'DEBUG' or: [ DateAndTime now seconds % 10 = 0 ])
+	(aString = 'TRACE' or: [ aString = 'DEBUG' or: [ DateAndTime now seconds % 10 = 0 ] ])
 		ifTrue: [ aStream flush ]
