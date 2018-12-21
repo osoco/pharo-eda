@@ -2,7 +2,9 @@ initialization
 setUp
 	super setUp.
 	self
-		logInfoMessage: 'Running ' , thisContext receiver className greaseString , '>>' , thisContext receiver selector greaseString.
+		logInfoMessage:
+			'Running ' , thisContext receiver className greaseString , '>>'
+				, thisContext receiver selector greaseString.
 	self originalEnvironment: EDADUEnvironment currentEnvironment.
 	self setUpCurrentEnvironment.
 	self loadSettings.
@@ -13,4 +15,4 @@ setUp
 	self clearQueues.
 	self application eventStore repository resolver debug: true.
 	self launchApplication.
-	self timeLimit: 60 seconds
+	self timeLimit: EDATestEventStompTopicListener timeout
