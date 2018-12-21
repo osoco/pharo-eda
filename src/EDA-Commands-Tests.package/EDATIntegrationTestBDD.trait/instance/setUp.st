@@ -13,4 +13,4 @@ setUp
 	self clearQueues.
 	self application eventStore repository resolver debug: true.
 	self launchApplication.
-	self maxTimeForTest: 60 seconds
+	self timeLimit: 60 seconds
