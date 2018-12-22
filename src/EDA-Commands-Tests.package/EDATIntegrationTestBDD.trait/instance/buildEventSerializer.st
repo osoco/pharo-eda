@@ -1,0 +1,3 @@
+helper
+buildEventSerializer
+	^ EDAJsonEventSerializer new

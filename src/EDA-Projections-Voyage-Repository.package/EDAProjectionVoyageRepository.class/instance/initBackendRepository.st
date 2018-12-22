@@ -1,3 +1,3 @@
 persistence
 initBackendRepository
-	self subclassResponsibility
+	self subclassResponsibility 
