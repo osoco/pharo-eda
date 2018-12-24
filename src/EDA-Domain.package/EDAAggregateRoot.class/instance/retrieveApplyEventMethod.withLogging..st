@@ -14,7 +14,7 @@ retrieveApplyEventMethod: event withLogging: aFlag
 							found := true.
 							^ aux ]
 						ifAbsent: [ aFlag
-								ifTrue: [ self logWarningMessage: self class greaseString,  '>>', aux, ' not found.' ] ].
+								ifTrue: [ self logTraceMessage: self class greaseString , '>>' , aux , ' not found.' ] ].
 					auxClassName := auxClassName allButFirst.
 					aux := self buildApplyEventMethodNameForEvent: auxClassName andVersion: event version ].
 			auxClass := auxClass superclass.

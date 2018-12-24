@@ -14,5 +14,5 @@
 		"uniqueInstance"
 	],
 	"pools" : [ ],
-	"category" : "EDA-Domain"
+	"category" : "EDA-Domain-Repository"
 }
