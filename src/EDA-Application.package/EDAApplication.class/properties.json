@@ -15,7 +15,9 @@
 		"commandConsumer",
 		"commandDispatcher",
 		"eventProducer",
-		"commandListenerClientDebug"
+		"commandListenerClientDebug",
+		"isConfigured",
+		"isStarted"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Application"
