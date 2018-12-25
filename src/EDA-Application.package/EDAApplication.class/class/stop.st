@@ -1,4 +1,4 @@
-accessing
+api
 stop
 	self isStarted
 		ifFalse: [ ^ self ].

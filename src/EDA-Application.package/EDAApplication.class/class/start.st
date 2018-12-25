@@ -1,3 +1,7 @@
-running
+api
 start
-	self commandConsumer start
+	self setup.
+	self isStarted
+		ifTrue: [ ^ self ].
+	self commandConsumer start.
+	self isStarted: true
