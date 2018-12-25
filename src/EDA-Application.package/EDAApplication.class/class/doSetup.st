@@ -1,8 +1,6 @@
 setup
 doSetup
-	SettingBrowser
-		open;
-		delete.
+	SettingBrowser open delete.
 	self setupLogging.
 	self setupEventAnnouncer.
 	self setupEventProducer.
