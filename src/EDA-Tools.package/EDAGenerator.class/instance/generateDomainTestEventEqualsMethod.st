@@ -11,12 +11,7 @@ generateDomainTestEventEqualsMethod
 	result
 		nextPutAll: '	^ ';
 		nextPutAll: ' (anInstance class isKindOf: '.
-	self isDeleteEvent
-		ifTrue: [
-			result nextPutAll: 'EDADeleteCommandResultEvent'
-		] ifFalse: [
-			result nextPutAll: self retrieveEventClassName
-		].
+	result nextPutAll: self retrieveEventClassName.
 	result
 		nextPutAll: ' class) and: [';
 		nextPut: cr.
@@ -33,20 +28,18 @@ generateDomainTestEventEqualsMethod
 		nextPutAll: '					(self attribute: self timestamp named: ''timestamp'' matches: anInstance timestamp) and: [';
 		nextPut: cr.
 	result nextPutAll: '						(self attribute: self commandId named: ''correlationId'' matches: anInstance commandId) '.
-	self isDeleteEvent ifFalse: [
-		eventAttributes isNotEmpty
-			ifTrue: [ result
-					nextPutAll: 'and: [';
-					nextPut: cr.
-				result
-					nextPutAll: '							';
-					nextPutAll: (self generateDomainTestEventEqualsAndBlockRecursively: (self retrieveEventAttributesBut: self class skippedEventAttributes));
-					nextPut: cr.
-				result
-					nextPutAll: '						]';
-					nextPut: cr
-			]
-		].
+	self isDeleteEvent
+		ifFalse: [ eventAttributes isNotEmpty
+				ifTrue: [ result
+						nextPutAll: 'and: [';
+						nextPut: cr.
+					result
+						nextPutAll: '							';
+						nextPutAll: (self generateDomainTestEventEqualsAndBlockRecursively: (self retrieveEventAttributesBut: self class skippedEventAttributes));
+						nextPut: cr.
+					result
+						nextPutAll: '						]';
+						nextPut: cr ] ].
 	result
 		nextPutAll: '					]';
 		nextPut: cr.
