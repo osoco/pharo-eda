@@ -1,5 +1,6 @@
 setup
 setup
 	self isConfigured
-		ifFalse: [ self doSetup.
-			self isConfigured: true ]
+		ifTrue: [ ^ self ].
+	self doSetup.
+	self isConfigured: true
