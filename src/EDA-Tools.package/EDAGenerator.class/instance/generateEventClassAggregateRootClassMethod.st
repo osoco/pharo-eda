@@ -1,5 +1,5 @@
 code generation - event
-generateEventAggregateRootClassMethod
+generateEventClassAggregateRootClassMethod
 	| result methodName cr |
 	cr := Character cr.
 	methodName := 'aggregateRootClass'.

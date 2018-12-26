@@ -4,6 +4,6 @@ createEventClassAggregateRootClassMethod
 	cls := self class environment at: self retrieveEventClassName asSymbol.
 	^ self
 		compile: 'aggregateRootClass'
-		sourceCode: self generateAggregateRootClassMethod
+		sourceCode: self generateEventClassAggregateRootClassMethod
 		inClass: cls
 		classifiedAs: 'meta'
