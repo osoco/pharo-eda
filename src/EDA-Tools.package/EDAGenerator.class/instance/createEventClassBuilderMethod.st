@@ -1,6 +1,7 @@
 code generation - event
 createEventClassBuilderMethod
 	| methodAssoc |
+	self isDeleteEvent ifTrue: [ ^ self ].
 	methodAssoc := self generateEventClassBuilderMethod associations first.
 	^ self
 		compile: methodAssoc key
