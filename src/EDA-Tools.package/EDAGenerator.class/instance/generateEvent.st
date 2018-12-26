@@ -7,4 +7,4 @@ generateEvent
 	self createEventClassBuilderMethod.
 	self createEventClassEqualsMethod.
 	self createEventClassHashMethod.
-	self createEventClassInitializeMethod
+	self createEventClassAggregateRootClassMethod
