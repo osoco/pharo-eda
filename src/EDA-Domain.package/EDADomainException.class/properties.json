@@ -1,13 +1,11 @@
 {
 	"commentStamp" : "",
-	"super" : "EDADomainException",
+	"super" : "Exception",
 	"category" : "EDA-Domain-Exceptions",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [
-		"aggregateRootClass"
-	],
-	"name" : "EDAAggregateRootDoesNotExist",
+	"instvars" : [ ],
+	"name" : "EDADomainException",
 	"type" : "normal"
 }

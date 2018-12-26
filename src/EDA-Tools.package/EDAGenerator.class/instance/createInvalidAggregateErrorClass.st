@@ -5,7 +5,7 @@ createInvalidAggregateErrorClass
 	attributes := OrderedCollection new.
 	(self classExists: cls)
 		ifTrue: [ attributes := self allAttributesOf: (self class environment at: cls) ].
-	^ Exception
+	^ EDADomainException
 		subclass: cls
 		instanceVariableNames: (self concatenateCollection: attributes with: ' ')
 		classVariableNames: ''
