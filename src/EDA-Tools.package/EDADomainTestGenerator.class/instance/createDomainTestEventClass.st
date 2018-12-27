@@ -1,12 +1,10 @@
 code generation
 createDomainTestEventClass
-	| cls parent |
-	parent :=
-		self isDeleteEvent ifTrue: [
-				EDADeleteCommandResultEvent
-			] ifFalse: [
-				self class environment at: self retrieveEventClassName asSymbol
-			].
+	| cls parent parentSymbol |
+	parentSymbol := self isDeleteEvent
+		ifTrue: [ (self appName , (self toCamelCase: self eventName)) asSymbol ]
+		ifFalse: [ self retrieveEventClassName asSymbol ].
+	parent := self class environment at: parentSymbol .
 	cls := (self appName , 'Test' , (self toCamelCase: self eventName)) asSymbol.
 	parent
 		subclass: cls

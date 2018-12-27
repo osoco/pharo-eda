@@ -7,5 +7,4 @@ doGenerate
 	self createDomainTestEventClass.
 	self createTestEventBuildEventClassMethod.
 	self createTestHelperBuildEventClassMethod.
-	self createDomainTestEventEqualsMethod.
-	self createDomainTestEventClassAggregateRootClassMethod
+	self createDomainTestEventEqualsMethod

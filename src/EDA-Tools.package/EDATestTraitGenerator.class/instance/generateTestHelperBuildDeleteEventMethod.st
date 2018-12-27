@@ -2,19 +2,13 @@ code generation
 generateTestHelperBuildDeleteEventMethod
 	| result eventAttrs cr |
 	cr := Character cr.
-	eventAttrs := self
-		retrieveEventAttributesBut: self class skippedEventAttributes.
+	eventAttrs := self retrieveEventAttributesBut: self class skippedEventAttributes.
 	result := WriteStream on: String new.
-	result
-		nextPutAll:
-			(self
-				generateTestHelperBuildDeleteEventMethodNameWithId: 'evtId'
-				andCommandArg: 'aCommand').
+	result nextPutAll: (self generateTestHelperBuildDeleteEventMethodNameWithId: 'evtId' andCommandArg: 'aCommand').
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll:
-			'	| result |';
+		nextPutAll: '	| result |';
 		nextPut: cr.
 	result
 		nextPutAll: '	result := ';
@@ -22,11 +16,6 @@ generateTestHelperBuildDeleteEventMethod
 		nextPutAll: 'Test';
 		nextPutAll: (self toCamelCase: self eventName);
 		nextPutAll: ' new.';
-		nextPut: cr.
-	result
-		nextPutAll: '	result aggregateRootClass: ''';
-		nextPutAll: self aggregateClass;
-		nextPutAll: '''.';
 		nextPut: cr.
 	result
 		nextPutAll: '	result id: aCommand aggregateRootId.';
@@ -41,7 +30,7 @@ generateTestHelperBuildDeleteEventMethod
 		nextPutAll: '	result timestamp: ''<ANYTHING>''.';
 		nextPut: cr.
 	result
-		nextPutAll:	'	result commandId: aCommand commandId.';
+		nextPutAll: '	result commandId: aCommand commandId.';
 		nextPut: cr.
 	result
 		nextPutAll: '	^ result';

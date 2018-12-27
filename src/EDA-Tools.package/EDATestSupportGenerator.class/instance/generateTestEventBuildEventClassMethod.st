@@ -22,11 +22,6 @@ generateTestEventBuildEventClassMethod
 		nextPutAll: '	result commandId: newEvent commandId.';
 		nextPut: cr.
 	method
-		nextPutAll: '	result aggregateRootClass: #';
-		nextPutAll: self retrieveAggregateClassName;
-		nextPut: $.;
-		nextPut: cr.
-	method
 		nextPutAll: '	result version: newEvent version.';
 		nextPut: cr.
 	method

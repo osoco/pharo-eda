@@ -20,12 +20,6 @@ generateTestHelperBuildEventClassMethod
 	method
 		nextPutAll: '	result commandId: newCommandId.';
 		nextPut: cr.
-	method
-		nextPutAll: '	result aggregateRootClass: #';
-		nextPutAll: self appName;
-		nextPutAll: self aggregate;
-		nextPut: $.;
-		nextPut: cr.
 	method nextPutAll: '	result timestamp: DateAndTime now asUTC.'.
 	attrs
 		do: [ :attr | 
