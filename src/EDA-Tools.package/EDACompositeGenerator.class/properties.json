@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "EDAGenerator",
+	"category" : "EDA-Tools",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"generators",
+		"generatorClasses"
+	],
+	"name" : "EDACompositeGenerator",
+	"type" : "normal"
+}

@@ -1,0 +1,3 @@
+api
+generate
+	self subclassResponsibility
