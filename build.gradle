@@ -1,5 +1,5 @@
-def tag = 'hotfix-1733'
-def branch = 'develop'
+def tag = 'develop'
+def branchOrTag = 'develop'
 version = "${tag}-SNAPSHOT" // do not forget to update the version also in docker.gradle
 apply plugin: PharoPlugin
 
@@ -22,7 +22,7 @@ task downloadFreshImage(type: DownloadPharoImageTask, dependsOn: removePreviousP
 task loadPharoEDA(type: EvalSmalltalkExpressionTask, dependsOn: downloadFreshImage) {
     pharoPath = customPharoPath
     commonPharoArgs = customPharoArgs
-    expression = "Metacello new repository: 'github://osoco/pharo-eda:develop/src'; configuration: 'PharoEDA'; version: #development; load"
+    expression = "Metacello new repository: 'github://osoco/pharo-eda:develop/${branchOrTag}'; configuration: 'PharoEDA'; version: #development; load"
 }
 
 task customizeImage(type: RunSmalltalkScriptTask, dependsOn: loadPharoEDA) {
