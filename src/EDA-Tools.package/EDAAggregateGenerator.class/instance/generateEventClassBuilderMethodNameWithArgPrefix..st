@@ -1,10 +1,10 @@
 delegated
-createTestEventBuildEventClassMethod
+generateEventClassBuilderMethodNameWithArgPrefix: aString 
 	| delegate |
-	delegate := EDATestSupportGenerator
+	delegate := EDAEventGenerator
 		fromExampleFile: self commandFile
 		version: self version
 		appName: self appName
 		aggregate: self aggregate
 		andEventNameResolver: self eventNameResolver.
-	^ delegate createTestEventBuildEventClassMethod
+	^ delegate generateEventClassBuilderMethodNameWithArgPrefix: aString

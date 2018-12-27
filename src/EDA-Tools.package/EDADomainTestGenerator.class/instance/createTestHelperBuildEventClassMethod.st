@@ -1,5 +1,5 @@
 delegated
-createTestEventBuildEventClassMethod
+createTestHelperBuildEventClassMethod
 	| delegate |
 	delegate := EDATestSupportGenerator
 		fromExampleFile: self commandFile
@@ -7,4 +7,4 @@ createTestEventBuildEventClassMethod
 		appName: self appName
 		aggregate: self aggregate
 		andEventNameResolver: self eventNameResolver.
-	^ delegate createTestEventBuildEventClassMethod
+	^ delegate createTestHelperBuildEventClassMethod
