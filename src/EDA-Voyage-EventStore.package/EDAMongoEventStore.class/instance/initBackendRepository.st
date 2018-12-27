@@ -1,7 +1,7 @@
 persistence
 initBackendRepository
 	| result |
-	result := VOMongoRepository
+	result := EDAVOMongoRepository
 		host: self class host
 		port: self class port
 		database: self class databaseName
