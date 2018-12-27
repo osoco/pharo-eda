@@ -1,3 +1,3 @@
 accessing
 aggregateRootClass
-	^ aggregateRootClass
+	^ self class aggregateRootClass

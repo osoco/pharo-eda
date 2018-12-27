@@ -1,0 +1,3 @@
+protected
+doGenerate
+	self createEDAApplicationRegisterCommandBuilders

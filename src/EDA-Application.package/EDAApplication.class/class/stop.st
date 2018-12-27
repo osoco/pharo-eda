@@ -1,3 +1,6 @@
-running
+api
 stop
-	self commandConsumer ifNotNil: [self commandConsumer stop ]
+	self isStarted
+		ifFalse: [ ^ self ].
+	self commandConsumer ifNotNil: [ :arg | arg stop ].
+	self isStarted: false

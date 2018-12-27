@@ -6,6 +6,7 @@ fromExampleFile: aFile version: version appName: appName aggregate: aggregate an
 		appName: appName;
 		aggregate: aggregate;
 		version: version.
+	result eventNameResolver: resolver.
 	result commandRaw: result readCommandExampleFile.
 	result commandJson: (NeoJSONReader fromString: result commandRaw).
 	result commandName: ((result commandJson at: #meta) at: #type).

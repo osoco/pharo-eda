@@ -1,0 +1,9 @@
+protected
+doGenerate
+	self createAggregateClass.
+	self createAggregateHandleCommandMethod.
+	self createAggregateApplyEventVersionMethod.
+	self createAggregateClassAccessors.
+	self createAggregateClassEqualsMethod.
+	self createAggregateClassHashMethod.
+	self createAggregateRetrieveRepositoryMethod

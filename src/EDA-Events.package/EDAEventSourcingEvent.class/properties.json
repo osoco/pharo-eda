@@ -3,7 +3,6 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"id",
-		"aggregateRootClass",
 		"timestamp",
 		"aggregateRootVersion",
 		"version",

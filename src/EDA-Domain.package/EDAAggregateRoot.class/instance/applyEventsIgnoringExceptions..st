@@ -1,3 +1,7 @@
 event handling
 applyEventsIgnoringExceptions: eventsCollection
-	eventsCollection do: [ :event | [ self applyEvent: event ] on: Exception do: [ :ex | ex resume ] ]
+	eventsCollection
+		do: [ :event | 
+			[ self applyEvent: event ]
+				on: EDADomainException 
+				do: [ :ex | ex resume ] ]

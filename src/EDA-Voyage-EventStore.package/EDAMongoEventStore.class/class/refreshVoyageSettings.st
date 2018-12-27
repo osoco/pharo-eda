@@ -1,4 +1,3 @@
 refresh settings
 refreshVoyageSettings
-	EDAVOMongoRepository
-		allInstancesDo: [ :repo | self refreshVoyageSettingsOn: repo ]
+	EDAVOMongoRepository allInstancesDo: [ :repo | self refreshVoyageSettingsOn: repo ]
