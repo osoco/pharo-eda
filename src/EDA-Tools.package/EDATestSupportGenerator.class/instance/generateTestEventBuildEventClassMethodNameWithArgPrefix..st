@@ -1,3 +1,3 @@
-code generation - test support
+code generation
 generateTestEventBuildEventClassMethodNameWithArgPrefix: prefix
 	^ 'fromEvent: ' , prefix , 'Event'

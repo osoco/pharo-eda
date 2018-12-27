@@ -1,3 +1,3 @@
-code generation - test support
+code generation
 generateTestHelperBuildEventClassMethodName
 	^ 'withAggregateId:commandId:andAttributes:'

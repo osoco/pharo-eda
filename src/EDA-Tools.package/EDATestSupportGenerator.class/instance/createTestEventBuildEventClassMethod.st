@@ -1,4 +1,4 @@
-code generation - test support
+code generation
 createTestEventBuildEventClassMethod
 	| method |
 	method := self generateTestEventBuildEventClassMethod.

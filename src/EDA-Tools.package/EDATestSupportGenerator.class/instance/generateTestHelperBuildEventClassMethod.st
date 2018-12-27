@@ -1,4 +1,4 @@
-code generation - test support
+code generation
 generateTestHelperBuildEventClassMethod
 	| result methodName method attrs cr |
 	cr := Character cr.
