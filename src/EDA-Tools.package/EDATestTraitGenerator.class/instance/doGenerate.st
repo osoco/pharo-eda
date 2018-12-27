@@ -1,6 +1,5 @@
-api
-generate
-	self logDebugMessage: '** Generating test helper trait for ' , self eventName greaseString , ', version ' , self version greaseString.
+protected
+doGenerate
 	self createTestHelperTrait.
 	self createTestHelperBuildCommandMethod.
 	self createTestHelperBuildEventFromArbitraryFileMethod.

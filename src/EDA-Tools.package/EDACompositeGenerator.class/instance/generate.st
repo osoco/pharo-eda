@@ -1,13 +1,15 @@
 api
 generate
-	self generatorClasses
-		keysAndValuesDo: [ :index :generatorClass | 
-			| generator |
-			generator := generatorClass
+	| generators |
+	generators := self generatorClasses collect: [ :generatorClass |
+		 generatorClass
 				fromExampleFile: self commandFile
 				version: self version
 				appName: self appName
 				aggregate: self aggregate
-				andEventNameResolver: self eventNameResolver.
+				andEventNameResolver: self eventNameResolver ].
+	generators
+		keysAndValuesDo: [ :index :generator | 
 			generator generate ]
-		displayingProgress: [ :index :generatorClass | 'Generating via ' , generatorClass greaseString , ' (v' , self version greaseString , ')' ]
+		displayingProgress:
+			[ :index :generator | generator buildMessage ]

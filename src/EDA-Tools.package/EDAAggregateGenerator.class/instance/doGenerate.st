@@ -1,6 +1,5 @@
-api
-generate
-	self logDebugMessage: '** Generating aggregate for ' , self aggregate greaseString , ', version ' , self version greaseString.
+protected
+doGenerate
 	self createAggregateClass.
 	self createAggregateHandleCommandMethod.
 	self createAggregateApplyEventVersionMethod.

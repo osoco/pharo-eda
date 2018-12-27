@@ -1,6 +1,5 @@
-api
-generate
-	self logDebugMessage: '** Generating domain test for ' , self aggregate greaseString , ', version ' , self version greaseString.
+protected
+doGenerate
 	self createDomainTestClass.
 	self createDomainTestMethod.
 	self createTestHelperBuildCommandMethod.

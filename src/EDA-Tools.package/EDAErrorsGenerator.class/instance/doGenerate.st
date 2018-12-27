@@ -1,0 +1,4 @@
+protected
+doGenerate
+	self createInvalidAggregateErrorClass.
+	self createAggregateDoesNotExistErrorClass

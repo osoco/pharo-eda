@@ -1,8 +1,7 @@
-api
-generate
+protected
+doGenerate
 	self isDeleteCommand
 		ifTrue: [ ^ self ].
-	self logDebugMessage: '** Generating command for ' , self commandName greaseString , ', version ' , self version greaseString.
 	self createCommandClass.
 	self createCommandClassAccessors.
 	self createCommandClassBuilderMethod.

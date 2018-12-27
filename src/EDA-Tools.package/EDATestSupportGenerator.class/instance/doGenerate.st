@@ -1,0 +1,4 @@
+protected
+doGenerate
+	self createTestEventBuildEventClassMethod.
+	self createTestHelperBuildEventClassMethod

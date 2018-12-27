@@ -1,6 +1,5 @@
-api
-generate
-	self logDebugMessage: '** Generating command for ' , self eventName greaseString , ', version ' , self version greaseString.
+protected
+doGenerate
 	self createEventClass.
 	self createEventClassAccessors.
 	self createEventClassBuilderMethod.

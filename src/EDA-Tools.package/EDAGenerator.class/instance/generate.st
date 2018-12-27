@@ -1,3 +1,4 @@
 api
 generate
-	self subclassResponsibility
+	self logDebugMessage: '** ' , self buildMessage.
+	self doGenerate
