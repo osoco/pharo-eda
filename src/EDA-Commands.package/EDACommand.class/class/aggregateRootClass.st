@@ -1,0 +1,3 @@
+meta
+aggregateRootClass
+	self subclassResponsibility 

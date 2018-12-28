@@ -7,4 +7,5 @@ doGenerate
 	self createCommandClassBuilderMethod.
 	self createCommandClassEqualsMethod.
 	self createCommandClassHashMethod.
+	self createCommandClassAggregateRootClassMethod.
 	self createCommandClassRetrieveAggregateRootClassMethod

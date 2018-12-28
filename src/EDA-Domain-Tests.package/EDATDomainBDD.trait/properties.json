@@ -1,5 +1,7 @@
 {
-	"name" : "EDATDomainBDD",
 	"commentStamp" : "",
-	"category" : "EDA-Domain-Tests"
+	"traitcomposition" : "EDATLogging",
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"category" : "EDA-Domain-Tests",
+	"name" : "EDATDomainBDD"
 }
