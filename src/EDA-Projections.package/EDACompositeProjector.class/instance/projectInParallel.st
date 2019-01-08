@@ -2,7 +2,7 @@ api
 projectInParallel
 	| semaphore |
 	semaphore := Semaphore new.
-	Smalltalk isHeadless
+	self class headlessMode
 		ifTrue: [ self projectors
 				do: [ :projector | 
 					[ self delegateProjectionTo: projector.

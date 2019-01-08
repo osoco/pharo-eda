@@ -1,6 +1,6 @@
 projection retrieval
 projectFilteredEvents: anEventCollection usingBlock: aBlock
-	Smalltalk isHeadless
+	self class headlessMode
 		ifTrue: [ anEventCollection
 				keysAndValuesDo: [ :index :event | 
 					| aProjectionCollection |
@@ -12,5 +12,5 @@ projectFilteredEvents: anEventCollection usingBlock: aBlock
 					aProjectionCollection := self projectEvent: event atIndex: index ofTotalCount: anEventCollection size.
 					aBlock value: aProjectionCollection value: event value: index ]
 				displayingProgress: [ :index :event | 
-					'Processing event ' , index greaseString , '/' , anEventCollection size greaseString , ' : ' , event class name greaseString
-						, ' (' , event id greaseString, ')' ] ]
+					'Processing event ' , index greaseString , '/' , anEventCollection size greaseString , ' : ' , event class name greaseString , ' ('
+						, event id greaseString , ')' ] ]

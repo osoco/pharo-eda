@@ -1,6 +1,8 @@
 {
 	"classtraitcomposition" : "EDATLogging classTrait + EDATCollectionHelper classTrait",
-	"classvars" : [ ],
+	"classvars" : [
+		"HeadlessMode"
+	],
 	"instvars" : [
 		"eventStore"
 	],

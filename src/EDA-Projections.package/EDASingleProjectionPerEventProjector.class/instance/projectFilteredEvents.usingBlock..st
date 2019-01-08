@@ -1,6 +1,6 @@
 projecting
 projectFilteredEvents: anEventCollection usingBlock: aBlock
-	Smalltalk isHeadless
+	self class headlessMode
 		ifTrue: [ anEventCollection
 				keysAndValuesDo: [ :index :event | 
 					| aProjection |
@@ -13,4 +13,4 @@ projectFilteredEvents: anEventCollection usingBlock: aBlock
 					aBlock value: aProjection value: event value: index ]
 				displayingProgress: [ :index :event | 
 					'Processing event ' , index greaseString , '/' , anEventCollection size greaseString , ' : ' , event class greaseString , ' ('
-						, event id greaseString, ')' ] ]
+						, event id greaseString , ')' ] ]

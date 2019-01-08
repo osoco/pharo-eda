@@ -1,4 +1,4 @@
-initialisation
+initialization
 doInitialize
 	super doInitialize.
 	self concurrentSynchronization: false.

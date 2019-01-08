@@ -5,7 +5,10 @@ projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEnt
 	(aBuilder group: #projections)
 		label: 'Projections' translated;
 		parent: parent.
-	self projectionsRepositorySettingsOn: aBuilder under: #projections populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
+	self
+		projectionsRepositorySettingsOn: aBuilder
+		under: #projections
+		populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
 	(aBuilder setting: #projectionSynchronizationEnabled)
 		parent: #projections;
 		target: EDAApplication;
@@ -26,4 +29,11 @@ projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEnt
 		label: 'Synchronization in parallel' translated;
 		description: 'Whether enable or disable concurrent projection synchronization' translated;
 		order: 2;
-		default: (extSettings at: 'concurrentSynchronization')
+		default: (extSettings at: 'concurrentSynchronization').
+	(aBuilder setting: #headlessMode)
+		parent: #projections;
+		target: EDAProjector;
+		label: 'Headless' translated;
+		description: 'Whether to show the progress when projecting events visually' translated;
+		order: 3;
+		default: (extSettings at: 'headlessMode')
