@@ -12,7 +12,8 @@
 	"traitcomposition" : "EDATLogging + EDATCollectionHelper",
 	"type" : "normal",
 	"classinstvars" : [
-		"errorStrategy"
+		"errorStrategy",
+		"synchronizationInProgress"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Projections-Projectors"

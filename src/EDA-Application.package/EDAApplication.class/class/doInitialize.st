@@ -1,4 +1,4 @@
 initialization
 doInitialize
 	self isStarted: false.
-	self isConfigured: false
+	self isConfigured: false.

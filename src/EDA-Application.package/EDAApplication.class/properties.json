@@ -17,7 +17,8 @@
 		"eventProducer",
 		"commandListenerClientDebug",
 		"isConfigured",
-		"isStarted"
+		"isStarted",
+		"projector"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Application"
