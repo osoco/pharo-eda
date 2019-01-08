@@ -3,7 +3,7 @@ project
 	| projectionSourceEvents |
 	self class synchronizationInProgress
 		ifTrue: [ ^ self ].
-			self class synchronizationInProgress: true.
+	self class synchronizationInProgress: true.
 	self
 		logDebugMessage: 'Projection request for ' , self class projectionClass greaseString , '.'.
 	projectionSourceEvents := self sourceEvents: self eventStore.
