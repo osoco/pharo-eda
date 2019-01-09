@@ -5,4 +5,4 @@ retrieveProjectionHandlerMethodsForEvent: anEvent
 	result := projectionHandlers
 		select: [ :pragma | pragma arguments first anySatisfy: [ :supportedEvent | supportedEvent = anEvent class name ] ]
 		thenCollect: [ :pragma | pragma method ].
-		^ result
+	^ result

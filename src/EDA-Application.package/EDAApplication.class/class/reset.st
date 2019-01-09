@@ -9,4 +9,5 @@ reset
 	self resetCommandDispatcher.
 	self resetCommandConsumer.
 	self resetEventSubscriptions.
-	self resetEventAnnouncer
+	self resetEventAnnouncer.
+	self isConfigured: false
