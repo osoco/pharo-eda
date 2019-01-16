@@ -10,7 +10,7 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 				ifTrue: [ self logDebugMessage: 'Sending ACK...'.
 					aClient writeWithReceipt: message ackFrame.
 					self logDebugMessage: 'ACK sent.' ]
-				ifFalse: [ self logDebugMessage: 'Skipping ACK (type is ''client-individual'').' ].
+				ifFalse: [ self logDebugMessage: 'Skipping ACK (type is ''' , conf ack greaseString , ''').' ].
 			self logFinish: message body greaseString usingClient: aClient withConfig: conf ]
 				on: Error
 				do: [ :ex | 
