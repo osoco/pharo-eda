@@ -6,5 +6,6 @@ retrieveTestHelperTraitName
 		version: self version
 		appName: self appName
 		aggregate: self aggregate
+		commandNameResolver: self commandNameResolver
 		andEventNameResolver: self eventNameResolver.
 	^ delegate retrieveTestHelperTraitName

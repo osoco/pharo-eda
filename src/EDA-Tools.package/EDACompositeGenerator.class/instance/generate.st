@@ -7,6 +7,7 @@ generate
 				version: self version
 				appName: self appName
 				aggregate: self aggregate
+				commandNameResolver: self commandNameResolver
 				andEventNameResolver: self eventNameResolver ].
 	generators
 		keysAndValuesDo: [ :index :generator | 

@@ -6,7 +6,8 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"eventNameResolver"
+		"eventNameResolver",
+		"commandNameResolver"
 	],
 	"name" : "EDAGenerator",
 	"type" : "normal"
