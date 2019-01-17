@@ -8,7 +8,7 @@ handle: aCommand withErrorStrategy: strategy
 		ifFalse: [ | handlingResult |
 			producedEvents := OrderedCollection new.
 			handlingResult := (self delegateHandlingOfCommand: aCommand toAggregate: aggregateRoot).
-			(handlingResult isKindOf: EDAEventSourcingEvent) ifTrue: [ 
+			((handlingResult isKindOf: EDAEventSourcingEvent) or: [ handlingResult isKindOf: OrderedCollection ]) ifTrue: [ 
 			producedEvents add: handlingResult.
 			producedEvents := producedEvents flattened.
 			processedEvents := self processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: aggregateRoot ] ] ]
