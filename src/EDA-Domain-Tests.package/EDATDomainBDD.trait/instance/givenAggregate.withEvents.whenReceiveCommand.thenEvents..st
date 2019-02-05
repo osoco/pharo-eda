@@ -9,7 +9,11 @@ givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCo
 		ifTrue: [ | resultingEvents |
 			resultingEvents := aggregateRoot perform: handlerSelectorSymbol with: aCommand.
 			self assert: resultingEvents isNotNil.
-			resultingEvents do: [ :event | event aggregateRootVersion: aCommand aggregateRootVersion + 1 ].
+			resultingEvents do: [ :event |
+				(event aggregateRootClass = aCommand class aggregateRootClass)
+				ifTrue: [   
+				event aggregateRootVersion: aCommand aggregateRootVersion + 1]
+			].
 			self assert: resultingEvents size equals: expectedResultingEvents size.
 			resultingEvents doWithIndex: [ :e :i | self assert: e equals: (expectedResultingEvents at: i) ]
 			"self assertCollection: resultingEvents equals: expectedResultingEvents asOrderedCollection" ]
