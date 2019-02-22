@@ -1,0 +1,3 @@
+accessing
+uniqueId
+	^ self id
