@@ -5,7 +5,7 @@ createEventClassEqualsMethod
 	attributes := OrderedCollection withAll: self retrieveEventAttributes.
 	attributes add: 'aggregateRootClass'.
 	^ self
-		compile: '='
+		compile: 'semanticEquals:'
 		sourceCode: (self generateEqualsMethodFor: attributes)
 		inClass: cls
 		classifiedAs: self protocol

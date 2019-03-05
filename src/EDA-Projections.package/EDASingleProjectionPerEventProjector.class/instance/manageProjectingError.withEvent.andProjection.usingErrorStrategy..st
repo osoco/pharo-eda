@@ -2,6 +2,7 @@ projecting
 manageProjectingError: anException withEvent: anEvent andProjection: aProjection usingErrorStrategy: strategy
 	| errorHandler result |
 	aProjection addUnprojectedEvent: anEvent.
+	self halt.
 	aProjection save.
 	errorHandler := (self class environment at: strategy asSymbol) new
 		context:
