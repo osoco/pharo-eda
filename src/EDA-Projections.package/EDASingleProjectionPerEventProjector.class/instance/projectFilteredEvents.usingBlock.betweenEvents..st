@@ -3,6 +3,13 @@ projectFilteredEvents: anEventCollection usingBlock: aBlock betweenEvents: itera
 	| projectionLogic |
 	projectionLogic := [ :index :event | 
 	| aProjection |
+	self
+		logEvent: event id
+		ofEventClass: event class
+		atPosition: index
+		ofTotal: anEventCollection size
+		projectedIn: self class projectionClass
+		.
 	aProjection := self projectEvent: event atIndex: index ofTotalCount: anEventCollection size.
 	aBlock value: aProjection value: event value: index.
 	iterationBlock value: index value: event value: aProjection ].

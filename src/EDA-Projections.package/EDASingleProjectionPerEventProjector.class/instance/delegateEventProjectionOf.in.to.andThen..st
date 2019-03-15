@@ -9,7 +9,8 @@ delegateEventProjectionOf: anEvent in: aProjection to: aProjectionMethod andThen
 	aProjection saveProjection.
 	eventToEmitClass := succeed
 		ifTrue: [ EDAEventProjected ]
-		ifFalse: [ self halt. EDAEventNotProjected ].
+		ifFalse: [ 
+			EDAEventNotProjected ].
 	eventToEmit := eventToEmitClass new
 		projection: aProjection class;
 		event: anEvent.
