@@ -1,0 +1,3 @@
+sorting
+shouldRunAfter: anotherGenerator
+	^ false
