@@ -3,7 +3,7 @@ generateAttributesEqualsMethodFor: attributes
 	| result |
 	result := WriteStream on: String new.
 	result
-		nextPutAll: '= anInstance';
+		nextPutAll: 'semanticEquals: anInstance';
 		nextPut: Character cr.
 	result nextPutAll: self generateSignature.
 	result

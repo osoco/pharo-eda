@@ -3,7 +3,7 @@ generateAttributesHashMethodFor: attributes
 	| result |
 	result := WriteStream with: String new.
 	result
-		nextPutAll: 'hash';
+		nextPutAll: 'semanticHash';
 		nextPut: Character cr.
 	result nextPutAll: self generateSignature.
 	result
