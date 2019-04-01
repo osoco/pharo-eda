@@ -1,4 +1,4 @@
-code generation
+delegated
 createTestEventBuildEventClassMethod
 	| method |
 	method := self generateTestEventBuildEventClassMethod.
@@ -7,5 +7,5 @@ createTestEventBuildEventClassMethod
 			^ self
 				compile: assoc key
 				sourceCode: assoc value
-				inClass: (self class environment at: (self appName , 'Test' , (self toCamelCase: self eventName)) asSymbol) class
+				inClass: self retrieveDomainTestEventClass 
 				classifiedAs: self protocol ]

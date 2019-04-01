@@ -1,11 +1,11 @@
-delegated
-createTestEventBuildEventClassMethod
+code generation
+createTestHelperBuildCommandMethod
 	| delegate |
-	delegate := EDADomainTestEventGenerator
+	delegate := EDATestTraitGenerator
 		fromExampleFile: self commandFile
 		version: self version
 		appName: self appName
 		aggregate: self aggregate
 		commandNameResolver: self commandNameResolver
 		andEventNameResolver: self eventNameResolver.
-	^ delegate createTestEventBuildEventClassMethod
+	^ delegate createTestHelperBuildCommandMethod

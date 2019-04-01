@@ -1,7 +1,9 @@
 code generation
 generateDomainTestEventEqualsMethod
 	| result cr eventAttributes |
-	eventAttributes := self allAttributesOf: self retrieveDomainTestEventClass including: (self retrieveEventAttributesBut: self class skippedEventAttributes).
+	eventAttributes := self
+		allAttributesOf: self retrieveDomainTestEventClass
+		including: (self retrieveEventAttributesBut: self class skippedEventAttributes).
 	result := WriteStream with: String new.
 	cr := Character cr.
 	result

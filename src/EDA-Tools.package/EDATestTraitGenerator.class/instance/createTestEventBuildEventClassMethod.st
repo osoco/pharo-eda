@@ -1,7 +1,7 @@
 delegated
 createTestEventBuildEventClassMethod
 	| delegate |
-	delegate := EDATestSupportGenerator
+	delegate := EDADomainTestEventGenerator
 		fromExampleFile: self commandFile
 		version: self version
 		appName: self appName
