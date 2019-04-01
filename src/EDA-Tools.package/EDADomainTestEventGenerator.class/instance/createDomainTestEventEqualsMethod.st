@@ -3,5 +3,5 @@ createDomainTestEventEqualsMethod
 	^ self
 		compile: '='
 		sourceCode: self generateDomainTestEventEqualsMethod
-		inClass: (self class environment at: (self appName , 'Test' , (self toCamelCase: self eventName)) asSymbol)
+		inClass: (self retrieveDomainTestEventClass)
 		classifiedAs: self protocol

@@ -7,5 +7,5 @@ createTestEventBuildEventClassMethod
 			^ self
 				compile: assoc key
 				sourceCode: assoc value
-				inClass: self retrieveDomainTestEventClass 
+				inClass: self retrieveDomainTestEventClass class
 				classifiedAs: self protocol ]

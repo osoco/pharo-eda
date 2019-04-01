@@ -1,3 +1,3 @@
 protected
 description
-	^ 'domain event test for ' , self aggregate greaseString
+	^ 'domain test event for ' , self aggregate greaseString
