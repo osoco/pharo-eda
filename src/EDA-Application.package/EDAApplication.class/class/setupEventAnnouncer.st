@@ -1,3 +1,3 @@
 setup - events
 setupEventAnnouncer
-	eventAnnouncer := Announcer new
+	self eventAnnouncer: Announcer new
