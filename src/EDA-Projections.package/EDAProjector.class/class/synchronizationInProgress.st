@@ -1,3 +1,3 @@
 accessing
 synchronizationInProgress
-	^ synchronizationInProgress 
+	^ synchronizationInProgress ifNil: [ false ]

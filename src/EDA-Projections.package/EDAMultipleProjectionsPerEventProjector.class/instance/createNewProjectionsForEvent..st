@@ -1,3 +1,0 @@
-projection creation
-createNewProjectionsForEvent: anEvent
-	self subclassResponsibility
