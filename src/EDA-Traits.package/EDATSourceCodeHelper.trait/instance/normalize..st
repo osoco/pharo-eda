@@ -1,3 +1,3 @@
 helper
 normalize: aString
-	^ aString greaseString trimmed asLowercase
+	^ (aString trimmed replaceAll: '\W' with: '_') asLowercase 
