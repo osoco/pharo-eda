@@ -1,11 +1,11 @@
 {
 	"commentStamp" : "",
-	"super" : "VODescriptionBuilder",
+	"super" : "VOMongoRepositoryResolver",
 	"category" : "EDA-Voyage-EventStore",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "EDAVODescriptionBuilder",
+	"name" : "EDAVOMongoRepositoryResolver",
 	"type" : "normal"
 }
