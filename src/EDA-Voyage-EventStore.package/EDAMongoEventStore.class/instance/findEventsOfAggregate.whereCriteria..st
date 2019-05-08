@@ -1,9 +1,10 @@
 accessing
 findEventsOfAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary
 	| eventsCriteria |
-	eventsCriteria := {('aggregateRootClass' -> anAggregateRootClass greaseString)} asDictionary.
+	eventsCriteria := {('aggregateRootClass' -> anAggregateRootClass greaseString)}
+		asDictionary.
 	eventsCriteria addAll: aCriteriaDictionary.
-	^ EDAEventSourcingEvent
-		selectMany: eventsCriteria
-		sortBy:
-			{(#timestamp -> VOOrder ascending)} asDictionary
+	^ self repository
+		selectMany: EDAEventSourcingEvent
+		where: eventsCriteria
+		sortBy: {(#timestamp -> VOOrder ascending)} asDictionary

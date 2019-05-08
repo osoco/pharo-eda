@@ -18,7 +18,9 @@
 		"wireProtocolEnabled"
 	],
 	"pools" : [ ],
-	"classvars" : [ ],
+	"classvars" : [
+		"BackendRepositories"
+	],
 	"instvars" : [ ],
 	"name" : "EDAMongoEventStore",
 	"type" : "normal"
