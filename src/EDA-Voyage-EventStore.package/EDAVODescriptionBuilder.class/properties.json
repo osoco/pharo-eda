@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "VODescriptionBuilder",
+	"category" : "EDA-Voyage-EventStore",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAVODescriptionBuilder",
+	"type" : "normal"
+}

@@ -1,3 +1,3 @@
 helper
 normalize: aString
-	^ (aString trimmed replaceAll: '\W' with: '_') asLowercase 
+	^ (aString trimmed replaceAllMatches: '\W' with: '_') asLowercase
