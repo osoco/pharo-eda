@@ -1,3 +1,5 @@
 private persistence
 collectionAt: aClass inDatabase: db
-	self error: 'This method should not be used'
+	| collectionName |
+	collectionName := aClass aggregateRootClass greaseString.
+	^ MongoCollection database: db name: collectionName

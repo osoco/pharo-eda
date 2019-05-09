@@ -1,0 +1,3 @@
+accessing
+eventClassPrefix
+	self subclassResponsibility

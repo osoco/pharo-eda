@@ -1,3 +1,3 @@
 protected
 aggregateClass
-	self subclassResponsibility 
+	^ self class aggregateClass

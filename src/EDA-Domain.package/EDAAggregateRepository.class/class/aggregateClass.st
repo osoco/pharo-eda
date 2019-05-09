@@ -1,0 +1,3 @@
+protected
+aggregateClass
+	self subclassResponsibility 
