@@ -1,3 +1,3 @@
 persistence
 save: aProjection
-	aProjection save
+	self repository save: aProjection
