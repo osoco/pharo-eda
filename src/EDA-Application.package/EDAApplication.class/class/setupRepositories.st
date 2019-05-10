@@ -4,7 +4,5 @@ setupRepositories
 		allSubclassesDo: [ :repo | 
 			repo setupEventStore: self eventStore.
 			(EDAEventSourcingEvent allSubclasses
-				select: [ :s | 
-					(s greaseString beginsWithSubCollection: self eventClassPrefix)
-						and: [ s aggregateRootClass = repo aggregateClass ] ])
-				collect: [ :s | s repository: repo uniqueInstance ] ]
+				select: [ :s | (s greaseString beginsWithSubCollection: self eventClassPrefix) and: [ s aggregateRootClass = repo aggregateClass ] ])
+				collect: [ :s | s repository: repo uniqueInstance eventStore repository ] ]
