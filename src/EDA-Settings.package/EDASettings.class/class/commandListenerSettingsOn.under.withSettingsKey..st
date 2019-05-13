@@ -1,5 +1,5 @@
 settings
-commandListenerSettingsOn: aBuilder under: parent
+commandListenerSettingsOn: aBuilder under: parent withSettingsKey: aKey
 	(aBuilder group: #commandListener)
 		label: 'Command Listener' translated;
 		description: 'Command listener' translated;
@@ -9,3 +9,4 @@ commandListenerSettingsOn: aBuilder under: parent
 		withConfig: EDACommandStompTopicListener
 		under: #commandListener
 		populatedWithValuesFrom: 'commandListener'
+		withSettingsKey: aKey

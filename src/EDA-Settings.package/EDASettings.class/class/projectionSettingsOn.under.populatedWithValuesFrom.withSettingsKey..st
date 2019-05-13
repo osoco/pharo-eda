@@ -1,14 +1,11 @@
 settings
-projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry
+projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry withSettingsKey: aKey
 	| extSettings |
-	extSettings := self retrieveSettingAsDict: aConfigEntry.
+	extSettings := self retrieveSettingAsDict: aConfigEntry under: aKey.
 	(aBuilder group: #projections)
 		label: 'Projections' translated;
 		parent: parent.
-	self
-		projectionsRepositorySettingsOn: aBuilder
-		under: #projections
-		populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
+	self projectionsRepositorySettingsOn: aBuilder under: #projections populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
 	(aBuilder setting: #projectionSynchronizationEnabled)
 		parent: #projections;
 		target: EDAApplication;

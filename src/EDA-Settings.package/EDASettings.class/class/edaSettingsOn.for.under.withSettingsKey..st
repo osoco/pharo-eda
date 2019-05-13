@@ -1,5 +1,5 @@
 settings
-edaSettingsOn: aBuilder for: application under: parent
+edaSettingsOn: aBuilder for: application under: parent withSettingsKey: aKey
 	(aBuilder group: #eda)
 		label: 'Event-Driven Architecture' translated;
 		description: 'Event-Driven Architecture settings';
@@ -13,12 +13,12 @@ edaSettingsOn: aBuilder for: application under: parent
 		order: 1;
 		domainValues: (EDADUEnvironment environments collect: [ :level | level translated -> level greaseString ]).
 	application listensForCommands
-		ifTrue: [ self commandListenerSettingsOn: aBuilder under: #eda.
+		ifTrue: [ self commandListenerSettingsOn: aBuilder under: #eda withSettingsKey: aKey.
 			self commandErrorHandlingStrategySettingsOn: aBuilder under: #eda ].
 	application publishesEvents
-		ifTrue: [ self eventPublisherSettingsOn: aBuilder under: #eda ].
+		ifTrue: [ self eventPublisherSettingsOn: aBuilder under: #eda withSettingsKey: aKey ].
 	application usesEventStore
-		ifTrue: [ self eventStoreSettingsOn: aBuilder under: #eda ].
+		ifTrue: [ self eventStoreSettingsOn: aBuilder under: #eda withSettingsKey: aKey ].
 	application usesProjections
-		ifTrue: [ self projectionSettingsOn: aBuilder under: #eda populatedWithValuesFrom: 'projections' ].
-	self loggingSettingsOn: aBuilder under: #eda
+		ifTrue: [ self projectionSettingsOn: aBuilder under: #eda populatedWithValuesFrom: 'projections' withSettingsKey: aKey ].
+	self loggingSettingsOn: aBuilder under: #eda withSettingsKey: aKey

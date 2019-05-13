@@ -1,7 +1,7 @@
 settings
-stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: configEntry
+stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: configEntry withSettingsKey: aKey
 	| stompConfig |
-	stompConfig := self retrieveSettingAsDict: configEntry.
+	stompConfig := self retrieveSettingAsDict: configEntry under: aKey.
 	(aBuilder setting: #host)
 		parent: parent;
 		target: container;

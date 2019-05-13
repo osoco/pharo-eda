@@ -1,7 +1,7 @@
 settings
-eventStoreSettingsOn: aBuilder under: parent
+eventStoreSettingsOn: aBuilder under: parent withSettingsKey: aKey
 	| extSettings |
-	extSettings := self retrieveSettingAsDict: 'eventStore'.
+	extSettings := self retrieveSettingAsDict: 'eventStore' under: aKey.
 	(aBuilder group: #eventStore)
 		label: 'Event Store' translated;
 		parent: parent.

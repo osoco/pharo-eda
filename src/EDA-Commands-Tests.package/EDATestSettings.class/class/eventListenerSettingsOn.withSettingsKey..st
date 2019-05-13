@@ -1,5 +1,5 @@
 settings
-eventListenerSettingsOn: aBuilder
+eventListenerSettingsOn: aBuilder withSettingsKey: aKey
 	(aBuilder group: #testEventListener)
 		label: 'Event Listener' translated;
 		description: 'Event Listener (for integration tests)' translated;
@@ -9,3 +9,4 @@ eventListenerSettingsOn: aBuilder
 		withConfig: EDATestEventStompTopicListener
 		under: #testEventListener
 		populatedWithValuesFrom: 'testEventListener'
+		withSettingsKey: aKey
