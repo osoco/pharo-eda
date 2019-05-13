@@ -1,3 +1,4 @@
 accessing
 enableReplication
-	^ enableReplication
+	enableReplication ifNil: [ self enableReplication: false ].
+	^ enableReplication 

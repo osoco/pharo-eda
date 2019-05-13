@@ -1,3 +1,3 @@
 accessing
 duEnvironmentClass: envClass
-	duEnvironmentClass := envClass
+	DuEnvironmentClass := envClass

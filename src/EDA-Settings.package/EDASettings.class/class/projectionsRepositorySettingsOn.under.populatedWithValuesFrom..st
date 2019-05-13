@@ -1,7 +1,12 @@
 settings
 projectionsRepositorySettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry
-	(aBuilder group: #projectionsRepository)
+	| symbol |
+	symbol := (parent greaseString , 'ProjectionsRepository') asSymbol.
+	(aBuilder group: symbol)
 		label: 'Projections Repository' translated;
 		parent: parent.
-
-	^ self mongoSettingsOn: aBuilder withConfig: EDAProjectionMongoRepository under: #projectionsRepository populatedWithValuesFrom: aConfigEntry
+	^ self
+		mongoSettingsOn: aBuilder
+		withConfig: EDAProjectionMongoRepository
+		under: symbol
+		populatedWithValuesFrom: aConfigEntry

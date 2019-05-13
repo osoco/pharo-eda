@@ -1,13 +1,14 @@
 settings
 loggingSettingsOn: aBuilder under: parent withSettingsKey: aKey
-	| extSettings |
+	| symbol extSettings |
+	symbol := (parent greaseString , 'Logging') asSymbol.
 	extSettings := self retrieveSettingAsDict: 'logging' under: aKey.
-	(aBuilder group: #logging)
+	(aBuilder group: symbol)
 		label: 'Logging' translated;
 		parent: parent.
 	(aBuilder pickOne: #loggingLevel)
-		parent: #logging;
-		target: EDALoggingSettings;
+		parent: symbol;
+		target: self loggingSettingsContainer;
 		label: 'Logging level' translated;
 		description: 'Logging level' translated;
 		order: 1;
