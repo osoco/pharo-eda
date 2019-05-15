@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "EDADUEnvironment",
+	"category" : "EDA-Settings-Tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATestDUEnvironment",
+	"type" : "normal"
+}
