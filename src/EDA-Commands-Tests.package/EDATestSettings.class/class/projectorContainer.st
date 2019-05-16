@@ -1,3 +1,0 @@
-accessing
-projectorContainer
-	^ self shouldBeImplemented

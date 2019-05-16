@@ -1,3 +1,0 @@
-accessing
-eventStompTopicPublisherContainer
-	^ self shouldBeImplemented

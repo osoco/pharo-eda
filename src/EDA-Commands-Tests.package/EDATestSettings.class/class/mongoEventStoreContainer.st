@@ -1,3 +1,0 @@
-accessing
-mongoEventStoreContainer
-	^ self shouldBeImplemented

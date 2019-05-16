@@ -1,3 +1,0 @@
-accessing
-commandStompTopicListenerContainer
-	^ self shouldBeImplemented

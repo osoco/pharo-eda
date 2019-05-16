@@ -1,3 +1,0 @@
-accessing
-loggingSettingsContainer
-	^ self shouldBeImplemented

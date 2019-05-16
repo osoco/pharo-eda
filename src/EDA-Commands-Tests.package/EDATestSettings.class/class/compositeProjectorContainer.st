@@ -1,3 +1,0 @@
-accessing
-compositeProjectorContainer
-	^ self shouldBeImplemented
