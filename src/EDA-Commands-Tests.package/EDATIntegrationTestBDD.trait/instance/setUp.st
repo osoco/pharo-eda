@@ -15,4 +15,4 @@ setUp
 	self clearQueues.
 	self application eventStore repository resolver debug: true.
 	self launchApplication.
-	self timeLimit: EDATestEventStompTopicListener timeout seconds
+	self eventStompTopicListenerClass timeout ifNotNil: [ :t | self timeLimit: t seconds ]

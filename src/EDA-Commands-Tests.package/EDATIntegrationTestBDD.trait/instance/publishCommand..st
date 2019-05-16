@@ -1,3 +1,3 @@
 lifecycle
 publishCommand: commandString
-	^ EDACommandStompTopicPublisher new publishMessage: commandString
+	^ self commandStompTopicPublisher publishMessage: commandString
