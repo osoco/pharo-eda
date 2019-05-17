@@ -1,3 +1,3 @@
 accessing
 commandClassPrefix
-	self subclassResponsibility
+	^ self eventClassPrefix

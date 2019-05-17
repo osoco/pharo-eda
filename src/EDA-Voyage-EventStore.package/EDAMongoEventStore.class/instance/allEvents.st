@@ -1,3 +1,8 @@
 accessing
 allEvents
-	^ EDAEventSourcingEvent selectAllSortBy: { (#timestamp -> VOOrder ascending) . (#'_id' -> VOOrder ascending) } asDictionary
+		^ self repository
+		selectMany: EDAEventSourcingEvent
+		where: Dictionary new
+		sortBy:
+			{(#timestamp -> VOOrder ascending).
+			(#_id -> VOOrder ascending)} asDictionary
