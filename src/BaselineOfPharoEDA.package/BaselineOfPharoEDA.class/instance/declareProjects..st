@@ -7,4 +7,5 @@ declareProjects: spec
 	self declareDeployUtilsIn: spec.
 	self declareRoassal2In: spec.
 	self declareGToolkitIn: spec.
+	self declareZincZodiacIn: spec.
 	^ spec
