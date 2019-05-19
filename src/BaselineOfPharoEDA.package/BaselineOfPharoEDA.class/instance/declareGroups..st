@@ -3,9 +3,8 @@ declareGroups: spec
 	spec
 		group: 'default'
 			with:
-			#(#'EDA-Application' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
-		group: 'tests'
-			with: #(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
+			#('EDA-Traits' 'EDA-Tools' 'EDA-Domain' 'EDA-EventStore' 'EDA-Messaging' 'EDA-Events' 'EDA-Commands' 'EDA-Logging' 'EDA-Projections' 'EDA-Projections-Voyage-Repository' 'EDA-StompMessaging' #'EDA-Voyage-EventStore' 'EDA-Application' 'EDA-Settings');
+		group: 'tests' with: #('EDA-Traits-Tests' 'EDA-Tools-Tests' 'EDA-Domain-Tests' 'EDA-Projections-Tests' 'EDA-Commands-Tests' 'EDA-Commands-Tests-Tests');
 		group: 'development' with: #('default' 'tests');
-		group: 'full' with: #('default' 'Roassal2' 'GToolkit').
+		group: 'full' with: #('development' 'Roassal2' 'GToolkit').
 	^ spec
