@@ -6,22 +6,22 @@ queueCleanerSettingsOn: aBuilder withConfig: container under: parent populatedWi
 		label: 'RabbitMQ host' translated;
 		description: 'RabbitMQ host address' translated;
 		order: 1;
-		default: (config at: 'host').
+		default: (config at: 'host' ifAbsent: 'unset').
 	(aBuilder setting: #port)
 		parent: parent;
 		target: container;
 		label: 'RabbitMQ HTTP port' translated;
 		description: 'RabbitMQ HTTP port' translated;
-		default: (config at: 'httpPort').
+		default: (config at: 'httpPort' ifAbsent: 0).
 	(aBuilder setting: #username)
 		parent: parent;
 		target: container;
 		label: 'RabbitMQ user' translated;
 		description: 'RabbitMQ admin username' translated;
-		default: (config at: 'user').
+		default: (config at: 'user' ifAbsent: 'unset').
 	(aBuilder setting: #password)
 		parent: parent;
 		target: container;
 		label: 'RabbitMQ password' translated;
 		description: 'RabbitMQ admin password' translated;
-		default: (config at: 'password')
+		default: (config at: 'password' ifAbsent: 'unset')

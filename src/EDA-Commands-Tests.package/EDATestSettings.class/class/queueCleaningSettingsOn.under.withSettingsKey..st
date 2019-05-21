@@ -6,7 +6,7 @@ queueCleaningSettingsOn: aBuilder under: parent withSettingsKey: aKey
 		label: 'Queue cleaning' translated;
 		description: 'Queue cleaning (for integration tests)' translated;
 		parent: parent.
-	extSettings := self retrieveSettingAsDict: 'queueCleaner' under: aKey.
+	extSettings := (self retrieveSettingAsDict: 'queueCleaner' under: aKey) ifNil: [ Dictionary new ].
 	^ self
 		queueCleanerSettingsOn: aBuilder
 		withConfig: self queueCleaner
