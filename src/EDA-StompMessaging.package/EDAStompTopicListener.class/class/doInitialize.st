@@ -8,4 +8,4 @@ doInitialize
 	self timeout: nil.
 	self prefetchCount: nil.
 	self durable: true.
-	self ack: #auto
+	self ack: #'client-individual'

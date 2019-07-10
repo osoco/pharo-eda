@@ -3,14 +3,18 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 	aClient
 		runWith: [ :message | 
 			self logInit: message body greaseString usingClient: aClient withConfig: conf.
-			[ | text |
+			[ | text ack |
 			text := message body greaseString.
 			aBlock value: text.
-			conf ack = #'client-individual'
+			ack := conf ack.
+			ack = #'client-individual'
+				ifFalse: [ self logErrorMessage: 'ACK was ''' , conf ack greaseString , ''' in ', conf class greaseString, '. Resetting it to client-individual.'. ack := #'client-individual' ].
+			ack = #'client-individual'
 				ifTrue: [ self logDebugMessage: 'Sending ACK...'.
 					aClient writeWithReceipt: message ackFrame.
 					self logDebugMessage: 'ACK sent.' ]
-				ifFalse: [ self logDebugMessage: 'Skipping ACK (type is ''' , conf ack greaseString , ''').' ].
+				ifFalse: [ 
+					self logErrorMessage: 'Skipping ACK (type is ''' , conf ack greaseString , ''').' ].
 			self logFinish: message body greaseString usingClient: aClient withConfig: conf ]
 				on: Error
 				do: [ :ex | 
