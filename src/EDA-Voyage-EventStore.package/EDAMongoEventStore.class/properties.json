@@ -1,7 +1,12 @@
 {
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAMongoEventStore",
 	"commentStamp" : "",
 	"super" : "EDAEventStore",
-	"category" : "EDA-Voyage-EventStore",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal",
 	"classinstvars" : [
 		"username",
 		"password",
@@ -18,8 +23,5 @@
 		"wireProtocolEnabled"
 	],
 	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
-	"name" : "EDAMongoEventStore",
-	"type" : "normal"
+	"category" : "EDA-Voyage-EventStore"
 }

@@ -1,7 +1,17 @@
 {
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"client",
+		"listenerProcess",
+		"subscriptionId",
+		"config"
+	],
+	"name" : "EDAStompTopicListener",
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:15",
 	"super" : "EDATopicListener",
-	"category" : "EDA-StompMessaging",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal",
 	"classinstvars" : [
 		"username",
 		"queue",
@@ -14,13 +24,5 @@
 		"timeout"
 	],
 	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [
-		"client",
-		"listenerProcess",
-		"subscriptionId",
-		"config"
-	],
-	"name" : "EDAStompTopicListener",
-	"type" : "normal"
+	"category" : "EDA-StompMessaging"
 }

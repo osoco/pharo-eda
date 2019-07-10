@@ -1,11 +1,13 @@
 {
-	"commentStamp" : "",
-	"super" : "VOMongoRepository",
-	"category" : "EDA-Voyage-EventStore",
-	"classinstvars" : [ ],
-	"pools" : [ ],
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "EDAVOMongoRepository",
-	"type" : "normal"
+	"commentStamp" : "",
+	"super" : "VOMongoRepository",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Voyage-EventStore"
 }
