@@ -1,11 +1,11 @@
 {
-	"classtraitcomposition" : "EDATSettingsHelper classTrait",
+	"classtraitcomposition" : "EDATSettingsHelper classTrait + EDATLogging classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "EDASettings",
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:44",
 	"super" : "Object",
-	"traitcomposition" : "EDATSettingsHelper",
+	"traitcomposition" : "EDATSettingsHelper + EDATLogging",
 	"type" : "normal",
 	"classinstvars" : [
 		"duEnvironmentClass"

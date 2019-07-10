@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDATLanguageHelper classTrait",
+	"classtraitcomposition" : "EDATLanguageHelper classTrait + EDATLogging classTrait",
 	"classvars" : [
 		"CurrentEnvironment"
 	],
@@ -7,7 +7,7 @@
 	"name" : "EDADUEnvironment",
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:46",
 	"super" : "DUEnvironment",
-	"traitcomposition" : "EDATLanguageHelper",
+	"traitcomposition" : "EDATLanguageHelper + EDATLogging",
 	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],

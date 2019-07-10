@@ -1,6 +1,6 @@
 settings
 stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: configEntry
-	| stompConfig |
+	| stompConfig ack timeout |
 	stompConfig := self retrieveSettingAsDict: configEntry.
 	(aBuilder setting: #host)
 		parent: parent;
@@ -39,6 +39,8 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		label: 'Durable subscription' translated;
 		description: 'Durability of subscription' translated;
 		default: (stompConfig at: 'durable').
+	((stompConfig at: 'ack') asSymbol = #auto) ifTrue: [ self logErrorMessage: 'ACK is AUTO. Using client-individual anyway' ].
+	ack := #'client-individual'.
 	(aBuilder pickOne: #ack)
 		parent: parent;
 		target: container;
@@ -48,19 +50,21 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 			{('Auto' translated -> #auto).
 			('Client' translated -> #client).
 			('Client Individual' translated -> #'client-individual')};
-		default: (stompConfig at: 'ack') asSymbol.
+		default: ack.
 	(aBuilder setting: #prefetchCount)
 		parent: parent;
 		target: container;
 		label: 'Prefetch count' translated;
 		description: 'Prefetch count' translated;
 		default: (stompConfig at: 'prefetchCount').
+	timeout := (stompConfig at: 'timeout' ifAbsent: 1).
+	self logDebugMessage: 'Timeout: ', timeout greaseString.
 	(aBuilder setting: #timeout)
 		parent: parent;
 		target: container;
 		label: 'Timeout' translated;
 		description: 'Timeout (in seconds)' translated;
-		default: (stompConfig at: 'timeout').
+		default: timeout.
 	(aBuilder setting: #commandListenerClientDebug)
 		parent: parent;
 		target: EDAApplication;
