@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDASmtpClient",
+	"commentStamp" : "",
+	"super" : "ZdcSecureSMTPClient",
+	"traitcomposition" : "EDAPrintOnHelper + EDATLogging",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-SMTP"
+}
