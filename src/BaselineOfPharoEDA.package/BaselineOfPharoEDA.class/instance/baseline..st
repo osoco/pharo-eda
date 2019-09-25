@@ -19,6 +19,7 @@ baseline: spec
 				package: #'EDA-Commands-Tests-Tests' with: [ spec requires: #('EDA-Commands-Tests') ];
 				package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
 				package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
+				package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
 				package: #'EDA-Events' with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
 				package: #'EDA-Commands' with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
 				package: #'EDA-Logging';
@@ -36,7 +37,7 @@ baseline: spec
 			spec
 				group: 'core'
 					with:
-					#(#'EDA-Application' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
+					#(#'EDA-Application' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
 				group: 'tests'
 					with:
 					#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
