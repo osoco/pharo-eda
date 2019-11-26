@@ -1,4 +1,3 @@
 logging
 logErrorMessage: aMessage andThrow: anExceptionClass
-	self logErrorMessage: aMessage.
-	anExceptionClass signal
+	^ self logErrorMessage: aMessage beautify: self beautifyByDefault andThrow: anExceptionClass

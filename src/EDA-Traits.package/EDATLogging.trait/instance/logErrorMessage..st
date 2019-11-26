@@ -1,3 +1,3 @@
 logging
 logErrorMessage: aMessage
-   self class logErrorMessage: aMessage
+	^ self class logErrorMessage: aMessage

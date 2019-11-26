@@ -1,7 +1,9 @@
 {
 	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATLogging classTrait",
 	"classvars" : [ ],
-	"instvars" : [ ],
+	"instvars" : [
+		"pendingLog"
+	],
 	"name" : "EDASmtpClient",
 	"commentStamp" : "",
 	"super" : "ZdcSecureSMTPClient",

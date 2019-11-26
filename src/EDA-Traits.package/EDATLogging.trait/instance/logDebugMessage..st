@@ -1,3 +1,3 @@
 logging
 logDebugMessage: aMessage
-	self class logDebugMessage: aMessage
+	^ self class logDebugMessage: aMessage
