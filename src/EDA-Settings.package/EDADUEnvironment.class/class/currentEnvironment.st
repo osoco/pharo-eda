@@ -2,5 +2,7 @@ accessing
 currentEnvironment
 	| aux |
 	aux := CurrentEnvironment.
-	aux ifNil: [ environment := super currentEnvironment. self currentEnvironment: aux ].
+	(aux isNil or: [ aux isEmpty ]) ifTrue: [ aux := super currentEnvironment ].
+	(aux isNil or: [ aux isEmpty ]) ifTrue: [ aux := 'development' ].
+	self currentEnvironment: aux.
 	^ CurrentEnvironment
