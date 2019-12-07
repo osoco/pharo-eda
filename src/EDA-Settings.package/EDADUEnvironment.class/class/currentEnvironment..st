@@ -1,7 +1,7 @@
 accessing
 currentEnvironment: aString
 	| previousEnvironment |
-	previousEnvironment := self currentEnvironment.
+	previousEnvironment := CurrentEnvironment.
 	CurrentEnvironment := aString.
 	(previousEnvironment isNil or: [ previousEnvironment = aString ])
 		ifTrue: [ ^ self ].
