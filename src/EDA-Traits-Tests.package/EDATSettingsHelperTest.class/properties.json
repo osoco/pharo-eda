@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDATSettingsHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDATSettingsHelperTest",
+	"commentStamp" : "",
+	"super" : "TestCase",
+	"traitcomposition" : "EDATSettingsHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Traits-Tests"
+}
