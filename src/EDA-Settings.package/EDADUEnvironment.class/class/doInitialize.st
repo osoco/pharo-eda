@@ -1,0 +1,2 @@
+class initialization
+doInitialize

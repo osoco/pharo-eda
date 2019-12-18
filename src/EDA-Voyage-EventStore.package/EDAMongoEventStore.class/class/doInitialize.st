@@ -1,4 +1,4 @@
-initialization
+class initialization
 doInitialize
 	self host: nil.
 	self port: nil.

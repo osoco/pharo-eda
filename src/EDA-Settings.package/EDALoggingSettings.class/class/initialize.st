@@ -1,3 +1,3 @@
-initialization
+class initialization
 initialize
 	self doInitialize
