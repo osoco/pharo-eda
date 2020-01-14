@@ -3,6 +3,7 @@ applyEvent: anEvent onAggregateRoot: anAggregateRoot
 	| eventClassName applyEventSelector applyEventSelectorSymbol error |
 	eventClassName := anEvent class name.
 	error := false.
+	anEvent delete ifTrue: [ anAggregateRoot applyAggregateDeletedEvent: anEvent ] ifFalse: [ 
 	applyEventSelector := anAggregateRoot retrieveApplyEventMethod: anEvent withLogging: false.
 	applyEventSelector
 		ifNil: [ error := true ]
@@ -11,4 +12,4 @@ applyEvent: anEvent onAggregateRoot: anAggregateRoot
 				ifFalse: [ error := true ] ].
 	error
 		ifTrue: [ self fail: 'Aggregate root ' , anAggregateRoot class name asSymbol , ' is not able to handle events of type ' , eventClassName , ' and version ' , anEvent version greaseString]
-		ifFalse: [ anAggregateRoot perform: applyEventSelectorSymbol with: anEvent ]
+		ifFalse: [ anAggregateRoot perform: applyEventSelectorSymbol with: anEvent  ] ]

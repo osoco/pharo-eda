@@ -3,6 +3,7 @@ givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCo
 	| aggregateRoot handlerSelectorSymbol commandClassName |
 	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
+	aggregateRoot isDeleted ifTrue: [ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new ].
 	commandClassName := aCommand class name.
 	handlerSelectorSymbol := self retrieveHandlerSelectorSymbol: aCommand.
 	(aggregateRoot respondsTo: handlerSelectorSymbol)

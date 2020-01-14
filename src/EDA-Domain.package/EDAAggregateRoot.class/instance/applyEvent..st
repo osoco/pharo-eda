@@ -3,11 +3,10 @@ applyEvent: anEvent
 	| eventClassName applyEventSelector applyEventSelectorSymbol delete |
 	delete := anEvent delete.
 	delete
-		ifNil: [ self
-				logWarningMessage: anEvent class greaseString , ' implements an invalid #initialize method. Make sure it calls parent''s initialize.'.
+		ifNil: [ self logWarningMessage: anEvent class greaseString , ' implements an invalid #initialize method. Make sure it calls parent''s initialize.'.
 			delete := false ].
 	delete
-		ifTrue: [ ^ self ].
+		ifTrue: [ self applyAggregateDeletedEvent: anEvent ] ifFalse: [ 
 	eventClassName := anEvent class greaseString.
 	applyEventSelector := self retrieveApplyEventMethod: anEvent withLogging: false.
 	applyEventSelector
@@ -21,13 +20,8 @@ applyEvent: anEvent
 					suffix := '...' ]
 				ifFalse: [ last := text size ].
 			applyEventSelectorSymbol := applyEventSelector asSymbol.
-			self
-				logTraceMessage:
-					self class greaseString , '(' , self id greaseString , ')>>' , applyEventSelectorSymbol greaseString , ' '''
-						, (text copyFrom: 1 to: last) greaseString , suffix greaseString.
+			self logTraceMessage: self class greaseString , '(' , self id greaseString , ')>>' , applyEventSelectorSymbol greaseString , ' ''' , (text copyFrom: 1 to: last) greaseString , suffix greaseString.
 			self perform: applyEventSelectorSymbol with: anEvent ]
-		ifNil: [ 	self
-				logErrorMessage:
-					'Aggregate root class mismatch for ' , anEvent class greaseString , ' event : ' , anEvent greaseString , '. It''s '
-						, self class greaseString , ' but should be ' , anEvent aggregateRootClass greaseString.
-			self retrieveApplyEventMethod: anEvent withLogging: true ]
+		ifNil: [ self
+				logErrorMessage: 'Aggregate root class mismatch for ' , anEvent class greaseString , ' event : ' , anEvent greaseString , '. It''s ' , self class greaseString , ' but should be ' , anEvent aggregateRootClass greaseString.
+			self retrieveApplyEventMethod: anEvent withLogging: true ] ]
