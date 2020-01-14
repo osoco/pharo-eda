@@ -22,6 +22,6 @@ applyEvent: anEvent
 			applyEventSelectorSymbol := applyEventSelector asSymbol.
 			self logTraceMessage: self class greaseString , '(' , self id greaseString , ')>>' , applyEventSelectorSymbol greaseString , ' ''' , (text copyFrom: 1 to: last) greaseString , suffix greaseString.
 			self perform: applyEventSelectorSymbol with: anEvent ]
-		ifNil: [ self
-				logErrorMessage: 'Aggregate root class mismatch for ' , anEvent class greaseString , ' event : ' , anEvent greaseString , '. It''s ' , self class greaseString , ' but should be ' , anEvent aggregateRootClass greaseString.
+		ifNil: [ (anEvent class greaseString = self class greaseString) ifTrue: [ self
+				logErrorMessage: 'Aggregate root class mismatch for ' , anEvent class greaseString , ' event : ' , anEvent greaseString , '. It''s ' , self class greaseString , ' but should be ' , anEvent aggregateRootClass greaseString ].
 			self retrieveApplyEventMethod: anEvent withLogging: true ] ]
