@@ -31,6 +31,13 @@ mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValue
 		label: 'Mongo database' translated;
 		description: 'Mongo database name' translated;
 		default: (mongoConfig at: 'database').
+	(aBuilder pickOne: #authenticationMechanism)
+		parent: parent;
+		target: container;
+		label: 'AuthenticationMechanism' translated;
+		description: 'AuthenticationMechanism' translated;
+		domainValues: (MongoAuthMechanism allSubclasses select: [ :item | item isAbstract not ] thenCollect: [ :item | item description translated -> item ]);
+		default: (mongoConfig at: 'authenticationMechanism').
 	(aBuilder setting: #debug)
 		parent: parent;
 		target: container;
