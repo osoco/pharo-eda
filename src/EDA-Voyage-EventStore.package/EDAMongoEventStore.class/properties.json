@@ -1,11 +1,11 @@
 {
-	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATMongoHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "EDAMongoEventStore",
 	"commentStamp" : "",
 	"super" : "EDAEventStore",
-	"traitcomposition" : "EDAPrintOnHelper",
+	"traitcomposition" : "EDAPrintOnHelper + EDATMongoHelper",
 	"type" : "normal",
 	"classinstvars" : [
 		"username",
@@ -20,7 +20,8 @@
 		"ensuringCurrentReferencesOnQueries",
 		"forceEager",
 		"lazySynchronize",
-		"wireProtocolEnabled"
+		"wireProtocolEnabled",
+		"authenticationMechanism"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Voyage-EventStore"

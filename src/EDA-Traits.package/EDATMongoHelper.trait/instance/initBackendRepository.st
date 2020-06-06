@@ -1,7 +1,7 @@
 persistence
 initBackendRepository
 	| result |
-	result := EDAVOMongoRepository
+	result := EDAVOProjectionMongoRepository
 		host: self class host
 		port: self class port
 		database: self class databaseName
@@ -17,7 +17,6 @@ initBackendRepository
 		ifFalse: [ result disableSingleton ].
 	result ensuringCurrentOnSave: self class ensuringCurrentOnSave.
 	result ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
-	result forceEager: self class forceEager.
 	result lazySynchronize: self class lazySynchronize.
 	result wireProtocolEnabled: self class wireProtocolEnabled.
 	^ result

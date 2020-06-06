@@ -1,7 +1,12 @@
 {
+	"classtraitcomposition" : "EDATMongoHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDAProjectionMongoRepository",
 	"commentStamp" : "",
 	"super" : "EDAProjectionVoyageRepository",
-	"category" : "EDA-Projections-Voyage-Repository",
+	"traitcomposition" : "EDATMongoHelper",
+	"type" : "normal",
 	"classinstvars" : [
 		"username",
 		"password",
@@ -15,11 +20,9 @@
 		"debug",
 		"enableReplication",
 		"host",
-		"port"
+		"port",
+		"authenticationMechanism"
 	],
 	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
-	"name" : "EDAProjectionMongoRepository",
-	"type" : "normal"
+	"category" : "EDA-Projections-Voyage-Repository"
 }
