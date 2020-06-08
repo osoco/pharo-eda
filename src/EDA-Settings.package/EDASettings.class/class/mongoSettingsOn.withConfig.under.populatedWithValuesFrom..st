@@ -36,8 +36,15 @@ mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValue
 		target: container;
 		label: 'AuthenticationMechanism' translated;
 		description: 'AuthenticationMechanism' translated;
-		domainValues: (MongoAuthMechanism allSubclasses select: [ :item | item isAbstract not ] thenCollect: [ :item | item description translated -> item ]);
-		default: (MongoAuthMechanism allSubclasses select: [ :item | item isAbstract not and: [ item description = (mongoConfig at: 'authenticationMechanism') ]]).
+		domainValues:
+			(MongoAuthMechanism allSubclasses
+				select: [ :item | item isAbstract not ]
+				thenCollect: [ :item | item description translated -> item ]);
+		default:
+			(MongoAuthMechanism allSubclasses
+				select: [ :item | 
+					item isAbstract not
+						and: [ item description = (mongoConfig at: 'authenticationMechanism') ] ]) first.
 	(aBuilder setting: #debug)
 		parent: parent;
 		target: container;
