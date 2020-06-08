@@ -7,7 +7,7 @@ doInitialize
 	self password: nil.
 	self debug: false.
 	self enableReplication: false.
-	self enableSingleton: true.
+	self enableSingleton: nil.
 	self ensuringCurrentOnSave: false.
 	self ensuringCurrentReferencesOnQueries: false.
 	self forceEager: false.
