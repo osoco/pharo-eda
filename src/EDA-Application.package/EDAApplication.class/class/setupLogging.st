@@ -1,3 +1,5 @@
 setup
 setupLogging
-	EDALogEvent announcer subscribe: EDALogEvent do: [ :event | self logInfoMessage: event greaseString ]
+	EDALogEvent announcer
+		when: EDALogEvent
+		do: [ :event | self logInfoMessage: event greaseString ]

@@ -48,8 +48,10 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		target: container;
 		label: 'Ack policy' translated;
 		description: 'Acknowledgement policy';
-		domainValues:
-			#(#('Auto' translated -> #auto) #('Client' translated -> #client) #('Client Individual' translated -> #'client-individual'));
+		domainValues: (OrderedCollection
+			with: 'Auto' translated -> #auto
+			with: 'Client' translated -> #client
+			with: 'Client Individual' translated -> #'client-individual');
 		default: ack.
 	(aBuilder setting: #prefetchCount)
 		parent: parent;
