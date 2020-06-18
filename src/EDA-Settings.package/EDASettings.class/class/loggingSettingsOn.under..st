@@ -5,11 +5,13 @@ loggingSettingsOn: aBuilder under: parent
 	(aBuilder group: #logging)
 		label: 'Logging' translated;
 		parent: parent.
-			(aBuilder pickOne: #loggingLevel)
+	(aBuilder pickOne: #loggingLevel)
 		parent: #logging;
 		target: EDALoggingSettings;
 		label: 'Logging level' translated;
-		description: 'Logging level' translated;
+		description: 'Logging level';
 		order: 1;
-		domainValues: (EDALoggingSettings levels collect: [ :level | level translated -> level greaseString ]);
+		domainValues:
+			(EDALoggingSettings levels
+				collect: [ :level | level translated -> level greaseString ]);
 		default: (extSettings at: 'level')
