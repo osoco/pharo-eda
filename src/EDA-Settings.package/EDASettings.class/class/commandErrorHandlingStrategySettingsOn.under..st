@@ -4,8 +4,11 @@ commandErrorHandlingStrategySettingsOn: aBuilder under: parent
 		parent: parent;
 		target: EDACommandDispatcher;
 		label: 'Command Error Handling' translated;
-		description: 'Strategy when dealing with errors processing commands' translated;
+		description: 'Strategy when dealing with errors processing commands';
 		order: 1;
-		domainValues: (EDACommandErrorHandlingStrategy subclasses collect: [ :strategy | strategy description translated -> strategy greaseString ]);
-		default: EDAErrorAsEventStrategy asString.
+		domainValues:
+			(EDACommandErrorHandlingStrategy subclasses
+				collect:
+					[ :strategy | strategy description translated -> strategy greaseString ]);
+		default: EDAErrorAsEventStrategy greaseString.
 	^ self
