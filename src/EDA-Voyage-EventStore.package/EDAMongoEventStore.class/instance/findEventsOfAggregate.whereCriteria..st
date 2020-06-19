@@ -1,9 +1,11 @@
-accessing
+persistence
 findEventsOfAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary
 	| eventsCriteria |
-	eventsCriteria := {('aggregateRootClass' -> anAggregateRootClass greaseString)} asDictionary.
+	eventsCriteria := (OrderedCollection
+		with: 'aggregateRootClass' -> anAggregateRootClass greaseString)
+		asDictionary.
 	eventsCriteria addAll: aCriteriaDictionary.
 	^ EDAEventSourcingEvent
 		selectMany: eventsCriteria
 		sortBy:
-			{(#timestamp -> VOOrder ascending)} asDictionary
+			(OrderedCollection with: #timestamp -> VOOrder ascending) asDictionary

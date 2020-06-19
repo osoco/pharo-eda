@@ -1,3 +1,5 @@
-accessing
+persistence
 findEventsOfAggregate: anAggregateRootClass whereId: aNumber
-	^ self findEventsOfAggregate: anAggregateRootClass whereCriteria: { ('id' -> aNumber) } asDictionary.
+	^ self
+		findEventsOfAggregate: anAggregateRootClass
+		whereCriteria: (OrderedCollection with: ('id' -> aNumber)) asDictionary

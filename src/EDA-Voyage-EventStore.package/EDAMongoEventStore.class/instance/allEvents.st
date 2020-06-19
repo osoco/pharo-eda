@@ -1,3 +1,7 @@
-accessing
+persistence
 allEvents
-	^ EDAEventSourcingEvent selectAllSortBy: { (#timestamp -> VOOrder ascending) . (#'_id' -> VOOrder ascending) } asDictionary
+	^ EDAEventSourcingEvent
+		selectAllSortBy:
+			(OrderedCollection
+				with: (#timestamp -> VOOrder ascending)
+				with: (#_id -> VOOrder ascending)) asDictionary
