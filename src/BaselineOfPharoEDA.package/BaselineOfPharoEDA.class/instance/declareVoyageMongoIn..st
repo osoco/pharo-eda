@@ -5,6 +5,6 @@ declareVoyageMongoIn: spec
 		with: [ spec
 				className: #ConfigurationOfVoyageMongo;
 				versionString: #development;
-				repository: 'github://pharo-nosql/voyage:1.6/mc';
+				repository: 'github://osoco/voyage:master/mc';
 				loads: #('core' 'memory') ].
 	^ spec
