@@ -14,7 +14,7 @@
 	"traitcomposition" : "EDATLogging",
 	"type" : "normal",
 	"classinstvars" : [
-		"repository",
+		"voyageRepository",
 		"errorStrategy"
 	],
 	"pools" : [ ],
