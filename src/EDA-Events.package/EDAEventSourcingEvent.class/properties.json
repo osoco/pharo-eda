@@ -14,7 +14,9 @@
 	"super" : "Announcement",
 	"traitcomposition" : "EDAPrintOnHelper",
 	"type" : "normal",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"voyageRepository"
+	],
 	"pools" : [ ],
 	"category" : "EDA-Events-Events"
 }
