@@ -8,7 +8,6 @@ refreshVoyageSettingsOn: aRepository
 		ifFalse: [ aRepository disableReplication ].
 	aRepository ensuringCurrentOnSave: self ensuringCurrentOnSave.
 	aRepository ensuringCurrentReferencesOnQueries: self ensuringCurrentReferencesOnQueries.
-	aRepository forceEager: self forceEager.
 	aRepository lazySynchronize: self lazySynchronize.
 	self enableSingleton
 		ifTrue: [ aRepository enableSingleton ]
