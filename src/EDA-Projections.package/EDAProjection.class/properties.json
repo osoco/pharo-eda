@@ -15,7 +15,8 @@
 	"type" : "normal",
 	"classinstvars" : [
 		"voyageRepository",
-		"errorStrategy"
+		"errorStrategy",
+		"repository"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Projections-Views"
