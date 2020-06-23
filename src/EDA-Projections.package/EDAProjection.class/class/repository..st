@@ -1,3 +1,3 @@
 accessing
 repository: aRepository
-	self voyageRepository: aRepository
+	repository := aRepository
