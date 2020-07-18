@@ -75,12 +75,6 @@ mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValue
 		label: 'Current references on queries' translated;
 		description: 'Ensure current references on queries';
 		default: (mongoConfig at: 'ensuringCurrentReferencesOnQueries').
-	(aBuilder setting: #forceEager)
-		parent: parent;
-		target: container;
-		label: 'Force eager' translated;
-		description: 'Force eager';
-		default: (mongoConfig at: 'forceEager').
 	(aBuilder setting: #lazySynchronize)
 		parent: parent;
 		target: container;
