@@ -39,4 +39,4 @@ declarePackagesIn: spec
 					with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application') ];
 				package: #'EDA-Commands-Tests'
 					with: [ spec
-						requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ]
+						requires: #("'BabyMock2'" 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ]
