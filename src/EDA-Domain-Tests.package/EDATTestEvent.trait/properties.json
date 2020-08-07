@@ -1,5 +1,7 @@
 {
-	"name" : "EDATTestEvent",
 	"commentStamp" : "",
-	"category" : "EDA-Domain-Tests"
+	"classinstvars" : [ ],
+	"category" : "EDA-Domain-Tests",
+	"instvars" : [ ],
+	"name" : "EDATTestEvent"
 }

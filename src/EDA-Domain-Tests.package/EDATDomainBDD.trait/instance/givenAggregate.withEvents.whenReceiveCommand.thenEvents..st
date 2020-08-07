@@ -15,6 +15,6 @@ givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCo
 				event aggregateRootVersion: aCommand aggregateRootVersion + 1]
 			].
 			self assert: resultingEvents size equals: expectedResultingEvents size.
-			resultingEvents doWithIndex: [ :e :i | self assert: e equals: (expectedResultingEvents at: i) ]
+			resultingEvents doWithIndex: [ :e :i | self assert: (expectedResultingEvents at: i) equals: e ]
 			"self assertCollection: resultingEvents equals: expectedResultingEvents asOrderedCollection" ]
 		ifFalse: [ self fail: 'Aggregate root ' , anAggregateRootSymbol , ' does not know how to handle command ' , commandClassName ]
