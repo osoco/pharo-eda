@@ -3,5 +3,7 @@
 	"traitcomposition" : "EDATLogging",
 	"classtraitcomposition" : "EDATLogging classTrait",
 	"category" : "EDA-Domain-Tests",
-	"name" : "EDATDomainBDD"
+	"classinstvars" : [ ],
+	"name" : "EDATDomainBDD",
+	"instvars" : [ ]
 }

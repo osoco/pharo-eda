@@ -10,5 +10,5 @@ givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCo
 		ifTrue: [ | event |
 			event := aggregateRoot perform: handlerSelectorSymbol with: aCommand.
 			event aggregateRootVersion: aCommand aggregateRootVersion + 1.
-			self assert: event equals: expectedEvent ]
+			self assert: expectedEvent equals: event ]
 		ifFalse: [ self fail: 'Aggregate root ' , anAggregateRootSymbol , ' does not know how to handle command ' , commandClassName ]
