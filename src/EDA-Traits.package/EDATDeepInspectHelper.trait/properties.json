@@ -1,5 +1,7 @@
 {
-	"name" : "EDATDeepInspectHelper",
 	"commentStamp" : "",
-	"category" : "EDA-Traits"
+	"classinstvars" : [ ],
+	"category" : "EDA-Traits",
+	"instvars" : [ ],
+	"name" : "EDATDeepInspectHelper"
 }

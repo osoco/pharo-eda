@@ -1,5 +1,7 @@
 {
-	"name" : "EDATLanguageHelper",
 	"commentStamp" : "",
-	"category" : "EDA-Traits"
+	"classinstvars" : [ ],
+	"category" : "EDA-Traits",
+	"instvars" : [ ],
+	"name" : "EDATLanguageHelper"
 }

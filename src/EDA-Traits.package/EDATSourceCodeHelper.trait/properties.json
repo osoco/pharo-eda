@@ -3,5 +3,7 @@
 	"traitcomposition" : "EDATLanguageHelper",
 	"classtraitcomposition" : "EDATLanguageHelper classTrait",
 	"category" : "EDA-Traits",
-	"name" : "EDATSourceCodeHelper"
+	"classinstvars" : [ ],
+	"name" : "EDATSourceCodeHelper",
+	"instvars" : [ ]
 }

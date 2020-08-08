@@ -1,5 +1,7 @@
 {
-	"name" : "EDATMongoHelper",
 	"commentStamp" : "",
-	"category" : "EDA-Traits"
+	"classinstvars" : [ ],
+	"category" : "EDA-Traits",
+	"instvars" : [ ],
+	"name" : "EDATMongoHelper"
 }

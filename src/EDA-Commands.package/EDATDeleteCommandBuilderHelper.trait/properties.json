@@ -1,5 +1,7 @@
 {
-	"name" : "EDATDeleteCommandBuilderHelper",
 	"commentStamp" : "",
-	"category" : "EDA-Commands-Builders"
+	"classinstvars" : [ ],
+	"category" : "EDA-Commands-Builders",
+	"instvars" : [ ],
+	"name" : "EDATDeleteCommandBuilderHelper"
 }

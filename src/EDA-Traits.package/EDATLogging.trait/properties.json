@@ -1,5 +1,7 @@
 {
-	"name" : "EDATLogging",
 	"commentStamp" : "JoseSanLeandro 11/20/2018 06:18",
-	"category" : "EDA-Traits"
+	"classinstvars" : [ ],
+	"category" : "EDA-Traits",
+	"instvars" : [ ],
+	"name" : "EDATLogging"
 }
