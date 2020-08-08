@@ -1,5 +1,7 @@
 {
-	"name" : "EDATCollectionHelper",
 	"commentStamp" : "",
-	"category" : "EDA-Traits"
+	"classinstvars" : [ ],
+	"category" : "EDA-Traits",
+	"instvars" : [ ],
+	"name" : "EDATCollectionHelper"
 }

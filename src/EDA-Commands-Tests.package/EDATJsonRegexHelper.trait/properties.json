@@ -1,5 +1,7 @@
 {
-	"name" : "EDATJsonRegexHelper",
 	"commentStamp" : "",
-	"category" : "EDA-Commands-Tests"
+	"classinstvars" : [ ],
+	"category" : "EDA-Commands-Tests",
+	"instvars" : [ ],
+	"name" : "EDATJsonRegexHelper"
 }

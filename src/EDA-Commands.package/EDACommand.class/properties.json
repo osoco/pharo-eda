@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATCollectionHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"applicationKey",
@@ -8,12 +8,13 @@
 		"originalTimestamp",
 		"aggregateRootVersion",
 		"version",
-		"aggregateRootClass"
+		"aggregateRootClass",
+		"scopeContext"
 	],
 	"name" : "EDACommand",
 	"commentStamp" : "",
 	"super" : "Object",
-	"traitcomposition" : "EDAPrintOnHelper",
+	"traitcomposition" : "EDAPrintOnHelper + EDATCollectionHelper",
 	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],

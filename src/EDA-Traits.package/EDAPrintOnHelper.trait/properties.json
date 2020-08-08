@@ -1,5 +1,7 @@
 {
-	"name" : "EDAPrintOnHelper",
 	"commentStamp" : "",
-	"category" : "EDA-Traits"
+	"classinstvars" : [ ],
+	"category" : "EDA-Traits",
+	"instvars" : [ ],
+	"name" : "EDAPrintOnHelper"
 }
