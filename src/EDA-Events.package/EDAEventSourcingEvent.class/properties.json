@@ -7,7 +7,9 @@
 		"aggregateRootVersion",
 		"version",
 		"delete",
-		"aggregateRootClass"
+		"aggregateRootClass",
+		"scopeContext",
+		"scopeKey"
 	],
 	"name" : "EDAEventSourcingEvent",
 	"commentStamp" : "RafaelLuque 3/7/2017 09:25",

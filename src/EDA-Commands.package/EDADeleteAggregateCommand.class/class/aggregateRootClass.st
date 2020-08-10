@@ -1,0 +1,3 @@
+accessing
+aggregateRootClass
+	^ self subclassResponsibility

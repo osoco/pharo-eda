@@ -3,7 +3,9 @@ generateAggregateHandleCommandMethod
 	| result commandClass attrs cr |
 	cr := Character cr.
 	commandClass := self retrieveCommandClassName asSymbol.
-	attrs := self allAttributesOf: (self class environment at: commandClass) including: self retrieveCommandAttributes.
+	attrs := self
+		allAttributesOf: (self class environment at: commandClass)
+		including: self retrieveCommandAttributes.
 	result := WriteStream with: String new.
 	result
 		nextPutAll: (self generateAggregateHandleCommandMethodNameWithArg: 'aCommand');
@@ -25,15 +27,12 @@ generateAggregateHandleCommandMethod
 		nextPutAll: '	theCommandId := aCommand commandId.';
 		nextPut: cr.
 	result
-		nextPutAll: '	theAttrs := Dictionary new.';
+		nextPutAll: '	theAttrs := self class buildCommonArgsForCommand: aCommand.';
 		nextPut: cr.
-	result
-		nextPutAll: '	theAttrs at: ''version'' put: aCommand version.';
-		nextPut: cr.
-	result
-		nextPutAll: '	theAttrs at: ''aggregateRootVersion'' put: aCommand aggregateRootVersion.';
-		nextPut: cr.
-	(attrs reject: [ :attr | self class skippedEventAttributes anySatisfy: [ :skipped | attr = skipped ] ])
+	(attrs
+		reject: [ :attr |
+			self class skippedEventAttributes
+				anySatisfy: [ :skipped | attr = skipped ] ])
 		do: [ :attr | 
 			result
 				nextPutAll: '	aCommand ';

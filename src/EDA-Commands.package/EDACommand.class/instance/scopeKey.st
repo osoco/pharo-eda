@@ -1,6 +1,9 @@
 accessing
 scopeKey
-	^ self
-		extractScopeKey: (self scopeContext at: 'scopes')
-		target: (self scopeContext at: 'scope' ifAbsent: [ nil ])
-		accummulator: OrderedCollection new
+	^ self scopeContext
+		ifNil: [ nil ]
+		ifNotNil: [ :ctx |
+			self
+				extractScopeKey: (ctx at: 'scopes')
+				target: (ctx at: 'scope' ifAbsent: [ nil ])
+				accummulator: OrderedCollection new ]
