@@ -1,5 +1,5 @@
 tests
-testScope
+testScopeKey_when_scopeContext_is_provided
 	| expected actual scopeContext scopes tenant group subgroup command |
 	subgroup := Dictionary new.
 	subgroup at: 'id' put: 'subgroup-1'.

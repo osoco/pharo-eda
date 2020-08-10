@@ -4,7 +4,9 @@
 	"instvars" : [
 		"id",
 		"version",
-		"isDeleted"
+		"isDeleted",
+		"scopeContext",
+		"scopeKey"
 	],
 	"name" : "EDAAggregateRoot",
 	"commentStamp" : "",

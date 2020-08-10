@@ -1,3 +1,3 @@
 customization
 skippedAggregateAttributes
-	^ #('id' 'version')
+	^ #('id' 'version' 'scopeContext' 'scopeKey')

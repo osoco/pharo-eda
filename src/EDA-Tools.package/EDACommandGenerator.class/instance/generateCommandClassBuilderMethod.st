@@ -6,8 +6,13 @@ generateCommandClassBuilderMethod
 	method
 		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'the');
 		nextPut: cr.
-	cls := self class environment at: self retrieveCommandClassName asSymbol.
-	attrs := self allAttributesOf: cls including: (self retrieveCommandAttributesBut: self class skippedCommandAttributes).
+	cls := self class environment
+		at: self retrieveCommandClassName asSymbol.
+	attrs := self
+		allAttributesOf: cls
+		including:
+			(self
+				retrieveCommandAttributesBut: self class skippedCommandAttributes).
 	method nextPutAll: self generateSignature.
 	method
 		nextPutAll: '	<';
@@ -19,14 +24,10 @@ generateCommandClassBuilderMethod
 	method
 		nextPutAll: '	| result |';
 		nextPut: cr.
+	method nextPutAll: '	result := super '.
 	method
-		nextPutAll: '	result := self new.';
-		nextPut: cr.
-	method
-		nextPutAll: '	result commandId: theCommandId.';
-		nextPut: cr.
-	method
-		nextPutAll: '	result aggregateRootVersion: theVersion.';
+		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'the');
+		nextPut: $.;
 		nextPut: cr.
 	method
 		nextPutAll: '	result version: (theAttributes at: ''version'' ifAbsent: [ ';
@@ -45,5 +46,7 @@ generateCommandClassBuilderMethod
 	method nextPut: cr.
 	method nextPutAll: '	^ result'.
 	result := Dictionary new.
-	result at: self generateCommandClassBuilderMethodName put: method contents.
+	result
+		at: self generateCommandClassBuilderMethodName
+		put: method contents.
 	^ result

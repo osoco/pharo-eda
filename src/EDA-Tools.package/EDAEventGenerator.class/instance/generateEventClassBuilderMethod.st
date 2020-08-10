@@ -4,26 +4,23 @@ generateEventClassBuilderMethod
 	cr := Character cr.
 	methodName := self generateEventClassBuilderMethodName.
 	method := WriteStream with: String new.
-	method nextPutAll: (self generateEventClassBuilderMethodNameWithArgPrefix: 'the').
-	cls := self class environment at: self retrieveEventClassName asSymbol.
-	attrs := self allAttributesOf: cls including: (self retrieveEventAttributesBut: self class skippedEventAttributes).
+	method
+		nextPutAll: (self generateEventClassBuilderMethodNameWithArgPrefix: 'the').
+	cls := self class environment
+		at: self retrieveEventClassName asSymbol.
+	attrs := self
+		allAttributesOf: cls
+		including: (self retrieveEventAttributesBut: self class skippedEventAttributes).
 	method nextPut: cr.
 	method nextPutAll: self generateSignature.
 	method
 		nextPutAll: '	| result | ';
 		nextPut: cr.
+	method nextPutAll: '	result := super '.
 	method
-		nextPutAll: '	result := self new.';
+		nextPutAll: (self generateEventClassBuilderMethodNameWithArgPrefix: 'the');
+		nextPut: $.;
 		nextPut: cr.
-	method
-		nextPutAll: '	result id: theId.';
-		nextPut: cr.
-	method
-		nextPutAll: '	result commandId: theCommandId.';
-		nextPut: cr.
-	method nextPutAll: '	result timestamp: (theAttrs at: ''timestamp'' ifAbsent: [ DateAndTime now asUTC ]).'; nextPut: cr.
-	method nextPutAll: '	result version: (theAttrs at: ''version'').'; nextPut: cr.
-	method nextPutAll: '	result aggregateRootVersion: (theAttrs at: ''aggregateRootVersion'').'; nextPut: cr.
 	attrs
 		do: [ :attr | 
 			method
