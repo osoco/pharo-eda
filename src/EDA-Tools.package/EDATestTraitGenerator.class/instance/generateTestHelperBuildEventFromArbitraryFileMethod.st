@@ -7,12 +7,13 @@ generateTestHelperBuildEventFromArbitraryFileMethod
 	result := WriteStream on: String new.
 	result
 		nextPutAll:
-			(self	generateTestHelperBuildEventFromArbitraryFileMethodNameWithFileArg: 'aFile').
+			(self
+				generateTestHelperBuildEventFromArbitraryFileMethodNameWithFileArg: 'aFile').
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
 		nextPutAll:
-			'	| eventMessage eventJson eventMeta eventBody evtAttributes evtCommandId evtId evtTimestamp |';
+			'	| eventMessage eventJson eventMeta eventBody evtAttributes evtCommandId evtTenant evtId evtTimestamp |';
 		nextPut: cr.
 	result
 		nextPutAll: '	eventMessage := self readFile: aFile.';
@@ -37,19 +38,25 @@ generateTestHelperBuildEventFromArbitraryFileMethod
 			'	evtAttributes at: ''aggregateRootVersion'' put: (eventBody at: ''version'').';
 		nextPut: cr.
 	result
+		nextPutAll: '	evtTenant := eventBody at: ''tenant''.';
+		nextPut: cr.
+	result
 		nextPutAll: '	evtId := eventBody at: ''id''.';
 		nextPut: cr.
 	result
-		nextPutAll: '	evtCommandId := eventMeta at: ''correlationId'' ifAbsent: [ ''missing'' ].';
+		nextPutAll:
+			'	evtCommandId := eventMeta at: ''correlationId'' ifAbsent: [ ''missing'' ].';
 		nextPut: cr.
 	result
 		nextPutAll: '	evtTimestamp := eventBody at: ''timestamp'' ifAbsent: [ nil ].';
 		nextPut: cr.
 	result
-		nextPutAll: '	evtTimestamp ifNil: [ evtTimestamp := eventMeta at: ''timestamp'' ifAbsent: [ nil ] ].';
+		nextPutAll:
+			'	evtTimestamp ifNil: [ evtTimestamp := eventMeta at: ''timestamp'' ifAbsent: [ nil ] ].';
 		nextPut: cr.
 	result
-		nextPutAll: '	evtTimestamp ifNotNil: [ :t | evtAttributes at: ''timestamp'' put: evtTimestamp ].';
+		nextPutAll:
+			'	evtTimestamp ifNotNil: [ :t | evtAttributes at: ''timestamp'' put: evtTimestamp ].';
 		nextPut: cr.
 	eventAttrs
 		do: [ :attr | 
