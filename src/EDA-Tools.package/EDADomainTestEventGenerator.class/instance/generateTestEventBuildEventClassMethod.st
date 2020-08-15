@@ -7,13 +7,17 @@ generateTestEventBuildEventClassMethod
 		nextPutAll: (self generateTestEventBuildEventClassMethodNameWithArgPrefix: 'new');
 		nextPut: cr.
 	method nextPutAll: self generateSignature.
-	attrs := self retrieveEventAttributesBut: self class skippedCommandAttributes.
+	attrs := self
+		retrieveEventAttributesBut: self class skippedCommandAttributes.
 	method
 		nextPut: cr;
 		nextPutAll: '	| result |';
 		nextPut: cr.
 	method
 		nextPutAll: '	result := self new.';
+		nextPut: cr.
+	method
+		nextPutAll: '	result tenant: ''<ANYTHING>''.';
 		nextPut: cr.
 	method
 		nextPutAll: '	result id: ''<ANYTHING>''.';
@@ -41,5 +45,7 @@ generateTestEventBuildEventClassMethod
 		nextPut: cr;
 		nextPutAll: '	^ result'.
 	result := Dictionary new.
-	result at: self generateTestEventBuildEventClassMethodName put: method contents.
+	result
+		at: self generateTestEventBuildEventClassMethodName
+		put: method contents.
 	^ result

@@ -2,6 +2,7 @@
 	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATCollectionHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [
+		"tenant",
 		"applicationKey",
 		"commandId",
 		"aggregateRootId",
