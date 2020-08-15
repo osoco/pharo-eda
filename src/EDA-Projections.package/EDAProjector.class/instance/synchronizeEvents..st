@@ -1,4 +1,0 @@
-event synchronization
-synchronizeEvents: anEventCollection
-	"self synchronizeEventsBasedOnLastProjectedEventTimestamp: anEventCollection".
-	self projectFilteredEvents: anEventCollection

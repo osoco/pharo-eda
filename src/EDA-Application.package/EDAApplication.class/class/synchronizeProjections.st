@@ -1,3 +1,4 @@
 setup - projections
 synchronizeProjections
-	self projector project
+	self retrieveAllTenants do: [ :tenant | 
+	self projector projectOfTenant: tenant ]
