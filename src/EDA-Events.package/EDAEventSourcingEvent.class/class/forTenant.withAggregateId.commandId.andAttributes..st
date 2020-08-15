@@ -1,13 +1,15 @@
 meta
-withAggregateId: theId commandId: theCommandId andAttributes: theAttrs
+forTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs
 	| result scopeKey scopeContext |
 	result := self new.
+	result tenant: theTenant.
 	result id: theId.
 	result commandId: theCommandId.
 	result
 		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
 	result version: (theAttrs at: 'version' ifAbsent: [ 1 ]).
-	result aggregateRootVersion: (theAttrs at: 'aggregateRootVersion' ifAbsent: [ 0 ]).
+	result
+		aggregateRootVersion: (theAttrs at: 'aggregateRootVersion' ifAbsent: [ 0 ]).
 	scopeKey := theAttrs at: 'scopeKey' ifAbsent: [ nil ].
 	scopeKey ifNotNil: [ :sk | result scopeKey: sk ].
 	scopeContext := theAttrs at: 'scopeContext' ifAbsent: [ nil ].

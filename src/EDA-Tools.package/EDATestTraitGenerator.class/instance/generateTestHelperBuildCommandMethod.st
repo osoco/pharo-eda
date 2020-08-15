@@ -9,7 +9,8 @@ generateTestHelperBuildCommandMethod
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '    | commandMessage commandJson commandMeta commandBody cmdCommandId cmdVersion cmdContractVersion cmdAttributes result |';
+		nextPutAll:
+			'    | commandMessage commandJson commandMeta commandBody cmdTenant cmdCommandId cmdVersion cmdContractVersion cmdAttributes result |';
 		nextPut: cr.
 	result
 		nextPutAll: '	commandMessage := self read';
@@ -26,7 +27,12 @@ generateTestHelperBuildCommandMethod
 		nextPutAll: '	commandBody := commandJson at: #body.';
 		nextPut: cr.
 	result
-		nextPutAll: '	cmdCommandId := commandMeta at: ''id'' ifPresent: [ :v | v ] ifAbsent: [ UUID new greaseString ].';
+		nextPutAll:
+			'	cmdTenant := commandBody at: ''tenant'' ifPresent: [ :v | v ] ifAbsent: [ nil ].';
+		nextPut: cr.
+	result
+		nextPutAll:
+			'	cmdCommandId := commandMeta at: ''id'' ifPresent: [ :v | v ] ifAbsent: [ UUID new greaseString ].';
 		nextPut: cr.
 	result
 		nextPutAll: '	cmdAttributes := Dictionary new.';
@@ -56,21 +62,18 @@ generateTestHelperBuildCommandMethod
 				nextPut: cr ].
 	result nextPutAll: '	result := '.
 	self isDeleteCommand
-		ifTrue: [ 
-			result
-				nextPutAll: 'EDADeleteAggregateCommand'
-		] ifFalse: [
-			result
+		ifTrue: [ result nextPutAll: 'EDADeleteAggregateCommand' ]
+		ifFalse: [ result
 				nextPutAll: self appName;
-				nextPutAll: cmdName
-		].
+				nextPutAll: cmdName ].
 	result
 		nextPut: Character space;
 		nextPutAll: (self generateCommandClassBuilderMethodNameWithArgPrefix: 'cmd');
 		nextPut: $.;
 		nextPut: cr.
 	result
-		nextPutAll: '	commandBody at: ''id'' ifPresent: [ :v | result aggregateRootId: v ].';
+		nextPutAll:
+			'	commandBody at: ''id'' ifPresent: [ :v | result aggregateRootId: v ].';
 		nextPut: cr.
 	result
 		nextPutAll: '	result version: cmdContractVersion.';
@@ -80,5 +83,5 @@ generateTestHelperBuildCommandMethod
 		nextPut: cr.
 	result
 		nextPutAll: '	^ result';
-			nextPut: cr.
+		nextPut: cr.
 	^ result contents

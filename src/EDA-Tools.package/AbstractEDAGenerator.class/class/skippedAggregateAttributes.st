@@ -1,3 +1,3 @@
 customization
 skippedAggregateAttributes
-	^ #('id' 'version' 'scopeContext' 'scopeKey')
+	^ #('tenant' 'id' 'version' 'scopeContext' 'scopeKey')

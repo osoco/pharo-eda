@@ -1,3 +1,3 @@
 code generation
 generateTestHelperBuildEventClassMethodName
-	^ 'withAggregateId:commandId:andAttributes:'
+	^ 'forTenant:withAggregateId:commandId:andAttributes:'
