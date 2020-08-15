@@ -1,3 +1,0 @@
-projecting
-projectFilteredEvents: anEventCollection usingBlock: aBlock
-	self subclassResponsibility

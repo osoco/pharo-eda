@@ -1,5 +1,5 @@
 meta
-forTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs
+ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs
 	| result scopeKey scopeContext |
 	result := self new.
 	result tenant: theTenant.
