@@ -6,7 +6,7 @@ sourceEvents: anEventStore ofTenant: aTenant
 		in: self class) collect: [ :p | p arguments first ]) flattened.
 	aux := OrderedCollection new.
 	eventTypes
-		do: [ :t | 
+		do: [ :t |
 			aux
 				addAll: (anEventStore findEventsOfTenant: aTenant ofType: (self class environment at: t)) ].
 	result := self

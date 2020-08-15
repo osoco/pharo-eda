@@ -3,7 +3,7 @@ processGeneratedEvents: producedEvents forCommand: aCommand onAggregateRoot: anA
 	| message |
 	message := ''.
 	producedEvents
-		do: [ :event | 
+		do: [ :event |
 			event aggregateRootVersion: aCommand aggregateRootVersion + 1.
 			message := message , ' ' , event class name ].
 	self

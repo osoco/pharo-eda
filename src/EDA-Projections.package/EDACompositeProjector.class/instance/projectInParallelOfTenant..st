@@ -4,11 +4,11 @@ projectInParallelOfTenant: aTenant
 	semaphore := Semaphore new.
 	self class headlessMode
 		ifTrue: [ self projectors
-				do: [ :projector | 
+				do: [ :projector |
 					[ self delegateProjectionTo: projector ofTenant: aTenant.
 					semaphore signal ] fork ] ]
 		ifFalse: [ self projectors
-				do: [ :projector | 
+				do: [ :projector |
 					[ self delegateProjectionTo: projector ofTenant: aTenant.
 					semaphore signal ] fork ]
 				displayingProgress:
