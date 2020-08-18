@@ -1,3 +1,3 @@
 code generation
 generateEventClassBuilderMethodName
-	^ 'forTenant:withAggregateId:commandId:andAttributes:'
+	^ 'ofTenant:withAggregateId:commandId:andAttributes:'
