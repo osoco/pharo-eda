@@ -17,12 +17,15 @@ generateAggregateHandleCommandMethod
 		nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: '	| theId theCommandId theAttrs |';
+		nextPutAll: '	| theTenant theId theCommandId theAttrs |';
 		nextPut: cr.
 	(self commandContainsAttribute: 'id')
 		ifTrue: [ result nextPutAll: '	theId := aCommand aggregateRootId.' ]
 		ifFalse: [ result nextPutAll: '	theId := UUID new greaseString.' ].
 	result nextPut: cr.
+	result
+		nextPutAll: '	theTenant := aCommand tenant.';
+		nextPut: cr.
 	result
 		nextPutAll: '	theCommandId := aCommand commandId.';
 		nextPut: cr.

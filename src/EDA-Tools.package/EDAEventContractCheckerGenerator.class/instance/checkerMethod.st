@@ -41,7 +41,7 @@ checkerMethod
 				remove: self appName
 				fromBeginningOf: self retrieveEventClassName);
 		nextPutAll:
-			' fromEvent: ((self class environment at: eventClass asSymbol) forTenant: (attrs at: ''tenant'') withAggregateId: id commandId: commandId andAttributes: attrs).';
+			' fromEvent: ((self class environment at: eventClass asSymbol) ofTenant: (attrs at: ''tenant'' ifAbsent: [ nil ]) withAggregateId: id commandId: commandId andAttributes: attrs).';
 		nextPut: cr.
 	result
 		nextPutAll: '	self assert: (event attribute: event id matches: id).';
