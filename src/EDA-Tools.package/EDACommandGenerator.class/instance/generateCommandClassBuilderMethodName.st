@@ -1,3 +1,3 @@
 code generation
 generateCommandClassBuilderMethodName
-	^ 'forTenant:withCommandId:aggregateRootVersion:andAttributes:'
+	^ 'ofTenant:withCommandId:aggregateRootVersion:andAttributes:'

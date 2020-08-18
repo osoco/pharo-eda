@@ -1,12 +1,12 @@
 api
-findAllWithApplyEventsBlock: aBlock
+findAllOfTenant: aTenant withApplyEventsBlock: aBlock
 	| result events aux aggregateClass |
 	result := OrderedCollection new.
 	aggregateClass := self aggregateClass.
-	events := self findAllEvents.
+	events := self findAllEventsOfTenant: aTenant.
 	aux := self groupEventsByAggregateRootId: events.
 	aux
-		keysAndValuesDo: [ :key :eventList | 
+		keysAndValuesDo: [ :key :eventList |
 			| aggregate |
 			aggregate := aggregateClass new.
 			aBlock value: aggregate value: eventList.

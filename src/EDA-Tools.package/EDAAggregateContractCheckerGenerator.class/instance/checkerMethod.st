@@ -11,7 +11,7 @@ checkerMethod
 		nextPutAll: '	self assert: ((';
 		nextPutAll: self retrieveAggregateClassName;
 		nextPutAll:
-			' thoroughWhichSelectorsReferTo: #forTenant:withAggregateId:commandId:andAttributes:) select: [ :methodName | methodName = ''handle';
+			' thoroughWhichSelectorsReferTo: #ofTenant:withAggregateId:commandId:andAttributes:) select: [ :methodName | methodName = ''handle';
 		nextPutAll: (self underscoreSeparatedToCamelCase: commandName);
 		nextPutAll: ':'']) isNotEmpty.';
 		nextPut: cr.
