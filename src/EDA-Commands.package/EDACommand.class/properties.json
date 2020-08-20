@@ -10,7 +10,8 @@
 		"aggregateRootVersion",
 		"version",
 		"aggregateRootClass",
-		"scopeContext"
+		"scopeContext",
+		"agent"
 	],
 	"name" : "EDACommand",
 	"commentStamp" : "",
