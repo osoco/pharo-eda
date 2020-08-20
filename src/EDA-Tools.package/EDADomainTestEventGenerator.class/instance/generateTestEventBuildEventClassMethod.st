@@ -17,7 +17,7 @@ generateTestEventBuildEventClassMethod
 		nextPutAll: '	result := self new.';
 		nextPut: cr.
 	method
-		nextPutAll: '	result tenant: ''<ANYTHING>''.';
+		nextPutAll: '	result tenant: newEvent tenant.';
 		nextPut: cr.
 	method
 		nextPutAll: '	result id: ''<ANYTHING>''.';
