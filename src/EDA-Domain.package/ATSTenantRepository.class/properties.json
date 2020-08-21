@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "EDA-Domain-Repository",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"eventStore"
+	],
+	"name" : "ATSTenantRepository",
+	"type" : "normal"
+}
