@@ -6,7 +6,8 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"projection"
+		"projection",
+		"tenant"
 	],
 	"name" : "EDAProjectionLogEvent",
 	"type" : "normal"

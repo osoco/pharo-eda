@@ -1,5 +1,5 @@
 persistence
-findAll
+findAllOfTenant: aTenant
 	^ self voyageRepository
 		ifNil: [ OrderedCollection new ]
-		ifNotNil: [ :r | r findAll: self ]
+		ifNotNil: [ :r | r findAllOfTenant: self ]
