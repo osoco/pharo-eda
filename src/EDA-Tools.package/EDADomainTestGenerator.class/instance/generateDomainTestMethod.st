@@ -18,7 +18,7 @@ generateDomainTestMethod
 		nextPut: cr.
 	result
 		nextPutAll: '	event := self build'.
-	self isDeleteEvent
+	self isDeletedEvent
 		ifTrue: [
 			result
 				nextPutAll: 'DeletedEventWithId: ''<ANYTHING>'' ';

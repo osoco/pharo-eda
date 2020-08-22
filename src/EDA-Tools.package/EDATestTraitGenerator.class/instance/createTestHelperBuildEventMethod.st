@@ -2,7 +2,7 @@ code generation
 createTestHelperBuildEventMethod
 	^ (Smalltalk at: self retrieveTestHelperTraitName asSymbol)
 		compile:
-			(self isDeleteEvent
+			(self isDeletedEvent
 				ifTrue: [
 					self generateTestHelperBuildDeleteEventMethod
 				] ifFalse: [

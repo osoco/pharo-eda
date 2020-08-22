@@ -1,7 +1,7 @@
 code generation
 createDomainTestEventClass
 	| cls parent parentSymbol |
-	parentSymbol := self isDeleteEvent
+	parentSymbol := self isDeletedEvent
 		ifTrue: [ (self appName , (self toCamelCase: self eventName)) asSymbol ]
 		ifFalse: [ self retrieveEventClassName asSymbol].
 	parent := self class environment at: parentSymbol.

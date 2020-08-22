@@ -37,7 +37,7 @@ generateIntegrationTestMethod
 	result
 		nextPutAll: '	aggregateRootId := command aggregateRootId.';
 		nextPut: cr.
-	self isDeleteEvent ifTrue: [
+	self isDeletedEvent ifTrue: [
 			result
 				nextPutAll: '	expectedEvent := self buildDeletedEventWithId: aggregateRootId andCommand: command.'
 		] ifFalse: [
