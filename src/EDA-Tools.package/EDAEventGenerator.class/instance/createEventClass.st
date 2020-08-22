@@ -5,7 +5,7 @@ createEventClass
 	attributes := self retrieveEventAttributesBut: self class skippedEventAttributes.
 	(self classExists: cls)
 		ifTrue: [ attributes := self allAttributesOf: (self class environment at: cls) including: attributes ].
-	parent := self isDeleteEvent ifTrue: [ EDADeleteCommandResultEvent ] ifFalse: [ EDACommandResultEvent ].
+	parent := self isDeletedEvent ifTrue: [ EDADeleteCommandResultEvent ] ifFalse: [ EDACommandResultEvent ].
 	parent
 		subclass: cls
 		uses: ATSTEvent

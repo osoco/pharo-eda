@@ -1,7 +1,7 @@
 code generation
 createAggregateApplyEventVersionMethod
 	| result |
-	result := self isDeleteEvent
+	result := self isDeletedEvent
 		ifTrue: [ nil ]
 		ifFalse: [
 			self

@@ -40,7 +40,7 @@ generateDomainTestEventEqualsMethod
 	result
 		nextPutAll:
 			'							(self attribute: self commandId named: ''correlationId'' matches: anInstance commandId) '.
-	self isDeleteEvent
+	self isDeletedEvent
 		ifFalse: [ eventAttributes isNotEmpty
 				ifTrue: [ result
 						nextPutAll: 'and: [';

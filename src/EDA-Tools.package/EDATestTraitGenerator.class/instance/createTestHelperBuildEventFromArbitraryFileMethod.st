@@ -1,6 +1,6 @@
 code generation
 createTestHelperBuildEventFromArbitraryFileMethod
-	self isDeleteEvent
+	self isDeletedEvent
 		ifFalse: [
 			(Smalltalk at: self retrieveTestHelperTraitName asSymbol)
 			compile:	self generateTestHelperBuildEventFromArbitraryFileMethod
