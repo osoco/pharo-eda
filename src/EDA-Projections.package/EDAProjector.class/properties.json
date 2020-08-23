@@ -4,7 +4,8 @@
 		"HeadlessMode"
 	],
 	"instvars" : [
-		"eventStore"
+		"eventStore",
+		"tenant"
 	],
 	"name" : "EDAProjector",
 	"commentStamp" : "",
@@ -13,7 +14,7 @@
 	"type" : "normal",
 	"classinstvars" : [
 		"errorStrategy",
-		"synchronizationInProgress"
+		"synchronizationInProgressByTenant"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Projections-Projectors"

@@ -3,7 +3,7 @@ projectOfTenant: aTenant
 	| start end |
 	(self class synchronizationInProgressOfTenant: aTenant)
 		ifTrue: [ ^ self ].
-	self class synchronizationInProgress: true ofTenant: aTenant.
+	self class synchronizationInProgressOfTenant: aTenant is: true.
 	start := DateAndTime now.
 	self class concurrentSynchronization
 		ifTrue: [ self projectInParallelOfTenant: aTenant ]

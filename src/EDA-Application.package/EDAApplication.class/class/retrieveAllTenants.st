@@ -1,0 +1,3 @@
+multitenancy support
+retrieveAllTenants
+	self shouldBeImplemented

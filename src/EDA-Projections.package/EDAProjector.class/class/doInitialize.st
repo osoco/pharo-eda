@@ -1,4 +1,4 @@
 class initialization
 doInitialize
 	self errorStrategy: nil.
-	self synchronizationInProgress: false
+	synchronizationInProgressByTenant := Dictionary new
