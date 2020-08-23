@@ -7,7 +7,7 @@ doSetup
 	self setupEventStore.
 	self setupRepositories.
 	self setupProjections.
-	self setupProjector.
+	self setupProjectors.
 	self projectionSynchronizationEnabled
 		ifTrue: [ self synchronizeProjections ].
 	self setupCommandDispatcher.

@@ -18,7 +18,8 @@
 		"commandListenerClientDebug",
 		"isConfigured",
 		"isStarted",
-		"projector"
+		"projectors",
+		"projectorsByTenant"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Application"

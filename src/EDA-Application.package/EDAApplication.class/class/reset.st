@@ -5,7 +5,7 @@ reset
 	self resetEventStore.
 	self resetRepositories.
 	self resetProjections.
-	self resetProjector.
+	self resetProjectors.
 	self resetCommandDispatcher.
 	self resetCommandConsumer.
 	self resetEventSubscriptions.

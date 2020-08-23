@@ -1,9 +1,9 @@
 api
 projectOfTenant: aTenant
 	| projectionSourceEvents |
-	self class synchronizationInProgressOfTenant: aTenant
+	(self class synchronizationInProgressOfTenant: aTenant)
 		ifTrue: [ ^ self ].
-	self class synchronizationInProgress: true ofTenant: aTenant.
+	self class synchronizationInProgressOfTenant: aTenant is: true.
 	self
 		logDebugMessage:
 			'Projection request for ' , self class projectionClass greaseString
