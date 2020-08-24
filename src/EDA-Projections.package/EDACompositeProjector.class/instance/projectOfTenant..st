@@ -12,4 +12,4 @@ projectOfTenant: aTenant
 	self class
 		annotateDuration: end - start
 		forProjector: self class greaseString.
-	self class synchronizationInProgress: false
+	self class synchronizationInProgressOfTenant: aTenant is: false
