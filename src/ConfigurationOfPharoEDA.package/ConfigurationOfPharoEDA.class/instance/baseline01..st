@@ -14,8 +14,7 @@ baseline01: spec
 						repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock2/main/' ];
 				project: 'VoyageMongo'
 					with: [ spec
-						className: #ConfigurationOfVoyageMongo;
-						versionString: #development;
+						className: #BaselineOfVoyage;
 						repository: 'github://pharo-nosql/voyage:1.5/mc';
 						loads: #('core' 'memory') ];
 				project: 'Stamp'
