@@ -14,4 +14,4 @@ projectOfTenant: aTenant
 		logDebugMessage:
 			'End of projection request ' , self class projectionClass greaseString
 				, '.'.
-	self class synchronizationInProgress: false ofTenant: aTenant
+	self class synchronizationInProgressOfTenant: aTenant is: false
