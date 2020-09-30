@@ -17,7 +17,7 @@ initBackendRepository
 		ifFalse: [ result disableSingleton ].
 	result ensuringCurrentOnSave: self class ensuringCurrentOnSave.
 	result ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
-	result forceEager: self class forceEager.
+"	result forceEager: self class forceEager."
 	result lazySynchronize: self class lazySynchronize.
 	result wireProtocolEnabled: self class wireProtocolEnabled.
 	^ result
