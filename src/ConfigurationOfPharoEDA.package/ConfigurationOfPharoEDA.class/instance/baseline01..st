@@ -15,8 +15,8 @@ baseline01: spec
 				project: 'VoyageMongo'
 					with: [ spec
 						className: 'BaselineOfVoyage';
-						repository: 'github://pharo-nosql/voyage:1.6/mc';
-						loads: 'mongo tests' ];
+						repository: 'github://pharo-nosql/voyage:1.5/mc';
+						loads: #('core' 'memory') ];
 				project: 'Stamp'
 					with: [ spec
 						className: #ConfigurationOfStamp;
