@@ -2,7 +2,7 @@
 	"classtraitcomposition" : "EDATLogging classTrait",
 	"classvars" : [ ],
 	"instvars" : [
-		"projectors"
+		"projectorsByTenant"
 	],
 	"name" : "EDACompositeProjector",
 	"commentStamp" : "",
