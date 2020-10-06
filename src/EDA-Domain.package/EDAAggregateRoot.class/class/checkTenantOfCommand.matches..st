@@ -2,5 +2,5 @@ helpers
 checkTenantOfCommand: tenantOfCommand matches: tenantOfAggregate
 	tenantOfCommand isNil
 		ifTrue: [ InvalidTenant signal ].
-	tenantOfCommand = tenantOfAggregate
+	(tenantOfAggregate isNotNil and: [ tenantOfCommand = tenantOfAggregate ])
 		ifFalse: [ InvalidTenant signal ]
