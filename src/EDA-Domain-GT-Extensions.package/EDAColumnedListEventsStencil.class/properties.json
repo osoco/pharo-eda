@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "BrStencil",
+	"category" : "EDA-Domain-GT-Extensions-Stencils",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"events"
+	],
+	"name" : "EDAColumnedListEventsStencil",
+	"type" : "normal"
+}
