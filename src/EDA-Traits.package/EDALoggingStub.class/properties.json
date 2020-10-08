@@ -2,7 +2,7 @@
 	"classtraitcomposition" : "EDATLogging classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "EDATLoggingStub",
+	"name" : "EDALoggingStub",
 	"commentStamp" : "JoseSanLeandro 12/14/2018 18:23",
 	"super" : "Object",
 	"traitcomposition" : "EDATLogging",
