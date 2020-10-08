@@ -10,4 +10,4 @@ To add EDATLogging-based logging to ZnLogEvent class, add an extension method su
 "*EDA-Logging"
 logToStdout
 	self stopLoggingToTranscript.
-   	^ self announcer when: ZnLogEvent do: [ :event | EDATLoggingStub new logInfoMessage: event ]
+	^ self announcer when: ZnLogEvent do: [ :event | EDATLoggingStub new logInfoMessage: event ]

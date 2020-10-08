@@ -1,9 +1,9 @@
 persistence
 findEventsOfTenant: aTenant ofType: anEventClass whereCriteria: aCriteria
 	| criteria |
-	criteria := {('#instanceOf' -> anEventClass greaseString)}
-		asDictionary.
-	criteria addAll: aCriteria.
+	criteria := Dictionary newFrom: aCriteria.
+	criteria at: '#instanceOf' put: anEventClass greaseString.
 	^ self
-		findEventsOfTenant: aTenant ofAggregate: anEventClass aggregateRootClass
+		findEventsOfTenant: aTenant
+		ofAggregate: anEventClass aggregateRootClass
 		whereCriteria: criteria
