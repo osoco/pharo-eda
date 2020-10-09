@@ -12,6 +12,6 @@ create
 		timelineLabelFormat: [ :eachDateAndTime | 
 			eachDateAndTime asRopedText glamorousRegularFontAndSize
 				foreground: Color darkGray ];
-		timelineFrom: events first timestamp - 4 days to: DateAndTime now;
+		timelineFrom: events first timestamp - 4 days to: events last timestamp + 4 days;
 		with: eventsData;
 		yourself
