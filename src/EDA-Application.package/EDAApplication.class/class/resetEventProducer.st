@@ -1,4 +1,4 @@
 reset - events
 resetEventProducer
-	self
-		eventProducer: nil
+	self eventProducer ifNotNil: [ :producer | producer close ].
+	self eventProducer: nil
