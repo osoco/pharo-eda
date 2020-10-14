@@ -8,4 +8,16 @@ commandListenerSettingsOn: aBuilder under: parent
 		stompListenerSettingsOn: aBuilder
 		withConfig: EDACommandStompTopicListener
 		under: #commandListener
-		populatedWithValuesFrom: 'commandListener'
+		populatedWithValuesFrom: 'commandListener'.
+	(aBuilder pickOne: #strategy)
+		parent: #commandListener;
+		target: EDACommandConsumingErrorBehavior;
+		label: 'Command Consuming Error' translated;
+		description: 'Strategy when dealing with command consuming errors';
+		order: 1;
+		domainValues:
+			(EDAErrorHandlingStrategy subclasses
+				collect:
+					[ :strategy | strategy description translated -> strategy greaseString ]);
+		default: EDAPublishMessageErrorStrategy greaseString.
+	^ self
