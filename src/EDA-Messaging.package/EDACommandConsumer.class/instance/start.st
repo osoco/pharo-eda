@@ -7,9 +7,15 @@ start
 		subscribe;
 		onMessageDo: [ :message | 
 			Transcript flush.
-			self consumeCommandMessage: message ].
+			self
+				consumeCommandMessage: message
+				usingErrorStrategy: self class errorStrategy ].
 	listener
 		on: Error
 		do: [ :error | 
-			self logErrorMessage: 'Error in Command Consumer''s listener: ' , error description greaseString.
+			self manageError: error usingErrorStrategy: self class errorStrategy.
+			self
+				logErrorMessage:
+					'Error in Command Consumer''s listener: '
+						, error description greaseString.
 			self restart ]

@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATLogging classTrait",
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATLogging classTrait + EDATErrorHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"busListener",
@@ -9,7 +9,7 @@
 	"name" : "EDACommandConsumer",
 	"commentStamp" : "",
 	"super" : "Object",
-	"traitcomposition" : "EDAPrintOnHelper + EDATLogging",
+	"traitcomposition" : "EDAPrintOnHelper + EDATLogging + EDATErrorHelper",
 	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],
