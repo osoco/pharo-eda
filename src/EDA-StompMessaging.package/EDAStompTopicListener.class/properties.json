@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATErrorHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"client",
@@ -10,7 +10,7 @@
 	"name" : "EDAStompTopicListener",
 	"commentStamp" : "JoseSanLeandro 9/22/2015 06:15",
 	"super" : "EDATopicListener",
-	"traitcomposition" : "EDAPrintOnHelper",
+	"traitcomposition" : "EDAPrintOnHelper + EDATErrorHelper",
 	"type" : "normal",
 	"classinstvars" : [
 		"username",

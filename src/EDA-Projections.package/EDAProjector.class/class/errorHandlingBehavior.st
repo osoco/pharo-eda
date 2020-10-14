@@ -1,3 +1,3 @@
 accessing
-errorStrategy
+errorHandlingBehavior
 	self subclassResponsibility

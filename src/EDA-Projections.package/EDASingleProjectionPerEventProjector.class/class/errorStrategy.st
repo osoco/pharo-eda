@@ -1,3 +1,0 @@
-accessing
-errorStrategy
-	self subclassResponsibility
