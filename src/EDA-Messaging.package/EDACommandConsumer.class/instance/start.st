@@ -9,9 +9,9 @@ start
 			Transcript flush.
 			self
 				consumeCommandMessage: message
-				usingErrorStrategy: self class errorStrategy ].
+				usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ].
 	listener
 		on: Error
 		do: [ :error | 
-			self manageError: error usingErrorStrategy: self class errorStrategy.
+			self manageError: error usingErrorStrategy: EDACommandConsumingErrorBehavior strategy.
 			self restart ]
