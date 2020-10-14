@@ -14,8 +14,8 @@ checkNewStoredEvents: expectedNewStoredEvents ofTenant: aTenant givenPreviousEve
 					| serializer |
 					serializer := self buildEventSerializer.
 					self
-						assertEvent: (serializer writeEvent: (storedEvents at: index))
-						matchesEventRegex: (serializer writeEvent: eventMessageRegex) ] ]
+						assertEvent: (serializer serialize: (storedEvents at: index))
+						matchesEventRegex: (serializer serialize: eventMessageRegex) ] ]
 		ifNil: [ allEvents := self application eventStore allEventsOfTenant: aTenant.
 			self
 				assert: allEvents
