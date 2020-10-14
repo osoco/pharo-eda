@@ -1,20 +1,17 @@
 {
-	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
-	"classvars" : [ ],
-	"instvars" : [
-		"writer",
-		"errorWriter",
-		"extraContextInformation",
-		"context"
-	],
-	"name" : "EDAJsonErrorSerializer",
 	"commentStamp" : "",
 	"super" : "EDAMessageSerializer",
-	"traitcomposition" : "EDAPrintOnHelper",
-	"type" : "normal",
+	"category" : "EDA-Errors-Strategies",
 	"classinstvars" : [
+		"context",
 		"extraContextInformation"
 	],
 	"pools" : [ ],
-	"category" : "EDA-Errors-Strategies"
+	"classvars" : [ ],
+	"instvars" : [
+		"context",
+		"extraContextInformation"
+	],
+	"name" : "EDAJsonErrorSerializer",
+	"type" : "normal"
 }

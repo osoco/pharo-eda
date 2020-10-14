@@ -1,6 +1,3 @@
 instance creation
 withContext: aContext andExtraContextInformation: aDictionary
-	^ self new
-		context: aContext;
-		extraContextInformation: aDictionary;
-		yourself
+	^ self new context: aContext; extraContextInformation: aDictionary; yourself
