@@ -9,14 +9,14 @@ writeMessage: aString withBasename: aBasename
 	serializer analyzer
 		when: [ :o | o class isObsolete ]
 		substituteBy: [ :o | nil ].
-	aStream := GZipWriteStream on: (ByteArray new: 100).
+	aStream := WriteStream on: (ByteArray new: 100).
 	serializer serialize: aString on: aStream.
 	aStream close.
 	stderr
 		nextPutAll: 'Serialized message';
 		nextPut: Character cr.
-	result := aBasename , '.message'.
+	result := aBasename , '.message.txt'.
 	file := FileSystem disk workingDirectory / result.
-	(WriteStream on: file) nextPutAll: aStream encodedStream contents.
-	file close.
+	file writeStream
+		nextPutAll: aStream encodedStream contents; close.
 	^ result

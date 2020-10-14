@@ -3,7 +3,7 @@ writeFuelContext: aContext named: aString
 	| file stderr serializer aStream result |
 	stderr := Stdio stderr.
 	stderr nextPut: Character cr.
-"	serializer := FLSerializer newDefault.
+	serializer := FLSerializer newDefault.
 	serializer analyzer
 		when: [ :o | o class isObsolete ]
 		substituteBy: [ :o | nil ].
@@ -13,8 +13,10 @@ writeFuelContext: aContext named: aString
 	stderr
 		nextPutAll: 'Serialized context';
 		nextPut: Character cr.
-"	result := Time now yyyyMMhhmmss24 , '-' , aString.
-"	file := FileSystem disk workingDirectory / (result , '.zip').
-	(WriteStream on: file) nextPutAll: aStream encodedStream contents.
-	file close."
+
+	result := Time now yyyyMMhhmmss24 , '-' , aString.
+	file := FileSystem disk workingDirectory / (result , '.zip').
+	file writeStream
+		nextPutAll: aStream encodedStream contents;
+		close.
 	^ result
