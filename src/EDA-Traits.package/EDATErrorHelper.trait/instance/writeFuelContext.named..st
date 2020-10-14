@@ -1,7 +1,7 @@
 handling
 writeFuelContext: aContext named: aString
 	| file stderr serializer aStream result |
-	stderr := Stdio stderr.
+	"stderr := Stdio stderr.
 	stderr nextPut: Character cr.
 	serializer := FLSerializer newDefault.
 	serializer analyzer
@@ -12,11 +12,10 @@ writeFuelContext: aContext named: aString
 	aStream close.
 	stderr
 		nextPutAll: 'Serialized context';
-		nextPut: Character cr.
-
+		nextPut: Character cr."
 	result := Time now yyyyMMhhmmss24 , '-' , aString.
-	file := FileSystem disk workingDirectory / (result , '.zip').
+	"file := FileSystem disk workingDirectory / (result , '.zip').
 	file writeStream
 		nextPutAll: aStream encodedStream contents;
-		close.
+		close."
 	^ result
