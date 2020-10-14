@@ -44,4 +44,8 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 							aClient writeWithReceipt: nack.
 							self
 								logDebugMessage: 'NACK message sent ' , message greaseString , '.' ].
-							self manageError: ex forMessage: message usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ]
+					self logDebugMessage: 'Delegating error handling to ', EDACommandConsumingErrorBehavior strategy.
+					self
+						manageError: ex
+						forMessage: message
+						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ]
