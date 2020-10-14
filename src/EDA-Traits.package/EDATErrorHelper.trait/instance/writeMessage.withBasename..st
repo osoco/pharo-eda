@@ -18,5 +18,6 @@ writeMessage: aString withBasename: aBasename
 	result := aBasename , '.message.txt'.
 	file := FileSystem disk workingDirectory / result.
 	file writeStream
-		nextPutAll: aStream encodedStream contents; close.
+		nextPutAll: aStream contents;
+		close.
 	^ result

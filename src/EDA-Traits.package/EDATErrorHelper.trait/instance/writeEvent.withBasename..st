@@ -17,5 +17,7 @@ writeEvent: anEvent withBasename: aBasename
 		nextPut: Character cr.
 	result := aBasename , '.event.txt'.
 	file := FileSystem disk workingDirectory / result.
-	file writeStream nextPutAll: aStream encodedStream contents; close.
+	file writeStream
+		nextPutAll: aStream contents;
+		close.
 	^ result
