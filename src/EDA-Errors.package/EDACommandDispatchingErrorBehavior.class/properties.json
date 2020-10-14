@@ -1,0 +1,13 @@
+{
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "EDACommandDispatchingErrorBehavior",
+	"commentStamp" : "",
+	"super" : "EDAErrorBehavior",
+	"traitcomposition" : "EDAPrintOnHelper",
+	"type" : "normal",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"category" : "EDA-Errors-Behaviors"
+}
