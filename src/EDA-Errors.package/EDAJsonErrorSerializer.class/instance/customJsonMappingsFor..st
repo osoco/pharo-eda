@@ -1,13 +1,11 @@
-parsing
-customJsonMappingsFor: jsonWriter
-	jsonWriter
+customization
+customJsonMappingsFor: aJsonWriter
+	aJsonWriter
 		for: Context
 		customDo: [ :mapping | 
 			mapping
 				encoder: [ :ctx | 
-					| contextDict stream |
-					contextDict := Dictionary new.
+					| stream |
 					stream := WriteStream on: String new.
-					context stack printOn: stream.
-					contextDict at: #context put: stream contents.
-					contextDict ] ]
+					ctx printOn: stream.
+					stream contents ] ]

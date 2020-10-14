@@ -1,17 +1,20 @@
 parsing
-serialize: anError withContext: aContext andExtraContextInformation: aDictionary
-	| aux body meta |
+serialize: anException withContext: aContext andExtraContextInformation: aDictionary
+	| result meta body |
+	result := Dictionary new.
+	meta := Dictionary new.
+	meta at: #timestamp put: DateAndTime now asUTC rounded greaseString.
+	meta at: #error put: anException description.
 	body := Dictionary newFrom: aDictionary.
 	body at: #context put: aContext.
-	meta := Dictionary new.
-	meta at: #error put: anError description.
-	meta at: #timestamp put: DateAndTime now greaseString.
-	aux := Dictionary new.
-	aux at: #body put: body.
-	aux at: #meta put: meta.
+	result at: #meta put: meta.
+	result at: #body put: body.
 	^ String
 		streamContents: [ :stream | 
-			| writer |
-			writer := NeoJSONWriter on: stream.
-			self customJsonMappingsFor: writer.
-			writer nextPut: aux ]
+			| jsonWriter |
+			jsonWriter := NeoJSONWriter on: stream.
+			jsonWriter
+				for: DateAndTime
+				customDo: [ :mapping | mapping encoder: [ :tmst | tmst printString ] ].
+			self customJsonMappingsFor: jsonWriter.
+			jsonWriter nextPut: result ]

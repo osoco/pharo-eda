@@ -2,10 +2,7 @@
 	"commentStamp" : "",
 	"super" : "EDAMessageSerializer",
 	"category" : "EDA-Errors-Strategies",
-	"classinstvars" : [
-		"context",
-		"extraContextInformation"
-	],
+	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [

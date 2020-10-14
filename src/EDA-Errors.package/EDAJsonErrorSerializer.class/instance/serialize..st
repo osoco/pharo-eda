@@ -1,3 +1,3 @@
 parsing
-serialize: anError
-	^ self serialize: anError withContext: self context andExtraContextInformation: self extraContextInformation
+serialize: anException
+	^ self serialize: anException withContext: self context andExtraContextInformation: self extraContextInformation
