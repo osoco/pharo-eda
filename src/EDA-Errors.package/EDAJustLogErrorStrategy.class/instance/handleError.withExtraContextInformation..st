@@ -13,7 +13,8 @@ handleError: anException withExtraContextInformation: aDictionary
 					'Projection of event ' , event greaseString , ' in projections '
 						, projections greaseString , ' failed with error '
 						, anException description , '.' ]
-		ifNotNil: [ self
+		ifNotNil: [ :arg | 
+			self
 				logWarningMessage:
 					'Projection of event ' , event greaseString , ' in projection '
 						, projection greaseString , ' failed with error '

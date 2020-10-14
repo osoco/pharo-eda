@@ -1,3 +1,3 @@
 logging
 stderr
-	^ FileStream stderr
+	^ Stdio stderr
