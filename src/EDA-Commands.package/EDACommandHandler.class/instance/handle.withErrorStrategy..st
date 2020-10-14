@@ -28,7 +28,6 @@ handle: aCommand withErrorStrategy: strategy
 					processedEvents := self
 						manageError: exception
 						forCommand: aCommand
-						producedEvents: evts
 						usingErrorStrategy: strategy ] ].
 	eventBus produceEvents: processedEvents.
 	^ self
