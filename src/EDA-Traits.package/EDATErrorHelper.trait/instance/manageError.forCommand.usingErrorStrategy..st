@@ -1,6 +1,6 @@
 handling
 manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy
-	| errorHandler result context basename |
+	| errorHandler result context basename dictionary |
 	context := thisContext clone.
 	basename := self
 		writeFuelContext: context
@@ -8,5 +8,7 @@ manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy
 	self writeCommand: aCommand withBasename: basename.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
-	result := errorHandler handleError: anException.
+	dictionary := Dictionary new.
+	dictionary at: #command put: aCommand.
+	result := errorHandler handleError: anException withExtraContextInformation: dictionary.
 	^ result

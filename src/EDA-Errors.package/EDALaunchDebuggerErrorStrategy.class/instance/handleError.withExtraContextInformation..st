@@ -1,6 +1,5 @@
 error handling
-handleError: anException
-
+handleError: anException withExtraContextInformation: aDictionary
 	anException freeze.
 	self class annotateError: anException.
 	^ true
