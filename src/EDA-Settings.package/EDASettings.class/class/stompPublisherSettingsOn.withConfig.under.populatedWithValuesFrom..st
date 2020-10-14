@@ -50,4 +50,10 @@ stompPublisherSettingsOn: aBuilder withConfig: container under: parent populated
 		target: container;
 		label: 'Timeout' translated;
 		description: 'Timeout (in seconds)';
-		default: (stompConfig at: 'timeout')
+		default: (stompConfig at: 'timeout').
+			(aBuilder setting: #errorExchange)
+		parent: parent;
+		target: container;
+		label: 'Error exchange' translated;
+		description: 'The exchange for errors';
+		default: (stompConfig at: 'errorExchange')

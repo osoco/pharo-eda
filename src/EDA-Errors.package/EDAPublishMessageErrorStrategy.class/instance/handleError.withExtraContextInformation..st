@@ -6,5 +6,4 @@ handleError: anError withExtraContextInformation: aDictionary
 		andExtraContextInformation: aDictionary.
 	message := serializer serialize: anError.
 	EDAEventStompTopicPublisher new
-		publishMessage: message
-		withRoutingKey: 'error-messages-from-core'
+		publishError: message

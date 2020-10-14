@@ -1,3 +1,6 @@
 API
 publishMessage: aMessage
-	^ self publishMessage: aMessage usingClient: self client withConfig: self class.
+	^ self
+		publishError: false message: aMessage
+		usingClient: self client
+		withConfig: self class

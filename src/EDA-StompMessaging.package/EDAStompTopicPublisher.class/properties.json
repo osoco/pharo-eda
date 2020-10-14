@@ -17,7 +17,8 @@
 		"durable",
 		"host",
 		"port",
-		"timeout"
+		"timeout",
+		"errorExchange"
 	],
 	"pools" : [ ],
 	"category" : "EDA-StompMessaging"
