@@ -16,16 +16,6 @@ projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEnt
 		description:
 			'When the EDAApplication starts, this setting enables a check and conditional automatic synchronization of projections';
 		default: (extSettings at: 'synchronizationEnabled').
-	(aBuilder pickOne: #strategy)
-		parent: #projections;
-		target: EDADefaultProjectingErrorBehavior;
-		label: 'Default projection Error Handling' translated;
-		description: 'Default trategy when dealing with errors projecting events';
-		order: 1;
-		domainValues:
-			(EDAErrorHandlingStrategy subclasses
-				collect: [ :strategy | strategy description -> strategy greaseString ]);
-		default: EDAJustLogErrorStrategy greaseString.
 	(aBuilder setting: #concurrentSynchronization)
 		parent: #projections;
 		target: EDACompositeProjector;
@@ -40,4 +30,7 @@ projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEnt
 		description: 'Whether to show the progress when projecting events visually';
 		order: 3;
 		default: (extSettings at: 'headlessMode').
-	self customProjectionErrorBehaviorsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry
+	self
+		projectionErrorHandlingSettingsOn: aBuilder
+		under: parent
+		populatedWithValuesFrom: aConfigEntry
