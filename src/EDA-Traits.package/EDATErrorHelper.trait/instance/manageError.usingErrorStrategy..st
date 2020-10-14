@@ -1,9 +1,14 @@
 handling
-manageError: exception usingErrorStrategy: strategy
+manageError: anException usingErrorStrategy: aStrategy
 	| errorHandler result context |
+				self
+				logErrorMessage:
+					'Error in Command Consumer''s listener: '
+						, anException description greaseString.
+
 	context := thisContext clone.
-	self writeFuelContext: context named: exception class greaseString.
-	errorHandler := (self class environment at: strategy asSymbol) new
+	self writeFuelContext: context named: anException class greaseString.
+	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
-	result := errorHandler handleError: exception.
+	result := errorHandler handleError: anException.
 	^ result

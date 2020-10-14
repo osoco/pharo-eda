@@ -1,13 +1,14 @@
 handling
-manageError: exception whenProjectingEvent: anEvent usingErrorStrategy: strategy
-	| errorHandler result context |
+manageError: anException whenProjectingEvent: anEvent usingErrorStrategy: aStrategy
+	| errorHandler result context basename |
 	context := thisContext clone.
-	self
+	basename := self
 		writeFuelContext: context
 		named:
-			exception class greaseString , '-' , anEvent class greaseString , '-'
+			anException class greaseString , '-' , anEvent class greaseString , '-'
 				, self class greaseString.
-	errorHandler := (self class environment at: strategy asSymbol) new
+	self writeEvent: anEvent withBasename: basename.
+	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
-	result := errorHandler handleError: exception.
+	result := errorHandler handleError: anException.
 	^ result

@@ -14,8 +14,4 @@ start
 		on: Error
 		do: [ :error | 
 			self manageError: error usingErrorStrategy: self class errorStrategy.
-			self
-				logErrorMessage:
-					'Error in Command Consumer''s listener: '
-						, error description greaseString.
 			self restart ]

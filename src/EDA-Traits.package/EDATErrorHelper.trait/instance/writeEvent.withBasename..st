@@ -1,20 +1,22 @@
 handling
-writeFuelContext: aContext named: aString
+writeEvent: anEvent withBasename: aBasename
 	| file stderr serializer aStream result |
 	stderr := Stdio stderr.
-	stderr nextPut: Character cr.
+	stderr
+		nextPutAll: 'Writing event ...';
+		nextPut: Character cr.
 	serializer := FLSerializer newDefault.
 	serializer analyzer
 		when: [ :o | o class isObsolete ]
 		substituteBy: [ :o | nil ].
 	aStream := GZipWriteStream on: (ByteArray new: 100).
-	serializer serialize: aContext on: aStream.
+	serializer serialize: anEvent on: aStream.
 	aStream close.
 	stderr
-		nextPutAll: 'Serialized context';
+		nextPutAll: 'Serialized event';
 		nextPut: Character cr.
-	result := Time now yyyyMMhhmmss24 , '-' , aString.
-	file := FileSystem disk workingDirectory / (result , '.zip').
+	result := aBasename , '.event'.
+	file := FileSystem disk workingDirectory / result.
 	(WriteStream on: file) nextPutAll: aStream encodedStream contents.
 	file close.
 	^ result
