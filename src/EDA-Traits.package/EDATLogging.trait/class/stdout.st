@@ -1,3 +1,3 @@
 logging
 stdout
-	^ FileStream stdout
+	^ Stdio stdout

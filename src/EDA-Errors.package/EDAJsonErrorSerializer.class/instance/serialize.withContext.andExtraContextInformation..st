@@ -2,6 +2,7 @@ parsing
 serialize: anError withContext: aContext andExtraContextInformation: aDictionary
 	| aux body meta |
 	body := Dictionary newFrom: aDictionary.
+	body at: #context put: aContext.
 	meta := Dictionary new.
 	meta at: #error put: anError description.
 	meta at: #timestamp put: DateAndTime now greaseString.
@@ -9,4 +10,8 @@ serialize: anError withContext: aContext andExtraContextInformation: aDictionary
 	aux at: #body put: body.
 	aux at: #meta put: meta.
 	^ String
-		streamContents: [ :stream | | writer | writer := NeoJSONWriter on: stream. self customJsonMappingsFor: writer. writer nextPut: aux ]
+		streamContents: [ :stream |
+			| writer |
+			writer := NeoJSONWriter on: stream.
+			self customJsonMappingsFor: writer.
+			writer nextPut: aux ]
