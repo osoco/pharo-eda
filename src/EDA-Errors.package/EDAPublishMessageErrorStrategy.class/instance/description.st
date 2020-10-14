@@ -1,3 +1,3 @@
 accessing
 description
-	^ 'Errors generate events'
+	^ 'Errors published as messages'
