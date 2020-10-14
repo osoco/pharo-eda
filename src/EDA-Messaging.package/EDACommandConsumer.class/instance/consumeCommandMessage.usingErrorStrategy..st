@@ -1,8 +1,7 @@
 reading
-consumeCommandMessage: aCommandMessageString usingErrorStrategy: strategy
+consumeCommandMessage: aCommandMessageString usingErrorStrategy: aStrategy
 	| aCommand |
-	[ Transcript flush.
-	aCommand := self commandMaterializer
+	[ aCommand := self commandMaterializer
 		materialize: aCommandMessageString.
 	self commandDispatcher dispatch: aCommand ]
 		on: Exception
@@ -10,5 +9,4 @@ consumeCommandMessage: aCommandMessageString usingErrorStrategy: strategy
 			self
 				manageError: error
 				forMessage: aCommandMessageString
-				usingErrorStrategy: strategy
-			self restart ]
+				usingErrorStrategy: aStrategy. self restart ]
