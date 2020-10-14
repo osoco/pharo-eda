@@ -12,5 +12,7 @@ manageError: anException whenProjectingEvent: anEvent usingErrorStrategy: aStrat
 		context: context.
 	dictionary := Dictionary new.
 	dictionary at: #event put: anEvent.
-	result := errorHandler handleError: anException withExtraContextInformation: dictionary.
+	result := errorHandler
+		handleError: anException
+		withExtraContextInformation: dictionary.
 	^ result

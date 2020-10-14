@@ -10,5 +10,7 @@ manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy
 		context: context.
 	dictionary := Dictionary new.
 	dictionary at: #command put: aCommand.
-	result := errorHandler handleError: anException withExtraContextInformation: dictionary.
+	result := errorHandler
+		handleError: anException
+		withExtraContextInformation: dictionary.
 	^ result
