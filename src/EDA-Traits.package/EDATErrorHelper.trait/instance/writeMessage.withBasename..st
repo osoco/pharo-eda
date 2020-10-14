@@ -1,23 +1,14 @@
 handling
 writeMessage: aString withBasename: aBasename
-	| file stderr serializer aStream result |
+	| file stderr stream result |
+	result := aBasename , '.message.txt'.
 	stderr := Stdio stderr.
 	stderr
-		nextPutAll: 'Writing message ...';
+		nextPutAll: 'Writing message ';
+		nextPutAll: result;
 		nextPut: Character cr.
-	serializer := FLSerializer newDefault.
-	serializer analyzer
-		when: [ :o | o class isObsolete ]
-		substituteBy: [ :o | nil ].
-	aStream := WriteStream on: (ByteArray new: 100).
-	serializer serialize: aString on: aStream.
-	aStream close.
-	stderr
-		nextPutAll: 'Serialized message';
-		nextPut: Character cr.
-	result := aBasename , '.message.txt'.
 	file := FileSystem disk workingDirectory / result.
-	file writeStream
-		nextPutAll: aStream contents;
-		close.
+	stream := file writeStream.
+	stream nextPutAll: aString.
+	stream close.
 	^ result
