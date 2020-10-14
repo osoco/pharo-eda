@@ -20,8 +20,8 @@ declarePackagesIn: spec
 		package: #'EDA-Commands'
 			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
 		package: #'EDA-Logging';
-		package: #'EDA-Projections';
-			with: [ spec requires: #('EDA-Settings') ];
+		package: #'EDA-Projections'
+		with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Projections-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Projections-Voyage-Repository'
