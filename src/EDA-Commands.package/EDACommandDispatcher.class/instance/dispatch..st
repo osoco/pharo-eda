@@ -8,4 +8,4 @@ dispatch: aCommand
 	handler ifNil: [ EDACommandHandlerNotFound signal ].
 	handler
 		handle: aCommand
-		withErrorStrategy: EDACommandDispatcher commandErrorHandlingStrategy
+		withErrorStrategy: EDACommandDispatchingErrorBehavior strategy

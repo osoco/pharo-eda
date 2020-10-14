@@ -1,0 +1,3 @@
+accessing
+topicPublisher
+	^ topicPublisher
