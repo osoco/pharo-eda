@@ -7,9 +7,8 @@ consumeCommandMessage: aCommandMessageString usingErrorStrategy: strategy
 	self commandDispatcher dispatch: aCommand ]
 		on: Exception
 		do: [ :error |
-			self manageError: error forCommand: aCommandMessageString usingErrorStrategy: strategy.
 			self
-				logErrorMessage:
-					'Error processing ' , aCommandMessageString greaseString , ': '
-						, error description greaseString.
+				manageError: error
+				forMessage: aCommandMessageString
+				usingErrorStrategy: strategy
 			self restart ]

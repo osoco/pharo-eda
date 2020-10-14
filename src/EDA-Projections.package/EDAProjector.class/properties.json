@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDATLogging classTrait + EDATCollectionHelper classTrait",
+	"classtraitcomposition" : "EDATCollectionHelper classTrait",
 	"classvars" : [
 		"HeadlessMode"
 	],
@@ -10,7 +10,7 @@
 	"name" : "EDAProjector",
 	"commentStamp" : "",
 	"super" : "Object",
-	"traitcomposition" : "EDATLogging + EDATCollectionHelper",
+	"traitcomposition" : "EDATCollectionHelper",
 	"type" : "normal",
 	"classinstvars" : [
 		"errorStrategy",

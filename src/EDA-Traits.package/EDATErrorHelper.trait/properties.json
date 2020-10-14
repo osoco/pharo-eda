@@ -1,7 +1,9 @@
 {
 	"commentStamp" : "",
-	"classinstvars" : [ ],
+	"traitcomposition" : "EDATLogging",
+	"classtraitcomposition" : "EDATLogging classTrait",
 	"category" : "EDA-Traits",
-	"instvars" : [ ],
-	"name" : "EDATErrorHelper"
+	"classinstvars" : [ ],
+	"name" : "EDATErrorHelper",
+	"instvars" : [ ]
 }
