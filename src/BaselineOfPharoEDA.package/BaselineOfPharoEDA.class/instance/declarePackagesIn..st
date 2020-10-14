@@ -1,9 +1,10 @@
 meta
 declarePackagesIn: spec
 	spec
-		package: #'EDA-Error-Strategies';
 		package: #'EDA-Traits';
 		package: #'EDA-Traits-Tests'
+			with: [ spec requires: #('EDA-Traits') ];
+		package: #'EDA-Errors'
 			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools') ];
