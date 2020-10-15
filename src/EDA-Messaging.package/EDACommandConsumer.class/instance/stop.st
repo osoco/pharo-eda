@@ -1,6 +1,8 @@
 lifecycle
 stop
-	self logWarningMessage: 'Stopping Command Consumer (' , self greaseString , ') ...'.
-	[ self busListener forceUnsubscribe ]
+	[ self busListener forceUnsubscribe.
+	self logWarningMessage: 'Stopped Command Consumer.' ]
 		on: Error
-		do: [ :ex | self logErrorMessage: 'Error stopping Command Consumer: ' , ex description , '.' ]
+		do: [ :ex |
+			self
+				logErrorMessage: 'Error stopping Command Consumer: ' , ex description , '.' ]
