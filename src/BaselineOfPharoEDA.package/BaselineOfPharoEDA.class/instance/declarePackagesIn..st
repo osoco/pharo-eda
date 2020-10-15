@@ -4,7 +4,6 @@ declarePackagesIn: spec
 		package: #'EDA-Traits';
 		package: #'EDA-Traits-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Errors' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools') ];
 		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
@@ -14,6 +13,7 @@ declarePackagesIn: spec
 			with: [ spec requires: #('EDA-Commands-Tests') ];
 		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
+		package: #'EDA-Errors' with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
 		package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Events'
 			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
@@ -21,7 +21,7 @@ declarePackagesIn: spec
 			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
 		package: #'EDA-Logging';
 		package: #'EDA-Projections'
-		with: [ spec requires: #('EDA-Traits') ];
+			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Projections-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Projections-Voyage-Repository'
