@@ -11,7 +11,9 @@
 	"super" : "Object",
 	"traitcomposition" : "EDAPrintOnHelper + EDATErrorHelper",
 	"type" : "normal",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"restartOnCommandConsumingErrors"
+	],
 	"pools" : [ ],
 	"category" : "EDA-Messaging-Command"
 }

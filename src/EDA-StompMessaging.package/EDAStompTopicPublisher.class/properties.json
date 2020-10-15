@@ -18,7 +18,8 @@
 		"host",
 		"port",
 		"timeout",
-		"errorExchange"
+		"errorExchange",
+		"errorRoutingKey"
 	],
 	"pools" : [ ],
 	"category" : "EDA-StompMessaging"

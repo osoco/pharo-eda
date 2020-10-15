@@ -15,4 +15,5 @@ start
 			self
 				manageError: error
 				usingErrorStrategy: EDACommandConsumingErrorBehavior strategy.
-			self restart ]
+			self class restartOnCommandConsumingErrors
+				ifTrue: [ self restart ] ]

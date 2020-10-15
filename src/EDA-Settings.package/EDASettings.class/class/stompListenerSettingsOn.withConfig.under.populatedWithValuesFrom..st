@@ -48,10 +48,11 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		target: container;
 		label: 'Ack policy' translated;
 		description: 'Acknowledgement policy';
-		domainValues: (OrderedCollection
-			with: 'Auto' translated -> #auto
-			with: 'Client' translated -> #client
-			with: 'Client Individual' translated -> #'client-individual');
+		domainValues:
+			(OrderedCollection
+				with: 'Auto' translated -> #auto
+				with: 'Client' translated -> #client
+				with: 'Client Individual' translated -> #'client-individual');
 		default: ack.
 	(aBuilder setting: #prefetchCount)
 		parent: parent;
@@ -60,7 +61,6 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		description: 'Prefetch count';
 		default: (stompConfig at: 'prefetchCount').
 	timeout := stompConfig at: 'timeout' ifAbsent: 1.
-	self logDebugMessage: 'Timeout: ' , timeout greaseString.
 	(aBuilder setting: #timeout)
 		parent: parent;
 		target: container;
@@ -72,4 +72,10 @@ stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedW
 		target: EDAApplication;
 		label: 'STOMP client in debug mode' translated;
 		description: 'Whether enable debug mode in the STOMP client';
-		default: (stompConfig at: 'debug')
+		default: (stompConfig at: 'debug').
+	(aBuilder setting: #restartOnCommandConsumingErrors)
+		parent: parent;
+		target: EDACommandConsumer;
+		label: 'Restart on error' translated;
+		description: 'Whether to restart the client in case of errros';
+		default: (stompConfig at: 'restartOnError')
