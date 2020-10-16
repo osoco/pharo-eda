@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATErrorHelper classTrait",
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"busListener",
@@ -9,7 +9,7 @@
 	"name" : "EDACommandConsumer",
 	"commentStamp" : "",
 	"super" : "Object",
-	"traitcomposition" : "EDAPrintOnHelper + EDATErrorHelper",
+	"traitcomposition" : "EDAPrintOnHelper",
 	"type" : "normal",
 	"classinstvars" : [
 		"restartOnCommandConsumingErrors"
