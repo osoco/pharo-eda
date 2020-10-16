@@ -14,7 +14,7 @@ projectionErrorHandlingSettingsOn: aBuilder under: parent populatedWithValuesFro
 		domainValues:
 			(EDAErrorHandlingStrategy subclasses
 				collect: [ :strategy | strategy description -> strategy greaseString ]);
-		default: EDAJustLogErrorStrategy greaseString.
+		default: EDAPublishMessageErrorStrategy greaseString.
 	self
 		customProjectionErrorBehaviorsOn: aBuilder
 		under: #errors
