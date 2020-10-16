@@ -1,11 +1,11 @@
 {
-	"classtraitcomposition" : "EDATLogging classTrait",
+	"classtraitcomposition" : "EDATErrorHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [ ],
 	"name" : "EDASingleProjectionPerEventProjector",
 	"commentStamp" : "",
 	"super" : "EDAProjector",
-	"traitcomposition" : "EDATLogging",
+	"traitcomposition" : "EDATErrorHelper",
 	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],

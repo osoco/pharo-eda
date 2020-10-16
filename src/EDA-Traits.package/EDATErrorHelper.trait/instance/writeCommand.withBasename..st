@@ -8,7 +8,7 @@ writeCommand: aString withBasename: aBasename
 		nextPutAll: result;
 		nextPut: Character cr.
 	file := FileSystem disk workingDirectory / result.
-	file writeStream
+	(WriteStream on: file)
 		nextPutAll: aString;
 		close.
 	^ result
