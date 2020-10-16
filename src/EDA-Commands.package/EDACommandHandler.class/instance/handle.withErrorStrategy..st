@@ -21,13 +21,13 @@ handle: aCommand withErrorStrategy: strategy
 						processGeneratedEvents: producedEvents
 						forCommand: aCommand
 						onAggregateRoot: aggregateRoot ] ] ]
-		on: Error
+		on: Exception - Break
 		do: [ :exception | 
 			producedEvents
 				ifNotNil: [ :evts | 
 					processedEvents := self
 						manageError: exception
 						forCommand: aCommand
-						usingErrorStrategy: strategy ] ].
+						usingErrorStrategy: strategy ] ].	"Error"
 	eventBus produceEvents: processedEvents.
 	^ self

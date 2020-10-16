@@ -1,11 +1,11 @@
 customization
 customJsonMappingsFor: aJsonWriter
-	aJsonWriter
-		for: Context
-		customDo: [ :mapping | 
-			mapping
-				encoder: [ :ctx | 
-					| stream |
-					stream := WriteStream on: String new.
-					ctx printOn: stream.
-					stream contents ] ]
+	self print: Context inJsonWriter: aJsonWriter.
+	EDADomainException
+		allSubclassesDo: [ :cls | self printException: cls inJsonWriter: aJsonWriter ].
+	EDACommand
+		allSubclassesDo: [ :cls | self print: cls inJsonWriter: aJsonWriter ].
+	EDAEventSourcingEvent
+		allSubclassesDo: [ :cls | self print: cls inJsonWriter: aJsonWriter ].
+		EDAAggregateRoot 
+				allSubclassesDo: [ :cls | self print: cls inJsonWriter: aJsonWriter ].
