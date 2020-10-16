@@ -1,13 +1,13 @@
 enumerating
 syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 	aClient
-		runWith: [ :message | 
+		runWith: [ :message |  | text |
+			text := message body greaseString.
 			self
 				logInit: message body greaseString
 				usingClient: aClient
 				withConfig: conf.
-			[ | text ack |
-			text := message body greaseString.
+			[ | ack |
 			aBlock value: text.
 			ack := conf ack.
 			ack = #'client-individual'
@@ -38,14 +38,17 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 					conf ack = #'client-individual'
 						ifTrue: [ | nack |
 							self
-								logDebugMessage: 'Sending NACK message... ' , message greaseString , '.'.
+								logDebugMessage: 'Sending NACK message... ' , text , '.'.
 							nack := message nackFrame.
 							nack headers at: 'requeue' put: 'False'.
 							aClient writeWithReceipt: nack.
 							self
-								logDebugMessage: 'NACK message sent ' , message greaseString , '.' ].
-					self logDebugMessage: 'Delegating error handling to ', EDACommandConsumingErrorBehavior strategy.
+								logDebugMessage: 'NACK message sent ' , text , '.' ].
+					self
+						logDebugMessage:
+							'Delegating error handling to '
+								, EDACommandConsumingErrorBehavior strategy greaseString.
 					self
 						manageError: ex
-						forMessage: message
+						forMessage: text
 						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ]

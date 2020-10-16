@@ -7,8 +7,7 @@ start
 		subscribe;
 		onMessageDo: [ :message | 
 			self
-				consumeCommandMessage: message
-				usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ].
+				consumeCommandMessage: message ].
 	listener
 		on: Exception
 		do: [ :error | 
