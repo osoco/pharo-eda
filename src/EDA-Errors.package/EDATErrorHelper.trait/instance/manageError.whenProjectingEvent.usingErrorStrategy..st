@@ -1,12 +1,18 @@
 handling
 manageError: anException whenProjectingEvent: anEvent usingErrorStrategy: aStrategy
 	| errorHandler result context basename dictionary |
+		self
+		logErrorMessage:
+			'Error projecting ' , anEvent greaseString , ': '
+				, anException description greaseString.
 	context := thisContext clone.
-	basename := self
+	basename := self class basename.
+	self
 		writeFuelContext: context
 		named:
 			anException class greaseString , '-' , anEvent class greaseString
-				, '-' , self class greaseString.
+				, '.txt'
+		withBasename: basename.
 	self writeEvent: anEvent withBasename: basename.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
