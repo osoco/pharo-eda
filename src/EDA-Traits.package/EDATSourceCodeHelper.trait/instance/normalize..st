@@ -1,3 +1,3 @@
 helper
 normalize: aString
-	^ (aString trimmed replaceAll: '\W' with: '_') asLowercase 
+	^ (self replace: '\W' with: '_' inString: aString trimmed) asLowercase
