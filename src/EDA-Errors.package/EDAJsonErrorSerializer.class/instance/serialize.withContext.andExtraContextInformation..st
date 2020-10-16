@@ -4,7 +4,7 @@ serialize: anException withContext: aContext andExtraContextInformation: aDictio
 	result := Dictionary new.
 	meta := Dictionary new.
 	meta at: #timestamp put: DateAndTime now asUTC rounded greaseString.
-	meta at: #error put: anException description.
+	meta at: #error put: anException greaseString.
 	body := Dictionary newFrom: aDictionary.
 	body at: #context put: aContext.
 	result at: #meta put: meta.

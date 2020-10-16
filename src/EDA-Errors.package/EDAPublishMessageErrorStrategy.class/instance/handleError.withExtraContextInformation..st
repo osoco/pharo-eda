@@ -4,6 +4,5 @@ handleError: anError withExtraContextInformation: aDictionary
 	serializer := EDAJsonErrorSerializer
 		withContext: thisContext clone
 		andExtraContextInformation: aDictionary.
-	message := serializer serialize: anError.
-	EDAEventStompTopicPublisher new
-		publishError: message
+	message := serializer serialize: anError greaseString.
+	EDAEventStompTopicPublisher new publishError: message
