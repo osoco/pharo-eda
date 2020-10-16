@@ -1,7 +1,7 @@
 handling
 manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy
 	| errorHandler result context basename dictionary |
-		self
+	self
 		logErrorMessage:
 			'Error processing ' , aCommand greaseString , ': '
 				, anException description greaseString.
@@ -11,7 +11,7 @@ manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy
 		writeFuelContext: context
 		named: anException class greaseString
 		withBasename: basename.
-	self writeCommand: aCommand withBasename: basename.
+	self writeCommand: aCommand greaseString withBasename: basename.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
 	dictionary := Dictionary new.

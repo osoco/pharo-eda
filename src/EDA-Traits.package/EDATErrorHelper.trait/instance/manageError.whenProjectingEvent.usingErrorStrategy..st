@@ -1,7 +1,7 @@
 handling
 manageError: anException whenProjectingEvent: anEvent usingErrorStrategy: aStrategy
 	| errorHandler result context basename dictionary |
-		self
+	self
 		logErrorMessage:
 			'Error projecting ' , anEvent greaseString , ': '
 				, anException description greaseString.
@@ -13,7 +13,7 @@ manageError: anException whenProjectingEvent: anEvent usingErrorStrategy: aStrat
 			anException class greaseString , '-' , anEvent class greaseString
 				, '.txt'
 		withBasename: basename.
-	self writeEvent: anEvent withBasename: basename.
+	self writeEvent: anEvent greaseString withBasename: basename.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
 	dictionary := Dictionary new.
