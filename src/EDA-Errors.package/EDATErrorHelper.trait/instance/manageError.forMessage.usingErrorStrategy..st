@@ -8,9 +8,10 @@ manageError: anException forMessage: aString usingErrorStrategy: aStrategy
 	dictionary := Dictionary new.
 	dictionary at: #message put: aString.
 	context := thisContext clone.
-	basename := self
+	basename := self class basename.
+	self
 		writeFuelContext: context
-		named: anException class greaseString.
+		named: anException class greaseString withBasename: basename.
 	self writeMessage: aString withBasename: basename.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.

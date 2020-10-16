@@ -4,4 +4,5 @@ errorFolderFor: basename
 	parent := FileSystem workingDirectory / 'errors'.
 	parent createDirectory.
 	result := parent / basename greaseString.
-	result createDirectory
+	result createDirectory.
+	^ result

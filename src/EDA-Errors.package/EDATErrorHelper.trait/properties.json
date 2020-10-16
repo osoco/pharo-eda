@@ -1,8 +1,8 @@
 {
-	"commentStamp" : "",
+	"commentStamp" : "JoseSanLeandro 10/16/2020 15:33",
 	"traitcomposition" : "EDATLogging",
 	"classtraitcomposition" : "EDATLogging classTrait",
-	"category" : "EDA-Traits",
+	"category" : "EDA-Errors",
 	"classinstvars" : [ ],
 	"name" : "EDATErrorHelper",
 	"instvars" : [ ]
