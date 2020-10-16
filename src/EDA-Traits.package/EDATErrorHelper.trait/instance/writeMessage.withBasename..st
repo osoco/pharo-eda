@@ -7,7 +7,7 @@ writeMessage: aString withBasename: aBasename
 		nextPutAll: 'Writing message ';
 		nextPutAll: result;
 		nextPut: Character cr.
-	file := FileSystem disk workingDirectory / result.
+	file := (self class errorFolderFor: aBasename) / result.
 	stream := file writeStream.
 	stream nextPutAll: aString.
 	stream close.

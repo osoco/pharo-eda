@@ -7,7 +7,7 @@ writeEvent: aString withBasename: aBasename
 		nextPutAll: 'Writing event ';
 		nextPutAll: result;
 		nextPut: Character cr.
-	file := FileSystem disk workingDirectory / result.
+	file := (self class errorFolderFor: aBasename) / result.
 	file writeStream
 		nextPutAll: aString;
 		close.
