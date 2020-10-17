@@ -9,7 +9,7 @@ start
 			self
 				consumeCommandMessage: message ].
 	listener
-		on: Exception
+		on: Exception - Break
 		do: [ :error | 
 			self
 				manageError: error
