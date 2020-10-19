@@ -1,11 +1,15 @@
 {
-	"commentStamp" : "JoseSanLeandro 7/17/2015 14:40",
+	"classtraitcomposition" : "EDATLogging classTrait",
+	"classvars" : [ ],
+	"instvars" : [
+		"commandDictionary"
+	],
+	"name" : "EDADefaultCommandBuilder",
+	"commentStamp" : "",
 	"super" : "EDABaseCommandBuilder",
-	"category" : "EDA-Commands-Builders",
+	"traitcomposition" : "EDATLogging",
+	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],
-	"classvars" : [ ],
-	"instvars" : [ ],
-	"name" : "EDADefaultCommandBuilder",
-	"type" : "normal"
+	"category" : "EDA-Commands-Builders"
 }

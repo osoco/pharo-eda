@@ -1,0 +1,3 @@
+helper
+commandClassPrefix
+	^ ATSEDAApplication commandClassPrefix
