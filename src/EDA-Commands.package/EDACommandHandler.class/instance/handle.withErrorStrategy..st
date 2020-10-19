@@ -22,7 +22,7 @@ handle: aCommand withErrorStrategy: strategy
 						forCommand: aCommand
 						onAggregateRoot: aggregateRoot ] ].
 	eventBus produceEvents: processedEvents ]
-		on: Exception - Break
+		on: Error - Break
 		do: [ :exception |
 			self
 				manageError: exception
