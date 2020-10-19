@@ -10,13 +10,13 @@ handleError: anException withExtraContextInformation: aDictionary
 				ifAbsent: OrderedCollection new.
 			self
 				logWarningMessage:
-					'Projection of event ' , event greaseString , ' in projections '
-						, projections greaseString , ' failed with error '
-						, anException description , '.' ]
+					(String streamContents: [ :s | s nextPutAll: 'Projection of event '; nextPutAll: event greaseString; nextPutAll: ' in projections '
+						; nextPutAll: projections greaseString; nextPutAll: ' failed with error '
+						; nextPutAll: anException description ])]
 		ifNotNil: [ :arg |
 			self
-				logWarningMessage:
-					'Projection of event ' , event greaseString , ' in projection '
-						, projection greaseString , ' failed with error '
-						, anException description , '.' ].
+				logWarningMessage: (String streamContents: [ :s | s nextPutAll:
+					'Projection of event '; nextPutAll: event greaseString; nextPutAll: ' in projection '
+						; nextPutAll: projection greaseString; nextPutAll: ' failed with error '
+						; nextPutAll: anException description ] )].
 	^ false
