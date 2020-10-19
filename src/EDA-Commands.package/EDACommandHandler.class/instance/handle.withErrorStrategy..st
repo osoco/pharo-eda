@@ -4,10 +4,10 @@ handle: aCommand withErrorStrategy: strategy
 	[ aggregateRoot := self buildAggregateRootFromCommand: aCommand.
 	aggregateRoot isDeleted
 		ifTrue: [ self
-				logInfoMessage:
-					'Discarding command ' , aCommand commandName greaseString , ' since '
-						, aCommand aggregateRootClass greaseString , ' with id '
-						, aCommand aggregateRootId greaseString , ' is already deleted.' ]
+				logInfoMessage: (String streamContents: [ :s | s nextPutAll: 
+					'Discarding command '; nextPutAll: aCommand commandName greaseString ; nextPutAll: ' since '
+						; nextPutAll: aCommand aggregateRootClass greaseString; nextPutAll: ' with id '
+						; nextPutAll: aCommand aggregateRootId greaseString ; nextPutAll: ' is already deleted.' ]) ]
 		ifFalse: [ | handlingResult |
 			producedEvents := OrderedCollection new.
 			handlingResult := self
@@ -25,7 +25,7 @@ handle: aCommand withErrorStrategy: strategy
 		on: Exception - Break
 		do: [ :exception | 
 			self
-						manageError: exception
-						forCommand: aCommand
-						usingErrorStrategy: strategy ].
+				manageError: exception
+				forCommand: aCommand
+				usingErrorStrategy: strategy ].
 	^ self

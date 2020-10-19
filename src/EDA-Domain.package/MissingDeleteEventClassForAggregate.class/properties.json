@@ -1,11 +1,11 @@
 {
 	"commentStamp" : "",
-	"super" : "Error",
-	"category" : "EDA-Commands-Handlers",
+	"super" : "EDADomainException",
+	"category" : "EDA-Domain-Exceptions",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "EDAInvalidCommandHandler",
+	"name" : "MissingDeleteEventClassForAggregate",
 	"type" : "normal"
 }
