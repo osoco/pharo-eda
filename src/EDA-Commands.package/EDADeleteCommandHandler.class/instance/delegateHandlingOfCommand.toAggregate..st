@@ -4,6 +4,6 @@ delegateHandlingOfCommand: aCommand toAggregate: anAggregateRoot
 		ifTrue: [
 			^ anAggregateRoot handleDeleteCommand: aCommand
 		] ifFalse: [
-			EDAInvalidCommandHandler signal
+			EDAInvalidCommandMessage signal
 		]
 					

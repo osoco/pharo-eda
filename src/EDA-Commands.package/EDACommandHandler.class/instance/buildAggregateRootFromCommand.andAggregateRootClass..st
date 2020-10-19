@@ -6,36 +6,64 @@ buildAggregateRootFromCommand: aCommand andAggregateRootClass: anAggregateRootCl
 	raise a concurrency error and reject the change"
 	self
 		logDebugMessage:
-			'Retrieving events for ' , anAggregateRootClass greaseString
-				, ' matching ' , aCommand aggregateSelectionCriteria greaseString
-				, '.'.
+			(String
+				streamContents: [ :s |
+					s
+						nextPutAll: 'Retrieving events for ';
+						nextPutAll: anAggregateRootClass greaseString;
+						nextPutAll: ' matching ';
+						nextPutAll: aCommand aggregateSelectionCriteria greaseString;
+						nextPutAll: '.' ]).
 	startRetrievingEventsTimer := DateAndTime now.
 	events := eventStore
-		findEventsOfTenant: aCommand tenant ofAggregate: anAggregateRootClass
+		findEventsOfTenant: aCommand tenant
+		ofAggregate: anAggregateRootClass
 		whereCriteria: aCommand aggregateSelectionCriteria.
 	startBuildingAggregateTimer := DateAndTime now.
 	self
-		logInfoMessage:
-			events size greaseString , ' event(s) retrieved in '
-				,
-					(startBuildingAggregateTimer - startRetrievingEventsTimer)
-						totalSeconds greaseString , ' second(s).'.
+		logDebugMessage:
+			(String
+				streamContents: [ :s |
+					s
+						nextPutAll: events size greaseString;
+						nextPutAll: ' event(s) retrieved in ';
+						nextPutAll:
+							(startBuildingAggregateTimer - startRetrievingEventsTimer)
+								totalSeconds greaseString;
+						nextPutAll: ' second(s).' ]).
 	result := anAggregateRootClass new.
 	self
-		logInfoMessage:
-			'Applying ' , events size greaseString , ' event(s) to an empty '
-				, anAggregateRootClass greaseString , '.'.
+		logDebugMessage:
+			(String
+				streamContents: [ :s |
+					s
+						nextPutAll: 'Applying ';
+						nextPutAll: events size greaseString;
+						nextPutAll: ' event(s) to an empty ';
+						nextPutAll: anAggregateRootClass greaseString;
+						nextPut: $. ]).
 	result applyEvents: events.
 	self
-		logInfoMessage:
-			'Aggregate ' , result greaseString , ' successfully built in '
-				,
-					(DateAndTime now - startBuildingAggregateTimer) totalSeconds
-						greaseString , ' second(s).'.
+		logDebugMessage:
+			(String
+				streamContents: [ :s |
+					s
+						nextPutAll: 'Aggregate ';
+						nextPutAll: result greaseString;
+						nextPutAll: ' successfully built in ';
+						nextPutAll:
+							(DateAndTime now - startBuildingAggregateTimer) totalSeconds
+								greaseString;
+						nextPutAll: ' second(s).' ]).
 	result version = aCommand aggregateRootVersion
 		ifFalse: [ self
 				logWarningMessage:
-					'Aggregate root''s version (' , result version greaseString
-						, ') does not match command''s ('
-						, aCommand aggregateRootVersion greaseString , ').' ].
+					(String
+						streamContents: [ :s |
+							s
+								nextPutAll: 'Aggregate root''s version (';
+								nextPutAll: result version greaseString;
+								nextPutAll: ') does not match command''s (';
+								nextPutAll: aCommand aggregateRootVersion greaseString;
+								nextPutAll: ').' ]) ].
 	^ result

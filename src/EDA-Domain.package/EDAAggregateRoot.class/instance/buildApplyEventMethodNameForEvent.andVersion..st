@@ -1,3 +1,3 @@
 helper
-buildApplyEventMethodNameForEvent: eventClassName andVersion: eventVersion
-	^ 'apply' , eventClassName , 'v' , eventVersion greaseString , ':'
+buildApplyEventMethodNameForEvent: eventName andVersion: eventVersion
+	^ String streamContents: [ :s | s nextPutAll: 'apply'; nextPutAll: eventName greaseString; nextPut: $v; nextPutAll: eventVersion greaseString; nextPut: $: ]

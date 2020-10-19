@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "EDADomainException",
+	"category" : "EDA-Domain-Exceptions",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "TooManyDeleteEventClassesForAggregate",
+	"type" : "normal"
+}
