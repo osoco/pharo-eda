@@ -39,7 +39,8 @@ applyEvent: anEvent
 								nextPutAll: suffix greaseString;
 								close;
 								contents).
-					self perform: applyEventSelectorSymbol with: anEvent ]
+					self perform: applyEventSelectorSymbol with: anEvent.
+					self id: anEvent id ]
 				ifNil: [ anEvent class greaseString = self class greaseString
 						ifTrue: [ self
 								logErrorMessage:
