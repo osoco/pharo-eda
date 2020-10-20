@@ -30,9 +30,9 @@ generateCommandClassBuilderMethod
 		nextPut: $.;
 		nextPut: cr.
 	method
-		nextPutAll: '	result version: (theAttributes at: ''version'' ifAbsent: [ ';
+		nextPutAll: '	result version: ';
 		nextPutAll: self version greaseString;
-		nextPutAll: ' ]).';
+		nextPut: $.;
 		nextPut: cr.
 	attrs
 		do: [ :attr | 
