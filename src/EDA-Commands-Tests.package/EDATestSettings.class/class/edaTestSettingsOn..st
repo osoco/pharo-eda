@@ -1,6 +1,6 @@
 settings
 edaTestSettingsOn: aBuilder
-	<systemsettings>
+	"<systemsettings>"
 	(aBuilder group: #edatests)
 		label: 'EDA Tests' translated;
 		description: 'EDA tests';
