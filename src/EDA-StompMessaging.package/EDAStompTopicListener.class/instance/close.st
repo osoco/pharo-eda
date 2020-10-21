@@ -1,7 +1,7 @@
 lifecycle
 close
 	[ self client close ]
-		on: StampError , PrimitiveFailed
+		on: StampError , PrimitiveFailed, ZnIncomplete
 		do: [ :ex | 
 			self
 				logErrorMessage:

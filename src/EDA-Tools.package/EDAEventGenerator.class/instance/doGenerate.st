@@ -5,4 +5,4 @@ doGenerate
 	self createEventClassBuilderMethod.
 	self createEventClassEqualsMethod.
 	self createEventClassHashMethod.
-	self updateEventClassLatestVersion
+	self createEventClassLatestVersionClassMethod
