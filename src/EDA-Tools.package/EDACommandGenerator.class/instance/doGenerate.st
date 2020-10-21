@@ -9,4 +9,4 @@ doGenerate
 	self createCommandClassHashMethod.
 	self createCommandClassAggregateRootClassMethod.
 	self createCommandClassRetrieveAggregateRootClassMethod.
-		self updateEventClassLatestVersion
+	self createCommandClassLatestVersionClassMethod

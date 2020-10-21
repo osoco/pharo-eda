@@ -20,7 +20,7 @@ dispatch: aCommand
 							s
 								nextPutAll: self class greaseString;
 								nextPutAll: ' rejected: version ';
-								nextPutAll: aCommand version;
+								nextPutAll: aCommand version greaseString;
 								nextPutAll: ' is not supported. Only version ';
 								nextPutAll: aCommand class latestVersion;
 								nextPutAll: ' is supported' ])

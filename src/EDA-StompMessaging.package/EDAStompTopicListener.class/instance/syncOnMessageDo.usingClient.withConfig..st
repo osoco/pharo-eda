@@ -1,6 +1,6 @@
 enumerating
 syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
-	aClient
+	[ aClient
 		runWith: [ :message |
 			| text |
 			text := message body greaseString.
@@ -77,4 +77,6 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 					self
 						manageError: ex
 						forMessage: text
-						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ]
+						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ] ]
+		on: PrimitiveFailed
+		do: [ :ex | self logErrorMessage: ex greaseString ]
