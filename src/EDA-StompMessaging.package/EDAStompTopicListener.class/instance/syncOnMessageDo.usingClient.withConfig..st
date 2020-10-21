@@ -78,5 +78,5 @@ syncOnMessageDo: aBlock usingClient: aClient withConfig: conf
 						manageError: ex
 						forMessage: text
 						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ] ]
-		on: PrimitiveFailed
+		on: PrimitiveFailed, StampError
 		do: [ :ex | self logErrorMessage: ex greaseString ]
