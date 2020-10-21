@@ -1,11 +1,16 @@
 code generation
 createEventClass
 	| cls attributes parent |
-	cls := (self appName , (self underscoreSeparatedToCamelCase: self eventName)) asSymbol.
-	attributes := self retrieveEventAttributesBut: self class skippedEventAttributes.
+	cls := self retrieveEventClassName asSymbol.
+	attributes := self
+		retrieveEventAttributesBut: self class skippedEventAttributes.
 	(self classExists: cls)
-		ifTrue: [ attributes := self allAttributesOf: (self class environment at: cls) including: attributes ].
-	parent := self isDeletedEvent ifTrue: [ EDADeleteCommandResultEvent ] ifFalse: [ EDACommandResultEvent ].
+		ifTrue: [ attributes := self
+				allAttributesOf: (self class environment at: cls)
+				including: attributes ].
+	parent := self isDeletedEvent
+		ifTrue: [ EDADeleteCommandResultEvent ]
+		ifFalse: [ EDACommandResultEvent ].
 	parent
 		subclass: cls
 		uses: ATSTEvent

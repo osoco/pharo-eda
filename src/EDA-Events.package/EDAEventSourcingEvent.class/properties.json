@@ -19,7 +19,8 @@
 	"traitcomposition" : "EDAPrintOnHelper",
 	"type" : "normal",
 	"classinstvars" : [
-		"voyageRepository"
+		"voyageRepository",
+		"latestVersion"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Events-Events"

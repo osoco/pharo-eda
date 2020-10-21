@@ -1,4 +1,6 @@
 protected
 doGenerate
-	self createInvalidAggregateErrorClass.
-	self createAggregateDoesNotExistErrorClass
+	<doc: 'Generates error classes'>
+	"self createInvalidAggregateErrorClass.
+	self createAggregateDoesNotExistErrorClass"
+	self createInvalidCommandErrorClass
