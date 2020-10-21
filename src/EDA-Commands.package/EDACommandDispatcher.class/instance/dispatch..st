@@ -7,10 +7,24 @@ dispatch: aCommand
 					(String
 						streamContents: [ :s |
 							s
-								nextPutAll: 'Internal error: '; nextPutAll: self class greaseString;
+								nextPutAll: 'Internal error: ';
+								nextPutAll: self class greaseString;
 								nextPutAll: '>>';
 								nextPutAll: 'dispatch: received a nil command' ])
-				andThrow: EDACommandError ].
+				andThrow: EDAInvalidCommandMessage ].
+	(aCommand version = aCommand class version) ifFalse: [
+		self logErrorMessage:
+		(String
+						streamContents: [ :s |
+							s
+								nextPutAll: self class greaseString;
+								nextPutAll: ' rejected: version ';
+								nextPutAll: aCommand version;
+								nextPutAll: ' is not supported. Only version ';
+								nextPutAll: aCommand class latestVersion;
+								nextPutAll: ' is supported'])
+				andThrow: EDAInvalidCommandMessage
+		 ].
 	handler := aCommand isDelete
 		ifTrue: [ EDADeleteCommandHandler uniqueInstance ]
 		ifFalse: [ self handlersRegistry handlerForCommand: aCommand ].

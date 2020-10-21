@@ -8,4 +8,5 @@ doGenerate
 	self createCommandClassEqualsMethod.
 	self createCommandClassHashMethod.
 	self createCommandClassAggregateRootClassMethod.
-	self createCommandClassRetrieveAggregateRootClassMethod
+	self createCommandClassRetrieveAggregateRootClassMethod.
+		self updateEventClassLatestVersion

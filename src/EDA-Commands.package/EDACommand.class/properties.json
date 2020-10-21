@@ -18,7 +18,9 @@
 	"super" : "Object",
 	"traitcomposition" : "EDAPrintOnHelper + EDATCollectionHelper",
 	"type" : "normal",
-	"classinstvars" : [ ],
+	"classinstvars" : [
+		"latestVersion"
+	],
 	"pools" : [ ],
 	"category" : "EDA-Commands-Commands"
 }
