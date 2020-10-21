@@ -12,9 +12,10 @@ dispatch: aCommand
 								nextPutAll: '>>';
 								nextPutAll: 'dispatch: received a nil command' ])
 				andThrow: EDAInvalidCommandMessage ].
-	(aCommand version = aCommand class version) ifFalse: [ 
-		self logErrorMessage:
-		(String
+	aCommand version = aCommand class latestVersion
+		ifFalse: [ self
+				logErrorMessage:
+					(String
 						streamContents: [ :s | 
 							s
 								nextPutAll: self class greaseString;
@@ -22,9 +23,8 @@ dispatch: aCommand
 								nextPutAll: aCommand version;
 								nextPutAll: ' is not supported. Only version ';
 								nextPutAll: aCommand class latestVersion;
-								nextPutAll: ' is supported'])
-				andThrow: EDAInvalidCommandMessage 
-		 ].
+								nextPutAll: ' is supported' ])
+				andThrow: EDAInvalidCommandMessage ].
 	handler := aCommand isDelete
 		ifTrue: [ EDADeleteCommandHandler uniqueInstance ]
 		ifFalse: [ self handlersRegistry handlerForCommand: aCommand ].
