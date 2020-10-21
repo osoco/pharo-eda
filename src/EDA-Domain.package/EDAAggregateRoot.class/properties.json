@@ -6,7 +6,8 @@
 		"version",
 		"isDeleted",
 		"scopeContext",
-		"scopeKey"
+		"scopeKey",
+		"brandNew"
 	],
 	"name" : "EDAAggregateRoot",
 	"commentStamp" : "",

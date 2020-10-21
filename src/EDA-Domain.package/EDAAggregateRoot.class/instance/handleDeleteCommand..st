@@ -2,14 +2,8 @@ event handling
 handleDeleteCommand: aCommand
 	| result |
 	self id
-		ifNil: [ self
-				logErrorMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: aCommand class greaseString;
-								nextPutAll: ' rejected: id is nil' ])
-				andThrow: EDAInvalidCommandMessage  ].
+		ifNil:
+			[ self logErrorMessage: 'id is missing' andThrow: EDAInvalidCommandMessage ].
 	result := self buildDeleteCommandResultEvent.
 	result
 		ifNotNil: [ :r | 
