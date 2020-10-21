@@ -7,6 +7,7 @@ generateEventClassLatestVersionMethod
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
-		nextPutAll: self version greaseString;
+		nextPutAll: '	^ ';
+			nextPutAll: self version greaseString;
 		nextPut: cr.
 	^ result contents

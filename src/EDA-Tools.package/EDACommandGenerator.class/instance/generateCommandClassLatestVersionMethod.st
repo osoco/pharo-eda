@@ -7,6 +7,7 @@ generateCommandClassLatestVersionMethod
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
+		nextPutAll: '	^ ';
 		nextPutAll: self version greaseString;
 		nextPut: cr.
 	^ result contents
