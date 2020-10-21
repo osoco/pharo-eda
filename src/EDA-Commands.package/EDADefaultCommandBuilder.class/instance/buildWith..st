@@ -5,7 +5,7 @@ buildWith: jsonDict
 	body := jsonDict at: #body ifAbsent: [ nil ].
 	(meta isNil or: [ body isNil ])
 		ifTrue: [ self
-				logErrorMessage: 'Command rejected: Invalid JSON (meta or body missing)'
+				logErrorMessage: 'Invalid JSON (meta or body missing)'
 				andThrow: EDAInvalidCommandMessage ]
 		ifFalse: [ [ command := (self retrieveCommandClassFromJsonDict: jsonDict) new.
 			command

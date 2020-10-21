@@ -4,10 +4,13 @@ applyEvent: anEvent
 	delete := anEvent delete.
 	delete
 		ifNil: [ self
-				logWarningMessage: ((WriteStream on: String new) nextPutAll:
-					anEvent class greaseString
-						; nextPutAll:
-							' implements an invalid #initialize method. Make sure it calls parent''s initialize.'; close; contents).
+				logWarningMessage:
+					((WriteStream on: String new)
+						nextPutAll: anEvent class greaseString;
+						nextPutAll:
+							' implements an invalid #initialize method. Make sure it calls parent''s initialize.';
+						close;
+						contents).
 			delete := false ].
 	delete
 		ifTrue: [ self applyAggregateDeletedEvent: anEvent ]
@@ -40,7 +43,8 @@ applyEvent: anEvent
 								close;
 								contents).
 					self perform: applyEventSelectorSymbol with: anEvent.
-					self id: anEvent id ]
+					self id: anEvent id.
+					self brandNew: false ]
 				ifNil: [ anEvent class greaseString = self class greaseString
 						ifTrue: [ self
 								logErrorMessage:

@@ -10,9 +10,8 @@ checkTenantOfCommand: aCommand matches: anAggregate
 					(String
 						streamContents: [ :s |
 							s
-								nextPutAll: aCommand class greaseString;
-								nextPutAll: ' rejected: Invalid tenant (';
+								nextPutAll: 'Invalid tenant (';
 								nextPutAll: aCommand tenant;
 								nextPutAll: '). Aggregate''s tenant: ';
-								nextPutAll: anAggregate tenant greaseString])
+								nextPutAll: anAggregate tenant greaseString ])
 				andThrow: InvalidTenant ]
