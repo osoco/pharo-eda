@@ -8,8 +8,6 @@ ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes
 	result
 		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
 	result version: (theAttrs at: 'version' ifAbsent: [ 1 ]).
-	result
-		aggregateRootVersion: (theAttrs at: 'aggregateRootVersion' ifAbsent: [ 0 ]).
 	scopeKey := theAttrs at: 'scopeKey' ifAbsent: [ nil ].
 	scopeKey ifNotNil: [ :sk | result scopeKey: sk ].
 	scopeContext := theAttrs at: 'scopeContext' ifAbsent: [ nil ].

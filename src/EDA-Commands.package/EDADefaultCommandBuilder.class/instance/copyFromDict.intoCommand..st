@@ -13,9 +13,9 @@ copyFromDict: aDictionary intoCommand: aCommand
 								instVarIndexFor: key
 								ifAbsent: [ self logWarningMessage: 'No such inst var: ' , key ])
 						put: assoc value ]
-				on: Exception
-				do: [ :ex |
-					self
-						logWarningMessage: key greaseString , ' does not exist in ' , aCommand class greaseString ] ] ].
+						on: Exception
+						do: [ :ex |
+							self
+								logWarningMessage: key greaseString , ' does not exist in ' , aCommand class greaseString ] ] ].
 	aCommand
-		aggregateRootVersion: (aDictionary at: #version ifAbsent: [ 0 ])
+		aggregateRootVersion: (aDictionary at: #aggregateRootVersion ifAbsent: [ 0 ])
