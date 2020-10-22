@@ -1,8 +1,8 @@
 helpers
-checkTenantOfCommand: aCommand matches: anAggregate
+checkTenantOfCommand: aCommandTenant matches: anAggregateTenant
 	| result |
-	result := (self checkTenantIsValid: aCommand tenant)
-		ifTrue: [ aCommand tenant = anAggregate tenant ]
+	result := (self checkTenantIsValid: aCommandTenant)
+		ifTrue: [ aCommandTenant = anAggregateTenant ]
 		ifFalse: [ false ].
 	result
 		ifFalse: [ self
@@ -11,7 +11,7 @@ checkTenantOfCommand: aCommand matches: anAggregate
 						streamContents: [ :s | 
 							s
 								nextPutAll: 'Invalid tenant (';
-								nextPutAll: aCommand tenant;
-								nextPutAll: '). Aggregate''s tenant: ';
-								nextPutAll: anAggregate tenant greaseString ])
+								nextPutAll: aCommandTenant;
+								nextPutAll: '), aggregate''s tenant: ';
+								nextPutAll: anAggregateTenant greaseString ])
 				andThrow: InvalidTenant ]
