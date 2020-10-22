@@ -22,7 +22,7 @@ dispatch: aCommand
 								nextPutAll: ' rejected: version ';
 								nextPutAll: aCommand version greaseString;
 								nextPutAll: ' is not supported. Only version ';
-								nextPutAll: aCommand class latestVersion;
+								nextPutAll: aCommand class latestVersion greaseString;
 								nextPutAll: ' is supported' ])
 				andThrow: EDAInvalidCommandMessage ].
 	handler := aCommand isDelete
