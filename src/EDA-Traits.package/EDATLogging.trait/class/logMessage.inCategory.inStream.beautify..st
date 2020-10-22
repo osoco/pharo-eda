@@ -17,8 +17,9 @@ logMessage: aMessage inCategory: aString inStream: aStream beautify: beautify
 				ifFalse: [ stream << '.' ] ].
 	stream nextPut: Character cr.
 	stream nextPut: Character lf.
-	aStream << stream contents.
+	aStream
+		<< stream contents;
+		nextPut: Character cr.
 	(aString = 'ERROR'
-		or: [ aString = 'WARN '
-				or: [ aString = 'INFO ' or: [ DateAndTime now seconds % 10 = 0 ] ] ])
+		or: [ aString = 'WARN ' or: [ aString = 'INFO ' or: [ DateAndTime now seconds % 10 = 0 ] ] ])
 		ifTrue: [ aStream flush ]

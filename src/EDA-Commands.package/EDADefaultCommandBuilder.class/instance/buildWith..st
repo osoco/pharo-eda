@@ -14,20 +14,8 @@ buildWith: jsonDict
 				originalTimestamp: (DateAndTime fromString: (meta at: #timestamp)).
 			(command isKindOf: EDAUserCommand)
 				ifTrue: [ command authorUsername: (jsonDict at: #authorUsername) ].
-			body
-				associationsDo: [ :assoc |
-					| key |
-					key := assoc key.
-					key = 'version'
-						ifFalse: [ key = 'id'
-								ifTrue: [ key := 'aggregateRootId' ].
-							command
-								instVarAt:
-									(command class
-										instVarIndexFor: key
-										ifAbsent: [ self logWarningMessage: 'No such inst var: ' , key ])
-								put: assoc value ] ].
-			command aggregateRootVersion: (body at: #version ifAbsent: [ 0 ]).
+				self copyFromDict: body intoCommand: command.
+		.
 			^ command ]
 				on: Exception
 				do: [ :ex |
