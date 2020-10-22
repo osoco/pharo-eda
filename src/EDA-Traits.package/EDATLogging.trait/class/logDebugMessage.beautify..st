@@ -1,8 +1,8 @@
 logging
 logDebugMessage: aMessage beautify: aBoolean
-	^ EDALoggingSettings debugEnabled
+	EDALoggingSettings debugEnabled
 		ifTrue: [ self
 				logMessage: aMessage
 				inCategory: 'DEBUG'
-				inStream: FileStream stdout
+				inStream: self defaultStream
 				beautify: aBoolean ]

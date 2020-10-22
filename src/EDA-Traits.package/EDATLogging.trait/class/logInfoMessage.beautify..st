@@ -1,8 +1,8 @@
 logging
 logInfoMessage: aMessage beautify: aBoolean
-	^ EDALoggingSettings infoEnabled
+	EDALoggingSettings infoEnabled
 		ifTrue: [ self
 				logMessage: aMessage
 				inCategory: 'INFO '
-				inStream: FileStream stdout
+				inStream: self defaultStream
 				beautify: aBoolean ]
