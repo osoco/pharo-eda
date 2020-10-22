@@ -13,18 +13,7 @@ handle: aCommand withErrorStrategy: strategy
 								nextPutAll: aCommand aggregateRootId greaseString;
 								nextPutAll: ' is already deleted' ])
 				andThrow: EDAInvalidCommandMessage ].
-	(aCommand isCreate not and: [ aggregateRoot brandNew ])
-		ifTrue: [ self
-				logErrorMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: aggregateRoot class greaseString;
-								nextPutAll: ' with id ';
-								nextPutAll: aCommand aggregateRootId greaseString;
-								nextPutAll: ' does not exist in tenant ';
-								nextPutAll: aCommand tenant ])
-				andThrow: EDAInvalidCommandMessage ].
+	self checkCreateCommand: aCommand forAggregateRoot: aggregateRoot.
 	producedEvents := OrderedCollection new.
 	handlingResult := self
 		delegateHandlingOfCommand: aCommand
