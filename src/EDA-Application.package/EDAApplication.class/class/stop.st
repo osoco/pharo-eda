@@ -4,4 +4,5 @@ stop
 	self isStarted
 		ifFalse: [ ^ self ].
 	self commandConsumer ifNotNil: [ :arg | arg stop ].
-	self isStarted: false
+	self isStarted: false.
+	self logInfoMessage: self applicationName , ' stopped'

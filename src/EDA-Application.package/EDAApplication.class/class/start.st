@@ -8,4 +8,5 @@ start
 	self commandConsumer
 		ifNotNil: [ :c | 
 			c start.
-			self isStarted: true ]
+			self isStarted: true ].
+	self logInfoMessage: self applicationName , ' started'

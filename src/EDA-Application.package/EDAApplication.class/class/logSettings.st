@@ -1,20 +1,21 @@
 logging
 logSettings
 	self
-		logInfoMessage: 'Command consumer: ' , self commandConsumer greaseString.
+		logDebugMessage: 'Command consumer: ' , self commandConsumer greaseString.
 	self
-		logInfoMessage: 'Command dispatcher: ' , self commandDispatcher greaseString.
+		logDebugMessage: 'Command dispatcher: ' , self commandDispatcher greaseString.
 	self
-		logInfoMessage:
+		logDebugMessage:
 			'Command listener client debug: '
 				, self commandListenerClientDebug greaseString.
 	self
-		logInfoMessage: 'Event announcer: ' , self eventAnnouncer greaseString.
+		logDebugMessage: 'Event announcer: ' , self eventAnnouncer greaseString.
 	self
-		logInfoMessage: 'Event producer: ' , self eventProducer greaseString.
-	self logInfoMessage: 'Event store: ' , self eventStore greaseString.
+		logDebugMessage: 'Event producer: ' , self eventProducer greaseString.
+	self logDebugMessage: 'Event store: ' , self eventStore greaseString.
 	self
-		logInfoMessage:
+		logDebugMessage:
 			'Projection synchronization enabled: '
 				, self projectionSynchronizationEnabled greaseString.
-	self logInfoMessage: 'Projectors: ' , self projectorsByTenant greaseString
+	self
+		logDebugMessage: 'Projectors: ' , self projectorsByTenant greaseString

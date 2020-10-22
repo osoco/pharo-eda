@@ -1,6 +1,6 @@
 logging
 logTraceMessage: aMessage beautify: aBoolean
-	^ EDALoggingSettings traceEnabled
+	EDALoggingSettings traceEnabled
 		ifTrue: [ self
 				logMessage: aMessage
 				inCategory: 'TRACE'
