@@ -7,7 +7,7 @@ ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes
 	result commandId: theCommandId.
 	result
 		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
-	result version: (theAttrs at: 'version' ifAbsent: [ 1 ]).
+	result version: (theAttrs at: 'version' ifAbsent: [ self latestVersion ]).
 	scopeKey := theAttrs at: 'scopeKey' ifAbsent: [ nil ].
 	scopeKey ifNotNil: [ :sk | result scopeKey: sk ].
 	scopeContext := theAttrs at: 'scopeContext' ifAbsent: [ nil ].
