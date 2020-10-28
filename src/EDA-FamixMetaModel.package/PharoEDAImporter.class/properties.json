@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "SmalltalkImporter",
+	"category" : "EDA-FamixMetaModel-Importer",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"aggregates"
+	],
+	"name" : "PharoEDAImporter",
+	"type" : "normal"
+}

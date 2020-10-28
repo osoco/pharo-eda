@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "FAMIXEntity",
+	"category" : "EDA-FamixMetaModel-MetaModel",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"name",
+		"parentPackage",
+		"aggregateRoot"
+	],
+	"name" : "EDAFamixAggregate",
+	"type" : "normal"
+}
