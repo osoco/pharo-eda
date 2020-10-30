@@ -6,7 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"aggregates"
+		"aggregates",
+		"commands",
+		"events"
 	],
 	"name" : "PharoEDAImporter",
 	"type" : "normal"

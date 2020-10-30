@@ -15,6 +15,8 @@ importATSDomainModelPackage
 				importInheritance;
 				importAccess;
 				importAggregate;
+				importCommand;
+				importEvent;
 				mergeClassAndMetaclass;
 				doNotImportSubclasses;
 				yourself);
