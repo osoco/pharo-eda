@@ -1,3 +1,3 @@
 *EDA-FamixMetaModel
-event: aEvent
+eventClass: aEvent
 	self privateState attributeAt: #event put: aEvent

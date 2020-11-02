@@ -10,8 +10,8 @@ ensureClass: aClass
 			class aggregate: aggregate ].
 	(importingContext shouldImportCommand and: [ class isCommand ])
 		ifTrue: [ command := self ensureCommandForCommandClass: class.
-			class command: command ].
+			class commandClass: command ].
 	(importingContext shouldImportEvent and: [ class isEvent ])
 		ifTrue: [ event := self ensureEventForEventSourcingEventClass: class.
-			class event: event ].
+			class eventClass: event ].
 	^ class
