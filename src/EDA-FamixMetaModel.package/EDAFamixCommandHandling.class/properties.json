@@ -6,9 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"handlingMethod",
 		"aggregate",
-		"command"
+		"command",
+		"handlerMethod"
 	],
 	"name" : "EDAFamixCommandHandling",
 	"type" : "normal"
