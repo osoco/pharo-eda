@@ -1,0 +1,3 @@
+accessing
+aggregateHandlers: anAggregateHandler
+	aggregateHandlers add: anAggregateHandler

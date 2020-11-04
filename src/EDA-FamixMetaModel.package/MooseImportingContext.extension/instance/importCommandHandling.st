@@ -1,0 +1,3 @@
+*EDA-FamixMetaModel
+importCommandHandling
+	self entityKindsToBeExtracted addAll: self class importCommandHandling

@@ -1,6 +1,6 @@
 public-entity-creation
 createCommandHandling: aEDACommandModel
-	| handlingMethod aggregateRootClassModel aggregateClass commandClassModel commandClass |
+	| handlingMethod aggregateRootClassModel aggregateClass commandClassModel commandClass commandHandling |
 	commandClassModel := aEDACommandModel command.
 	commandClass := commandClassModel smalltalkClass.
 	"aggregateRootClassModel := commandClassModel aggregateRoot."
@@ -14,8 +14,10 @@ createCommandHandling: aEDACommandModel
 		in: aggregateClass)
 		select: [ :pragma | pragma arguments first = commandClass name ])
 		first method.
-	^ EDAFamixCommandHandling new
+	commandHandling :=EDAFamixCommandHandling new
 		command: aEDACommandModel;
 		aggregate: (self ensureAggregateForAggregateRootClass: aggregateRootClassModel);
 		handlerMethod: (self ensureMethod: handlingMethod);
-		yourself
+		yourself.
+	commandHandlings at: aEDACommandModel put: commandHandling.
+	^ commandHandling 

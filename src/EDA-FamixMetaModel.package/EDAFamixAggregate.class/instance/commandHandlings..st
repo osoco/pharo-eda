@@ -1,0 +1,3 @@
+accessing
+commandHandlings: aCommandHandling
+	commandHandlings add: aCommandHandling

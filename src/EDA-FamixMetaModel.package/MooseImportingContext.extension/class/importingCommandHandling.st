@@ -1,0 +1,3 @@
+*EDA-FamixMetaModel
+importingCommandHandling
+	^ #CommandHandling

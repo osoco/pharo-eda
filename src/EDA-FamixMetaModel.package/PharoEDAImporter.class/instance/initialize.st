@@ -4,3 +4,4 @@ initialize
 	aggregates := IdentityDictionary new.
 	commands := IdentityDictionary new.
 	events := IdentityDictionary new.
+	commandHandlings := IdentityDictionary new.

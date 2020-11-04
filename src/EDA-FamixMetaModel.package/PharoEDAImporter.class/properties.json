@@ -8,7 +8,8 @@
 	"instvars" : [
 		"aggregates",
 		"commands",
-		"events"
+		"events",
+		"commandHandlings"
 	],
 	"name" : "PharoEDAImporter",
 	"type" : "normal"

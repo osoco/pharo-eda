@@ -1,3 +1,3 @@
 accessing
 event: anEventModel
-	event := anEventModel 
+	event add: anEventModel

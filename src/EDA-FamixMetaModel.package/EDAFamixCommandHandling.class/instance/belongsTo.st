@@ -1,0 +1,3 @@
+accessing
+belongsTo
+	^ command belongsTo

@@ -1,3 +1,3 @@
 accessing
 command: aCommandModel
-	command := aCommandModel
+	command add: aCommandModel

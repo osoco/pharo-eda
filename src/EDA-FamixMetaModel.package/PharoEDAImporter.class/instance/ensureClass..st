@@ -6,12 +6,12 @@ ensureClass: aClass
 	class := classes at: aClass ifAbsent: [ self createClass: aClass ].
 	(importingContext shouldImportAggregate
 		and: [ class isAggregateRoot ])
-		ifTrue: [ aggregate := self ensureAggregateForAggregateRootClass: class.
-			class aggregate: aggregate ].
+		ifTrue: [ aggregate := self ensureAggregateForAggregateRootClass: class
+			"class aggregate: aggregate" ].
 	(importingContext shouldImportCommand and: [ class isCommand ])
-		ifTrue: [ command := self ensureCommandForCommandClass: class.
-			class commandClass: command ].
+		ifTrue: [ command := self ensureCommandForCommandClass: class
+			"class commandClass: command" ].
 	(importingContext shouldImportEvent and: [ class isEvent ])
 		ifTrue: [ event := self ensureEventForEventSourcingEventClass: class.
-			class eventClass: event ].
+			"class eventClass: event "].
 	^ class

@@ -1,10 +1,10 @@
 public-entity-creation
 ensureCommandForCommandClass: aCommandClassModel
-	| command commandHandling |
+	| command |
 	^ commands
 		at: aCommandClassModel
 		ifAbsent: [ command := self createCommand: aCommandClassModel.
 			self addEntity: command.
-			commandHandling := self createCommandHandling: command.
-			self addEntity: commandHandling.
+			importingContext shouldImportCommandHandling
+				ifTrue: [ self ensureCommandHandlingForCommand: command ].
 			command ]
