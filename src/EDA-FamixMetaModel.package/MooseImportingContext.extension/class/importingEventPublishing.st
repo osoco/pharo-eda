@@ -1,0 +1,3 @@
+*EDA-FamixMetaModel
+importingEventPublishing
+	^ #EventPublishing

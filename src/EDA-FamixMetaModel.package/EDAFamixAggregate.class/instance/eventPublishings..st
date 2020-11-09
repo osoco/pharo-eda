@@ -1,0 +1,3 @@
+accessing
+eventPublishings: anEventPublishing
+	eventPublishings add: anEventPublishing

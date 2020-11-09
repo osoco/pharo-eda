@@ -1,8 +1,8 @@
 public-entity-creation
-ensureCommandHandlingForCommand: aEDACommandModel
+ensureCommandHandlingForCommand: anEDACommandModel
 	| commandHandling |
 	^ commandHandlings
-		at: aEDACommandModel
-		ifAbsent: [commandHandling := self createCommandHandling: aEDACommandModel.
-			self addEntity: commandHandling.
-			commandHandling]
+		at: anEDACommandModel
+		ifAbsent: [ commandHandling := self createCommandHandling: anEDACommandModel.
+			commandHandling ifNotNil: [ self addEntity: commandHandling ].
+			commandHandling ]

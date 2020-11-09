@@ -4,4 +4,9 @@ isEvent
 	<multivalued>
 	<derived>
 	<MSEComment: 'If the Class is an EDA Event.'>
-	^ self smalltalkClass allSuperclasses includes: EDAEventSourcingEvent 
+	| class |
+	class := self smalltalkClass.
+	^ (class allSuperclasses includes: EDACommandResultEvent)
+		and:
+			[ (class = EDADeleteCommandResultEvent
+				or: [ class = EDAUserCommandResultEvent ]) not ] 

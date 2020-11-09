@@ -5,3 +5,4 @@ initialize
 	commands := IdentityDictionary new.
 	events := IdentityDictionary new.
 	commandHandlings := IdentityDictionary new.
+		eventPublishings  := IdentityDictionary new.

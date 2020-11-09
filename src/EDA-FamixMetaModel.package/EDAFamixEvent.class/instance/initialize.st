@@ -4,4 +4,8 @@ initialize
 	event := FMNullMultivalueLink
 		on: self
 		opposite: #eventClass:
-		selector: #event
+		selector: #event.
+	aggregatePublishers := FMNullMultivalueLink
+		on: self
+		opposite: #event:
+		selector: #aggregatePublishers

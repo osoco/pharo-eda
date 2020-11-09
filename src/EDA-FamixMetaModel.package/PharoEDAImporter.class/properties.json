@@ -9,7 +9,8 @@
 		"aggregates",
 		"commands",
 		"events",
-		"commandHandlings"
+		"commandHandlings",
+		"eventPublishings"
 	],
 	"name" : "PharoEDAImporter",
 	"type" : "normal"

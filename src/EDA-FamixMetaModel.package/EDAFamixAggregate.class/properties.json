@@ -9,7 +9,8 @@
 		"name",
 		"parentPackage",
 		"aggregateRoot",
-		"commandHandlings"
+		"commandHandlings",
+		"eventPublishings"
 	],
 	"name" : "EDAFamixAggregate",
 	"type" : "normal"

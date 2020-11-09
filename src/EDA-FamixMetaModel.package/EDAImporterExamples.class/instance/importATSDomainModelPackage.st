@@ -13,11 +13,13 @@ importATSDomainModelPackage
 			(MooseImportingContext new
 				importPackage;
 				importInheritance;
+				importInvocation ;
 				importAccess;
 				importAggregate;
 				importCommand;
 				importEvent;
-				importCommandHandling ;
+				importCommandHandling;
+				importEventPublishing;
 				mergeClassAndMetaclass;
 				doNotImportSubclasses;
 				yourself);
