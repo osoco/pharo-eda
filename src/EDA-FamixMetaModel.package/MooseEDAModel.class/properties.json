@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "MooseModel",
+	"category" : "EDA-FamixMetaModel-Model",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "MooseEDAModel",
+	"type" : "normal"
+}

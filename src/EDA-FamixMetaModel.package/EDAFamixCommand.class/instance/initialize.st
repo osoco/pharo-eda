@@ -5,8 +5,11 @@ initialize
 		on: self
 		opposite: #commandClass:
 		selector: #command.
-
-	aggregateHandlers  := FMNullMultivalueLink
+	aggregateHandlers := FMNullMultivalueLink
 		on: self
 		opposite: #command:
-		selector: #aggregateHandlers .
+		selector: #aggregateHandlers.
+	eventTriggerings := FMNullMultivalueLink
+		on: self
+		opposite: #command:
+		selector: #eventTriggerings

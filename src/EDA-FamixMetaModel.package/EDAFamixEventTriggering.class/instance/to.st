@@ -1,0 +1,4 @@
+accessing
+to
+
+	^ self event

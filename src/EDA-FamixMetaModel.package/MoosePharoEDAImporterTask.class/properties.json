@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "MoosePharoImporterTask",
+	"category" : "EDA-FamixMetaModel-Importer",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "MoosePharoEDAImporterTask",
+	"type" : "normal"
+}

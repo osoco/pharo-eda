@@ -1,19 +1,25 @@
 importing-filters
-importParentPackage
+importFamixATSDomainModelPackage
 	<gtExample>
 	| model parentPackageName |
 	parentPackageName := 'ATS-Domain'.
-	model := MooseModel new.
+	model := MooseEDAModel new.
 	model name: 'Moose Model for package ' , parentPackageName.
 	model sourceLanguage: FAMIXSmalltalkSourceLanguage new.
 	MoosePharoImporterTask new
-		importerClass: SmalltalkImporter;
+		importerClass: PharoEDAImporter;
 		model: model;
 		importingContext:
 			(MooseImportingContext new
 				importPackage;
 				importInheritance;
+				importInvocation;
 				importAccess;
+				importAggregate;
+				importCommand;
+				importEvent;
+				importCommandHandling;
+				importEventPublishing;
 				mergeClassAndMetaclass;
 				doNotImportSubclasses;
 				yourself);

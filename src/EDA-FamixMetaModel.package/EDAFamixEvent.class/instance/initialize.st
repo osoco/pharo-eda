@@ -8,4 +8,8 @@ initialize
 	aggregatePublishers := FMNullMultivalueLink
 		on: self
 		opposite: #event:
-		selector: #aggregatePublishers
+		selector: #aggregatePublishers.
+	commandTriggers  := FMNullMultivalueLink
+		on: self
+		opposite: #event:
+		selector: #commandTriggers 

@@ -1,23 +1,28 @@
 public-entity-creation
 createCommandHandling: anEDACommandModel
-	| handlingMethod aggregateRootClassModel aggregateRootClass commandClassModel commandClass commandHandling pragma |
+	| model handlingMethodModel aggregateRootClassModel aggregateRootClass commandClassModel commandClass commandHandling pragma |
+	model := anEDACommandModel command mooseModel.
 	commandClassModel := anEDACommandModel command.
 	commandClass := commandClassModel smalltalkClass.
-	"aggregateRootClassModel := commandClassModel aggregateRoot."
+	"Obtener aggregateRootClass así y pragma directamente sin detect?
+	aggregateRootClass := commandClass aggregateRootClass.
+	"
 	aggregateRootClass := EDAAggregateRoot subclasses
 		detect: [ :anAggregateRootClass | 
 			pragma := (Pragma
 				allNamed: #useAsCommandHandlerFor:
-				in: anAggregateRootClass) detect: [ :aPragma | aPragma arguments first = commandClass name ] ifNone: [  ].
-				pragma isNotNil  ]
+				in: anAggregateRootClass)
+				detect: [ :aPragma | aPragma arguments first = commandClass name ]
+				ifNone: [  ].
+			pragma isNotNil ]
 		ifNone: [  ].
 	aggregateRootClass
-		ifNotNil: [ aggregateRootClassModel := self ensureClass: aggregateRootClass.
-			handlingMethod := pragma method.
+		ifNotNil: [ aggregateRootClassModel := model classModelFor: aggregateRootClass.
+			handlingMethodModel := model methodModelFor: pragma method.
 			commandHandling := EDAFamixCommandHandling new
 				command: anEDACommandModel;
 				aggregate: (self ensureAggregateForAggregateRootClass: aggregateRootClassModel);
-				handlerMethod: (self ensureMethod: handlingMethod);
+				handlerMethod: handlingMethodModel;
 				yourself.
 			commandHandlings at: anEDACommandModel put: commandHandling ].
 	^ commandHandling

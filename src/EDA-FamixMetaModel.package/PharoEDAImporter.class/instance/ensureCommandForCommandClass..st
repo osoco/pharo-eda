@@ -5,6 +5,6 @@ ensureCommandForCommandClass: aCommandClassModel
 		at: aCommandClassModel
 		ifAbsent: [ command := self createCommand: aCommandClassModel.
 			self addEntity: command.
-			importingContext shouldImportCommandHandling
-				ifTrue: [ self ensureCommandHandlingForCommand: command ].
+			self ensureCommandHandlingForCommand: command.
+			self ensureEventTriggeringForCommand: command.
 			command ]

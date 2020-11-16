@@ -1,6 +1,7 @@
 public-entity-creation
 createEventPublishing: anEDAEventModel
-	| eventPublishing aggregateRootClassModel aggregateRootClass applyMethods |
+	| model eventPublishing aggregateRootClassModel aggregateRootClass applyMethods |
+	model := anEDAEventModel event mooseModel.
 	applyMethods := FAMIXMethodGroup new.
 	"	aggregateRootClass := EDAAggregateRoot subclasses
 		detect: [ :anAggregateRootClass | 
@@ -13,12 +14,12 @@ createEventPublishing: anEDAEventModel
 		keysAndValuesDo: [ :methodName :method | 
 			(methodName
 				includesSubstring: 'apply' , (anEDAEventModel name withoutPrefix: 'ATS'))
-				ifTrue: [ applyMethods add: (self ensureMethod: method) ] ].
+				ifTrue: [ applyMethods add: (model methodModelFor: method) ] ].
 	aggregateRootClass
-		ifNotNil: [ aggregateRootClassModel := self ensureClass: aggregateRootClass.
+		ifNotNil: [ aggregateRootClassModel := model classModelFor: aggregateRootClass.
 			eventPublishing := EDAFamixEventPublishing new
 				event: anEDAEventModel;
 				aggregate: (self ensureAggregateForAggregateRootClass: aggregateRootClassModel);
-				applyMethods: applyMethods yourself.
+				applyMethods: applyMethods.
 			eventPublishings at: anEDAEventModel put: eventPublishing ].
 	^ eventPublishing

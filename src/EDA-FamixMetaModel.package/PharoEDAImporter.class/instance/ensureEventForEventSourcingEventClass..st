@@ -5,6 +5,5 @@ ensureEventForEventSourcingEventClass: aEventSourcingEventClassModel
 		at: aEventSourcingEventClassModel
 		ifAbsent: [ event := self createEvent: aEventSourcingEventClassModel.
 			self addEntity: event.
-			importingContext shouldImportEventPublishing
-				ifTrue: [ self ensureEventPublishingForEvent: event ].
+ self ensureEventPublishingForEvent: event .
 			event ]

@@ -1,17 +1,16 @@
 {
 	"commentStamp" : "",
-	"super" : "FAMIXEntity",
+	"super" : "FAMIXAssociation",
 	"category" : "EDA-FamixMetaModel-MetaModel",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
 		"name",
-		"parentPackage",
 		"command",
-		"aggregateHandlers",
-		"eventTriggerings"
+		"event",
+		"aggregate"
 	],
-	"name" : "EDAFamixCommand",
+	"name" : "EDAFamixEventTriggering",
 	"type" : "normal"
 }

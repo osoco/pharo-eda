@@ -9,7 +9,8 @@
 		"name",
 		"parentPackage",
 		"event",
-		"aggregatePublishers"
+		"aggregatePublishers",
+		"commandTriggers"
 	],
 	"name" : "EDAFamixEvent",
 	"type" : "normal"
