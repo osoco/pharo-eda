@@ -1,5 +1,5 @@
-view
-gtCommandsEventsFor: aView
+gt - viewers
+gtAggregatesEventsFor: aView
 	<gtView>
 	| view |
 	view := GtMondrian new.
@@ -28,6 +28,6 @@ gtCommandsEventsFor: aView
 	view layout force charge: -1000.
 	"	view layout custom: GtGradHorizontalDominanceCenteredTreeLayout new."
 	^ aView mondrian
-		title: 'Commands & Events';
+		title: 'Aggregates & Events';
 		priority: 40;
 		initialize: view

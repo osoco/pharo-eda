@@ -1,0 +1,4 @@
+view
+eventsToView
+^ self asCollection 
+	

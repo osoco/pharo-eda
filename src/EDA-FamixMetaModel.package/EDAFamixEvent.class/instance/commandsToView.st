@@ -1,0 +1,3 @@
+view
+commandsToView
+	^ self commandTriggersForEvent

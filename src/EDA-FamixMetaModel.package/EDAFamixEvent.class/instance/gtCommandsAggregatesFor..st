@@ -1,5 +1,5 @@
 view
-gtCommandsEventsFor: aView
+gtCommandsAggregatesFor: aView
 	<gtView>
 	| view |
 	view := GtMondrian new.
@@ -15,7 +15,7 @@ gtCommandsEventsFor: aView
 				border: (BlBorder paint: Color black);
 				constraintsDo: [ :c | c padding: (BlInsets all: 10) ] ];
 		with: self elementsToView.
-	view edges
+		view edges
 		shape: [ :object | object edgeStencil ];
 		fromCenterBottom;
 		toCenterTop;
@@ -28,6 +28,6 @@ gtCommandsEventsFor: aView
 	view layout force charge: -1000.
 	"	view layout custom: GtGradHorizontalDominanceCenteredTreeLayout new."
 	^ aView mondrian
-		title: 'Commands & Events';
+		title: 'Commands & Aggregates';
 		priority: 40;
 		initialize: view

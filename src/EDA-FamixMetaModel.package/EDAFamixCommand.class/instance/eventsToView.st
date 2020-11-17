@@ -1,0 +1,3 @@
+view
+eventsToView
+	^ self eventTriggeringsByCommand, self eventPublishingsByCommandAggregates

@@ -1,0 +1,3 @@
+accessing
+commandsToView
+	^ self commandHandlingsByAggregate

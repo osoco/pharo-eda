@@ -1,0 +1,3 @@
+view
+aggregatesToView
+	^ self aggregatePublishersForEvent
