@@ -4,6 +4,8 @@ initialize
 	aggregates := IdentityDictionary new.
 	commands := IdentityDictionary new.
 	events := IdentityDictionary new.
+		aggregateElements := IdentityDictionary new.
 	commandHandlings := IdentityDictionary new.
-		eventTriggerings  := IdentityDictionary new.
+	eventTriggerings := IdentityDictionary new.
 	eventPublishings := IdentityDictionary new.
+	aggregateElementUsings  := IdentityDictionary new.

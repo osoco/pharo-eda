@@ -12,4 +12,8 @@ initialize
 	eventPublishings := FMNullMultivalueLink
 		on: self
 		opposite: #aggregate:
-		selector: #eventPublishings
+		selector: #eventPublishings.
+	aggregateElementUsings  := FMNullMultivalueLink
+		on: self
+		opposite: #aggregate:
+		selector: #aggregateElementUsings

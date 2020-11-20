@@ -1,0 +1,3 @@
+accessing
+to: anAggregateElementModel
+	self aggregateElement: anAggregateElementModel

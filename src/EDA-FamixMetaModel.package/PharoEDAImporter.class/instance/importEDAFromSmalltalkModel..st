@@ -1,10 +1,11 @@
 importing
 importEDAFromSmalltalkModel: aModel
-	aModel allModelClasses 
+	aModel allModelClasses
 		do: [ :classModel | 
 			classModel isAggregateRoot
 				ifTrue: [ self ensureAggregateForAggregateRootClass: classModel ].
 			classModel isCommand
 				ifTrue: [ self ensureCommandForCommandClass: classModel ].
 			classModel isEvent
-				ifTrue: [ self ensureEventForEventSourcingEventClass: classModel ] ]
+				ifTrue: [ self ensureEventForEventSourcingEventClass: classModel ].
+			classModel isAggregateElement ifTrue: [ self ensureAggregateElementForAggregateElementClass: classModel ] ]

@@ -8,11 +8,9 @@
 	"instvars" : [
 		"name",
 		"parentPackage",
-		"aggregateRoot",
-		"commandHandlings",
-		"eventPublishings",
-		"aggregateElementUsings"
+		"aggregateElementClassModel",
+		"aggregateElementUsers"
 	],
-	"name" : "EDAFamixAggregate",
+	"name" : "EDAFamixAggregateElement",
 	"type" : "normal"
 }

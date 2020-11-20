@@ -9,9 +9,11 @@
 		"aggregates",
 		"commands",
 		"events",
+		"aggregateElements",
 		"commandHandlings",
 		"eventPublishings",
-		"eventTriggerings"
+		"eventTriggerings",
+		"aggregateElementUsings"
 	],
 	"name" : "PharoEDAImporter",
 	"type" : "normal"

@@ -1,0 +1,3 @@
+accessing
+aggregateElementClassModel: anAggregateElementClassModel
+	aggregateElementClassModel  add: anAggregateElementClassModel
