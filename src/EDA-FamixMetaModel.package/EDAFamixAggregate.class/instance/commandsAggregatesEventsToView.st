@@ -1,3 +1,3 @@
 view
-elementsToView
+commandsAggregatesEventsToView
 	^ self commandsToView , self eventsToView , self aggregatesToView

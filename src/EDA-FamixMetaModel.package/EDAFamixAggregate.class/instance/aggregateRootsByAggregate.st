@@ -1,0 +1,3 @@
+accessing
+aggregateRootsByAggregate
+	^ self aggregateRoot asCollection

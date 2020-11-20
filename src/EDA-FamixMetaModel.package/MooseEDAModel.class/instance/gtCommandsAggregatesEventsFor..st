@@ -4,19 +4,16 @@ gtCommandsAggregatesEventsFor: aView
 	| view |
 	view := GtMondrian new.
 	view nodes
-		shape: [ :x | 
-			| colors |
-			colors := {(#EDAFamixCommand -> Color green).
-			(#EDAFamixAggregate -> Color red).
-			(#EDAFamixEvent -> Color yellow)} asDictionary.
-			BlElement new
-				geometry: BlEllipse new;
-				background: (colors at: x className);
-				border: (BlBorder paint: Color black);
-				constraintsDo: [ :c | c padding: (BlInsets all: 10) ] ];
-		with: self elementsToView.
+		shape: [ :object | object defaultElementStencil ];
+		with: self commandsAggregatesEventsToView;
+		forEach: [ :object | 
+			object class = EDAFamixAggregate 
+				ifTrue: [ view nodes
+						shape: [ :anAggregateElement | anAggregateElement defaultElementStencil ];
+						with: object aggregateElementsToView ] ].
+	view edges shape: [ :object | object defaultEdgeStencil ].
 	view edges
-		shape: [ :object | object edgeStencil ];
+		shape: [ :object | object defaultEdgeStencil ];
 		fromCenterBottom;
 		toCenterTop;
 		connect: self aggregatesToView
