@@ -1,3 +1,3 @@
 accessing
-aggregateRoot: anAggregateRootClassModel
-	aggregateRoot add: anAggregateRootClassModel
+aggregateRoot: anAggregateRoot
+	aggregateRoot add: anAggregateRoot

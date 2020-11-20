@@ -10,8 +10,7 @@
 		"parentPackage",
 		"aggregateRoot",
 		"commandHandlings",
-		"eventPublishings",
-		"aggregateElementUsings"
+		"eventPublishings"
 	],
 	"name" : "EDAFamixAggregate",
 	"type" : "normal"

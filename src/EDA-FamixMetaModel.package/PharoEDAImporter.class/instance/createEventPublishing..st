@@ -1,14 +1,14 @@
 public-entity-creation
 createEventPublishing: anEDAEventModel
 	| model eventPublishing aggregateRootClassModel aggregateRootClass applyMethods |
-	model := anEDAEventModel event mooseModel.
+	model := anEDAEventModel eventClassModel mooseModel.
 	applyMethods := FAMIXMethodGroup new.
 	"	aggregateRootClass := EDAAggregateRoot subclasses
 		detect: [ :anAggregateRootClass | 
 			anAggregateRootClass methodDict keys
 				includesSubstringAnywhere: 'apply' , (anEDAEventModel name withoutPrefix: 'ATS') ]
 		ifNone: [  ]."
-	aggregateRootClass := anEDAEventModel event smalltalkClass
+	aggregateRootClass := anEDAEventModel eventClassModel smalltalkClass
 		aggregateRootClass.
 	aggregateRootClass methodDict
 		keysAndValuesDo: [ :methodName :method | 

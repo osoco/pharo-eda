@@ -1,6 +1,6 @@
 public-entity-creation
 createFromEventClass: aEventSourcingEventClassModel
 	^ self new
-		event: aEventSourcingEventClassModel;
+		eventClassModel: aEventSourcingEventClassModel;
 		parentPackage: aEventSourcingEventClassModel parentPackage;
 		yourself

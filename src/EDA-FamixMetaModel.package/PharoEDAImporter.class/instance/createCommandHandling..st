@@ -1,8 +1,8 @@
 public-entity-creation
 createCommandHandling: anEDACommandModel
 	| model handlingMethodModel aggregateRootClassModel aggregateRootClass commandClassModel commandClass commandHandling pragma |
-	model := anEDACommandModel command mooseModel.
-	commandClassModel := anEDACommandModel command.
+	model := anEDACommandModel commandClassModel mooseModel.
+	commandClassModel := anEDACommandModel commandClassModel.
 	commandClass := commandClassModel smalltalkClass.
 	"Obtener aggregateRootClass así y pragma directamente sin detect?
 	aggregateRootClass := commandClass aggregateRootClass.

@@ -8,7 +8,7 @@
 	"instvars" : [
 		"name",
 		"parentPackage",
-		"event",
+		"eventClassModel",
 		"aggregatePublishers",
 		"commandTriggers"
 	],

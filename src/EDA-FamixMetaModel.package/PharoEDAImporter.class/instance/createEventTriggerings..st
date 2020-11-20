@@ -1,8 +1,8 @@
 public-entity-creation
 createEventTriggerings: anEDACommandModel
 	| model handlingMethodModel aggregateRootClass aggregateRootClassModel commandClassModel commandClass allEventTriggeringsForCommand pragma eventTriggereds analyzedMethods findDirectEventForMethod |
-	model := anEDACommandModel command mooseModel.
-	commandClassModel := anEDACommandModel command.
+	model := anEDACommandModel commandClassModel mooseModel.
+	commandClassModel := anEDACommandModel commandClassModel.
 	commandClass := commandClassModel smalltalkClass.
 	"Obtener aggregateRootClass así y pragma directamente sin detect?
 	aggregateRootClass := commandClass aggregateRootClass.

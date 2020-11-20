@@ -1,15 +1,15 @@
 initialization
 initialize
 	super initialize.
-	event := FMNullMultivalueLink
+	eventClassModel := FMNullMultivalueLink
 		on: self
 		opposite: #eventClass:
-		selector: #event.
+		selector: #eventClassModel.
 	aggregatePublishers := FMNullMultivalueLink
 		on: self
 		opposite: #event:
 		selector: #aggregatePublishers.
-	commandTriggers  := FMNullMultivalueLink
+	commandTriggers := FMNullMultivalueLink
 		on: self
 		opposite: #event:
-		selector: #commandTriggers 
+		selector: #commandTriggers

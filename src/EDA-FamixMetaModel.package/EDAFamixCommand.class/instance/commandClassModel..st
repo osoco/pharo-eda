@@ -1,0 +1,3 @@
+accessing
+commandClassModel: aCommandClassModel
+	commandClassModel add: aCommandClassModel

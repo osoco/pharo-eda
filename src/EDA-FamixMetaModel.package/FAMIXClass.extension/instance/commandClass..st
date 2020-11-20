@@ -1,3 +1,3 @@
 *EDA-FamixMetaModel
 commandClass: aCommand
-	self privateState attributeAt: #command put: aCommand 
+	self privateState attributeAt: #commandClass put: aCommand

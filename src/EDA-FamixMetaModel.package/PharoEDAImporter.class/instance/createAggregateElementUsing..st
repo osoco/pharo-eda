@@ -9,7 +9,7 @@ createAggregateElementUsing: anEDAAggregateElement
 					anEDAAggregateElement aggregateElementClassModel smalltalkClass
 						category and: [ classModel isAggregateRoot ] ].
 	aggregateElementUsing := EDAFamixAggregateElementUsing new
-		aggregate: (self ensureAggregateForAggregateRootClass: aggregateRootClassModel);
+		aggregate: (self ensureAggregateRootForAggregateRootClass: aggregateRootClassModel);
 		aggregateElement: anEDAAggregateElement.
 	aggregateElementUsings
 		at: anEDAAggregateElement

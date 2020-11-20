@@ -5,7 +5,7 @@ createCommand: aCommandClassModel
 		at: aCommandClassModel
 		put:
 			(EDAFamixCommand new
-				command: aCommandClassModel;
+				commandClassModel: aCommandClassModel;
 				parentPackage: aCommandClassModel parentPackage;
 				yourself).
 	^ command

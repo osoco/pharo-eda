@@ -5,7 +5,7 @@ createAggregate: anAggregateRootClassModel
 		at: anAggregateRootClassModel
 		put:
 			(EDAFamixAggregate new
-				aggregateRoot: anAggregateRootClassModel;
+				aggregateRoot: (self ensureAggregateRootForAggregateRootClass: anAggregateRootClassModel);
 				parentPackage: anAggregateRootClassModel parentPackage;
 				yourself).
 	^ aggregate

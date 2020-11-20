@@ -1,0 +1,3 @@
+accessing
+eventClassModel: anEventClassModel
+	eventClassModel add: anEventClassModel

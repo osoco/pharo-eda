@@ -1,10 +1,10 @@
 initialization
 initialize
 	super initialize.
-	command := FMNullMultivalueLink
+	commandClassModel := FMNullMultivalueLink
 		on: self
 		opposite: #commandClass:
-		selector: #command.
+		selector: #commandClassModel.
 	aggregateHandlers := FMNullMultivalueLink
 		on: self
 		opposite: #command:

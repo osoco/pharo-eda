@@ -1,0 +1,3 @@
+accessing
+aggregateRootClassModel: anAggregateRootClassModel
+	aggregateRootClassModel add: anAggregateRootClassModel

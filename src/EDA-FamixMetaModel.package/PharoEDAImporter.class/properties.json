@@ -9,6 +9,7 @@
 		"aggregates",
 		"commands",
 		"events",
+		"aggregateRoots",
 		"aggregateElements",
 		"commandHandlings",
 		"eventPublishings",
