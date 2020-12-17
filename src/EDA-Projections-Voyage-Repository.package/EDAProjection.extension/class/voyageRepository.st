@@ -1,3 +1,3 @@
 *EDA-Projections-Voyage-Repository
 voyageRepository
-	^ self repository repository
+	^ self repository ifNotNil: [ :repo | repo repository]
