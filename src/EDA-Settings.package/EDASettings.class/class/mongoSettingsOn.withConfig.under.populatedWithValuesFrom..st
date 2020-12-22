@@ -1,18 +1,18 @@
 settings
 mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: mongoConfig
-	(aBuilder setting: #host)
+	(aBuilder setting: #urls)
 		parent: parent;
 		target: container;
-		label: 'Mongo DB host' translated;
-		description: 'Mongo DB host address';
+		label: 'Urls' translated;
+		description: 'Comma-separated MongoDB urls';
 		order: 1;
-		default: (mongoConfig at: 'host').
-	(aBuilder setting: #port)
+		default: (mongoConfig at: 'urls').
+	(aBuilder setting: #tls)
 		parent: parent;
 		target: container;
-		label: 'Mongo DB port' translated;
-		description: 'Mongo DB port';
-		default: (mongoConfig at: 'port').
+		label: 'Use TLS' translated;
+		description: 'Whether to connect using TLS';
+		default: (mongoConfig at: 'tls').
 	(aBuilder setting: #username)
 		parent: parent;
 		target: container;

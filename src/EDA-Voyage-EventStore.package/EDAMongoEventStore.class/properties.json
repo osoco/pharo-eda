@@ -21,7 +21,9 @@
 		"forceEager",
 		"lazySynchronize",
 		"wireProtocolEnabled",
-		"authenticationMechanism"
+		"authenticationMechanism",
+		"urls",
+		"tls"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Voyage-EventStore"
