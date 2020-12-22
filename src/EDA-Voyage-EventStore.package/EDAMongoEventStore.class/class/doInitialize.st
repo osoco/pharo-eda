@@ -1,7 +1,7 @@
 class initialization
 doInitialize
-	self host: nil.
-	self port: nil.
+	self urls: nil.
+	self tls: false.
 	self databaseName: nil.
 	self username: nil.
 	self password: nil.

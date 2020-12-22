@@ -21,7 +21,9 @@
 		"enableReplication",
 		"host",
 		"port",
-		"authenticationMechanism"
+		"authenticationMechanism",
+		"urls",
+		"tls"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Projections-Voyage-Repository"
