@@ -1,7 +1,9 @@
 {
 	"commentStamp" : "",
-	"classinstvars" : [ ],
+	"traitcomposition" : "EDATCollectionHelper",
+	"classtraitcomposition" : "EDATCollectionHelper classTrait",
 	"category" : "EDA-Traits",
-	"instvars" : [ ],
-	"name" : "EDATMongoHelper"
+	"classinstvars" : [ ],
+	"name" : "EDATMongoHelper",
+	"instvars" : [ ]
 }
