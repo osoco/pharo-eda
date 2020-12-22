@@ -13,6 +13,6 @@ setUp
 	self clearPreviousEvents.
 	self clearPreviousProjections.
 	self clearQueues.
-	self application eventStore repository resolver debug: true.
+"	self application eventStore repository resolver debug: true."
 	self launchApplication.
 	self timeLimit: EDATestEventStompTopicListener timeout seconds
