@@ -2,8 +2,8 @@ persistence
 initBackendRepository
 	| result |
 	result := self mongoRepositoryClass
-		host: self class host
-		port: self class port
+		mongoUrls: self class mongoUrls
+		tls: self class tls
 		database: self class databaseName
 		username: self class username
 		password: self class password.
@@ -16,7 +16,8 @@ initBackendRepository
 		ifTrue: [ result enableSingleton ]
 		ifFalse: [ result disableSingleton ].
 	result ensuringCurrentOnSave: self class ensuringCurrentOnSave.
-	result ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
+	result
+		ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
 	result lazySynchronize: self class lazySynchronize.
 	result wireProtocolEnabled: self class wireProtocolEnabled.
 	^ result
