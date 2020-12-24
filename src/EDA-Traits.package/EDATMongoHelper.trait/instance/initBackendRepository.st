@@ -9,16 +9,17 @@ initBackendRepository
 		tls: self class tls.
 	"result cache: EDAMongoNoCache new."
 	result debug: self class debug.
-	self class enableReplication
+	"	self class enableReplication
 		ifTrue: [ result enableReplication ]
-		ifFalse: [ result disableReplication ].
+		ifFalse: [ result disableReplication ]."
 	self class enableSingleton
 		ifTrue: [ result enableSingleton ]
 		ifFalse: [ result disableSingleton ].
 	result ensuringCurrentOnSave: self class ensuringCurrentOnSave.
-	result ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
+	result
+		ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
 	result
 		ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
 	result lazySynchronize: self class lazySynchronize.
-	result wireProtocolEnabled: self class wireProtocolEnabled.
+"	result wireProtocolEnabled: self class wireProtocolEnabled."
 	^ result
