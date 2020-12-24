@@ -1,15 +1,15 @@
 class initialization
 doInitialize
 	self urls: nil.
-	self tls: false.
+	self tls: nil.
 	self databaseName: nil.
 	self username: nil.
 	self password: nil.
-	self debug: false.
-	self enableReplication: false.
+	self debug: nil.
+	self enableReplication: nil.
 	self enableSingleton: nil.
-	self ensuringCurrentOnSave: false.
-	self ensuringCurrentReferencesOnQueries: false.
-	self forceEager: false.
-	self lazySynchronize: true.
-	self wireProtocolEnabled: true
+	self ensuringCurrentOnSave: nil.
+	self ensuringCurrentReferencesOnQueries: nil.
+	self forceEager: nil.
+	self lazySynchronize: nil.
+	self wireProtocolEnabled: nil
