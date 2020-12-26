@@ -1,7 +1,7 @@
 meta
 declarePackagesIn: spec
 	spec
-		package: #'EDA-Error-Strategies';
+		package: #'EDA-Errors';
 		package: #'EDA-Traits';
 		package: #'EDA-Traits-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
@@ -36,6 +36,8 @@ declarePackagesIn: spec
 					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging') ];
 		package: #'EDA-Settings'
 			with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application') ];
+		package: #'EDA-Settings-Tests'
+			with: [ spec requires: #('EDA-Settings') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec
 				requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ]
