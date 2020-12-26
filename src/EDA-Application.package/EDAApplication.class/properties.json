@@ -19,7 +19,8 @@
 		"isConfigured",
 		"isStarted",
 		"projectors",
-		"projectorsByTenant"
+		"projectorsByTenant",
+		"application"
 	],
 	"pools" : [ ],
 	"category" : "EDA-Application"
