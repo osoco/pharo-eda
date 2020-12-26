@@ -34,6 +34,8 @@ declarePackagesIn: spec
 			with: [ spec
 				requires:
 					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging') ];
+		package: #'EDA-Application-Tests'
+			with: [ spec requires: #('EDA-Application') ];
 		package: #'EDA-Settings'
 			with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application') ];
 		package: #'EDA-Settings-Tests'
