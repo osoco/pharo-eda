@@ -1,8 +1,7 @@
 private
 envVarDictionaryFiles
-	^ super envVarDictionaryFiles
-		union: {
+	^ OrderedCollection with: (
 			FileLocator imageDirectory 
 			/ 'config' 
 			/ 'integration-tests.json'
-		} asOrderedCollection
+		)

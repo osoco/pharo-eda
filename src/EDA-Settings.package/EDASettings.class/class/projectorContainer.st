@@ -1,0 +1,3 @@
+accessing
+projectorContainer
+	self subclassResponsibility

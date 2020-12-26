@@ -1,0 +1,3 @@
+accessing
+commandClassPrefix
+	^ self eventClassPrefix

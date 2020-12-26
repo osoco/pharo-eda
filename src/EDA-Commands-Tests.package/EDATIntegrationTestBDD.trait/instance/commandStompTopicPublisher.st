@@ -1,0 +1,3 @@
+lifecycle
+commandStompTopicPublisher
+	self subclassResponsibility

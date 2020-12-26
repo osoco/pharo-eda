@@ -1,3 +1,3 @@
 persistence
 selectOne: aProjectionClass where: aDictionary
-	^ aProjectionClass selectOne: aDictionary
+	^ self repository selectOne: aProjectionClass where: aDictionary

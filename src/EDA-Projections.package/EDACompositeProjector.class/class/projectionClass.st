@@ -1,3 +1,3 @@
 accessing
 projectionClass
-	^ self shouldBeImplemented
+	^ self shouldNotImplement 

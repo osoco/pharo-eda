@@ -1,0 +1,3 @@
+configuration
+listensForCommands
+	self subclassResponsibility 

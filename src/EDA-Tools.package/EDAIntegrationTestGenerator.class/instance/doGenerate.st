@@ -1,4 +1,5 @@
 protected
 doGenerate
 	self createIntegrationTestClass.
-	self createIntegrationTestMethod
+	self createIntegrationTestMethod.
+	self createAggregateRootClassClassMethod

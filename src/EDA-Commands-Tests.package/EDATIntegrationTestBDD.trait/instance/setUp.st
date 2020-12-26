@@ -14,4 +14,4 @@ setUp
 	self clearPreviousProjections.
 	self clearQueues.
 	self launchApplication.
-	self timeLimit: EDATestEventStompTopicListener timeout seconds
+	self eventStompTopicListenerClass timeout ifNotNil: [ :t | self timeLimit: t seconds ]

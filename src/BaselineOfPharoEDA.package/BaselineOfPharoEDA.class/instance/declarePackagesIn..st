@@ -1,6 +1,7 @@
 meta
 declarePackagesIn: spec
 	spec
+		package: #'EDA-Error-Strategies';
 		package: #'EDA-Traits';
 		package: #'EDA-Traits-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
@@ -13,7 +14,6 @@ declarePackagesIn: spec
 			with: [ spec requires: #('EDA-Commands-Tests') ];
 		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Errors' with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
 		package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Events'
 			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];

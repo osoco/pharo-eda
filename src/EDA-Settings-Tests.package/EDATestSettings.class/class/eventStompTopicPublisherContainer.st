@@ -1,0 +1,3 @@
+accessing
+eventStompTopicPublisherContainer
+	^ self shouldBeImplemented

@@ -1,4 +1,4 @@
-dependencies
+baselines
 declarePharoEdaIn: spec
-	spec repository: FileSystem workingDirectory.
+	spec repository: 'github://osoco/pharo-eda:develop/src'.
 	^ spec

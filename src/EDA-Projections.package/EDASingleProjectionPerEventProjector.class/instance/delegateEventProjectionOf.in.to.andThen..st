@@ -22,6 +22,7 @@ delegateEventProjectionOf: anEvent in: aProjection to: aProjectionMethod andThen
 		do: [ :exception | 
 			succeed := self
 				manageError: exception
-				whenProjectingEvent: anEvent
-				usingErrorStrategy: self class errorHandlingBehavior strategy ].
+				whenProjectingSingle: aProjection
+				event: anEvent
+				usingErrorStrategy: self class errorStrategy ].
 	^ succeed

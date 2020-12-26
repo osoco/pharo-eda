@@ -11,8 +11,9 @@ start
 	listener
 		on: Exception - Break
 		do: [ :error | 
+			self manageError: error usingErrorStrategy: self class errorStrategy.
 			self
-				manageError: error
-				usingErrorStrategy: EDACommandConsumingErrorBehavior strategy.
-			self class restartOnCommandConsumingErrors
-				ifTrue: [ self restart ] ]
+				logErrorMessage:
+					'Error in Command Consumer''s listener: '
+						, error description greaseString.
+			self restart ]

@@ -18,6 +18,7 @@ delegateEventProjectionOf: anEvent in: aProjectionCollection to: aProjectionMeth
 		do: [ :exception | 
 			succeed := self
 				manageError: exception
-				whenProjectingEvent: anEvent
-				usingErrorStrategy: self class errorHandlingBehavior strategy ].
+				whenProjectingMultiple: aProjectionCollection
+				event: anEvent
+				usingErrorStrategy: self class errorStrategy ].
 	^ succeed

@@ -1,0 +1,3 @@
+accessing
+mongoEventStoreContainer
+	self subclassResponsibility

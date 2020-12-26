@@ -1,5 +1,5 @@
 {
-	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATErrorHelper classTrait",
+	"classtraitcomposition" : "EDAPrintOnHelper classTrait + EDATLogging classTrait + EDATErrorHelper classTrait",
 	"classvars" : [ ],
 	"instvars" : [
 		"eventStore",
@@ -8,7 +8,7 @@
 	"name" : "EDACommandHandler",
 	"commentStamp" : "",
 	"super" : "Object",
-	"traitcomposition" : "EDAPrintOnHelper + EDATErrorHelper",
+	"traitcomposition" : "EDAPrintOnHelper + EDATLogging + EDATErrorHelper",
 	"type" : "normal",
 	"classinstvars" : [ ],
 	"pools" : [ ],

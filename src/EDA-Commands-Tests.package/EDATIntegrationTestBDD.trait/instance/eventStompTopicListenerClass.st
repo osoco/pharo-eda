@@ -1,0 +1,3 @@
+initialization
+eventStompTopicListenerClass
+	self shouldBeImplemented

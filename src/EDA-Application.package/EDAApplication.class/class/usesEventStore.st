@@ -1,0 +1,3 @@
+configuration
+usesEventStore
+	self subclassResponsibility 

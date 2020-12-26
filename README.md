@@ -1,5 +1,7 @@
 # Event-Driven Architectures in Pharo
 
+[![Build Status](https://travis-ci.org/osoco/pharo-eda.svg?branch=develop)](https://travis-ci.org/osoco/pharo-eda)
+
 PharoEDA is a framework that simplifies developing Event-Driven Architectures [1].
 It's also an opinionated framework favoring Domain-Driven Design [2], which means that if you honor some conventions, and the adapters are available, PharoEDA will let you focus in your domain and only in your domain. It works out-of-the-box. Please read on even if your programming language of choice is not Pharo Smalltalk [3].
 

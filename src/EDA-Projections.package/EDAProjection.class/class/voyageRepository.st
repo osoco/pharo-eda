@@ -1,0 +1,3 @@
+accessing
+voyageRepository
+	^ self repository

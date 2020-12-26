@@ -26,5 +26,10 @@
 		"tls"
 	],
 	"pools" : [ ],
-	"category" : "EDA-Voyage-EventStore"
+	"classvars" : [
+		"BackendRepositories"
+	],
+	"instvars" : [ ],
+	"name" : "EDAMongoEventStore",
+	"type" : "normal"
 }

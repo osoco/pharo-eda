@@ -1,3 +1,3 @@
 *EDA-Voyage-EventStore
 voyageRepository
-	^ voyageRepository
+	^ self repository
