@@ -3,5 +3,5 @@ declareVoyageIn: spec
 	spec
 		baseline: 'Voyage'
 		with: [ spec
-				repository: 'github://osoco/voyage:1.7-tls/mc' ].
+				repository: 'github://pharo-nosql/voyage:1.7/mc' ].
 	^ spec
