@@ -5,8 +5,7 @@ initBackendRepository
 		mongoUrls: (self csvToCollection: self class urls)
 		database: self class databaseName
 		username: self class username
-		password: self class password
-		tls: self class tls.
+		password: self class password.
 	"result cache: EDAMongoNoCache new."
 	result debug: self class debug.
 		self class enableReplication
