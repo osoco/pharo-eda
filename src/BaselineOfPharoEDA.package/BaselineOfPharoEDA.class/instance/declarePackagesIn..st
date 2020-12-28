@@ -29,7 +29,7 @@ declarePackagesIn: spec
 		package: #'EDA-StompMessaging'
 			with: [ spec requires: #('Stamp' 'EDA-Traits') ];
 		package: #'EDA-Voyage-EventStore'
-			with: [ spec requires: #('VoyageMongo') ];
+			with: [ spec requires: #('Voyage') ];
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
