@@ -3,7 +3,7 @@ handleDeleteCommand: aCommand
 	| result |
 	self id
 		ifNil:
-			[ self logErrorMessage: 'id is missing' andThrow: EDAInvalidCommandMessage ].
+			[ self logErrorMessage: 'id is missing' andThrow: (EDAAggregateRootDoesNotExist forClass: self class) ].
 	result := self buildDeleteCommandResultEvent.
 	result
 		ifNotNil: [ :r | 
