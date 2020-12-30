@@ -7,7 +7,7 @@ baseline: spec
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
 			self declareVoyageIn: spec.
-			self declareMongotalkIn: spec.
+			"self declareMongotalkIn: spec."
 			self declareStampIn: spec.
 			self declareDeployUtilsIn: spec.
 			self declarePackagesIn: spec.
