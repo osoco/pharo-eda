@@ -1,5 +1,5 @@
 *EDA-Voyage-EventStore
-openWithTimeout: aDuration
+openSslWithTimeout: aDuration
 	| addr |
 	"Waits the specified number of seconds to open the connection."
 	addr := NetNameResolver addressForName: host timeout: 20.
