@@ -1,8 +1,9 @@
 handling
-writeCommand: aString withBasename: aBasename
+writeCommand: aCommand withBasename: aBasename
 	| result |
-	result := (self class errorFolderFor: aBasename) / 'command.txt'.
+	result := (self class errorFolderFor: aBasename)
+		/ (aCommand class printString , '.txt').
 	result writeStream
-		nextPutAll: aString;
+		nextPutAll: aCommand printString;
 		close.
 	^ result

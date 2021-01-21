@@ -4,7 +4,6 @@ start
 	self isStarted ifNil: [ self isStarted: false ].
 	self isStarted
 		ifTrue: [ ^ self ].
-	self logSettings.
 	self commandConsumer
 		ifNotNil: [ :c | 
 			c start.
