@@ -1,3 +1,0 @@
-persistence
-removeProjection: aProjectionClass
-	repository removeAll: aProjectionClass

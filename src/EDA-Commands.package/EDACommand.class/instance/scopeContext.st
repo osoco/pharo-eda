@@ -1,3 +1,0 @@
-accessing
-scopeContext
-	^ scopeContext

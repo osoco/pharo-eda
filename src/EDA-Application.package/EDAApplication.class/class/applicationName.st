@@ -1,3 +1,0 @@
-accessing
-applicationName
-	self subclassResponsibility

@@ -1,8 +1,0 @@
-protected
-doGenerate
-	self createDomainTestClass.
-	self createDomainTestMethod.
-	self createTestHelperBuildCommandMethod.
-	self createTestHelperBuildEventMethod.
-	self createTestEventBuildEventClassMethod.
-	self createTestHelperBuildEventClassMethod.

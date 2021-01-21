@@ -1,3 +1,0 @@
-accessing
-aggregateRepository
-	self subclassResponsibility

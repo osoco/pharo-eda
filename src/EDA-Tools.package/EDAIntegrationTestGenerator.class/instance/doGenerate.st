@@ -1,4 +1,0 @@
-protected
-doGenerate
-	self createIntegrationTestClass.
-	self createIntegrationTestMethod

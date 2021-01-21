@@ -1,3 +1,0 @@
-persistence
-findEventsOfTenant: aTenant ofAggregate: anAggregateRootClass whereId: aNumber
-	self subclassResponsibility

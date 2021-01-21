@@ -1,3 +1,0 @@
-lifecycle
-checkSettingsLoaded
-	"Compatibility purposes"	

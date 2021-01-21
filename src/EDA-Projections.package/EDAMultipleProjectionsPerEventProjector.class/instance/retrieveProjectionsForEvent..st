@@ -1,3 +1,0 @@
-projection retrieval
-retrieveProjectionsForEvent: anEvent
-	self subclassResponsibility

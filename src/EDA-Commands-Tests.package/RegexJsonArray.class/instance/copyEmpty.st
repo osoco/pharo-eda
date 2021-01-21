@@ -1,3 +1,0 @@
-copying
-copyEmpty
-	^ self new

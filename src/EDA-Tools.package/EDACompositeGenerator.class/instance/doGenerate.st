@@ -1,3 +1,0 @@
-protected
-doGenerate
-	^ nil

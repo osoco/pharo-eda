@@ -1,3 +1,0 @@
-initialization
-initializeCommandBuilders
-	self subclassResponsibility

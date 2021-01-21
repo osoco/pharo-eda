@@ -1,3 +1,0 @@
-persistence
-initBackendRepository
-	self subclassResponsibility 

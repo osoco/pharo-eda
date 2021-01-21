@@ -1,3 +1,0 @@
-accessing
-authenticationMechanism
-	^ authenticationMechanism

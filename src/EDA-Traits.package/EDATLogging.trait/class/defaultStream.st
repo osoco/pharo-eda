@@ -1,3 +1,0 @@
-logging
-defaultStream
-	^ self stdout

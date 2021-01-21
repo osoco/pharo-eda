@@ -1,3 +1,0 @@
-voyage
-voyageCollectionName
-	^ 'EventSourcingEvent'

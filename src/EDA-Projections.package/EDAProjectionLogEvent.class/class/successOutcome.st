@@ -1,3 +1,0 @@
-protected
-successOutcome
-	self subclassResponsibility 

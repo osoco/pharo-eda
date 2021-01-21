@@ -1,3 +1,0 @@
-helper
-cr
-	^ Character cr

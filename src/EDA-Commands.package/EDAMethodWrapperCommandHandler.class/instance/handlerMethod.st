@@ -1,3 +1,0 @@
-accessing
-handlerMethod
-	^ handlerMethod

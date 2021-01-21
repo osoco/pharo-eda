@@ -1,3 +1,0 @@
-lifecycle
-prepareToStopApplication
-	"Compatibility purposes"

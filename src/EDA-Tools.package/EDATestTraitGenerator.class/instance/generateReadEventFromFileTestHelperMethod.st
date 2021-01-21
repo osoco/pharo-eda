@@ -1,3 +1,0 @@
-code generation
-generateReadEventFromFileTestHelperMethod
-	^ self generateReadFromFileTestHelperMethod: self generateReadEventFromFileTestHelperMethodName for: self eventName ofType: 'events'
