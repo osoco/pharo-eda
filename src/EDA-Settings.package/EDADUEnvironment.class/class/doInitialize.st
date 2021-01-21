@@ -1,2 +1,0 @@
-class initialization
-doInitialize

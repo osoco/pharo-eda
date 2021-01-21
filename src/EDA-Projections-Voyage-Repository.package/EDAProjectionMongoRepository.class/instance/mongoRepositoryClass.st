@@ -1,3 +1,0 @@
-persistence
-mongoRepositoryClass
-	^ EDAVOProjectionMongoRepository

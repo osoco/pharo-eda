@@ -1,3 +1,0 @@
-logging
-stderr
-	^ Stdio stderr

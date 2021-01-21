@@ -1,3 +1,0 @@
-helper
-buildEventSerializer
-	^ EDAJsonEventSerializer new

@@ -1,3 +1,0 @@
-initialization
-initializeCommandMappings
-	self subclassResponsibility

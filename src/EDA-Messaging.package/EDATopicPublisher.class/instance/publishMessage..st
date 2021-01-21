@@ -1,3 +1,0 @@
-writing
-publishMessage: aMessage
-	self subclassResponsibility

@@ -1,3 +1,0 @@
-sorting
-shouldRunAfter: anotherGenerator
-	^ false

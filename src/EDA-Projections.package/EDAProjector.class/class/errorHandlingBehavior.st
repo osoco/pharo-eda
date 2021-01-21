@@ -1,3 +1,0 @@
-accessing
-errorHandlingBehavior
-	self subclassResponsibility

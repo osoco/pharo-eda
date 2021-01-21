@@ -1,3 +1,0 @@
-lifecycle
-subscribe
-	self subclassResponsibility

@@ -1,3 +1,0 @@
-accessing
-restartOnCommandConsumingErrors: aBoolean
-	restartOnCommandConsumingErrors := aBoolean

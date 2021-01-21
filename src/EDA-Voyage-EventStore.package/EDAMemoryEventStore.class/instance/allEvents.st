@@ -1,3 +1,0 @@
-persistence
-allEvents
-	^ EDAEventSourcingEvent selectAll

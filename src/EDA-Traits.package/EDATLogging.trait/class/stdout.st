@@ -1,3 +1,0 @@
-logging
-stdout
-	^ Stdio stdout

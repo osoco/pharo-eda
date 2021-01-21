@@ -1,3 +1,0 @@
-setup - events
-configureEventStoreAuthentication
-		EDAMongoEventStore authenticationMechanism beDefault
