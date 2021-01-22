@@ -9,7 +9,7 @@ Class {
 		'loggingLevel',
 		'traceEnabled'
 	],
-	#category : 'EDA-Settings'
+	#category : #'EDA-Traits'
 }
 
 { #category : #accessing }
