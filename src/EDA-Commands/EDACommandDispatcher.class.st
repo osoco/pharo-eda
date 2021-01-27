@@ -9,7 +9,7 @@ Class {
 	#classInstVars : [
 		'strategy'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Commands-Handlers'
 }
 
 { #category : #'instance creation' }
@@ -33,7 +33,10 @@ EDACommandDispatcher >> dispatch: aCommand [
 								nextPutAll: '>>';
 								nextPutAll: 'dispatch: received a nil command' ])
 				andThrow: EDAInvalidCommandMessage ].
-	aCommand version = aCommand class latestVersion
+	
+	handler := aCommand isDelete
+		ifTrue: [ EDADeleteCommandHandler uniqueInstance ]
+		ifFalse: [ aCommand version = aCommand class latestVersion
 		ifFalse: [ self
 				logErrorMessage:
 					(String
@@ -46,9 +49,7 @@ EDACommandDispatcher >> dispatch: aCommand [
 								nextPutAll: aCommand class latestVersion greaseString;
 								nextPutAll: ' is supported' ])
 				andThrow: EDAInvalidCommandMessage ].
-	handler := aCommand isDelete
-		ifTrue: [ EDADeleteCommandHandler uniqueInstance ]
-		ifFalse: [ self handlersRegistry handlerForCommand: aCommand ].
+			self handlersRegistry handlerForCommand: aCommand ].
 	handler
 		ifNil: [ self
 				logErrorMessage:
