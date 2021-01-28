@@ -1,7 +1,7 @@
 Class {
 	#name : #EDADomainTestGenerator,
 	#superclass : #EDAGenerator,
-	#category : 'EDA-Tools'
+	#category : #'EDA-Tools'
 }
 
 { #category : #asserting }
@@ -131,6 +131,7 @@ EDADomainTestGenerator >> generateDomainTestMethod [
 		].
 	result
 		nextPut: cr.
+	result nextPutAll: '	event aggregateRootVersion: command aggregateRootVersion + 1.'.
 	result
 		nextPutAll: '	self';
 		nextPut: cr.
