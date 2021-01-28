@@ -11,7 +11,7 @@ Class {
 		'scopeKey',
 		'brandNew'
 	],
-	#category : 'EDA-Domain-Aggregate'
+	#category : #'EDA-Domain-Aggregate'
 }
 
 { #category : #helpers }
@@ -213,6 +213,7 @@ EDAAggregateRoot >> handleDeleteCommand: aCommand [
 	result := self buildDeleteCommandResultEvent.
 	result
 		ifNotNil: [ :r | 
+			r tenant: aCommand tenant.
 			r id: self id.
 			r commandId: aCommand commandId.
 			r version: 1.
