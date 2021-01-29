@@ -82,7 +82,7 @@ EDAProjection class >> projectionErrorHandlingStrategy: aStrategy [
 
 { #category : #persistence }
 EDAProjection class >> removeAllProjections [
-	(self class subclasses
+	(self subclasses
 		reject:
 			[ :projectionClass | (projectionClass class name beginsWith: 'EDATest') or: [ projectionClass isAbstract ] ])
 		do:
