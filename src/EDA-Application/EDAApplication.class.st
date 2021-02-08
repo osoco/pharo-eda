@@ -26,20 +26,20 @@ Class {
 	#superclass : #Object,
 	#traits : 'EDATLogging',
 	#classTraits : 'EDATLogging classTrait',
-	#classVars : [
-		'ProjectionSynchronizationEnabled'
-	],
-	#classInstVars : [
-		'eventStore',
-		'eventAnnouncer',
+	#instVars : [
 		'commandConsumer',
 		'commandDispatcher',
-		'eventProducer',
 		'commandListenerClientDebug',
+		'eventAnnouncer',
+		'eventProducer',
+		'eventStore',
 		'isConfigured',
 		'isStarted',
-		'projectors',
-		'projectorsByTenant'
+		'projectorsByTenant',
+		'applicationName'
+	],
+	#classVars : [
+		'ProjectionSynchronizationEnabled'
 	],
 	#category : #'EDA-Application'
 }
@@ -70,54 +70,73 @@ EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore event
 ]
 
 { #category : #accessing }
-EDAApplication class >> commandConsumer [
+EDAApplication class >> new [
+	| result |
+	result := self basicNew.
+	EDAApplications uniqueInstance
+		register: result.
+	^ result
+]
+
+{ #category : #accessing }
+EDAApplication >> applicationName [
+	^ applicationName ifNil: [ self class applicationName ]
+]
+
+{ #category : #accessing }
+EDAApplication >> applicationName: aString [
+	applicationName := aString
+]
+
+{ #category : #accessing }
+EDAApplication >> commandConsumer [
 	^ commandConsumer
 ]
 
 { #category : #accessing }
-EDAApplication class >> commandConsumer: anObject [
+EDAApplication >> commandConsumer: anObject [
 	commandConsumer := anObject
 ]
 
 { #category : #accessing }
-EDAApplication class >> commandDispatcher [
+EDAApplication >> commandDispatcher [
 	^ commandDispatcher
 ]
 
 { #category : #accessing }
-EDAApplication class >> commandDispatcher: anObject [
+EDAApplication >> commandDispatcher: anObject [
 	commandDispatcher := anObject
 ]
 
 { #category : #accessing }
-EDAApplication class >> commandListenerClientDebug [
+EDAApplication >> commandListenerClientDebug [
 	^ commandListenerClientDebug
 ]
 
 { #category : #accessing }
-EDAApplication class >> commandListenerClientDebug: aBoolean [
+EDAApplication >> commandListenerClientDebug: aBoolean [
 	commandListenerClientDebug := aBoolean
 ]
 
 { #category : #'setup - events' }
-EDAApplication class >> configureEventStoreAuthentication [
+EDAApplication >> configureEventStoreAuthentication [
 		EDAMongoEventStore authenticationMechanism beDefault
 ]
 
 { #category : #'setup - projections' }
-EDAApplication class >> configureProjectionBackendAuthentication: anObject [
+EDAApplication >> configureProjectionBackendAuthentication: anObject [
 	anObject configureAuthentication
 ]
 
 { #category : #'class initialization' }
-EDAApplication class >> doInitialize [
+EDAApplication >> doInitialize [
 	self isStarted: false.
 	self isConfigured: false.
 	self projectorsByTenant: Dictionary new
 ]
 
 { #category : #setup }
-EDAApplication class >> doSetup [
+EDAApplication >> doSetup [
 	SettingBrowser open delete.
 	self setupLogging.
 	self setupEventAnnouncer.
@@ -134,62 +153,63 @@ EDAApplication class >> doSetup [
 ]
 
 { #category : #accessing }
-EDAApplication class >> eventAnnouncer [
+EDAApplication >> eventAnnouncer [
 	^ eventAnnouncer
 ]
 
 { #category : #accessing }
-EDAApplication class >> eventAnnouncer: anObject [
+EDAApplication >> eventAnnouncer: anObject [
 	eventAnnouncer := anObject
 ]
 
 { #category : #accessing }
-EDAApplication class >> eventProducer [
+EDAApplication >> eventProducer [
 	^ eventProducer
 ]
 
 { #category : #accessing }
-EDAApplication class >> eventProducer: anObject [
+EDAApplication >> eventProducer: anObject [
 	eventProducer := anObject
 ]
 
 { #category : #accessing }
-EDAApplication class >> eventStore [
+EDAApplication >> eventStore [
 	^ eventStore
 ]
 
 { #category : #accessing }
-EDAApplication class >> eventStore: anObject [
+EDAApplication >> eventStore: anObject [
 	eventStore := anObject
 ]
 
 { #category : #'class initialization' }
-EDAApplication class >> initialize [
+EDAApplication >> initialize [
+	super initialize.
 	self doInitialize
 ]
 
 { #category : #accessing }
-EDAApplication class >> isConfigured [
+EDAApplication >> isConfigured [
 	^ isConfigured
 ]
 
 { #category : #accessing }
-EDAApplication class >> isConfigured: aBoolean [
+EDAApplication >> isConfigured: aBoolean [
 	isConfigured := aBoolean
 ]
 
 { #category : #accessing }
-EDAApplication class >> isStarted [
+EDAApplication >> isStarted [
 	^ isStarted
 ]
 
 { #category : #accessing }
-EDAApplication class >> isStarted: aBoolean [
+EDAApplication >> isStarted: aBoolean [
 	isStarted := aBoolean
 ]
 
 { #category : #logging }
-EDAApplication class >> logSettings [
+EDAApplication >> logSettings [
 	self
 		logDebugMessage: 'Command consumer: ' , self commandConsumer greaseString.
 	self
@@ -212,30 +232,32 @@ EDAApplication class >> logSettings [
 ]
 
 { #category : #accessing }
-EDAApplication class >> projectionSynchronizationEnabled [
+EDAApplication >> projectionSynchronizationEnabled [
 	^ ProjectionSynchronizationEnabled
 ]
 
 { #category : #accessing }
-EDAApplication class >> projectionSynchronizationEnabled: aBoolean [
+EDAApplication >> projectionSynchronizationEnabled: aBoolean [
 	ProjectionSynchronizationEnabled := aBoolean
 ]
 
 { #category : #accessing }
-EDAApplication class >> projectorsByTenant [
+EDAApplication >> projectorsByTenant [
 	| result |
 	result := projectorsByTenant.
-	result ifNil: [ result := Dictionary new. projectorsByTenant := result ].
+	result
+		ifNil: [ result := Dictionary new.
+			projectorsByTenant := result ].
 	^ result
 ]
 
 { #category : #accessing }
-EDAApplication class >> projectorsByTenant: aDictionary [
+EDAApplication >> projectorsByTenant: aDictionary [
 	projectorsByTenant := aDictionary
 ]
 
 { #category : #reset }
-EDAApplication class >> reset [
+EDAApplication >> reset [
 	self resetLogging.
 	self resetEventProducer.
 	self resetEventStore.
@@ -250,51 +272,51 @@ EDAApplication class >> reset [
 ]
 
 { #category : #'reset - commands' }
-EDAApplication class >> resetCommandConsumer [
+EDAApplication >> resetCommandConsumer [
 	self commandConsumer ifNotNil: [ :c | c close ].
 	self commandConsumer: nil
 ]
 
 { #category : #'reset - commands' }
-EDAApplication class >> resetCommandDispatcher [
+EDAApplication >> resetCommandDispatcher [
 	self commandDispatcher: nil
 ]
 
 { #category : #'reset - events' }
-EDAApplication class >> resetEventAnnouncer [
+EDAApplication >> resetEventAnnouncer [
 	eventAnnouncer := nil
 ]
 
 { #category : #'reset - events' }
-EDAApplication class >> resetEventProducer [
+EDAApplication >> resetEventProducer [
 	self eventProducer ifNotNil: [ :producer | producer close ].
 	self eventProducer: nil
 ]
 
 { #category : #'reset - events' }
-EDAApplication class >> resetEventStore [
+EDAApplication >> resetEventStore [
 	self eventStore: nil
 ]
 
 { #category : #'reset - events' }
-EDAApplication class >> resetEventSubscriptions [
+EDAApplication >> resetEventSubscriptions [
 	self subclassResponsibility
 ]
 
 { #category : #reset }
-EDAApplication class >> resetLogging [
+EDAApplication >> resetLogging [
 	EDALogEvent announcer
 		unsubscribe: EDALogEvent
 ]
 
 { #category : #'reset - projections' }
-EDAApplication class >> resetProjections [
+EDAApplication >> resetProjections [
 	"nothing to do"
 	
 ]
 
 { #category : #'reset - projections' }
-EDAApplication class >> resetProjectorOfTenant: aTenant [
+EDAApplication >> resetProjectorOfTenant: aTenant [
 	| projector |
 	projector := self projectorsByTenant at: aTenant ifAbsent: [ nil ].
 	projector
@@ -303,24 +325,24 @@ EDAApplication class >> resetProjectorOfTenant: aTenant [
 ]
 
 { #category : #'reset - projections' }
-EDAApplication class >> resetProjectors [
+EDAApplication >> resetProjectors [
 	self retrieveAllTenants do: [ :t | self resetProjectorOfTenant: t ]
 
 
 ]
 
 { #category : #'reset - repositories' }
-EDAApplication class >> resetRepositories [
+EDAApplication >> resetRepositories [
 	EDAAggregateRepository allSubclassesDo: [ :repo | repo eventStore: nil ]
 ]
 
 { #category : #'multitenancy support' }
-EDAApplication class >> retrieveAllTenants [
+EDAApplication >> retrieveAllTenants [
 	self shouldBeImplemented
 ]
 
 { #category : #setup }
-EDAApplication class >> setup [
+EDAApplication >> setup [
 	self isConfigured ifNil: [ self isConfigured: false ].
 	self isConfigured ifTrue: [ ^ self ].
 	self doSetup.
@@ -328,12 +350,12 @@ EDAApplication class >> setup [
 ]
 
 { #category : #'setup - commands' }
-EDAApplication class >> setupCommandConsumer [
+EDAApplication >> setupCommandConsumer [
 	^ self setupCommandConsumerWithCommandListener: EDACommandStompTopicListener new
 ]
 
 { #category : #'setup - commands' }
-EDAApplication class >> setupCommandConsumerWithCommandListener: listener [
+EDAApplication >> setupCommandConsumerWithCommandListener: listener [
 	| materializer |
 	listener client debug: self commandListenerClientDebug.
 	materializer := EDAJsonCommandMaterializer new.
@@ -342,22 +364,22 @@ EDAApplication class >> setupCommandConsumerWithCommandListener: listener [
 ]
 
 { #category : #setup }
-EDAApplication class >> setupCommandDispatcher [
-	self
-		commandDispatcher:
-			(self
-				buildCommandDispatcherWithEventStore: self eventStore
-				eventProducer: self eventProducer
-				andProjectorClass: EDACompositeProjector)
+EDAApplication >> setupCommandDispatcher [
+	| handlerScanner  handlerFactory commandRegistry |
+	EDADeleteCommandHandler eventStore: self eventStore; eventBus: self eventProducer.
+	handlerScanner := EDAPragmaCommandHandlerMethodsScanner scannerPragma: #useAsCommandHandlerFor: from: EDAAggregateRoot.
+	handlerFactory := EDACommandHandlerFactory factoryWithEventStore: self eventStore eventBus: self eventProducer.
+	commandRegistry := EDACommandHandlersRegistry withScanner: handlerScanner factory: handlerFactory.
+	self commandDispatcher: (EDACommandDispatcher withRegistry: commandRegistry).
 ]
 
 { #category : #'setup - events' }
-EDAApplication class >> setupEventAnnouncer [
+EDAApplication >> setupEventAnnouncer [
 	self eventAnnouncer: Announcer new
 ]
 
 { #category : #'setup - events' }
-EDAApplication class >> setupEventProducer [
+EDAApplication >> setupEventProducer [
 	| eventPublisher eventSerializer |
 	eventPublisher := EDAEventStompTopicPublisher new.
 	eventSerializer := EDAJsonEventSerializer new.
@@ -365,26 +387,26 @@ EDAApplication class >> setupEventProducer [
 ]
 
 { #category : #'setup - events' }
-EDAApplication class >> setupEventStore [
+EDAApplication >> setupEventStore [
 	self flag: #TODO.	"Find out how to customize the authentication of the specific Mongo instance"
 	self eventStore: EDAMongoEventStore new.
 	self configureEventStoreAuthentication
 ]
 
 { #category : #'setup - events' }
-EDAApplication class >> setupEventSubscriptions [
+EDAApplication >> setupEventSubscriptions [
 	self subclassResponsibility 
 ]
 
 { #category : #setup }
-EDAApplication class >> setupLogging [
+EDAApplication >> setupLogging [
 	EDALogEvent announcer
 		when: EDALogEvent
 		do: [ :event | self logInfoMessage: event greaseString ]
 ]
 
 { #category : #'setup - projections' }
-EDAApplication class >> setupProjectionRepositoryForProjection: aProjectionClass [
+EDAApplication >> setupProjectionRepositoryForProjection: aProjectionClass [
 	| repository |
 	repository := EDAProjectionMongoRepository new.
 	self configureProjectionBackendAuthentication: repository.
@@ -392,7 +414,7 @@ EDAApplication class >> setupProjectionRepositoryForProjection: aProjectionClass
 ]
 
 { #category : #'setup - projections' }
-EDAApplication class >> setupProjections [
+EDAApplication >> setupProjections [
 	| projectionClasses |
 	projectionClasses := EDAProjection allSubclasses
 		reject: [ :projectionClass | 
@@ -406,7 +428,7 @@ EDAApplication class >> setupProjections [
 ]
 
 { #category : #'setup - projections' }
-EDAApplication class >> setupProjectorOfTenant: aTenant [
+EDAApplication >> setupProjectorOfTenant: aTenant [
 	self
 		projectorsByTenant at: aTenant put:
 			(EDACompositeProjector
@@ -415,12 +437,12 @@ EDAApplication class >> setupProjectorOfTenant: aTenant [
 ]
 
 { #category : #'setup - projections' }
-EDAApplication class >> setupProjectors [
+EDAApplication >> setupProjectors [
 	self retrieveAllTenants do: [ :tenant | self setupProjectorOfTenant: tenant ]
 ]
 
 { #category : #'setup - repositories' }
-EDAApplication class >> setupRepositories [
+EDAApplication >> setupRepositories [
 	EDAAggregateRepository
 		allSubclassesDo: [ :repo | repo setupEventStore: self eventStore ].
 	EDAEventSourcingEvent voyageRepository: self eventStore repository.
@@ -429,7 +451,7 @@ EDAApplication class >> setupRepositories [
 ]
 
 { #category : #api }
-EDAApplication class >> start [
+EDAApplication >> start [
 	self setup.
 	self isStarted ifNil: [ self isStarted: false ].
 	self isStarted
@@ -442,7 +464,7 @@ EDAApplication class >> start [
 ]
 
 { #category : #api }
-EDAApplication class >> stop [
+EDAApplication >> stop [
 	self isStarted ifNil: [ self isStarted: false ].
 	self isStarted
 		ifFalse: [ ^ self ].
@@ -452,7 +474,7 @@ EDAApplication class >> stop [
 ]
 
 { #category : #'setup - projections' }
-EDAApplication class >> synchronizeProjections [
+EDAApplication >> synchronizeProjections [
 	self retrieveAllTenants
 		do: [ :tenant |
 			| projector |
@@ -461,7 +483,7 @@ EDAApplication class >> synchronizeProjections [
 ]
 
 { #category : #'setup - projections' }
-EDAApplication class >> synchronizeProjectionsOfTenant: aTenant [
+EDAApplication >> synchronizeProjectionsOfTenant: aTenant [
 	| projector |
 	projector := self projectorsByTenant at: aTenant ifAbsent: [ nil ].
 	projector ifNotNil: [ :p | p projectOfTenant: aTenant ]
