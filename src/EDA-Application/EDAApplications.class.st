@@ -29,9 +29,15 @@ EDAApplications class >> uniqueInstance: anInstance [
 
 { #category : #logic }
 EDAApplications >> register: anEDAApplication [
+	self register: anEDAApplication under: anEDAApplication applicationName
+
+]
+
+{ #category : #logic }
+EDAApplications >> register: anEDAApplication under: anApplicationName [
 	self registry
-		at: anEDAApplication applicationName
-		ifPresent: [ :app | EDAApplicationAlreadyRegistered signal: app applicationName ]
+		at: anApplicationName
+		ifPresent: [ :app | EDAApplicationAlreadyRegistered signal: app printString ]
 		ifAbsentPut: [ anEDAApplication ]
 ]
 
@@ -50,5 +56,10 @@ EDAApplications >> registry: aDictionary [
 
 { #category : #logic }
 EDAApplications >> unregister: anEDAApplication [
-	self registry removeKey: anEDAApplication applicationName
+	self unregisterByName: anEDAApplication applicationName
+]
+
+{ #category : #logic }
+EDAApplications >> unregisterByName: anApplicationName [
+	self registry removeKey: anApplicationName
 ]
