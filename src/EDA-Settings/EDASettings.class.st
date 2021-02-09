@@ -19,19 +19,19 @@ Class {
 }
 
 { #category : #settings }
-EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
+EDASettings class >> commandListenerSettingsOn: aBuilder withConfig: aConfig under: parent [
 	(aBuilder group: #commandListener)
 		label: 'Command Listener' translated;
 		description: 'Command listener';
 		parent: parent.
 	self
 		stompListenerSettingsOn: aBuilder
-		withConfig: EDACommandStompTopicListener
+		withConfig: aConfig
 		under: #commandListener
 		populatedWithValuesFrom: 'commandListener'.
 	(aBuilder pickOne: #strategy)
 		parent: #commandListener;
-		target: EDACommandConsumingErrorBehavior;
+		target: aConfig;
 		label: 'Command Consuming Error' translated;
 		description: 'Strategy when dealing with command consuming errors';
 		order: 1;
@@ -72,49 +72,61 @@ EDASettings class >> duEnvironmentClass: envClass [
 { #category : #settings }
 EDASettings class >> edaSettingsOn: aBuilder [
 	<systemsettings>
-	| parent |
-	parent := EDAApplication subclasses
-		ifEmpty: [ nil ]
-		ifNotEmpty: [ :c | c first settingsGroup ].
-	(aBuilder group: #eda)
-		label: 'Event-Driven Architecture' translated;
-		description: 'Event-Driven Architecture settings';
-		noOrdering;
-		parent: parent.
-	(aBuilder pickOne: #currentEnvironment)
-		parent: #eda;
-		target: EDADUEnvironment;
-		label: 'Environment' translated;
-		description: 'Environment';
-		order: 1;
-		domainValues:
-			(EDADUEnvironment environments
-				collect: [ :level | level translated -> level greaseString ]).
-	self commandListenerSettingsOn: aBuilder under: #eda.
-	self eventPublisherSettingsOn: aBuilder under: #eda.
-	self eventStoreSettingsOn: aBuilder under: #eda.
-	self
-		projectionSettingsOn: aBuilder
-		under: #eda
-		populatedWithValuesFrom: 'projections'.
-	self loggingSettingsOn: aBuilder under: #eda
+	EDAApplications uniqueInstance applications
+		do: [ :app | | parent |
+			parent := app settingsGroup.
+			(aBuilder group: #eda)
+				label: 'Event-Driven Architecture' translated;
+				description: 'Event-Driven Architecture settings';
+				noOrdering;
+				parent: parent.
+			(aBuilder pickOne: #currentEnvironment)
+				parent: #eda;
+				target: app environment;
+				label: 'Environment' translated;
+				description: 'Environment';
+				order: 1;
+				domainValues:
+					(EDADUEnvironment environments
+						collect: [ :level | level translated -> level greaseString ]).
+			self
+				commandListenerSettingsOn: aBuilder
+				withConfig: app commandListenerSettings
+				under: #eda.
+			self
+				eventPublisherSettingsOn: aBuilder
+				withConfig: app eventPublisherSettings
+				under: #eda.
+			self
+				eventStoreSettingsOn: aBuilder
+				withConfig: app eventStoreSettings
+				under: #eda.
+			self
+				projectionSettingsOn: aBuilder
+				withConfig: app projectionSettings
+				under: #eda
+				populatedWithValuesFrom: 'projections'.
+			self
+				loggingSettingsOn: aBuilder
+				withConfig: app loggingSettings
+				under: #eda ]
 ]
 
 { #category : #settings }
-EDASettings class >> eventPublisherSettingsOn: aBuilder under: parent [
+EDASettings class >> eventPublisherSettingsOn: aBuilder withConfig: aConfig under: parent [
 	(aBuilder group: #eventPublisher)
 		label: 'Event Publisher' translated;
 		description: 'Event publisher (for integration tests)';
 		parent: parent.
 	^ self
 		stompPublisherSettingsOn: aBuilder
-		withConfig: EDAEventStompTopicPublisher
+		withConfig: aConfig
 		under: #eventPublisher
 		populatedWithValuesFrom: 'eventPublisher'
 ]
 
 { #category : #settings }
-EDASettings class >> eventStoreSettingsOn: aBuilder under: parent [
+EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: parent [
 	| extSettings |
 	extSettings := self retrieveSettingAsDict: 'eventStore'.
 	(aBuilder group: #eventStore)
@@ -122,7 +134,7 @@ EDASettings class >> eventStoreSettingsOn: aBuilder under: parent [
 		parent: parent.
 	^ self
 		mongoSettingsOn: aBuilder
-		withConfig: EDAMongoEventStore
+		withConfig: aConfig
 		under: #eventStore
 		populatedWithValuesFrom: extSettings
 ]
@@ -143,6 +155,25 @@ EDASettings class >> loggingSettingsOn: aBuilder under: parent [
 	(aBuilder pickOne: #loggingLevel)
 		parent: #logging;
 		target: EDALoggingSettings;
+		label: 'Logging level' translated;
+		description: 'Logging level';
+		order: 1;
+		domainValues:
+			(EDALoggingSettings levels
+				collect: [ :level | level translated -> level greaseString ]);
+		default: (extSettings at: 'level')
+]
+
+{ #category : #settings }
+EDASettings class >> loggingSettingsOn: aBuilder withConfig: aConfig under: parent [
+	| extSettings |
+	extSettings := self retrieveSettingAsDict: 'logging'.
+	(aBuilder group: #logging)
+		label: 'Logging' translated;
+		parent: parent.
+	(aBuilder pickOne: #loggingLevel)
+		parent: #logging;
+		target: aConfig;
 		label: 'Logging level' translated;
 		description: 'Logging level';
 		order: 1;
@@ -267,6 +298,30 @@ EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder under: parent p
 ]
 
 { #category : #settings }
+EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
+	(aBuilder group: #errors)
+		label: 'Projection errors' translated;
+		description: 'Projection error handling';
+		noOrdering;
+		parent: #projections.
+	(aBuilder pickOne: #strategy)
+		parent: #errors;
+		target: aConfig;
+		label: 'Default projection Error Handling' translated;
+		description: 'Default trategy when dealing with errors projecting events';
+		order: 1;
+		domainValues:
+			(EDAErrorHandlingStrategy subclasses
+				collect: [ :strategy | strategy description -> strategy greaseString ]);
+		default: EDAPublishMessageErrorStrategy greaseString.
+	self
+		customProjectionErrorBehaviorsOn: aBuilder
+		withConfig: aConfig
+		under: #errors
+		populatedWithValuesFrom: aConfigEntry
+]
+
+{ #category : #settings }
 EDASettings class >> projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry [
 	| extSettings |
 	extSettings := self retrieveSettingAsDict: aConfigEntry.
@@ -305,6 +360,46 @@ EDASettings class >> projectionSettingsOn: aBuilder under: parent populatedWithV
 ]
 
 { #category : #settings }
+EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
+	| extSettings |
+	extSettings := self retrieveSettingAsDict: aConfigEntry.
+	(aBuilder group: #projections)
+		label: 'Projections' translated;
+		parent: parent.
+	self
+		projectionsRepositorySettingsOn: aBuilder
+		withConfig: aConfig
+		under: #projections
+		populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
+	(aBuilder setting: #projectionSynchronizationEnabled)
+		parent: #projections;
+		target: aConfig;
+		label: 'Synchronize on startup' translated;
+		description:
+			'When the EDAApplication starts, this setting enables a check and conditional automatic synchronization of projections';
+		default: (extSettings at: 'synchronizationEnabled').
+	(aBuilder setting: #concurrentSynchronization)
+		parent: #projections;
+		target: aConfig;
+		label: 'Synchronization in parallel' translated;
+		description: 'Whether enable or disable concurrent projection synchronization';
+		order: 2;
+		default: (extSettings at: 'concurrentSynchronization').
+	(aBuilder setting: #headlessMode)
+		parent: #projections;
+		target: aConfig;
+		label: 'Headless' translated;
+		description: 'Whether to show the progress when projecting events visually';
+		order: 3;
+		default: (extSettings at: 'headlessMode').
+	self
+		projectionErrorHandlingSettingsOn: aBuilder
+		withConfig: aConfig
+		under: parent
+		populatedWithValuesFrom: aConfigEntry
+]
+
+{ #category : #settings }
 EDASettings class >> projectionsRepositorySettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry [
 	(aBuilder group: #projectionsRepository)
 		label: 'Projections Repository' translated;
@@ -312,6 +407,18 @@ EDASettings class >> projectionsRepositorySettingsOn: aBuilder under: parent pop
 
 	^ self mongoSettingsOn: aBuilder withConfig: EDAProjectionMongoRepository under: #projectionsRepository populatedWithValuesFrom: aConfigEntry
 
+]
+
+{ #category : #settings }
+EDASettings class >> projectionsRepositorySettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
+	(aBuilder group: #projectionsRepository)
+		label: 'Projections Repository' translated;
+		parent: parent.
+	^ self
+		mongoSettingsOn: aBuilder
+		withConfig: aConfig
+		under: #projectionsRepository
+		populatedWithValuesFrom: aConfigEntry
 ]
 
 { #category : #settings }
@@ -390,13 +497,13 @@ EDASettings class >> stompListenerSettingsOn: aBuilder withConfig: container und
 		default: (stompConfig at: 'timeout' ifAbsent: 60).
 	(aBuilder setting: #commandListenerClientDebug)
 		parent: parent;
-		target: EDAApplication;
+		target: container;
 		label: 'STOMP client in debug mode' translated;
 		description: 'Whether enable debug mode in the STOMP client';
 		default: (stompConfig at: 'debug' ifAbsent: true).
 	(aBuilder setting: #restartOnCommandConsumingErrors)
 		parent: parent;
-		target: EDACommandConsumer;
+		target: container;
 		label: 'Restart on error' translated;
 		description: 'Whether to restart the client in case of errors';
 		default: (stompConfig at: 'restartOnError' ifAbsent: false)

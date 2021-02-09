@@ -30,131 +30,13 @@ Class {
 	#category : #'EDA-StompMessaging'
 }
 
-{ #category : #accessing }
-EDAStompTopicPublisher class >> destination [
-	^ self destinationWithRoutingKey: self routingKey
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> destinationWithRoutingKey: key [
-	^ '/exchange/', self exchange, '/', key
-]
-
-{ #category : #initialization }
-EDAStompTopicPublisher class >> doInitialize [
-	self host: nil.
-	self port: nil.
-	self exchange: nil.
-	self username: nil.
-	self password: nil.
-	self timeout: nil.
-	self routingKey: nil.
-	self durable: true
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> durable [
-	^ durable
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> durable: val [
-	durable := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> errorDestination [
-	^ '/exchange/' , self errorExchange , '/#'
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> errorExchange [
-	^ errorExchange
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> errorExchange: aString [
-	errorExchange := aString
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> errorRoutingKey [
-	^ errorRoutingKey
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> errorRoutingKey: val [
-	errorRoutingKey := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> exchange [
-	^ exchange
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> exchange: val [
-	exchange := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> host [
-	^ host
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> host: val [
-	host := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> password [
-	^ password
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> password: val [
-	password := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> port [
-	^ port
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> port: val [
-	port := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> routingKey [
-	^ routingKey
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> routingKey: val [
-	routingKey := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> timeout [
-	^ timeout
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> timeout: val [
-	timeout := val
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> username [
-	^ username
-]
-
-{ #category : #accessing }
-EDAStompTopicPublisher class >> username: val [
-	username := val
+{ #category : #'instance creation' }
+EDAStompTopicPublisher class >> withConfig: aConfig [
+	| result |
+	result := self new.
+	result config: aConfig.
+	result client: (result buildClientWith: aConfig).
+	^ result
 ]
 
 { #category : #initialization }
@@ -183,6 +65,21 @@ EDAStompTopicPublisher >> client [
 { #category : #accessing }
 EDAStompTopicPublisher >> client: val [
 	client := val
+]
+
+{ #category : #accessing }
+EDAStompTopicPublisher >> destination [
+	^ self destinationWithRoutingKey: self routingKey
+]
+
+{ #category : #accessing }
+EDAStompTopicPublisher >> destinationWithRoutingKey: key [
+	^ '/exchange/', self exchange, '/', key
+]
+
+{ #category : #accessing }
+EDAStompTopicPublisher >> errorDestination [
+	^ '/exchange/' , self errorExchange , '/#'
 ]
 
 { #category : #initialization }

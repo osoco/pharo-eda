@@ -27,6 +27,11 @@ EDAApplications class >> uniqueInstance: anInstance [
 	uniqueInstance := anInstance
 ]
 
+{ #category : #accessing }
+EDAApplications >> applications [
+	^ self registry values
+]
+
 { #category : #logic }
 EDAApplications >> register: anEDAApplication [
 	self register: anEDAApplication under: anEDAApplication applicationName

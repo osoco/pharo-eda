@@ -29,7 +29,6 @@ Class {
 	#instVars : [
 		'commandConsumer',
 		'commandDispatcher',
-		'commandListenerClientDebug',
 		'eventAnnouncer',
 		'eventProducer',
 		'eventStore',
@@ -67,6 +66,11 @@ EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore event
 		eventStore: anEventStore
 		eventProducer: anEventProducer
 		andProjectorClass: aClass
+]
+
+{ #category : #accessing }
+EDAApplication class >> defaultEnvironment [
+	^ EDADUEnvironment new
 ]
 
 { #category : #accessing }
@@ -109,13 +113,8 @@ EDAApplication >> commandDispatcher: anObject [
 ]
 
 { #category : #accessing }
-EDAApplication >> commandListenerClientDebug [
-	^ commandListenerClientDebug
-]
-
-{ #category : #accessing }
-EDAApplication >> commandListenerClientDebug: aBoolean [
-	commandListenerClientDebug := aBoolean
+EDAApplication >> commandListenerSettingsPort [
+	^ self resolveCommandListenerSettingsPort
 ]
 
 { #category : #'setup - events' }
@@ -153,6 +152,11 @@ EDAApplication >> doSetup [
 ]
 
 { #category : #accessing }
+EDAApplication >> environmentSettingsPort [
+	^ self resolveEnvironmentSettingsPort
+]
+
+{ #category : #accessing }
 EDAApplication >> eventAnnouncer [
 	^ eventAnnouncer
 ]
@@ -173,6 +177,11 @@ EDAApplication >> eventProducer: anObject [
 ]
 
 { #category : #accessing }
+EDAApplication >> eventPublisherSettingsPort [
+	^ self resolveEventPublisherSettingsPort
+]
+
+{ #category : #accessing }
 EDAApplication >> eventStore [
 	^ eventStore
 ]
@@ -180,6 +189,11 @@ EDAApplication >> eventStore [
 { #category : #accessing }
 EDAApplication >> eventStore: anObject [
 	eventStore := anObject
+]
+
+{ #category : #accessing }
+EDAApplication >> eventStoreSettingsPort [
+	^ self resolveEventStoreSettingsPort
 ]
 
 { #category : #'class initialization' }
@@ -232,6 +246,16 @@ EDAApplication >> logSettings [
 ]
 
 { #category : #accessing }
+EDAApplication >> loggingSettingsPort [
+	^ self resolveLoggingSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> projectionSettingsPort [
+	^ self resolveProjectionSettingsPort
+]
+
+{ #category : #accessing }
 EDAApplication >> projectionSynchronizationEnabled [
 	^ ProjectionSynchronizationEnabled
 ]
@@ -247,7 +271,7 @@ EDAApplication >> projectorsByTenant [
 	result := projectorsByTenant.
 	result
 		ifNil: [ result := Dictionary new.
-			projectorsByTenant := result ].
+			self projectorsByTenant: result ].
 	^ result
 ]
 
@@ -334,6 +358,44 @@ EDAApplication >> resetProjectors [
 { #category : #'reset - repositories' }
 EDAApplication >> resetRepositories [
 	EDAAggregateRepository allSubclassesDo: [ :repo | repo eventStore: nil ]
+]
+
+{ #category : #accessing }
+EDAApplication >> resolveCommandListenerSettingsPort [
+	^ self resolveSettingsPort: EDACommandListenerSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> resolveEnvironmentSettingsPort [
+	^ self resolveSettingsPort: EDAEnvironmentSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> resolveEventPublisherSettingsPort [
+	^ self resolveSettingsPort: EDAEventPublisherSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> resolveEventStoreSettingsPort [
+	^ self resolveSettingsPort: EDAEventStoreSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> resolveLoggingSettingsPort [
+	^ self resolveSettingsPort: EDALoggingSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> resolveProjectionSettingsPort [
+	^ self resolveSettingsPort: EDAProjectionSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> resolveSettingsPort: aPort [
+	| candidates |
+	candidates := (aPort traitUsers
+		select: [ :cls | cls accepts: self ]) sorted.
+	^ candidates ifEmpty: [ nil ] ifNotEmpty: [ :col | col first ]
 ]
 
 { #category : #'multitenancy support' }

@@ -15,7 +15,7 @@ Class {
 	#classVars : [
 		'CurrentEnvironment'
 	],
-	#category : 'EDA-Settings'
+	#category : #'EDA-Application'
 }
 
 { #category : #accessing }

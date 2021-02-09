@@ -26,7 +26,8 @@ Class {
 		'client',
 		'listenerProcess',
 		'subscriptionId',
-		'config'
+		'config',
+		'commandListenerClientDebug'
 	],
 	#classInstVars : [
 		'username',
@@ -43,65 +44,8 @@ Class {
 }
 
 { #category : #accessing }
-EDAStompTopicListener class >> ack [
-	^ ack
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> ack: val [
-	self assert: (#(#auto #client #'client-individual') includes: val).
-	ack := val
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> destination [
-	^ '/amq/queue/' , self queue
-]
-
-{ #category : #'class initialization' }
-EDAStompTopicListener class >> doInitialize [
-	self host: nil.
-	self port: nil.
-	self queue: nil.
-	self username: nil.
-	self password: nil.
-	self timeout: nil.
-	self prefetchCount: nil.
-	self durable: true.
-	self ack: #'client-individual'
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> durable [
-	^ durable
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> durable: flag [
-	durable := flag
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> host [
-	^ host
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> host: val [ 
-	host := val
-]
-
-{ #category : #'class initialization' }
-EDAStompTopicListener class >> initialize [
-	self doInitialize 
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> logMessageReceived: message usingClient: aClient from: aSource [
-	self
-		logInfoMessage:
-			'Received message ' , message greaseString , ' in '
-				, aSource greaseString , '.'
+EDAStompTopicListener class >> logFinish: message usingClient: aClient withConfig: aConfig [
+	self logInfoMessage: 'Published message ', message greaseString , ' in ', aConfig destination greaseString , '.'
 ]
 
 { #category : #accessing }
@@ -110,64 +54,13 @@ EDAStompTopicListener class >> logReceivingMessage: message usingClient: aClient
 		logInfoMessage: 'Receiving message in ' , aSource greaseString , '.'
 ]
 
-{ #category : #accessing }
-EDAStompTopicListener class >> password [
-	^ password
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> password: val [
-	password := val
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> port [
-	^ port
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> port: val [ 
-	port := val
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> prefetchCount [
-	^ prefetchCount
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> prefetchCount: val [
-	prefetchCount := val
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> queue [
-	^ queue
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> queue: val [
-	queue := val
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> timeout [
-	^ timeout
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> timeout: val [
-	timeout := val
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> username [
-	^ username
-]
-
-{ #category : #accessing }
-EDAStompTopicListener class >> username: val [
-	username := val
+{ #category : #'instance creation' }
+EDAStompTopicListener class >> withConfig: aConfig [
+	| result |
+	result := self new.
+	result config: aConfig.
+	result client: (result buildClientWith: aConfig).
+	^ result
 ]
 
 { #category : #lifecycle }
@@ -232,12 +125,6 @@ EDAStompTopicListener >> config: aConfig [
 { #category : #lifecycle }
 EDAStompTopicListener >> forceUnsubscribe [
 	self subscriptionId: nil
-]
-
-{ #category : #initialization }
-EDAStompTopicListener >> initialize [
-	self config: self class.
-	self client: (self buildClientWith: self config)
 ]
 
 { #category : #accessing }
