@@ -73,12 +73,17 @@ EDAApplication class >> defaultEnvironment [
 	^ EDADUEnvironment new
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 EDAApplication class >> new [
+	MessageNotUnderstood signal: 'Use ' , self class printString , '>>withName: instead'
+]
+
+{ #category : #'instance creation' }
+EDAApplication class >> withName: anApplicationName [
 	| result |
 	result := self basicNew.
-	EDAApplications uniqueInstance
-		register: result.
+	result applicationName: anApplicationName.
+	EDAApplications uniqueInstance register: result.
 	^ result
 ]
 

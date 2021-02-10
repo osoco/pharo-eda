@@ -13,7 +13,8 @@ Class {
 	#traits : 'EDATSettingsHelper + EDATLogging',
 	#classTraits : 'EDATSettingsHelper classTrait + EDATLogging classTrait',
 	#classInstVars : [
-		'duEnvironmentClass'
+		'duEnvironmentClass',
+		'noApplications'
 	],
 	#category : #'EDA-Settings'
 }
@@ -72,45 +73,56 @@ EDASettings class >> duEnvironmentClass: envClass [
 { #category : #settings }
 EDASettings class >> edaSettingsOn: aBuilder [
 	<systemsettings>
+	| root |
+	root := aBuilder group: #edaApps.
 	EDAApplications uniqueInstance applications
-		do: [ :app | 
-			| parent |
-			parent := app settingsGroup.
-			(aBuilder group: #eda)
-				label: 'Event-Driven Architecture' translated;
-				description: 'Event-Driven Architecture settings';
-				noOrdering;
-				parent: parent.
-			(aBuilder pickOne: #currentEnvironment)
-				parent: #eda;
-				target: app environmentSettingsPort;
-				label: 'Environment' translated;
-				description: 'Environment';
-				order: 1;
-				domainValues:
-					(EDADUEnvironment environments
-						collect: [ :level | level translated -> level greaseString ]).
-			self
-				commandListenerSettingsOn: aBuilder
-				withConfig: app commandListenerSettingsPort
-				under: #eda.
-			self
-				eventPublisherSettingsOn: aBuilder
-				withConfig: app eventPublisherSettingsPort
-				under: #eda.
-			self
-				eventStoreSettingsOn: aBuilder
-				withConfig: app eventStoreSettingsPort
-				under: #eda.
-			self
-				projectionSettingsOn: aBuilder
-				withConfig: app projectionSettingsPort
-				under: #eda
-				populatedWithValuesFrom: 'projections'.
-			self
-				loggingSettingsOn: aBuilder
-				withConfig: app loggingSettingsPort
-				under: #eda ]
+		ifEmpty: [ root
+				label: 'No PharoEDA applications registered' translated;
+				description: 'No PharoEDA applications registered' ]
+		ifNotEmpty: [ :apps | 
+			root
+				label: 'PharoEDA applications' translated;
+				description: 'Registered PharoEDA applications';
+				noOrdering.
+			apps
+				do: [ :app | 
+					| parent |
+					parent := app applicationName.
+					(aBuilder group: parent)
+						label: parent translated;
+						parent: #edaApps;
+						description: parent;
+						noOrdering.
+					(aBuilder pickOne: #currentEnvironment)
+						parent: parent;
+						target: app environmentSettingsPort;
+						label: 'Environment' translated;
+						description: 'Environment';
+						order: 1;
+						domainValues:
+							(EDADUEnvironment environments
+								collect: [ :level | level translated -> level greaseString ]).
+					self
+						commandListenerSettingsOn: aBuilder
+						withConfig: app commandListenerSettingsPort
+						under: parent.
+					self
+						eventPublisherSettingsOn: aBuilder
+						withConfig: app eventPublisherSettingsPort
+						under: parent.
+					self
+						eventStoreSettingsOn: aBuilder
+						withConfig: app eventStoreSettingsPort
+						under: parent.
+					self
+						projectionSettingsOn: aBuilder
+						withConfig: app projectionSettingsPort
+						under: parent
+						populatedWithValuesFrom: 'projections'.
+					self
+						loggingSettingsOn: aBuilder
+						withConfig: app loggingSettingsPort
+						under: parent ] ]
 ]
 
 { #category : #settings }
@@ -144,25 +156,6 @@ EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: p
 EDASettings class >> initialize [
 	self duEnvironmentClass: EDADUEnvironment
 
-]
-
-{ #category : #settings }
-EDASettings class >> loggingSettingsOn: aBuilder under: parent [
-	| extSettings |
-	extSettings := self retrieveSettingAsDict: 'logging'.
-	(aBuilder group: #logging)
-		label: 'Logging' translated;
-		parent: parent.
-	(aBuilder pickOne: #loggingLevel)
-		parent: #logging;
-		target: EDALoggingSettings;
-		label: 'Logging level' translated;
-		description: 'Logging level';
-		order: 1;
-		domainValues:
-			(EDALoggingSettings levels
-				collect: [ :level | level translated -> level greaseString ]);
-		default: (extSettings at: 'level')
 ]
 
 { #category : #settings }
@@ -276,29 +269,6 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 ]
 
 { #category : #settings }
-EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry [
-	(aBuilder group: #errors)
-		label: 'Projection errors' translated;
-		description: 'Projection error handling';
-		noOrdering;
-		parent: #projections.
-	(aBuilder pickOne: #strategy)
-		parent: #errors;
-		target: EDAProjectionErrorBehavior;
-		label: 'Default projection Error Handling' translated;
-		description: 'Default trategy when dealing with errors projecting events';
-		order: 1;
-		domainValues:
-			(EDAErrorHandlingStrategy subclasses
-				collect: [ :strategy | strategy description -> strategy greaseString ]);
-		default: EDAPublishMessageErrorStrategy greaseString.
-	self
-		customProjectionErrorBehaviorsOn: aBuilder
-		under: #errors
-		populatedWithValuesFrom: aConfigEntry
-]
-
-{ #category : #settings }
 EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
 	(aBuilder group: #errors)
 		label: 'Projection errors' translated;
@@ -398,16 +368,6 @@ EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: p
 		withConfig: aConfig
 		under: parent
 		populatedWithValuesFrom: aConfigEntry
-]
-
-{ #category : #settings }
-EDASettings class >> projectionsRepositorySettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry [
-	(aBuilder group: #projectionsRepository)
-		label: 'Projections Repository' translated;
-		parent: parent.
-
-	^ self mongoSettingsOn: aBuilder withConfig: EDAProjectionMongoRepository under: #projectionsRepository populatedWithValuesFrom: aConfigEntry
-
 ]
 
 { #category : #settings }

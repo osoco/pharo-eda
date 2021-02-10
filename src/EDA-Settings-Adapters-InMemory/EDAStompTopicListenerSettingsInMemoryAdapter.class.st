@@ -5,7 +5,9 @@ Class {
 	#classTraits : 'EDACommandListenerSettingsPort classTrait',
 	#instVars : [
 		'ack',
-		'queue'
+		'queue',
+		'strategy',
+		'restartOnCommandConsumingErrors'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
@@ -69,4 +71,24 @@ EDAStompTopicListenerSettingsInMemoryAdapter >> queue [
 { #category : #accessing }
 EDAStompTopicListenerSettingsInMemoryAdapter >> queue: val [
 	queue := val
+]
+
+{ #category : #accessing }
+EDAStompTopicListenerSettingsInMemoryAdapter >> restartOnCommandConsumingErrors [
+	^ restartOnCommandConsumingErrors
+]
+
+{ #category : #accessing }
+EDAStompTopicListenerSettingsInMemoryAdapter >> restartOnCommandConsumingErrors: aBoolean [
+	restartOnCommandConsumingErrors := aBoolean
+]
+
+{ #category : #accessing }
+EDAStompTopicListenerSettingsInMemoryAdapter >> strategy [
+	^ strategy
+]
+
+{ #category : #accessing }
+EDAStompTopicListenerSettingsInMemoryAdapter >> strategy: aStrategy [
+	strategy := aStrategy
 ]
