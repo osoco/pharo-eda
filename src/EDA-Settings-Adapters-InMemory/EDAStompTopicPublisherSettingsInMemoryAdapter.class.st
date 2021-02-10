@@ -1,6 +1,8 @@
 Class {
 	#name : #EDAStompTopicPublisherSettingsInMemoryAdapter,
 	#superclass : #EDAStompSettingsInMemoryAdapter,
+	#traits : 'EDAEventPublisherSettingsPort',
+	#classTraits : 'EDAEventPublisherSettingsPort classTrait',
 	#instVars : [
 		'errorExchange',
 		'errorRoutingKey',
@@ -9,6 +11,11 @@ Class {
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
+
+{ #category : #testing }
+EDAStompTopicPublisherSettingsInMemoryAdapter class >> accepts: anEDAApplication [
+	^ true
+]
 
 { #category : #'class initialization' }
 EDAStompTopicPublisherSettingsInMemoryAdapter >> doInitialize [
@@ -46,6 +53,11 @@ EDAStompTopicPublisherSettingsInMemoryAdapter >> exchange [
 { #category : #accessing }
 EDAStompTopicPublisherSettingsInMemoryAdapter >> exchange: val [
 	exchange := val
+]
+
+{ #category : #testing }
+EDAStompTopicPublisherSettingsInMemoryAdapter >> priority [
+	^ 0
 ]
 
 { #category : #accessing }

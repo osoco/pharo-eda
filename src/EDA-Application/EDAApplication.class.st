@@ -392,10 +392,11 @@ EDAApplication >> resolveProjectionSettingsPort [
 
 { #category : #accessing }
 EDAApplication >> resolveSettingsPort: aPort [
-	| candidates |
-	candidates := (aPort traitUsers
-		select: [ :cls | cls accepts: self ]) sorted.
-	^ candidates ifEmpty: [ nil ] ifNotEmpty: [ :col | col first ]
+	| candidates candidate |
+	candidates := (aPort traitUsers select: [ :cls | cls accepts: self ])
+		sorted.
+	candidate := candidates ifEmpty: [ nil ] ifNotEmpty: [ :col | col first ].
+	^ candidate ifNil: [ nil ] ifNotNil: [ :c | c withApp: self ]
 ]
 
 { #category : #'multitenancy support' }

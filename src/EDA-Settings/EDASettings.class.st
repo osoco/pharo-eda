@@ -73,7 +73,8 @@ EDASettings class >> duEnvironmentClass: envClass [
 EDASettings class >> edaSettingsOn: aBuilder [
 	<systemsettings>
 	EDAApplications uniqueInstance applications
-		do: [ :app | | parent |
+		do: [ :app | 
+			| parent |
 			parent := app settingsGroup.
 			(aBuilder group: #eda)
 				label: 'Event-Driven Architecture' translated;
@@ -82,7 +83,7 @@ EDASettings class >> edaSettingsOn: aBuilder [
 				parent: parent.
 			(aBuilder pickOne: #currentEnvironment)
 				parent: #eda;
-				target: app environment;
+				target: app environmentSettingsPort;
 				label: 'Environment' translated;
 				description: 'Environment';
 				order: 1;
@@ -91,24 +92,24 @@ EDASettings class >> edaSettingsOn: aBuilder [
 						collect: [ :level | level translated -> level greaseString ]).
 			self
 				commandListenerSettingsOn: aBuilder
-				withConfig: app commandListenerSettings
+				withConfig: app commandListenerSettingsPort
 				under: #eda.
 			self
 				eventPublisherSettingsOn: aBuilder
-				withConfig: app eventPublisherSettings
+				withConfig: app eventPublisherSettingsPort
 				under: #eda.
 			self
 				eventStoreSettingsOn: aBuilder
-				withConfig: app eventStoreSettings
+				withConfig: app eventStoreSettingsPort
 				under: #eda.
 			self
 				projectionSettingsOn: aBuilder
-				withConfig: app projectionSettings
+				withConfig: app projectionSettingsPort
 				under: #eda
 				populatedWithValuesFrom: 'projections'.
 			self
 				loggingSettingsOn: aBuilder
-				withConfig: app loggingSettings
+				withConfig: app loggingSettingsPort
 				under: #eda ]
 ]
 

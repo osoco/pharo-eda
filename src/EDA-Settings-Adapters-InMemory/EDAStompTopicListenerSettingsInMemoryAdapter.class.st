@@ -1,12 +1,19 @@
 Class {
 	#name : #EDAStompTopicListenerSettingsInMemoryAdapter,
 	#superclass : #EDAStompSettingsInMemoryAdapter,
+	#traits : 'EDACommandListenerSettingsPort',
+	#classTraits : 'EDACommandListenerSettingsPort classTrait',
 	#instVars : [
 		'ack',
 		'queue'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
+
+{ #category : #testing }
+EDAStompTopicListenerSettingsInMemoryAdapter class >> accepts: anEDAApplication [
+	^ true
+]
 
 { #category : #accessing }
 EDAStompTopicListenerSettingsInMemoryAdapter >> ack [
@@ -47,6 +54,11 @@ EDAStompTopicListenerSettingsInMemoryAdapter >> prefetchCount [
 { #category : #accessing }
 EDAStompTopicListenerSettingsInMemoryAdapter >> prefetchCount: val [
 	prefetchCount := val
+]
+
+{ #category : #testing }
+EDAStompTopicListenerSettingsInMemoryAdapter >> priority [
+	^ 0
 ]
 
 { #category : #accessing }
