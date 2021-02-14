@@ -258,6 +258,11 @@ EDAApplication >> loggingSettingsPort [
 ]
 
 { #category : #accessing }
+EDAApplication >> portSettingsPort [
+	^ self resolvePortSettingsPort
+]
+
+{ #category : #accessing }
 EDAApplication >> projectionSettingsPort [
 	^ self resolveProjectionSettingsPort
 ]

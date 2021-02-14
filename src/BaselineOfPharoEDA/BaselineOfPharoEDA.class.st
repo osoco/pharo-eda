@@ -43,7 +43,7 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Settings-Ports' #'EDA-Settings-Adapters-InMemory' #'EDA-Settings-Adapters-EnvVars' #'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
+			#(#'EDA-Settings-Ports' #'EDA-Settings-Adapters-InMemory' #'EDA-Settings-Adapters-EnvVars' #'EDA-Settings-Adapters-ByPriority' #'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
 		group: 'tests'
 			with:
 			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
@@ -85,6 +85,8 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('EDA-Settings-Ports') ];
 		package: #'EDA-Settings-Adapters-EnvVars'
 			with: [ spec requires: #('EDA-Settings-Ports') ];
+		package: #'EDA-Settings-Adapters-ByPriority'
+			with: [ spec requires: #('EDA-Settings-Ports' 'EDA-Settings-Adapters-InMemory' 'EDA-Settings-Adapters-EnvVars') ];
 		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools') ];
 		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];

@@ -118,7 +118,8 @@ EDASettings class >> edaSettingsOn: aBuilder [
 					self
 						loggingSettingsOn: aBuilder
 						withConfig: app loggingSettingsPort
-						under: parent ] ]
+						under: parent.
+						self portSettingsOn: aBuilder withConfig: app portSettingsPort under: parent ] ]
 ]
 
 { #category : #settings }
