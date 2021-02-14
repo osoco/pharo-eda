@@ -1,10 +1,11 @@
 Class {
 	#name : #EDALoggingSettingsInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDALoggingSettingsPort + EDAInMemoryAdapter',
-	#classTraits : 'EDALoggingSettingsPort classTrait + EDAInMemoryAdapter classTrait',
+	#traits : 'EDATLoggingSettingsPort + EDATInMemoryAdapter',
+	#classTraits : 'EDATLoggingSettingsPort classTrait + EDATInMemoryAdapter classTrait',
 	#instVars : [
-		'loggingLevel'
+		'loggingLevel',
+		'edaApplication'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
@@ -14,12 +15,22 @@ EDALoggingSettingsInMemoryAdapter class >> accepts: anEDAApplication [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
+EDALoggingSettingsInMemoryAdapter >> edaApplication [
+	^ edaApplication
+]
+
+{ #category : #accessing }
+EDALoggingSettingsInMemoryAdapter >> edaApplication: anEDAApplication [
+	edaApplication := anEDAApplication
+]
+
+{ #category : #accessing }
 EDALoggingSettingsInMemoryAdapter >> loggingLevel [
 	^ loggingLevel
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 EDALoggingSettingsInMemoryAdapter >> loggingLevel: aString [
 	loggingLevel := aString
 ]

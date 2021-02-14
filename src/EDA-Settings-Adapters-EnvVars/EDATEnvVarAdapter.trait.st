@@ -1,10 +1,10 @@
 Trait {
-	#name : #EDAEnvVarAdapter,
+	#name : #EDATEnvVarAdapter,
 	#category : #'EDA-Settings-Adapters-EnvVars'
 }
 
 { #category : #'environment-variables' }
-EDAEnvVarAdapter >> getValueFor: envVarName orElse: defaultValue [
+EDATEnvVarAdapter >> getValueFor: envVarName orElse: defaultValue [
 	^ OSPlatform current environment
 		at: envVarName
 		ifAbsent: defaultValue

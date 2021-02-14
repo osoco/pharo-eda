@@ -1,9 +1,9 @@
 Trait {
-	#name : #EDAInMemoryAdapter,
+	#name : #EDATInMemoryAdapter,
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
 
 { #category : #accessing }
-EDAInMemoryAdapter classSide >> description [
+EDATInMemoryAdapter classSide >> description [
 	^ 'Manual'
 ]

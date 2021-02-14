@@ -1,10 +1,11 @@
 Class {
 	#name : #EDAEnvironmentSettingsInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDAEnvironmentSettingsPort + EDAPrintOnHelper + EDAInMemoryAdapter',
-	#classTraits : 'EDAEnvironmentSettingsPort classTrait + EDAPrintOnHelper classTrait + EDAInMemoryAdapter classTrait',
+	#traits : 'EDATEnvironmentSettingsPort + EDAPrintOnHelper + EDATInMemoryAdapter',
+	#classTraits : 'EDATEnvironmentSettingsPort classTrait + EDAPrintOnHelper classTrait + EDATInMemoryAdapter classTrait',
 	#instVars : [
-		'currentEnvironment'
+		'currentEnvironment',
+		'edaApplication'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
@@ -27,4 +28,14 @@ EDAEnvironmentSettingsInMemoryAdapter >> currentEnvironment [
 { #category : #accessing }
 EDAEnvironmentSettingsInMemoryAdapter >> currentEnvironment: anObject [
 	currentEnvironment := anObject
+]
+
+{ #category : #accessing }
+EDAEnvironmentSettingsInMemoryAdapter >> edaApplication [
+	^ edaApplication
+]
+
+{ #category : #accessing }
+EDAEnvironmentSettingsInMemoryAdapter >> edaApplication: anEDAApplication [
+	edaApplication := anEDAApplication
 ]

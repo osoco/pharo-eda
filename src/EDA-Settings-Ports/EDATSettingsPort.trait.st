@@ -1,46 +1,48 @@
 Trait {
-	#name : #EDASettingsPort,
+	#name : #EDATSettingsPort,
 	#category : #'EDA-Settings-Ports'
 }
 
 { #category : #testing }
-EDASettingsPort classSide >> < anotherAdapterClass [
+EDATSettingsPort classSide >> < anotherAdapterClass [
 	^ self priority < anotherAdapterClass priority
 ]
 
 { #category : #testing }
-EDASettingsPort classSide >> <= anotherAdapterClass [
+EDATSettingsPort classSide >> <= anotherAdapterClass [
 	^ self priority = anotherAdapterClass priority
 		or: [ self < anotherAdapterClass ]
 ]
 
 { #category : #testing }
-EDASettingsPort classSide >> > anotherAdapterClass [
+EDATSettingsPort classSide >> > anotherAdapterClass [
 	^ anotherAdapterClass priority < self priority
 ]
 
 { #category : #testing }
-EDASettingsPort classSide >> >= anotherAdapterClass [
+EDATSettingsPort classSide >> >= anotherAdapterClass [
 	^ self priority = anotherAdapterClass priority
 		or: [ anotherAdapterClass < self ]
 ]
 
 { #category : #testing }
-EDASettingsPort classSide >> accepts: anEDAApplication [
+EDATSettingsPort classSide >> accepts: anEDAApplication [
 	^ false
 ]
 
 { #category : #testing }
-EDASettingsPort classSide >> description [
+EDATSettingsPort classSide >> description [
 	self subclassResponsibility 
 ]
 
 { #category : #testing }
-EDASettingsPort classSide >> priority [
+EDATSettingsPort classSide >> priority [
 	self subclassResponsibility
 ]
 
 { #category : #testing }
-EDASettingsPort classSide >> withApp: anEDAApplication [
+EDATSettingsPort classSide >> withApp: anEDAApplication [
 	^ self new
+		edaApplication: anEDAApplication;
+		yourself
 ]

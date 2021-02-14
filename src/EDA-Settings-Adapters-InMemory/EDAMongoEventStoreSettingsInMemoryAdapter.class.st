@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAMongoEventStoreSettingsInMemoryAdapter,
 	#superclass : #EDAMongoSettingsInMemoryAdapter,
-	#traits : 'EDAEventStoreSettingsPort',
-	#classTraits : 'EDAEventStoreSettingsPort classTrait',
+	#traits : 'EDATEventStoreSettingsPort',
+	#classTraits : 'EDATEventStoreSettingsPort classTrait',
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
 

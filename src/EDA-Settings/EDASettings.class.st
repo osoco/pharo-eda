@@ -287,7 +287,7 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 
 { #category : #settings }
 EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent [
-	| entry values byPriorityAdapter |
+	| entry values byPriorityAdapter defaultItem |
 	entry := aBuilder group: #ports.
 	entry
 		label: 'Ports' translated;
@@ -296,21 +296,23 @@ EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent
 	priorizedAdapter := byPriorityAdapter resolveEnvironmentSettingsPort.
 	values := OrderedCollection
 		with:
-			('By priority (' , priorizedAdapter description , ')')
-				-> EDAPortResolverByPriorityAdapter.
+			EDAPortResolverByPriorityAdapter name
+				-> EDAPortResolverByPriorityAdapter printString.
+	"('By priority (' , priorizedAdapter description , ')')"
 	values
 		addAll:
 			(EDAPortResolverByPriorityAdapter new
 				availableEnvironmentSettingsAdapters
 				reject: [ :adapterClass | adapterClass = priorizedAdapter class ]
-				thenCollect:
-					[ :adapterClass | adapterClass description translated -> adapterClass ]).
+				thenCollect: [ :adapterClass | adapterClass name -> adapterClass printString ]).
+	aConfig environmentSettingsResolverPort
+		ifNil: [ defaultItem := byPriorityAdapter ]
+		ifNotNil: [ :p | defaultItem := p class ].
 	(aBuilder pickOne: #environmentSettingsResolverPort)
 		label: 'Environment' translated;
 		target: aConfig;
 		parent: #ports;
-		domainValues: values;
-		default: EDAPortResolverByPriorityAdapter
+		domainValues: values
 ]
 
 { #category : #settings }

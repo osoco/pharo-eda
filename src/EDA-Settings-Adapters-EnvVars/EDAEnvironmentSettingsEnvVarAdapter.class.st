@@ -1,8 +1,11 @@
 Class {
 	#name : #EDAEnvironmentSettingsEnvVarAdapter,
 	#superclass : #Object,
-	#traits : 'EDAEnvironmentSettingsPort + EDAEnvVarAdapter',
-	#classTraits : 'EDAEnvironmentSettingsPort classTrait + EDAEnvVarAdapter classTrait',
+	#traits : 'EDATEnvironmentSettingsPort + EDATEnvVarAdapter',
+	#classTraits : 'EDATEnvironmentSettingsPort classTrait + EDATEnvVarAdapter classTrait',
+	#instVars : [
+		'edaApplication'
+	],
 	#category : #'EDA-Settings-Adapters-EnvVars'
 }
 
@@ -39,6 +42,16 @@ EDAEnvironmentSettingsEnvVarAdapter >> currentEnvironment [
 { #category : #testing }
 EDAEnvironmentSettingsEnvVarAdapter >> description [
 	^ self environmentVariableName , ' environment variable'
+]
+
+{ #category : #accessing }
+EDAEnvironmentSettingsEnvVarAdapter >> edaApplication [
+	^ edaApplication
+]
+
+{ #category : #accessing }
+EDAEnvironmentSettingsEnvVarAdapter >> edaApplication: anEDAApplication [
+	edaApplication := anEDAApplication
 ]
 
 { #category : #testing }

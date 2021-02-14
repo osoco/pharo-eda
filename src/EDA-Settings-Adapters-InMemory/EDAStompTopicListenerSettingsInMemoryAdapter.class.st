@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAStompTopicListenerSettingsInMemoryAdapter,
 	#superclass : #EDAStompSettingsInMemoryAdapter,
-	#traits : 'EDACommandListenerSettingsPort',
-	#classTraits : 'EDACommandListenerSettingsPort classTrait',
+	#traits : 'EDATCommandListenerSettingsPort',
+	#classTraits : 'EDATCommandListenerSettingsPort classTrait',
 	#instVars : [
 		'ack',
 		'queue',

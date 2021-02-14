@@ -1,67 +1,85 @@
 Class {
 	#name : #EDAPortResolverByPriorityAdapter,
 	#superclass : #Object,
-	#traits : 'EDAPortSettingsPort + EDAByPriorityAdapter',
-	#classTraits : 'EDAPortSettingsPort classTrait + EDAByPriorityAdapter classTrait',
+	#traits : 'EDATPortSettingsPort + EDATByPriorityAdapter',
+	#classTraits : 'EDATPortSettingsPort classTrait + EDATByPriorityAdapter classTrait',
+	#instVars : [
+		'edaApplication'
+	],
 	#category : #'EDA-Settings-Adapters-ByPriority'
 }
 
+{ #category : #testing }
+EDAPortResolverByPriorityAdapter class >> description [
+	^ 'Priority-based'
+]
+
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> availableCommandListenerSettingsAdapters [
-	^ self availableAdapters: EDACommandListenerSettingsPort
+	^ self availableAdapters: EDATCommandListenerSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> availableEnvironmentSettingsAdapters [
-	^ self availableAdapters: EDAEnvironmentSettingsPort
+	^ self availableAdapters: EDATEnvironmentSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> availableEventPublisherSettingsAdapters [
-	^ self availableAdapters: EDAEventPublisherSettingsPort
+	^ self availableAdapters: EDATEventPublisherSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> availableEventStoreSettingsAdapters [
-	^ self availableAdapters: EDAEventStoreSettingsPort
+	^ self availableAdapters: EDATEventStoreSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> availableLoggingSettingsAdapters [
-	^ self availableAdapters: EDALoggingSettingsPort
+	^ self availableAdapters: EDATLoggingSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> availableProjectionSettingsAdapters [
-	^ self availableAdapters: EDAProjectionSettingsPort
+	^ self availableAdapters: EDATProjectionSettingsPort
+]
+
+{ #category : #accessing }
+EDAPortResolverByPriorityAdapter >> edaApplication [
+	^ edaApplication
+]
+
+{ #category : #accessing }
+EDAPortResolverByPriorityAdapter >> edaApplication: anEDAApplication [ 
+ edaApplication := anEDAApplication 
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> resolveCommandListenerSettingsPort [
-	^ self resolveSettingsPort: EDACommandListenerSettingsPort
+	^ self resolveSettingsPort: EDATCommandListenerSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> resolveEnvironmentSettingsPort [
-	^ self resolveSettingsPort: EDAEnvironmentSettingsPort
+	^ self resolveSettingsPort: EDATEnvironmentSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> resolveEventPublisherSettingsPort [
-	^ self resolveSettingsPort: EDAEventPublisherSettingsPort
+	^ self resolveSettingsPort: EDATEventPublisherSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> resolveEventStoreSettingsPort [
-	^ self resolveSettingsPort: EDAEventStoreSettingsPort
+	^ self resolveSettingsPort: EDATEventStoreSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> resolveLoggingSettingsPort [
-	^ self resolveSettingsPort: EDALoggingSettingsPort
+	^ self resolveSettingsPort: EDATLoggingSettingsPort
 ]
 
 { #category : #logic }
 EDAPortResolverByPriorityAdapter >> resolveProjectionSettingsPort [
-	^ self resolveSettingsPort: EDAProjectionSettingsPort
+	^ self resolveSettingsPort: EDATProjectionSettingsPort
 ]

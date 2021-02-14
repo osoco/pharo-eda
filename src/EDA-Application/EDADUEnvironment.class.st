@@ -108,7 +108,7 @@ EDADUEnvironment class >> environments [
 
 { #category : #helper }
 EDADUEnvironment class >> isSettingBrowserOpen [
-	^ (World submorphs anySatisfy: [ :w | w model printString = 'a SettingBrowser' ]) 
+	^ self currentWorld submorphs anySatisfy: [ :w | w model class = SettingBrowser ]
 ]
 
 { #category : #helper }

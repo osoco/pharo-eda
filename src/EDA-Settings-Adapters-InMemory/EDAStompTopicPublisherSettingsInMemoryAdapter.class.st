@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAStompTopicPublisherSettingsInMemoryAdapter,
 	#superclass : #EDAStompSettingsInMemoryAdapter,
-	#traits : 'EDAEventPublisherSettingsPort',
-	#classTraits : 'EDAEventPublisherSettingsPort classTrait',
+	#traits : 'EDATEventPublisherSettingsPort',
+	#classTraits : 'EDATEventPublisherSettingsPort classTrait',
 	#instVars : [
 		'errorExchange',
 		'errorRoutingKey',

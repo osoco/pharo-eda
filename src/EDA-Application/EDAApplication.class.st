@@ -38,7 +38,9 @@ Class {
 		'applicationName',
 		'portSettingsPort',
 		'environmentSettingsPort',
-		'environmentSettingsResolverPort'
+		'environmentSettingsResolverPort',
+		'settingsAnnouncer',
+		'settingsSubscriber'
 	],
 	#classVars : [
 		'ProjectionSynchronizationEnabled'
@@ -174,21 +176,8 @@ EDAApplication >> environmentSettingsPort [
 
 { #category : #accessing }
 EDAApplication >> environmentSettingsPort: anAdapter [
-	environmentSettingsPort := anAdapter
-]
-
-{ #category : #accessing }
-EDAApplication >> environmentSettingsResolverPort [
-	environmentSettingsResolverPort
-		ifNil: [ | result |
-			result := EDAPortResolverByPriorityAdapter new.
-			self environmentSettingsResolverPort: result ].
-	^ environmentSettingsResolverPort
-]
-
-{ #category : #accessing }
-EDAApplication >> environmentSettingsResolverPort: anAdapter [
-	environmentSettingsResolverPort := anAdapter
+	(anAdapter = environmentSettingsPort) ifFalse: [ self notifyEnvironmentSettingsPortListener: anAdapter. 
+	environmentSettingsPort := anAdapter ]
 ]
 
 { #category : #accessing }
@@ -286,10 +275,23 @@ EDAApplication >> loggingSettingsPort [
 ]
 
 { #category : #accessing }
+EDAApplication >> notifyEnvironmentSettingsPortListener: anAdapter [
+	self settingsAnnouncer
+		announce: (EDAEnvironmentSettingsPortChanged with: anAdapter on: self)
+]
+
+{ #category : #accessing }
+EDAApplication >> notifyEnvironmentSettingsResolverPortListener: anAdapter [
+	self settingsAnnouncer
+		announce: (EDAEnvironmentSettingsResolverPortChanged with: anAdapter on: self)
+]
+
+{ #category : #accessing }
 EDAApplication >> portSettingsPort [
 	^ portSettingsPort
 		ifNil: [ | result |
-			result := EDAPortResolverInMemoryAdapter new. result ]
+			result := EDAPortResolverInMemoryAdapter withApp: self.
+			result ]
 ]
 
 { #category : #accessing }
@@ -340,6 +342,7 @@ EDAApplication >> reset [
 	self resetCommandConsumer.
 	self resetEventSubscriptions.
 	self resetEventAnnouncer.
+	self resetSettingsAnnouncer.
 	self isConfigured: false
 ]
 
@@ -356,7 +359,7 @@ EDAApplication >> resetCommandDispatcher [
 
 { #category : #'reset - events' }
 EDAApplication >> resetEventAnnouncer [
-	eventAnnouncer := nil
+	self eventAnnouncer: nil
 ]
 
 { #category : #'reset - events' }
@@ -413,34 +416,39 @@ EDAApplication >> resetRepositories [
 	EDAAggregateRepository allSubclassesDo: [ :repo | repo eventStore: nil ]
 ]
 
+{ #category : #'reset - events' }
+EDAApplication >> resetSettingsAnnouncer [
+	self settingsAnnouncer: nil
+]
+
 { #category : #accessing }
 EDAApplication >> resolveCommandListenerSettingsPort [
-	^ self resolveSettingsPort: EDACommandListenerSettingsPort
+	^ self resolveSettingsPort: EDATCommandListenerSettingsPort
 ]
 
 { #category : #accessing }
 EDAApplication >> resolveEnvironmentSettingsPort [
-	^ self resolveSettingsPort: EDAEnvironmentSettingsPort
+	^ self resolveSettingsPort: EDATEnvironmentSettingsPort
 ]
 
 { #category : #accessing }
 EDAApplication >> resolveEventPublisherSettingsPort [
-	^ self resolveSettingsPort: EDAEventPublisherSettingsPort
+	^ self resolveSettingsPort: EDATEventPublisherSettingsPort
 ]
 
 { #category : #accessing }
 EDAApplication >> resolveEventStoreSettingsPort [
-	^ self resolveSettingsPort: EDAEventStoreSettingsPort
+	^ self resolveSettingsPort: EDATEventStoreSettingsPort
 ]
 
 { #category : #accessing }
 EDAApplication >> resolveLoggingSettingsPort [
-	^ self resolveSettingsPort: EDALoggingSettingsPort
+	^ self resolveSettingsPort: EDATLoggingSettingsPort
 ]
 
 { #category : #accessing }
 EDAApplication >> resolveProjectionSettingsPort [
-	^ self resolveSettingsPort: EDAProjectionSettingsPort
+	^ self resolveSettingsPort: EDATProjectionSettingsPort
 ]
 
 { #category : #accessing }
@@ -455,6 +463,29 @@ EDAApplication >> resolveSettingsPort: aPort [
 { #category : #'multitenancy support' }
 EDAApplication >> retrieveAllTenants [
 	self shouldBeImplemented
+]
+
+{ #category : #accessing }
+EDAApplication >> settingsAnnouncer [
+	settingsAnnouncer
+		ifNil: [ self settingsAnnouncer: Announcer new ].
+	^ settingsAnnouncer
+]
+
+{ #category : #accessing }
+EDAApplication >> settingsAnnouncer: anAnnouncer [
+	settingsAnnouncer := anAnnouncer 
+]
+
+{ #category : #accessing }
+EDAApplication >> settingsSubscriber [
+	settingsSubscriber ifNil: [ self settingsSubscriber: EDASettingsSubscriber new ].
+	^ settingsSubscriber 
+]
+
+{ #category : #accessing }
+EDAApplication >> settingsSubscriber: aSubscriber [
+	settingsSubscriber := aSubscriber
 ]
 
 { #category : #setup }
@@ -564,6 +595,18 @@ EDAApplication >> setupRepositories [
 	EDAEventSourcingEvent voyageRepository: self eventStore repository.
 	EDAEventSourcingEvent
 		allSubclassesDo: [ :event | event voyageRepository: self eventStore repository ]
+]
+
+{ #category : #'setup - events' }
+EDAApplication >> setupSettingsAnnouncer [
+	self settingsAnnouncer: Announcer new
+]
+
+{ #category : #'setup - events' }
+EDAApplication >> setupSettingsSubscriptions [
+	self settingsSubscriber
+		setupAnnouncer: self settingsAnnouncer
+		application: self
 ]
 
 { #category : #api }

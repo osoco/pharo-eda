@@ -1,35 +1,45 @@
 Class {
 	#name : #EDAPortResolverInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDAPortSettingsPort + EDAPrintOnHelper + EDAInMemoryAdapter',
-	#classTraits : 'EDAPortSettingsPort classTrait + EDAPrintOnHelper classTrait + EDAInMemoryAdapter classTrait',
+	#traits : 'EDATPortSettingsPort + EDAPrintOnHelper + EDATInMemoryAdapter',
+	#classTraits : 'EDATPortSettingsPort classTrait + EDAPrintOnHelper classTrait + EDATInMemoryAdapter classTrait',
 	#instVars : [
 		'environmentPort',
-		'environmentSettingsResolverPort'
+		'environmentSettingsResolverPort',
+		'edaApplication'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
 
 { #category : #accessing }
-EDAPortResolverInMemoryAdapter >> environmentPort [
-	^ environmentPort
+EDAPortResolverInMemoryAdapter >> edaApplication [
+	^ edaApplication
 ]
 
 { #category : #accessing }
-EDAPortResolverInMemoryAdapter >> environmentPort: aPort [
-	environmentPort := aPort
+EDAPortResolverInMemoryAdapter >> edaApplication: anEDAApplication [ 
+	edaApplication := anEDAApplication 
 ]
 
 { #category : #accessing }
 EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPort [
-	environmentSettingsResolverPort ifNil: [ 
-		| result |
-		result := EDAPortResolverByPriorityAdapter new.
-		self environmentSettingsResolverPort: result ].
+	environmentSettingsResolverPort
+		ifNil: [ 
+			self environmentSettingsResolverPort: EDAPortResolverByPriorityAdapter new ].
 	^ environmentSettingsResolverPort
 ]
 
 { #category : #accessing }
 EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPort: anAdapter [
+	anAdapter = environmentSettingsResolverPort
+		ifTrue: [ ^ self ].
+	self 
+		notifyEnvironmentSettingsResolverPortListener: anAdapter.
 	environmentSettingsResolverPort := anAdapter
+]
+
+{ #category : #accessing }
+EDAPortResolverInMemoryAdapter >> notifyEnvironmentSettingsResolverPortListener: anAdapter [
+	self edaApplication
+		notifyEnvironmentSettingsResolverPortListener: anAdapter
 ]

@@ -1,12 +1,12 @@
 Trait {
-	#name : #EDAByPriorityAdapter,
-	#traits : 'EDAPortResolver',
-	#classTraits : 'EDAPortResolver classTrait',
+	#name : #EDATByPriorityAdapter,
+	#traits : 'EDATPortResolver',
+	#classTraits : 'EDATPortResolver classTrait',
 	#category : #'EDA-Settings-Adapters-ByPriority'
 }
 
 { #category : #logic }
-EDAByPriorityAdapter >> resolveSettingsPort: aPort [
+EDATByPriorityAdapter >> resolveSettingsPort: aPort [
 	| candidates candidate |
 	candidates := (self availableAdapters: aPort)
 		sorted.

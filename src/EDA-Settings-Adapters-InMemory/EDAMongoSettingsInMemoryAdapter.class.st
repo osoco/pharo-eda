@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAMongoSettingsInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDAInMemoryAdapter',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDAInMemoryAdapter classTrait',
+	#traits : 'EDAPrintOnHelper + EDATInMemoryAdapter',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATInMemoryAdapter classTrait',
 	#instVars : [
 		'authenticationMechanism',
 		'databaseName',
@@ -17,7 +17,8 @@ Class {
 		'tls',
 		'urls',
 		'username',
-		'wireProtocolEnabled'
+		'wireProtocolEnabled',
+		'edaApplication'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
@@ -69,6 +70,16 @@ EDAMongoSettingsInMemoryAdapter >> doInitialize [
 	self forceEager: nil.
 	self lazySynchronize: nil.
 	self wireProtocolEnabled: nil
+]
+
+{ #category : #accessing }
+EDAMongoSettingsInMemoryAdapter >> edaApplication [
+	^ edaApplication
+]
+
+{ #category : #accessing }
+EDAMongoSettingsInMemoryAdapter >> edaApplication: anEDAApplication [
+	edaApplication := anEDAApplication
 ]
 
 { #category : #accessing }

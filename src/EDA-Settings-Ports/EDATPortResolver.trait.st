@@ -1,9 +1,9 @@
 Trait {
-	#name : #EDAPortResolver,
+	#name : #EDATPortResolver,
 	#category : #'EDA-Settings-Ports'
 }
 
 { #category : #logic }
-EDAPortResolver >> availableAdapters: aPort [
+EDATPortResolver >> availableAdapters: aPort [
 	^ aPort traitUsers select: [ :cls | cls accepts: self ]
 ]

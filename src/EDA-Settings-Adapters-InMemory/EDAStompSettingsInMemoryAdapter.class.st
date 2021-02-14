@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAStompSettingsInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDAInMemoryAdapter',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDAInMemoryAdapter classTrait',
+	#traits : 'EDAPrintOnHelper + EDATInMemoryAdapter',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATInMemoryAdapter classTrait',
 	#instVars : [
 		'host',
 		'password',
@@ -11,7 +11,8 @@ Class {
 		'timeout',
 		'username',
 		'debug',
-		'durable'
+		'durable',
+		'edaApplication'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
@@ -44,6 +45,16 @@ EDAStompSettingsInMemoryAdapter >> durable [
 { #category : #accessing }
 EDAStompSettingsInMemoryAdapter >> durable: flag [
 	durable := flag
+]
+
+{ #category : #accessing }
+EDAStompSettingsInMemoryAdapter >> edaApplication [
+	^ edaApplication
+]
+
+{ #category : #accessing }
+EDAStompSettingsInMemoryAdapter >> edaApplication: anEDAApplication [
+	edaApplication := anEDAApplication
 ]
 
 { #category : #accessing }
