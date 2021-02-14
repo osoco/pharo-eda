@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAMongoProjectionSettingsInMemoryAdapter,
 	#superclass : #EDAMongoSettingsInMemoryAdapter,
-	#traits : 'EDAProjectionSettingsPort',
-	#classTraits : 'EDAProjectionSettingsPort classTrait',
+	#traits : 'EDAProjectionSettingsPort + EDAInMemoryAdapter',
+	#classTraits : 'EDAProjectionSettingsPort classTrait + EDAInMemoryAdapter classTrait',
 	#instVars : [
 		'concurrentSynchronization',
 		'headlessMode',
@@ -15,6 +15,11 @@ Class {
 { #category : #testing }
 EDAMongoProjectionSettingsInMemoryAdapter class >> accepts: anEDAApplication [
 	^ true
+]
+
+{ #category : #accessing }
+EDAMongoProjectionSettingsInMemoryAdapter class >> priority [
+	^ 0
 ]
 
 { #category : #accessing }
@@ -35,11 +40,6 @@ EDAMongoProjectionSettingsInMemoryAdapter >> headlessMode [
 { #category : #accessing }
 EDAMongoProjectionSettingsInMemoryAdapter >> headlessMode: aBoolean [
 	headlessMode := aBoolean
-]
-
-{ #category : #accessing }
-EDAMongoProjectionSettingsInMemoryAdapter >> priority [
-	^ 0
 ]
 
 { #category : #accessing }

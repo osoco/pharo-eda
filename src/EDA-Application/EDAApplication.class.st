@@ -35,7 +35,10 @@ Class {
 		'isConfigured',
 		'isStarted',
 		'projectorsByTenant',
-		'applicationName'
+		'applicationName',
+		'portSettingsPort',
+		'environmentSettingsPort',
+		'environmentSettingsResolverPort'
 	],
 	#classVars : [
 		'ProjectionSynchronizationEnabled'
@@ -138,6 +141,7 @@ EDAApplication >> configureProjectionBackendAuthentication: anObject [
 EDAApplication >> doInitialize [
 	self isStarted: false.
 	self isConfigured: false.
+	self resetPortSettingsPort.
 	self projectorsByTenant: Dictionary new
 ]
 
@@ -160,7 +164,31 @@ EDAApplication >> doSetup [
 
 { #category : #accessing }
 EDAApplication >> environmentSettingsPort [
-	^ self resolveEnvironmentSettingsPort
+	environmentSettingsPort ifNil: [ 
+		| result resolver |
+		resolver := self environmentSettingsResolverPort.
+		result := resolver resolveEnvironmentSettingsPort.
+		self environmentSettingsPort: result].
+	^ environmentSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> environmentSettingsPort: anAdapter [
+	environmentSettingsPort := anAdapter
+]
+
+{ #category : #accessing }
+EDAApplication >> environmentSettingsResolverPort [
+	environmentSettingsResolverPort
+		ifNil: [ | result |
+			result := EDAPortResolverByPriorityAdapter new.
+			self environmentSettingsResolverPort: result ].
+	^ environmentSettingsResolverPort
+]
+
+{ #category : #accessing }
+EDAApplication >> environmentSettingsResolverPort: anAdapter [
+	environmentSettingsResolverPort := anAdapter
 ]
 
 { #category : #accessing }
@@ -259,7 +287,14 @@ EDAApplication >> loggingSettingsPort [
 
 { #category : #accessing }
 EDAApplication >> portSettingsPort [
-	^ self resolvePortSettingsPort
+	^ portSettingsPort
+		ifNil: [ | result |
+			result := EDAPortResolverInMemoryAdapter new. result ]
+]
+
+{ #category : #accessing }
+EDAApplication >> portSettingsPort: anAdapter [
+	portSettingsPort := anAdapter
 ]
 
 { #category : #accessing }
@@ -294,6 +329,7 @@ EDAApplication >> projectorsByTenant: aDictionary [
 
 { #category : #reset }
 EDAApplication >> reset [
+	self resetPortResolver.
 	self resetLogging.
 	self resetEventProducer.
 	self resetEventStore.
@@ -343,6 +379,11 @@ EDAApplication >> resetEventSubscriptions [
 EDAApplication >> resetLogging [
 	EDALogEvent announcer
 		unsubscribe: EDALogEvent
+]
+
+{ #category : #reset }
+EDAApplication >> resetPortSettingsPort [
+	self portSettingsPort: EDAPortResolverInMemoryAdapter new.
 ]
 
 { #category : #'reset - projections' }

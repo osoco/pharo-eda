@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAStompSettingsInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDAInMemoryAdapter',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDAInMemoryAdapter classTrait',
 	#instVars : [
 		'host',
 		'password',

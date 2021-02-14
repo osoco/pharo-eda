@@ -1,8 +1,8 @@
 Class {
 	#name : #EDALoggingSettingsInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDALoggingSettingsPort',
-	#classTraits : 'EDALoggingSettingsPort classTrait',
+	#traits : 'EDALoggingSettingsPort + EDAInMemoryAdapter',
+	#classTraits : 'EDALoggingSettingsPort classTrait + EDAInMemoryAdapter classTrait',
 	#instVars : [
 		'loggingLevel'
 	],

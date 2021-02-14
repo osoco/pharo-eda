@@ -17,6 +17,11 @@ EDAStompTopicPublisherSettingsInMemoryAdapter class >> accepts: anEDAApplication
 	^ true
 ]
 
+{ #category : #testing }
+EDAStompTopicPublisherSettingsInMemoryAdapter class >> priority [
+	^ 0
+]
+
 { #category : #'class initialization' }
 EDAStompTopicPublisherSettingsInMemoryAdapter >> doInitialize [
 	super doInitialize.
@@ -53,11 +58,6 @@ EDAStompTopicPublisherSettingsInMemoryAdapter >> exchange [
 { #category : #accessing }
 EDAStompTopicPublisherSettingsInMemoryAdapter >> exchange: val [
 	exchange := val
-]
-
-{ #category : #testing }
-EDAStompTopicPublisherSettingsInMemoryAdapter >> priority [
-	^ 0
 ]
 
 { #category : #accessing }

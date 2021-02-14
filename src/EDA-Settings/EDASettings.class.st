@@ -14,7 +14,8 @@ Class {
 	#classTraits : 'EDATSettingsHelper classTrait + EDATLogging classTrait',
 	#classInstVars : [
 		'duEnvironmentClass',
-		'noApplications'
+		'noApplications',
+		'priorizedAdapter'
 	],
 	#category : #'EDA-Settings'
 }
@@ -285,6 +286,34 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 ]
 
 { #category : #settings }
+EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent [
+	| entry values byPriorityAdapter |
+	entry := aBuilder group: #ports.
+	entry
+		label: 'Ports' translated;
+		parent: aParent.
+	byPriorityAdapter := EDAPortResolverByPriorityAdapter new.
+	priorizedAdapter := byPriorityAdapter resolveEnvironmentSettingsPort.
+	values := OrderedCollection
+		with:
+			('By priority (' , priorizedAdapter description , ')')
+				-> EDAPortResolverByPriorityAdapter.
+	values
+		addAll:
+			(EDAPortResolverByPriorityAdapter new
+				availableEnvironmentSettingsAdapters
+				reject: [ :adapterClass | adapterClass = priorizedAdapter class ]
+				thenCollect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ]).
+	(aBuilder pickOne: #environmentSettingsResolverPort)
+		label: 'Environment' translated;
+		target: aConfig;
+		parent: #ports;
+		domainValues: values;
+		default: EDAPortResolverByPriorityAdapter
+]
+
+{ #category : #settings }
 EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
 	(aBuilder group: #errors)
 		label: 'Projection errors' translated;
@@ -295,12 +324,12 @@ EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aCo
 		parent: #errors;
 		target: aConfig;
 		label: 'Default projection Error Handling' translated;
-		description: 'Default trategy when dealing with errors projecting events';
+		description: 'Default strategy when dealing with errors projecting events';
 		order: 1;
 		domainValues:
 			(EDAErrorHandlingStrategy subclasses
-				collect: [ :strategy | strategy description -> strategy greaseString ]);
-		default: EDAPublishMessageErrorStrategy greaseString.
+				collect: [ :strategy | strategy description -> strategy printString ]);
+		default: EDAPublishMessageErrorStrategy printString.
 	self
 		customProjectionErrorBehaviorsOn: aBuilder
 		withConfig: aConfig

@@ -17,6 +17,11 @@ EDAStompTopicListenerSettingsInMemoryAdapter class >> accepts: anEDAApplication 
 	^ true
 ]
 
+{ #category : #testing }
+EDAStompTopicListenerSettingsInMemoryAdapter class >> priority [
+	^ 0
+]
+
 { #category : #accessing }
 EDAStompTopicListenerSettingsInMemoryAdapter >> ack [
 	^ ack
@@ -56,11 +61,6 @@ EDAStompTopicListenerSettingsInMemoryAdapter >> prefetchCount [
 { #category : #accessing }
 EDAStompTopicListenerSettingsInMemoryAdapter >> prefetchCount: val [
 	prefetchCount := val
-]
-
-{ #category : #testing }
-EDAStompTopicListenerSettingsInMemoryAdapter >> priority [
-	^ 0
 ]
 
 { #category : #accessing }
