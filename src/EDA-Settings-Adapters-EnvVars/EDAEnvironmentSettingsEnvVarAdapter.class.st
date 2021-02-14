@@ -12,6 +12,11 @@ EDAEnvironmentSettingsEnvVarAdapter class >> accepts: anEDAApplication [
 ]
 
 { #category : #testing }
+EDAEnvironmentSettingsEnvVarAdapter >> availableEnvironments [ 
+	^ OrderedCollection with: (self currentEnvironment)
+]
+
+{ #category : #testing }
 EDAEnvironmentSettingsEnvVarAdapter >> currentEnvironment [
 	^ self getValueFor: self environmentVariableName orElse: 'unknown'
 ]
@@ -24,4 +29,9 @@ EDAEnvironmentSettingsEnvVarAdapter >> environmentVariableName [
 { #category : #testing }
 EDAEnvironmentSettingsEnvVarAdapter >> priority [
 	^ 50
+]
+
+{ #category : #testing }
+EDAEnvironmentSettingsEnvVarAdapter >> supportsMultiple [
+	^ false
 ]

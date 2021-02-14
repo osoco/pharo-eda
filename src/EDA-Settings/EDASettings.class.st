@@ -86,22 +86,18 @@ EDASettings class >> edaSettingsOn: aBuilder [
 				noOrdering.
 			apps
 				do: [ :app | 
-					| parent |
+					| parent parentGroup |
 					parent := app applicationName.
-					(aBuilder group: parent)
+					parentGroup := aBuilder group: parent.
+					parentGroup
 						label: parent translated;
 						parent: #edaApps;
 						description: parent;
 						noOrdering.
-					(aBuilder pickOne: #currentEnvironment)
-						parent: parent;
-						target: app environmentSettingsPort;
-						label: 'Environment' translated;
-						description: 'Environment';
-						order: 1;
-						domainValues:
-							(EDADUEnvironment environments
-								collect: [ :level | level translated -> level greaseString ]).
+					self
+						environmentSettingsOn: aBuilder
+						withConfig: app environmentSettingsPort
+						under: parent.
 					self
 						commandListenerSettingsOn: aBuilder
 						withConfig: app commandListenerSettingsPort
@@ -123,6 +119,25 @@ EDASettings class >> edaSettingsOn: aBuilder [
 						loggingSettingsOn: aBuilder
 						withConfig: app loggingSettingsPort
 						under: parent ] ]
+]
+
+{ #category : #settings }
+EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: aParent [
+	| entry |
+	aConfig supportsMultiple
+		ifTrue: [ entry := aBuilder pickOne: #currentEnvironment.
+			entry
+				domainValues:
+					(aConfig availableEnvironments
+						collect: [ :level | level translated -> level greaseString ]) ]
+		ifFalse: [ entry := aBuilder group: #currentEnvironment.
+			entry dialog: [ LabelMorph newLabel: aConfig currentEnvironment ] ].
+	entry
+		parent: aParent;
+		target: aConfig;
+		label: 'Environment' translated;
+		description: 'Environment';
+		order: 1
 ]
 
 { #category : #settings }
