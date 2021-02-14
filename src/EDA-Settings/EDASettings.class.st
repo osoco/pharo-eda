@@ -21,7 +21,7 @@ Class {
 }
 
 { #category : #settings }
-EDASettings class >> commandListenerSettingsOn: aBuilder withConfig: aConfig under: parent [
+EDASettings class >> commandListenerSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
 	(aBuilder group: #commandListener)
 		label: 'Command Listener' translated;
 		description: 'Command listener';
@@ -98,33 +98,43 @@ EDASettings class >> edaSettingsOn: aBuilder [
 					self
 						environmentSettingsOn: aBuilder
 						withConfig: app environmentSettingsPort
-						under: parent.
+						under: parent
+						on: app.
 					self
 						commandListenerSettingsOn: aBuilder
 						withConfig: app commandListenerSettingsPort
-						under: parent.
+						under: parent
+						on: app.
 					self
 						eventPublisherSettingsOn: aBuilder
 						withConfig: app eventPublisherSettingsPort
-						under: parent.
+						under: parent
+						on: app.
 					self
 						eventStoreSettingsOn: aBuilder
 						withConfig: app eventStoreSettingsPort
-						under: parent.
+						under: parent
+						on: app.
 					self
 						projectionSettingsOn: aBuilder
 						withConfig: app projectionSettingsPort
 						under: parent
-						populatedWithValuesFrom: 'projections'.
+						populatedWithValuesFrom: 'projections'
+						on: app.
 					self
 						loggingSettingsOn: aBuilder
 						withConfig: app loggingSettingsPort
-						under: parent.
-						self portSettingsOn: aBuilder withConfig: app portSettingsPort under: parent ] ]
+						under: parent
+						on: app.
+					self
+						portSettingsOn: aBuilder
+						withConfig: app portSettingsPort
+						under: parent
+						on: app ] ]
 ]
 
 { #category : #settings }
-EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: aParent [
+EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: aParent on: app [
 	| entry |
 	aConfig supportsMultiple
 		ifTrue: [ entry := aBuilder pickOne: #currentEnvironment.
@@ -132,8 +142,10 @@ EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: 
 				domainValues:
 					(aConfig availableEnvironments
 						collect: [ :level | level translated -> level greaseString ]) ]
-		ifFalse: [ entry := aBuilder group: #currentEnvironment.
-			entry dialog: [ LabelMorph newLabel: aConfig currentEnvironment ] ].
+		ifFalse: [ aConfig isReadOnly
+				ifTrue: [ entry := aBuilder group: #currentEnvironment.
+					entry dialog: [ LabelMorph newLabel: aConfig currentEnvironment ] ]
+				ifFalse: [ entry := aBuilder setting: #currentEnvironment ] ].
 	entry
 		parent: aParent;
 		target: aConfig;
@@ -143,7 +155,7 @@ EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: 
 ]
 
 { #category : #settings }
-EDASettings class >> eventPublisherSettingsOn: aBuilder withConfig: aConfig under: parent [
+EDASettings class >> eventPublisherSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
 	(aBuilder group: #eventPublisher)
 		label: 'Event Publisher' translated;
 		description: 'Event publisher (for integration tests)';
@@ -156,7 +168,7 @@ EDASettings class >> eventPublisherSettingsOn: aBuilder withConfig: aConfig unde
 ]
 
 { #category : #settings }
-EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: parent [
+EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
 	| extSettings |
 	extSettings := self retrieveSettingAsDict: 'eventStore'.
 	(aBuilder group: #eventStore)
@@ -176,7 +188,7 @@ EDASettings class >> initialize [
 ]
 
 { #category : #settings }
-EDASettings class >> loggingSettingsOn: aBuilder withConfig: aConfig under: parent [
+EDASettings class >> loggingSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
 	| extSettings |
 	extSettings := self retrieveSettingAsDict: 'logging'.
 	(aBuilder group: #logging)
@@ -286,7 +298,7 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 ]
 
 { #category : #settings }
-EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent [
+EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent on: app [
 	| entry values byPriorityAdapter defaultItem |
 	entry := aBuilder group: #ports.
 	entry
@@ -296,20 +308,20 @@ EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent
 	priorizedAdapter := byPriorityAdapter resolveEnvironmentSettingsPort.
 	values := OrderedCollection
 		with:
-			EDAPortResolverByPriorityAdapter name
-				-> EDAPortResolverByPriorityAdapter printString.
-	"('By priority (' , priorizedAdapter description , ')')"
+			('By priority (' , priorizedAdapter description , ')')
+				-> (EDAPortResolverByPriorityAdapter withApp: app).
 	values
 		addAll:
 			(EDAPortResolverByPriorityAdapter new
 				availableEnvironmentSettingsAdapters
 				reject: [ :adapterClass | adapterClass = priorizedAdapter class ]
-				thenCollect: [ :adapterClass | adapterClass name -> adapterClass printString ]).
+				thenCollect:
+					[ :adapterClass | adapterClass description translated -> (adapterClass withApp: app) ]).
 	aConfig environmentSettingsResolverPort
 		ifNil: [ defaultItem := byPriorityAdapter ]
 		ifNotNil: [ :p | defaultItem := p class ].
 	(aBuilder pickOne: #environmentSettingsResolverPort)
-		label: 'Environment' translated;
+		label: 'Environment adapter' translated;
 		target: aConfig;
 		parent: #ports;
 		domainValues: values
@@ -378,7 +390,7 @@ EDASettings class >> projectionSettingsOn: aBuilder under: parent populatedWithV
 ]
 
 { #category : #settings }
-EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
+EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry on: app [
 	| extSettings |
 	extSettings := self retrieveSettingAsDict: aConfigEntry.
 	(aBuilder group: #projections)

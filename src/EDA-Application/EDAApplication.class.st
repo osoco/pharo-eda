@@ -86,11 +86,12 @@ EDAApplication class >> new [
 { #category : #'instance creation' }
 EDAApplication class >> withName: anApplicationName [
 	| result |
-	(EDAApplications uniqueInstance applications select: [ :app | app applicationName = anApplicationName ]) ifEmpty: [  
-	result := self basicNew.
-	result applicationName: anApplicationName.
-	EDAApplications uniqueInstance register: result.
-		] ifNotEmpty: [ :c | result := c first ].
+	(EDAApplications uniqueInstance applications
+		select: [ :app | app applicationName = anApplicationName ])
+		ifEmpty: [ result := self basicNew initialize.
+			result applicationName: anApplicationName.
+			EDAApplications uniqueInstance register: result ]
+		ifNotEmpty: [ :c | result := c first ].
 	^ result
 ]
 
@@ -144,7 +145,10 @@ EDAApplication >> doInitialize [
 	self isStarted: false.
 	self isConfigured: false.
 	self resetPortSettingsPort.
-	self projectorsByTenant: Dictionary new
+	self projectorsByTenant: Dictionary new.
+	self setupSettingsAnnouncer.
+	self setupEventAnnouncer.
+	self setupSettingsSubscriptions 
 ]
 
 { #category : #setup }
@@ -166,18 +170,16 @@ EDAApplication >> doSetup [
 
 { #category : #accessing }
 EDAApplication >> environmentSettingsPort [
-	environmentSettingsPort ifNil: [ 
-		| result resolver |
-		resolver := self environmentSettingsResolverPort.
-		result := resolver resolveEnvironmentSettingsPort.
-		self environmentSettingsPort: result].
-	^ environmentSettingsPort
+	^ self portSettingsPort environmentSettingsPort
 ]
 
 { #category : #accessing }
 EDAApplication >> environmentSettingsPort: anAdapter [
-	(anAdapter = environmentSettingsPort) ifFalse: [ self notifyEnvironmentSettingsPortListener: anAdapter. 
-	environmentSettingsPort := anAdapter ]
+	anAdapter = environmentSettingsPort
+		ifTrue: [ ^ self ].
+	environmentSettingsPort := anAdapter.
+		self notifyEnvironmentSettingsPortListener: anAdapter.
+
 ]
 
 { #category : #accessing }
@@ -386,7 +388,7 @@ EDAApplication >> resetLogging [
 
 { #category : #reset }
 EDAApplication >> resetPortSettingsPort [
-	self portSettingsPort: EDAPortResolverInMemoryAdapter new.
+	self portSettingsPort: (EDAPortResolverInMemoryAdapter withApp: self).
 ]
 
 { #category : #'reset - projections' }

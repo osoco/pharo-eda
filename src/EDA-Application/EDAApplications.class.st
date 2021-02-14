@@ -66,5 +66,5 @@ EDAApplications >> unregister: anEDAApplication [
 
 { #category : #logic }
 EDAApplications >> unregisterByName: anApplicationName [
-	self registry removeKey: anApplicationName
+	self registry removeKey: anApplicationName ifAbsent: [  ]
 ]

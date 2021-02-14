@@ -39,3 +39,8 @@ EDAEnvironmentSettingsInMemoryAdapter >> edaApplication [
 EDAEnvironmentSettingsInMemoryAdapter >> edaApplication: anEDAApplication [
 	edaApplication := anEDAApplication
 ]
+
+{ #category : #testing }
+EDAEnvironmentSettingsInMemoryAdapter >> supportsMultiple [
+	^ false
+]

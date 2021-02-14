@@ -9,3 +9,8 @@ EDATEnvVarAdapter >> getValueFor: envVarName orElse: defaultValue [
 		at: envVarName
 		ifAbsent: defaultValue
 ]
+
+{ #category : #'environment-variables' }
+EDATEnvVarAdapter >> isReadOnly [
+	^ true
+]

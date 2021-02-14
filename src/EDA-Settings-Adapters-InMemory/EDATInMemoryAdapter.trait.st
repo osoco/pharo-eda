@@ -7,3 +7,8 @@ Trait {
 EDATInMemoryAdapter classSide >> description [
 	^ 'Manual'
 ]
+
+{ #category : #testing }
+EDATInMemoryAdapter >> isReadOnly [ 
+	^ false
+]
