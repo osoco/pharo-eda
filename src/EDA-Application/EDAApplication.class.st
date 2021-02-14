@@ -73,7 +73,7 @@ EDAApplication class >> defaultEnvironment [
 	^ EDADUEnvironment new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 EDAApplication class >> new [
 	MessageNotUnderstood signal: 'Use ' , self class printString , '>>withName: instead'
 ]
