@@ -80,20 +80,21 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Traits';
 		package: #'EDA-Traits-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Settings-Ports';
+		package: #'EDA-Settings-Ports'
+			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Settings-Adapters-InMemory'
-			with: [ spec requires: #('EDA-Settings-Ports') ];
+			with: [ spec requires: #('EDA-Traits' 'EDA-Settings-Ports') ];
 		package: #'EDA-Settings-Adapters-EnvVars'
-			with: [ spec requires: #('EDA-Settings-Ports') ];
+			with: [ spec requires: #('EDA-Traits' 'EDA-Settings-Ports') ];
 		package: #'EDA-Settings-Adapters-ByPriority'
-			with: [ spec requires: #('EDA-Settings-Ports' 'EDA-Settings-Adapters-InMemory' 'EDA-Settings-Adapters-EnvVars') ];
+			with: [ spec
+				requires:
+					#('EDA-Traits' 'EDA-Settings-Ports' 'EDA-Settings-Adapters-InMemory' 'EDA-Settings-Adapters-EnvVars') ];
 		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools') ];
+		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools' 'EDA-Traits') ];
 		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
-		package: #'EDA-Commands-Tests-Tests'
-			with: [ spec requires: #('EDA-Commands-Tests') ];
 		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Errors'
@@ -113,16 +114,19 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-StompMessaging'
 			with: [ spec requires: #('Stamp' 'EDA-Traits') ];
 		package: #'EDA-Voyage-EventStore'
-			with: [ spec requires: #('Voyage') ];
+			with: [ spec requires: #('Voyage' 'EDA-Traits') ];
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
-					#('EDA-Settings-Ports' 'EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging') ];
+					#('EDA-Settings-Ports' 'EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'EDA-Traits') ];
 		package: #'EDA-Settings'
 			with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec
-				requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ]
+				requires:
+					#('BabyMock2' 'EDA-Settings' 'EDA-Traits' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
+		package: #'EDA-Commands-Tests-Tests'
+			with: [ spec requires: #('EDA-Commands-Tests') ]
 ]
 
 { #category : #dependencies }
