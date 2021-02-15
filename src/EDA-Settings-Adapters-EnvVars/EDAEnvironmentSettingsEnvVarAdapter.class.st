@@ -36,7 +36,7 @@ EDAEnvironmentSettingsEnvVarAdapter >> availableEnvironments [
 
 { #category : #testing }
 EDAEnvironmentSettingsEnvVarAdapter >> currentEnvironment [
-	^ self getValueFor: self environmentVariableName orElse: 'unknown'
+	^ self getValueFor: self environmentVariableName orElse: '(' , self environmentVariableName , ' not set)'
 ]
 
 { #category : #testing }

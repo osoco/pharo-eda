@@ -22,7 +22,7 @@ EDAEnvironmentSettingsInMemoryAdapter class >> priority [
 
 { #category : #accessing }
 EDAEnvironmentSettingsInMemoryAdapter >> currentEnvironment [
-	^ currentEnvironment
+	^ currentEnvironment ifNil: [ '' ]
 ]
 
 { #category : #accessing }

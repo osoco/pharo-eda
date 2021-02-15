@@ -11,7 +11,7 @@ EDASettingsSubscriber >> onEnvironmentSettingsPortChanged: anEvent on: anEDAAppl
 
 { #category : #setup }
 EDASettingsSubscriber >> onEnvironmentSettingsResolverPortChanged: anEvent on: anEDAApplication [
-	self refreshSettingBrowsers
+	anEDAApplication environmentSettingsPort: anEvent adapter
 ]
 
 { #category : #setup }

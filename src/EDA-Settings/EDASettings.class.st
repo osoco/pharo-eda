@@ -145,7 +145,8 @@ EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: 
 		ifFalse: [ aConfig isReadOnly
 				ifTrue: [ entry := aBuilder group: #currentEnvironment.
 					entry dialog: [ LabelMorph newLabel: aConfig currentEnvironment ] ]
-				ifFalse: [ entry := aBuilder setting: #currentEnvironment ] ].
+				ifFalse: [ entry := aBuilder setting: #currentEnvironment ].
+		 ].
 	entry
 		parent: aParent;
 		target: aConfig;
@@ -309,18 +310,18 @@ EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent
 	values := OrderedCollection
 		with:
 			('By priority (' , priorizedAdapter description , ')')
-				-> (EDAPortResolverByPriorityAdapter withApp: app).
+				-> EDAPortResolverByPriorityAdapter.
 	values
 		addAll:
 			(EDAPortResolverByPriorityAdapter new
 				availableEnvironmentSettingsAdapters
 				reject: [ :adapterClass | adapterClass = priorizedAdapter class ]
 				thenCollect:
-					[ :adapterClass | adapterClass description translated -> (adapterClass withApp: app) ]).
+					[ :adapterClass | adapterClass description translated -> adapterClass ]).
 	aConfig environmentSettingsResolverPort
 		ifNil: [ defaultItem := byPriorityAdapter ]
 		ifNotNil: [ :p | defaultItem := p class ].
-	(aBuilder pickOne: #environmentSettingsResolverPort)
+	(aBuilder pickOne: #environmentSettingsResolverPortClass)
 		label: 'Environment adapter' translated;
 		target: aConfig;
 		parent: #ports;

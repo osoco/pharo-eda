@@ -5,7 +5,8 @@ Class {
 	#classTraits : 'EDATPortSettingsPort classTrait + EDAPrintOnHelper classTrait + EDATInMemoryAdapter classTrait',
 	#instVars : [
 		'environmentSettingsResolverPort',
-		'edaApplication'
+		'edaApplication',
+		'environmentSettingsResolverPortClass'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
@@ -27,18 +28,24 @@ EDAPortResolverInMemoryAdapter >> environmentSettingsPort [
 
 { #category : #accessing }
 EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPort [
-	environmentSettingsResolverPort
-		ifNil: [ 
-			self environmentSettingsResolverPort: EDAPortResolverByPriorityAdapter new ].
-	^ environmentSettingsResolverPort
+	^ self environmentSettingsResolverPortClass withApp: (self edaApplication)
 ]
 
 { #category : #accessing }
-EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPort: anAdapter [
-	(anAdapter class = environmentSettingsResolverPort class)
+EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPortClass [
+	environmentSettingsResolverPortClass
+		ifNil: [ 
+			self environmentSettingsResolverPortClass: EDAPortResolverByPriorityAdapter ].
+	^ environmentSettingsResolverPortClass
+]
+
+{ #category : #accessing }
+EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPortClass: anAdapterClass [
+	anAdapterClass = environmentSettingsResolverPortClass
 		ifTrue: [ ^ self ].
-	self notifyEnvironmentSettingsResolverPortListener: anAdapter.
-	environmentSettingsResolverPort := anAdapter
+	environmentSettingsResolverPortClass := anAdapterClass.
+	self
+		notifyEnvironmentSettingsResolverPortListener: self environmentSettingsPort
 ]
 
 { #category : #testing }
