@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAPredefinedEnvironmentSettingsInMemoryAdapter,
 	#superclass : #Object,
-	#traits : 'EDATEnvironmentSettingsPort + EDAPrintOnHelper + EDATInMemoryAdapter',
-	#classTraits : 'EDATEnvironmentSettingsPort classTrait + EDAPrintOnHelper classTrait + EDATInMemoryAdapter classTrait',
+	#traits : 'EDATEnvironmentSettingsPort + EDAPrintOnHelper + EDATInMemoryAdapter + EDATCollectionHelper',
+	#classTraits : 'EDATEnvironmentSettingsPort classTrait + EDAPrintOnHelper classTrait + EDATInMemoryAdapter classTrait + EDATCollectionHelper classTrait',
 	#instVars : [
 		'currentEnvironment',
 		'edaApplication'
@@ -15,19 +15,24 @@ EDAPredefinedEnvironmentSettingsInMemoryAdapter class >> accepts: anEDAApplicati
 	^ true
 ]
 
-{ #category : #ambiguous }
-EDAPredefinedEnvironmentSettingsInMemoryAdapter class >> description [
-	^ 'Predefined list'
-]
-
-{ #category : #testing }
-EDAPredefinedEnvironmentSettingsInMemoryAdapter class >> priority [
-	^ 50
-]
-
-{ #category : #testing }
-EDAPredefinedEnvironmentSettingsInMemoryAdapter >> availableEnvironments [
+{ #category : #meta }
+EDAPredefinedEnvironmentSettingsInMemoryAdapter class >> availableEnvironments [
 	^ OrderedCollection with: 'dev' with: 'test' with: 'PRO'
+]
+
+{ #category : #meta }
+EDAPredefinedEnvironmentSettingsInMemoryAdapter class >> description [
+	^ 'Predefined list (', (self concatenateCollection: self availableEnvironments with: ', ') , ')'
+]
+
+{ #category : #meta }
+EDAPredefinedEnvironmentSettingsInMemoryAdapter class >> priority [
+	^ 60
+]
+
+{ #category : #meta }
+EDAPredefinedEnvironmentSettingsInMemoryAdapter >> availableEnvironments [
+	^ self class availableEnvironments 
 ]
 
 { #category : #accessing }

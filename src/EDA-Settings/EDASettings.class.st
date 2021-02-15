@@ -22,17 +22,19 @@ Class {
 
 { #category : #settings }
 EDASettings class >> commandListenerSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
-	(aBuilder group: #commandListener)
+	| key |
+	key := parent , 'commandListener'.
+	(aBuilder group: key)
 		label: 'Command Listener' translated;
 		description: 'Command listener';
 		parent: parent.
 	self
 		stompListenerSettingsOn: aBuilder
 		withConfig: aConfig
-		under: #commandListener
+		under: key
 		populatedWithValuesFrom: 'commandListener'.
 	(aBuilder pickOne: #strategy)
-		parent: #commandListener;
+		parent: key;
 		target: aConfig;
 		label: 'Command Consuming Error' translated;
 		description: 'Strategy when dealing with command consuming errors';
@@ -76,7 +78,7 @@ EDASettings class >> edaSettingsOn: aBuilder [
 	<systemsettings>
 	| root |
 	root := aBuilder group: #edaApps.
-	EDAApplications uniqueInstance applications
+	EDAApplications uniqueInstance edaApplications
 		ifEmpty: [ root
 				label: 'No PharoEDA applications registered' translated;
 				description: 'No PharoEDA applications registered' ]
@@ -157,28 +159,31 @@ EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: 
 
 { #category : #settings }
 EDASettings class >> eventPublisherSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
-	(aBuilder group: #eventPublisher)
+	| key |
+	key := parent , 'eventPublisher'.
+	(aBuilder group: key)
 		label: 'Event Publisher' translated;
 		description: 'Event publisher (for integration tests)';
 		parent: parent.
 	^ self
 		stompPublisherSettingsOn: aBuilder
 		withConfig: aConfig
-		under: #eventPublisher
+		under: key
 		populatedWithValuesFrom: 'eventPublisher'
 ]
 
 { #category : #settings }
 EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
-	| extSettings |
+	| extSettings key |
+	key := parent , 'eventStore'.
 	extSettings := self retrieveSettingAsDict: 'eventStore'.
-	(aBuilder group: #eventStore)
+	(aBuilder group: key)
 		label: 'Event Store' translated;
 		parent: parent.
 	^ self
 		mongoSettingsOn: aBuilder
 		withConfig: aConfig
-		under: #eventStore
+		under: key
 		populatedWithValuesFrom: extSettings
 ]
 
@@ -190,13 +195,14 @@ EDASettings class >> initialize [
 
 { #category : #settings }
 EDASettings class >> loggingSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
-	| extSettings |
+	| extSettings key |
+	key := parent , 'logging'.
 	extSettings := self retrieveSettingAsDict: 'logging'.
-	(aBuilder group: #logging)
+	(aBuilder group: key)
 		label: 'Logging' translated;
 		parent: parent.
 	(aBuilder pickOne: #loggingLevel)
-		parent: #logging;
+		parent: key;
 		target: aConfig;
 		label: 'Logging level' translated;
 		description: 'Logging level';
@@ -300,8 +306,9 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 
 { #category : #settings }
 EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent on: app [
-	| entry values byPriorityAdapter defaultItem |
-	entry := aBuilder group: #ports.
+	| entry values byPriorityAdapter key |
+	key := aParent , 'ports'.
+	entry := aBuilder group: key.
 	entry
 		label: 'Ports' translated;
 		parent: aParent.
@@ -309,34 +316,34 @@ EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent
 	priorizedAdapter := byPriorityAdapter resolveEnvironmentSettingsPort.
 	values := OrderedCollection
 		with:
-			('By priority (' , priorizedAdapter description , ')')
+			('By priority (' , priorizedAdapter class description , ')')
 				-> EDAPortResolverByPriorityAdapter.
 	values
 		addAll:
-			(EDAPortResolverByPriorityAdapter new
+			((EDAPortResolverByPriorityAdapter new
 				availableEnvironmentSettingsAdapters
 				reject: [ :adapterClass | adapterClass = priorizedAdapter class ]
 				thenCollect:
-					[ :adapterClass | adapterClass description translated -> adapterClass ]).
-	aConfig environmentSettingsResolverPort
-		ifNil: [ defaultItem := byPriorityAdapter ]
-		ifNotNil: [ :p | defaultItem := p class ].
+					[ :adapterClass | adapterClass description translated -> adapterClass ])
+				sorted: [ :a :b | a value < b value ]).
 	(aBuilder pickOne: #environmentSettingsResolverPortClass)
 		label: 'Environment adapter' translated;
 		target: aConfig;
-		parent: #ports;
+		parent: key;
 		domainValues: values
 ]
 
 { #category : #settings }
-EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
-	(aBuilder group: #errors)
+EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry on: app [
+	| key |
+	key := parent , 'errors'.
+	(aBuilder group: key)
 		label: 'Projection errors' translated;
 		description: 'Projection error handling';
 		noOrdering;
-		parent: #projections.
+		parent: parent.
 	(aBuilder pickOne: #strategy)
-		parent: #errors;
+		parent: key;
 		target: aConfig;
 		label: 'Default projection Error Handling' translated;
 		description: 'Default strategy when dealing with errors projecting events';
@@ -348,8 +355,9 @@ EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aCo
 	self
 		customProjectionErrorBehaviorsOn: aBuilder
 		withConfig: aConfig
-		under: #errors
+		under: key
 		populatedWithValuesFrom: aConfigEntry
+		on: app
 ]
 
 { #category : #settings }
@@ -392,32 +400,33 @@ EDASettings class >> projectionSettingsOn: aBuilder under: parent populatedWithV
 
 { #category : #settings }
 EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry on: app [
-	| extSettings |
+	| extSettings key |
+	key := parent , 'projections'.
 	extSettings := self retrieveSettingAsDict: aConfigEntry.
-	(aBuilder group: #projections)
+	(aBuilder group: key)
 		label: 'Projections' translated;
 		parent: parent.
 	self
 		projectionsRepositorySettingsOn: aBuilder
 		withConfig: aConfig
-		under: #projections
+		under: key
 		populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
 	(aBuilder setting: #projectionSynchronizationEnabled)
-		parent: #projections;
+		parent: key;
 		target: aConfig;
 		label: 'Synchronize on startup' translated;
 		description:
 			'When the EDAApplication starts, this setting enables a check and conditional automatic synchronization of projections';
 		default: (extSettings at: 'synchronizationEnabled').
 	(aBuilder setting: #concurrentSynchronization)
-		parent: #projections;
+		parent: key;
 		target: aConfig;
 		label: 'Synchronization in parallel' translated;
 		description: 'Whether enable or disable concurrent projection synchronization';
 		order: 2;
 		default: (extSettings at: 'concurrentSynchronization').
 	(aBuilder setting: #headlessMode)
-		parent: #projections;
+		parent: key;
 		target: aConfig;
 		label: 'Headless' translated;
 		description: 'Whether to show the progress when projecting events visually';
@@ -428,6 +437,7 @@ EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: p
 		withConfig: aConfig
 		under: parent
 		populatedWithValuesFrom: aConfigEntry
+		on: app
 ]
 
 { #category : #settings }

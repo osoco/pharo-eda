@@ -86,7 +86,7 @@ EDAApplication class >> new [
 { #category : #'instance creation' }
 EDAApplication class >> withName: anApplicationName [
 	| result |
-	(EDAApplications uniqueInstance applications
+	(EDAApplications uniqueInstance edaApplications
 		select: [ :app | app applicationName = anApplicationName ])
 		ifEmpty: [ result := self basicNew initialize.
 			result applicationName: anApplicationName.

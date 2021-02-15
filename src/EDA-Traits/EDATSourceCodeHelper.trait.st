@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATSourceCodeHelper,
-	#traits : 'EDATLanguageHelper',
+	#traits : 'EDATLanguageHelper + EDATCollectionHelper',
+	#classTraits : 'EDATLanguageHelper classTrait + EDATCollectionHelper classTrait',
 	#category : #'EDA-Traits'
 }
 
@@ -133,18 +134,6 @@ EDATSourceCodeHelper >> compileIfDoesNotExist: methodName sourceCode: method inC
 				sourceCode: method
 				inClass: aClass
 				classifiedAs: protocol ]
-]
-
-{ #category : #helper }
-EDATSourceCodeHelper >> concatenateCollection: aCollection with: aSeparator [
-	| txt |
-	txt := ''.
-	aCollection
-		keysAndValuesDo: [ :i :item | 
-			i > 1
-				ifTrue: [ txt := txt , aSeparator ].
-			txt := txt , item ].
-	^ txt
 ]
 
 { #category : #'compilation-support' }

@@ -4,7 +4,9 @@ Class {
 	#traits : 'EDATLogging',
 	#classTraits : 'EDATLogging classTrait',
 	#instVars : [
-		'registry'
+		'registry',
+		'edaApplicationsAnnouncer',
+		'edaApplicationsSubscribers'
 	],
 	#classInstVars : [
 		'uniqueInstance'
@@ -27,9 +29,57 @@ EDAApplications class >> uniqueInstance: anInstance [
 	uniqueInstance := anInstance
 ]
 
+{ #category : #initialization }
+EDAApplications >> addApplicationsSubscriber: aSubscriber [
+	aSubscriber setupAnnouncer: self edaApplicationsAnnouncer.
+
+]
+
+{ #category : #initialization }
+EDAApplications >> doInitialize [
+	self addApplicationsSubscriber: EDAApplicationsSubscriber new
+]
+
 { #category : #accessing }
-EDAApplications >> applications [
+EDAApplications >> edaApplications [
 	^ self registry values
+]
+
+{ #category : #accessing }
+EDAApplications >> edaApplicationsAnnouncer [
+	edaApplicationsAnnouncer
+		ifNil: [ self edaApplicationsAnnouncer: Announcer new ].
+	^ edaApplicationsAnnouncer
+]
+
+{ #category : #accessing }
+EDAApplications >> edaApplicationsAnnouncer: anAnnouncer [
+	edaApplicationsAnnouncer := anAnnouncer 
+]
+
+{ #category : #accessing }
+EDAApplications >> edaApplicationsSubscribers [
+	edaApplicationsSubscribers
+		ifNil: [ self edaApplicationsSubscribers: OrderedCollection new ].
+	^ edaApplicationsSubscribers
+]
+
+{ #category : #accessing }
+EDAApplications >> edaApplicationsSubscribers: aCollection [
+	edaApplicationsSubscribers := aCollection
+]
+
+{ #category : #initialization }
+EDAApplications >> initialize [
+	| result |
+	result := super initialize.
+	self doInitialize.
+	^ result
+]
+
+{ #category : #announcement }
+EDAApplications >> notifyApplicationRegistered: anEDAApplication [
+	edaApplicationsAnnouncer announce: (EDAApplicationRegistered on: anEDAApplication)
 ]
 
 { #category : #logic }
@@ -43,7 +93,8 @@ EDAApplications >> register: anEDAApplication under: anApplicationName [
 	self registry
 		at: anApplicationName
 		ifPresent: [ :app | EDAApplicationAlreadyRegistered signal: app printString ]
-		ifAbsentPut: [ anEDAApplication ]
+		ifAbsentPut: [ anEDAApplication ].
+	self notifyApplicationRegistered: anEDAApplication
 ]
 
 { #category : #accessing }

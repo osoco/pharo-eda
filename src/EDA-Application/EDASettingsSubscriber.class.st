@@ -1,6 +1,8 @@
 Class {
 	#name : #EDASettingsSubscriber,
 	#superclass : #Object,
+	#traits : 'EDATSettingBrowserHelper',
+	#classTraits : 'EDATSettingBrowserHelper classTrait',
 	#category : #'EDA-Application'
 }
 
@@ -12,13 +14,6 @@ EDASettingsSubscriber >> onEnvironmentSettingsPortChanged: anEvent on: anEDAAppl
 { #category : #setup }
 EDASettingsSubscriber >> onEnvironmentSettingsResolverPortChanged: anEvent on: anEDAApplication [
 	anEDAApplication environmentSettingsPort: anEvent adapter
-]
-
-{ #category : #setup }
-EDASettingsSubscriber >> refreshSettingBrowsers [
-	self currentWorld submorphs
-		select: [ :w | w model class = SettingBrowser ]
-		thenCollect: [ :w | w delete. SettingBrowser open ]
 ]
 
 { #category : #setup }
