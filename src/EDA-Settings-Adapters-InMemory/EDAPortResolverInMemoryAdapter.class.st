@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'environmentSettingsResolverPort',
 		'edaApplication',
-		'environmentSettingsResolverPortClass'
+		'environmentSettingsResolverPortClass',
+		'eventStoreSettingsResolverPortClass'
 	],
 	#category : #'EDA-Settings-Adapters-InMemory'
 }
@@ -48,6 +49,34 @@ EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPortClass: anAdapte
 		notifyEnvironmentSettingsResolverPortListener: self environmentSettingsPort
 ]
 
+{ #category : #accessing }
+EDAPortResolverInMemoryAdapter >> eventStoreSettingsPort [
+	^ self eventStoreSettingsResolverPort resolveEventStoreSettingsPort
+]
+
+{ #category : #accessing }
+EDAPortResolverInMemoryAdapter >> eventStoreSettingsResolverPort [
+	^ self eventStoreSettingsResolverPortClass
+		withApp: self edaApplication
+]
+
+{ #category : #accessing }
+EDAPortResolverInMemoryAdapter >> eventStoreSettingsResolverPortClass [
+	eventStoreSettingsResolverPortClass
+		ifNil: [ self
+				eventStoreSettingsResolverPortClass: EDAPortResolverByPriorityAdapter ].
+	^ eventStoreSettingsResolverPortClass
+]
+
+{ #category : #accessing }
+EDAPortResolverInMemoryAdapter >> eventStoreSettingsResolverPortClass: anAdapterClass [
+	anAdapterClass = eventStoreSettingsResolverPortClass
+		ifTrue: [ ^ self ].
+	eventStoreSettingsResolverPortClass := anAdapterClass.
+	self
+		notifyEventStoreSettingsResolverPortListener: self eventStoreSettingsPort
+]
+
 { #category : #testing }
 EDAPortResolverInMemoryAdapter >> isReadOnly [
 	^ false
@@ -57,4 +86,10 @@ EDAPortResolverInMemoryAdapter >> isReadOnly [
 EDAPortResolverInMemoryAdapter >> notifyEnvironmentSettingsResolverPortListener: anAdapter [
 	self edaApplication
 		notifyEnvironmentSettingsResolverPortListener: anAdapter
+]
+
+{ #category : #accessing }
+EDAPortResolverInMemoryAdapter >> notifyEventStoreSettingsResolverPortListener: anAdapter [
+	self edaApplication
+		notifyEventStoreSettingsResolverPortListener: anAdapter
 ]

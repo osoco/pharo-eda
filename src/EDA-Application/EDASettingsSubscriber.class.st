@@ -17,14 +17,32 @@ EDASettingsSubscriber >> onEnvironmentSettingsResolverPortChanged: anEvent on: a
 ]
 
 { #category : #setup }
+EDASettingsSubscriber >> onEventStoreSettingsPortChanged: anEvent on: anEDAApplication [
+	self refreshSettingBrowsers
+]
+
+{ #category : #setup }
+EDASettingsSubscriber >> onEventStoreSettingsResolverPortChanged: anEvent on: anEDAApplication [
+	anEDAApplication eventStoreSettingsPort: anEvent adapter
+]
+
+{ #category : #setup }
 EDASettingsSubscriber >> setupAnnouncer: anAnnouncer application: anEDAApplication [
 	anAnnouncer
 		ifNotNil: [ :announcer | 
 			announcer
 				when: EDAEnvironmentSettingsPortChanged
-				do:
-					[ :event | self onEnvironmentSettingsPortChanged: event on: anEDAApplication ] ;
+					do:
+						[ :event | self onEnvironmentSettingsPortChanged: event on: anEDAApplication ];
 				when: EDAEnvironmentSettingsResolverPortChanged
-				do:
-					[ :event | self onEnvironmentSettingsResolverPortChanged: event on: anEDAApplication ] ]
+					do: [ :event | 
+					self
+						onEnvironmentSettingsResolverPortChanged: event
+						on: anEDAApplication ];
+				when: EDAEventStoreSettingsResolverPortChanged
+					do: [ :event | 
+					self
+						onEventStoreSettingsResolverPortChanged: event
+						on: anEDAApplication ]
+					 ]
 ]

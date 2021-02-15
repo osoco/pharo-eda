@@ -137,24 +137,8 @@ EDASettings class >> edaSettingsOn: aBuilder [
 
 { #category : #settings }
 EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: aParent on: app [
-	| entry |
-	aConfig supportsMultiple
-		ifTrue: [ entry := aBuilder pickOne: #currentEnvironment.
-			entry
-				domainValues:
-					(aConfig availableEnvironments
-						collect: [ :level | level translated -> level greaseString ]) ]
-		ifFalse: [ aConfig isReadOnly
-				ifTrue: [ entry := aBuilder group: #currentEnvironment.
-					entry dialog: [ LabelMorph newLabel: aConfig currentEnvironment ] ]
-				ifFalse: [ entry := aBuilder setting: #currentEnvironment ].
-		 ].
-	entry
-		parent: aParent;
-		target: aConfig;
-		label: 'Environment' translated;
-		description: 'Environment';
-		order: 1
+	^ self settingOn: aBuilder named: #currentEnvironment withConfig: aConfig under: aParent on: app
+
 ]
 
 { #category : #settings }
@@ -185,6 +169,7 @@ EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: p
 		withConfig: aConfig
 		under: key
 		populatedWithValuesFrom: extSettings
+		on: app
 ]
 
 { #category : #initialization }
@@ -214,7 +199,7 @@ EDASettings class >> loggingSettingsOn: aBuilder withConfig: aConfig under: pare
 ]
 
 { #category : #settings }
-EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: mongoConfig [
+EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: mongoConfig on: app [
 	(aBuilder setting: #urls)
 		parent: parent;
 		target: container;
@@ -228,6 +213,11 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 		label: 'Use TLS' translated;
 		description: 'Whether to connect using TLS';
 		default: (mongoConfig at: 'tls' ifAbsent: false).
+	self
+		mongodbUsernameSettingOn: aBuilder
+		withConfig: container usernameSettingsPort
+		under: parent
+		on: app.
 	(aBuilder setting: #username)
 		parent: parent;
 		target: container;
@@ -302,6 +292,16 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 		label: 'Wire protocol' translated;
 		description: 'Whether to enable wire protocol';
 		default: (mongoConfig at: 'wireProtocolEnabled' ifAbsent: true)
+]
+
+{ #category : #settings }
+EDASettings class >> mongodbUsernameSettingOn: aBuilder withConfig: aConfig under: aParent on: app [
+	^ self
+		settingOn: aBuilder
+		named: #username
+		withConfig: aConfig
+		under: aParent
+		on: app
 ]
 
 { #category : #settings }
@@ -410,7 +410,8 @@ EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: p
 		projectionsRepositorySettingsOn: aBuilder
 		withConfig: aConfig
 		under: key
-		populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
+		populatedWithValuesFrom: (extSettings at: 'projectionsRepository')
+		on: app.
 	(aBuilder setting: #projectionSynchronizationEnabled)
 		parent: key;
 		target: aConfig;
@@ -441,7 +442,7 @@ EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: p
 ]
 
 { #category : #settings }
-EDASettings class >> projectionsRepositorySettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry [
+EDASettings class >> projectionsRepositorySettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry on: app [
 	(aBuilder group: #projectionsRepository)
 		label: 'Projections Repository' translated;
 		parent: parent.
@@ -450,12 +451,34 @@ EDASettings class >> projectionsRepositorySettingsOn: aBuilder withConfig: aConf
 		withConfig: aConfig
 		under: #projectionsRepository
 		populatedWithValuesFrom: aConfigEntry
+		on: app
 ]
 
 { #category : #settings }
 EDASettings class >> resetSettings [
 	#(EDACommandStompTopicListener EDAEventStompTopicPublisher EDAMongoEventStore EDALoggingSettings EDAApplication  EDAProjector 	 EDACompositeProjector  EDAProjectionMongoRepository)
 		do: [ :cls | cls initialize ]
+]
+
+{ #category : #settings }
+EDASettings class >> settingOn: aBuilder named: aSymbol withConfig: aConfig under: aParent on: app [
+	| entry |
+	aConfig supportsMultiple
+		ifTrue: [ entry := aBuilder pickOne: aSymbol.
+			entry
+				domainValues:
+					(aConfig availableEnvironments
+						collect: [ :level | level translated -> level greaseString ]) ]
+		ifFalse: [ aConfig isReadOnly
+				ifTrue: [ entry := aBuilder group: aSymbol.
+					entry dialog: [ LabelMorph newLabel: (aConfig perform: aSymbol) ] ]
+				ifFalse: [ entry := aBuilder setting: aSymbol ] ].
+	entry
+		parent: aParent;
+		target: aConfig;
+		label: 'Environment' translated;
+		description: 'Environment';
+		order: 1
 ]
 
 { #category : #settings }

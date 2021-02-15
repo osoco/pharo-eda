@@ -1,5 +1,5 @@
 Class {
-	#name : #EDAEnvironmentSettingsPortChanged,
+	#name : #EDAEventStoreSettingsPortChanged,
 	#superclass : #EDASettingsChanged,
 	#category : #'EDA-Application'
 }

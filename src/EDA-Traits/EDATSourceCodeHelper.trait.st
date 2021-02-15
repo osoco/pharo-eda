@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATSourceCodeHelper,
 	#traits : 'EDATLanguageHelper + EDATCollectionHelper',
-	#classTraits : 'EDATLanguageHelper classTrait + EDATCollectionHelper classTrait',
 	#category : #'EDA-Traits'
 }
 

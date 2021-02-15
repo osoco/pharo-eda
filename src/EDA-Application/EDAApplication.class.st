@@ -40,7 +40,8 @@ Class {
 		'environmentSettingsPort',
 		'environmentSettingsResolverPort',
 		'settingsAnnouncer',
-		'settingsSubscriber'
+		'settingsSubscriber',
+		'eventStoreSettingsPort'
 	],
 	#classVars : [
 		'ProjectionSynchronizationEnabled'
@@ -175,11 +176,10 @@ EDAApplication >> environmentSettingsPort [
 
 { #category : #accessing }
 EDAApplication >> environmentSettingsPort: anAdapter [
-	anAdapter = environmentSettingsPort
+	anAdapter = self portSettingsPort environmentSettingsPort
 		ifTrue: [ ^ self ].
-	environmentSettingsPort := anAdapter.
-		self notifyEnvironmentSettingsPortListener: anAdapter.
-
+	self portSettingsPort environmentSettingsPort: anAdapter.
+	self notifyEnvironmentSettingsPortListener: anAdapter
 ]
 
 { #category : #accessing }
@@ -219,7 +219,15 @@ EDAApplication >> eventStore: anObject [
 
 { #category : #accessing }
 EDAApplication >> eventStoreSettingsPort [
-	^ self resolveEventStoreSettingsPort
+		^ self portSettingsPort eventStoreSettingsPort
+]
+
+{ #category : #accessing }
+EDAApplication >> eventStoreSettingsPort: anAdapter [
+	anAdapter = self portSettingsPort eventStoreSettingsPort
+		ifTrue: [ ^ self ].
+	self portSettingsPort eventStoreSettingsPort: anAdapter.
+	self notifyEventStoreSettingsPortListener: anAdapter
 ]
 
 { #category : #'class initialization' }
@@ -286,6 +294,18 @@ EDAApplication >> notifyEnvironmentSettingsPortListener: anAdapter [
 EDAApplication >> notifyEnvironmentSettingsResolverPortListener: anAdapter [
 	self settingsAnnouncer
 		announce: (EDAEnvironmentSettingsResolverPortChanged with: anAdapter on: self)
+]
+
+{ #category : #accessing }
+EDAApplication >> notifyEventStoreSettingsPortListener: anAdapter [
+	self settingsAnnouncer
+		announce: (EDAEventStoreSettingsPortChanged with: anAdapter on: self)
+]
+
+{ #category : #accessing }
+EDAApplication >> notifyEventStoreSettingsResolverPortListener: anAdapter [
+	self settingsAnnouncer
+		announce: (EDAEventStoreSettingsResolverPortChanged with: anAdapter on: self)
 ]
 
 { #category : #accessing }
