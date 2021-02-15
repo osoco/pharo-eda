@@ -22,7 +22,7 @@ EDAPortResolverInMemoryAdapter >> edaApplication: anEDAApplication [
 
 { #category : #accessing }
 EDAPortResolverInMemoryAdapter >> environmentSettingsPort [
-	^ self environmentSettingsResolverPort
+	^ self environmentSettingsResolverPort resolveEnvironmentSettingsPort
 ]
 
 { #category : #accessing }
@@ -39,6 +39,11 @@ EDAPortResolverInMemoryAdapter >> environmentSettingsResolverPort: anAdapter [
 		ifTrue: [ ^ self ].
 	self notifyEnvironmentSettingsResolverPortListener: anAdapter.
 	environmentSettingsResolverPort := anAdapter
+]
+
+{ #category : #testing }
+EDAPortResolverInMemoryAdapter >> isReadOnly [
+	^ false
 ]
 
 { #category : #accessing }

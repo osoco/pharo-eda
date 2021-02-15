@@ -14,3 +14,13 @@ EDATPortSettingsPort >> edaApplication [
 EDATPortSettingsPort >> edaApplication: anEDAApplication [
 	self subclassResponsibility
 ]
+
+{ #category : #testing }
+EDATPortSettingsPort >> isReadOnly [
+	^ false
+]
+
+{ #category : #testing }
+EDATPortSettingsPort >> supportsMultiple [
+	^ false
+]

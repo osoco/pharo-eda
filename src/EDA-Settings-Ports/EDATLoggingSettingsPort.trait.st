@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATLoggingSettingsPort,
 	#traits : 'EDATSettingsPort',
-	#classTraits : 'EDATSettingsPort classTrait',
 	#category : #'EDA-Settings-Ports'
 }
 
