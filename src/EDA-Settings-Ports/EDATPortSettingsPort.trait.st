@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATPortSettingsPort,
 	#traits : 'EDATSettingsPort',
+	#classTraits : 'EDATSettingsPort classTrait',
 	#category : #'EDA-Settings-Ports'
 }
 
@@ -15,11 +16,11 @@ EDATPortSettingsPort >> edaApplication: anEDAApplication [
 ]
 
 { #category : #testing }
-EDATPortSettingsPort >> isReadOnly [
+EDATPortSettingsPort >> isReadOnly: aSymbol [
 	^ false
 ]
 
 { #category : #testing }
-EDATPortSettingsPort >> supportsMultiple [
+EDATPortSettingsPort >> supportsMultiple: aSymbol [
 	^ false
 ]

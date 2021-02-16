@@ -81,7 +81,14 @@ EDAApplication class >> defaultEnvironment [
 
 { #category : #'instance creation' }
 EDAApplication class >> new [
-	MessageNotUnderstood signal: 'Use ' , self class printString , '>>withName: instead'
+	MessageNotUnderstood
+		signal: 'Use ' , self class printString , '>>withName: or ' , self class printString , '>>unnamed instead'
+]
+
+{ #category : #'instance creation' }
+EDAApplication class >> unnamed [
+	^ self withName: self applicationName
+
 ]
 
 { #category : #'instance creation' }

@@ -77,11 +77,6 @@ EDAPortResolverInMemoryAdapter >> eventStoreSettingsResolverPortClass: anAdapter
 		notifyEventStoreSettingsResolverPortListener: self eventStoreSettingsPort
 ]
 
-{ #category : #testing }
-EDAPortResolverInMemoryAdapter >> isReadOnly [
-	^ false
-]
-
 { #category : #accessing }
 EDAPortResolverInMemoryAdapter >> notifyEnvironmentSettingsResolverPortListener: anAdapter [
 	self edaApplication
@@ -92,4 +87,9 @@ EDAPortResolverInMemoryAdapter >> notifyEnvironmentSettingsResolverPortListener:
 EDAPortResolverInMemoryAdapter >> notifyEventStoreSettingsResolverPortListener: anAdapter [
 	self edaApplication
 		notifyEventStoreSettingsResolverPortListener: anAdapter
+]
+
+{ #category : #testing }
+EDAPortResolverInMemoryAdapter >> supportsMultiple: aSymbol [
+	^ false
 ]

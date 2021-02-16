@@ -21,7 +21,7 @@ Class {
 }
 
 { #category : #settings }
-EDASettings class >> commandListenerSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
+EDASettings class >> commandListenerSettingsOn: aBuilder under: parent on: app [
 	| key |
 	key := parent , 'commandListener'.
 	(aBuilder group: key)
@@ -30,12 +30,12 @@ EDASettings class >> commandListenerSettingsOn: aBuilder withConfig: aConfig und
 		parent: parent.
 	self
 		stompListenerSettingsOn: aBuilder
-		withConfig: aConfig
+		withConfig: app commandListenerSettingsPort
 		under: key
 		populatedWithValuesFrom: 'commandListener'.
 	(aBuilder pickOne: #strategy)
 		parent: key;
-		target: aConfig;
+		target: app commandListenerSettingsPort;
 		label: 'Command Consuming Error' translated;
 		description: 'Strategy when dealing with command consuming errors';
 		order: 1;
@@ -76,73 +76,71 @@ EDASettings class >> duEnvironmentClass: envClass [
 { #category : #settings }
 EDASettings class >> edaSettingsOn: aBuilder [
 	<systemsettings>
-	| root |
-	root := aBuilder group: #edaApps.
+	| root rootSymbol |
+	rootSymbol := #edaApps.
+	root := aBuilder group: rootSymbol.
 	EDAApplications uniqueInstance edaApplications
 		ifEmpty: [ root
 				label: 'No PharoEDA applications registered' translated;
 				description: 'No PharoEDA applications registered' ]
 		ifNotEmpty: [ :apps | 
 			root
-				label: 'PharoEDA applications' translated;
+				label: 'PharoEDA application(s)' translated , ': ' , apps size printString;
 				description: 'Registered PharoEDA applications';
 				noOrdering.
 			apps
-				do: [ :app | 
-					| parent parentGroup |
-					parent := app applicationName.
-					parentGroup := aBuilder group: parent.
-					parentGroup
-						label: parent translated;
-						parent: #edaApps;
-						description: parent;
-						noOrdering.
-					self
-						environmentSettingsOn: aBuilder
-						withConfig: app environmentSettingsPort
-						under: parent
-						on: app.
-					self
-						commandListenerSettingsOn: aBuilder
-						withConfig: app commandListenerSettingsPort
-						under: parent
-						on: app.
-					self
-						eventPublisherSettingsOn: aBuilder
-						withConfig: app eventPublisherSettingsPort
-						under: parent
-						on: app.
-					self
-						eventStoreSettingsOn: aBuilder
-						withConfig: app eventStoreSettingsPort
-						under: parent
-						on: app.
-					self
-						projectionSettingsOn: aBuilder
-						withConfig: app projectionSettingsPort
-						under: parent
-						populatedWithValuesFrom: 'projections'
-						on: app.
-					self
-						loggingSettingsOn: aBuilder
-						withConfig: app loggingSettingsPort
-						under: parent
-						on: app.
-					self
-						portSettingsOn: aBuilder
-						withConfig: app portSettingsPort
-						under: parent
-						on: app ] ]
+				do: [ :app | self edaSettingsOn: aBuilder for: app under: rootSymbol ] ]
 ]
 
 { #category : #settings }
-EDASettings class >> environmentSettingsOn: aBuilder withConfig: aConfig under: aParent on: app [
-	^ self settingOn: aBuilder named: #currentEnvironment withConfig: aConfig under: aParent on: app
-
+EDASettings class >> edaSettingsOn: aBuilder for: anEDAApplication under: aSymbol [
+	| parent parentGroup |
+	parent := anEDAApplication applicationName.
+	parentGroup := aBuilder group: parent.
+	parentGroup
+		label: parent translated;
+		parent: aSymbol;
+		description: parent;
+		noOrdering.
+	self
+		environmentSettingsOn: aBuilder
+		under: parent
+		on: anEDAApplication.
+	self
+		commandListenerSettingsOn: aBuilder
+		under: parent
+		on: anEDAApplication.
+	self
+		eventPublisherSettingsOn: aBuilder
+		under: parent
+		on: anEDAApplication.
+	self
+		eventStoreSettingsOn: aBuilder
+		under: parent
+		on: anEDAApplication.
+	self
+		projectionSettingsOn: aBuilder
+		under: parent
+		populatedWithValuesFrom: 'projections'
+		on: anEDAApplication.
+	self loggingSettingsOn: aBuilder under: parent on: anEDAApplication.
+	self portSettingsOn: aBuilder under: parent on: anEDAApplication
 ]
 
 { #category : #settings }
-EDASettings class >> eventPublisherSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
+EDASettings class >> environmentSettingsOn: aBuilder under: aParent on: app [
+	^ self
+		settingOn: aBuilder
+		named: #currentEnvironment
+		labelled: 'Environment'
+		withDescription: 'Environment'
+		usingConfig:  app environmentSettingsPort
+		under: aParent
+		on: app
+]
+
+{ #category : #settings }
+EDASettings class >> eventPublisherSettingsOn: aBuilder under: parent on: app [
 	| key |
 	key := parent , 'eventPublisher'.
 	(aBuilder group: key)
@@ -151,13 +149,13 @@ EDASettings class >> eventPublisherSettingsOn: aBuilder withConfig: aConfig unde
 		parent: parent.
 	^ self
 		stompPublisherSettingsOn: aBuilder
-		withConfig: aConfig
+		withConfig: app eventPublisherSettingsPort
 		under: key
 		populatedWithValuesFrom: 'eventPublisher'
 ]
 
 { #category : #settings }
-EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
+EDASettings class >> eventStoreSettingsOn: aBuilder under: parent on: app [
 	| extSettings key |
 	key := parent , 'eventStore'.
 	extSettings := self retrieveSettingAsDict: 'eventStore'.
@@ -166,7 +164,7 @@ EDASettings class >> eventStoreSettingsOn: aBuilder withConfig: aConfig under: p
 		parent: parent.
 	^ self
 		mongoSettingsOn: aBuilder
-		withConfig: aConfig
+		withConfig: app eventStoreSettingsPort
 		under: key
 		populatedWithValuesFrom: extSettings
 		on: app
@@ -179,7 +177,7 @@ EDASettings class >> initialize [
 ]
 
 { #category : #settings }
-EDASettings class >> loggingSettingsOn: aBuilder withConfig: aConfig under: parent on: app [
+EDASettings class >> loggingSettingsOn: aBuilder under: parent on: app [
 	| extSettings key |
 	key := parent , 'logging'.
 	extSettings := self retrieveSettingAsDict: 'logging'.
@@ -188,7 +186,7 @@ EDASettings class >> loggingSettingsOn: aBuilder withConfig: aConfig under: pare
 		parent: parent.
 	(aBuilder pickOne: #loggingLevel)
 		parent: key;
-		target: aConfig;
+		target: app loggingSettingsPort;
 		label: 'Logging level' translated;
 		description: 'Logging level';
 		order: 1;
@@ -215,15 +213,9 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 		default: (mongoConfig at: 'tls' ifAbsent: false).
 	self
 		mongodbUsernameSettingOn: aBuilder
-		withConfig: container usernameSettingsPort
+		withConfig: container
 		under: parent
 		on: app.
-	(aBuilder setting: #username)
-		parent: parent;
-		target: container;
-		label: 'Mongo username' translated;
-		description: 'Mongo username';
-		default: (mongoConfig at: 'username' ifAbsent: 'user').
 	(aBuilder setting: #password)
 		parent: parent;
 		target: container;
@@ -299,13 +291,15 @@ EDASettings class >> mongodbUsernameSettingOn: aBuilder withConfig: aConfig unde
 	^ self
 		settingOn: aBuilder
 		named: #username
-		withConfig: aConfig
+		labelled: 'MongoDB user name'
+		withDescription: 'The name of the MongoDB user'
+		usingConfig: aConfig
 		under: aParent
 		on: app
 ]
 
 { #category : #settings }
-EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent on: app [
+EDASettings class >> portSettingsOn: aBuilder under: aParent on: app [
 	| entry values byPriorityAdapter key |
 	key := aParent , 'ports'.
 	entry := aBuilder group: key.
@@ -328,7 +322,7 @@ EDASettings class >> portSettingsOn: aBuilder withConfig: aConfig under: aParent
 				sorted: [ :a :b | a value < b value ]).
 	(aBuilder pickOne: #environmentSettingsResolverPortClass)
 		label: 'Environment adapter' translated;
-		target: aConfig;
+		target: app portSettingsPort;
 		parent: key;
 		domainValues: values
 ]
@@ -361,45 +355,7 @@ EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aCo
 ]
 
 { #category : #settings }
-EDASettings class >> projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry [
-	| extSettings |
-	extSettings := self retrieveSettingAsDict: aConfigEntry.
-	(aBuilder group: #projections)
-		label: 'Projections' translated;
-		parent: parent.
-	self
-		projectionsRepositorySettingsOn: aBuilder
-		under: #projections
-		populatedWithValuesFrom: (extSettings at: 'projectionsRepository' ifAbsent: 'localhost').
-	(aBuilder setting: #projectionSynchronizationEnabled)
-		parent: #projections;
-		target: EDAApplication;
-		label: 'Synchronize on startup' translated;
-		description:
-			'When the EDAApplication starts, this setting enables a check and conditional automatic synchronization of projections';
-		default: (extSettings at: 'synchronizationEnabled' ifAbsent: false).
-	(aBuilder setting: #concurrentSynchronization)
-		parent: #projections;
-		target: EDACompositeProjector;
-		label: 'Synchronization in parallel' translated;
-		description: 'Whether enable or disable concurrent projection synchronization';
-		order: 2;
-		default: (extSettings at: 'concurrentSynchronization' ifAbsent: false).
-	(aBuilder setting: #headlessMode)
-		parent: #projections;
-		target: EDAProjector;
-		label: 'Headless' translated;
-		description: 'Whether to show the progress when projecting events visually';
-		order: 3;
-		default: (extSettings at: 'headlessMode' ifAbsent: false).
-	self
-		projectionErrorHandlingSettingsOn: aBuilder
-		under: parent
-		populatedWithValuesFrom: aConfigEntry
-]
-
-{ #category : #settings }
-EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: parent populatedWithValuesFrom: aConfigEntry on: app [
+EDASettings class >> projectionSettingsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry on: app [
 	| extSettings key |
 	key := parent , 'projections'.
 	extSettings := self retrieveSettingAsDict: aConfigEntry.
@@ -408,34 +364,34 @@ EDASettings class >> projectionSettingsOn: aBuilder withConfig: aConfig under: p
 		parent: parent.
 	self
 		projectionsRepositorySettingsOn: aBuilder
-		withConfig: aConfig
+		withConfig: app projectionSettingsPort
 		under: key
 		populatedWithValuesFrom: (extSettings at: 'projectionsRepository')
 		on: app.
 	(aBuilder setting: #projectionSynchronizationEnabled)
 		parent: key;
-		target: aConfig;
+		target: app projectionSettingsPort;
 		label: 'Synchronize on startup' translated;
 		description:
 			'When the EDAApplication starts, this setting enables a check and conditional automatic synchronization of projections';
 		default: (extSettings at: 'synchronizationEnabled').
 	(aBuilder setting: #concurrentSynchronization)
 		parent: key;
-		target: aConfig;
+		target: app projectionSettingsPort;
 		label: 'Synchronization in parallel' translated;
 		description: 'Whether enable or disable concurrent projection synchronization';
 		order: 2;
 		default: (extSettings at: 'concurrentSynchronization').
 	(aBuilder setting: #headlessMode)
 		parent: key;
-		target: aConfig;
+		target: app projectionSettingsPort;
 		label: 'Headless' translated;
 		description: 'Whether to show the progress when projecting events visually';
 		order: 3;
 		default: (extSettings at: 'headlessMode').
 	self
 		projectionErrorHandlingSettingsOn: aBuilder
-		withConfig: aConfig
+		withConfig: app projectionSettingsPort
 		under: parent
 		populatedWithValuesFrom: aConfigEntry
 		on: app
@@ -461,23 +417,23 @@ EDASettings class >> resetSettings [
 ]
 
 { #category : #settings }
-EDASettings class >> settingOn: aBuilder named: aSymbol withConfig: aConfig under: aParent on: app [
+EDASettings class >> settingOn: aBuilder named: aSymbol labelled: aString withDescription: aDescription usingConfig: aConfig under: aParent on: app [
 	| entry |
-	aConfig supportsMultiple
+	(aConfig supportsMultiple: aSymbol)
 		ifTrue: [ entry := aBuilder pickOne: aSymbol.
 			entry
 				domainValues:
 					(aConfig availableEnvironments
 						collect: [ :level | level translated -> level greaseString ]) ]
-		ifFalse: [ aConfig isReadOnly
+		ifFalse: [ (aConfig isReadOnly: aSymbol)
 				ifTrue: [ entry := aBuilder group: aSymbol.
 					entry dialog: [ LabelMorph newLabel: (aConfig perform: aSymbol) ] ]
 				ifFalse: [ entry := aBuilder setting: aSymbol ] ].
 	entry
 		parent: aParent;
 		target: aConfig;
-		label: 'Environment' translated;
-		description: 'Environment';
+		label: aString translated;
+		description: aDescription;
 		order: 1
 ]
 

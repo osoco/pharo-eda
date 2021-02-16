@@ -58,8 +58,3 @@ EDAEnvironmentSettingsEnvVarAdapter >> edaApplication: anEDAApplication [
 EDAEnvironmentSettingsEnvVarAdapter >> environmentVariableName [
 	^ self class environmentVariableName
 ]
-
-{ #category : #testing }
-EDAEnvironmentSettingsEnvVarAdapter >> supportsMultiple [
-	^ false
-]

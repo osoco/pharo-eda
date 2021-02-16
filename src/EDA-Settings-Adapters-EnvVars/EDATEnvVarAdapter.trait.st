@@ -10,7 +10,12 @@ EDATEnvVarAdapter >> getValueFor: envVarName orElse: defaultValue [
 		ifAbsent: defaultValue
 ]
 
-{ #category : #'environment-variables' }
-EDATEnvVarAdapter >> isReadOnly [
+{ #category : #testing }
+EDATEnvVarAdapter >> isReadOnly: aSymbol [
 	^ true
+]
+
+{ #category : #testing }
+EDATEnvVarAdapter >> supportsMultiple: aSymbol [
+	^ false
 ]

@@ -61,6 +61,6 @@ EDAPredefinedEnvironmentSettingsInMemoryAdapter >> resolveEnvironmentSettingsPor
 ]
 
 { #category : #testing }
-EDAPredefinedEnvironmentSettingsInMemoryAdapter >> supportsMultiple [
+EDAPredefinedEnvironmentSettingsInMemoryAdapter >> supportsMultiple: aSymbol [
 	^ true
 ]

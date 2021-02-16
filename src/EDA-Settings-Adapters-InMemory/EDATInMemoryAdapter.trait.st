@@ -9,6 +9,11 @@ EDATInMemoryAdapter classSide >> description [
 ]
 
 { #category : #testing }
-EDATInMemoryAdapter >> isReadOnly [ 
+EDATInMemoryAdapter >> isReadOnly: aSymbol [
+	^ false
+]
+
+{ #category : #testing }
+EDATInMemoryAdapter >> supportsMultiple: aSymbol [
 	^ false
 ]

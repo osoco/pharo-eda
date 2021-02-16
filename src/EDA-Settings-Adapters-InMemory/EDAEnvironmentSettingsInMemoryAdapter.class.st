@@ -44,8 +44,3 @@ EDAEnvironmentSettingsInMemoryAdapter >> edaApplication: anEDAApplication [
 EDAEnvironmentSettingsInMemoryAdapter >> resolveEnvironmentSettingsPort [
 	^ self
 ]
-
-{ #category : #testing }
-EDAEnvironmentSettingsInMemoryAdapter >> supportsMultiple [
-	^ false
-]

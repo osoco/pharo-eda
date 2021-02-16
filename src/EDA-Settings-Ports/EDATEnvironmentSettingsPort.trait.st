@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATEnvironmentSettingsPort,
 	#traits : 'EDATSettingsPort',
+	#classTraits : 'EDATSettingsPort classTrait',
 	#category : #'EDA-Settings-Ports'
 }
 
@@ -10,6 +11,6 @@ EDATEnvironmentSettingsPort >> availableEnvironments [
 ]
 
 { #category : #testing }
-EDATEnvironmentSettingsPort >> supportsMultiple [
+EDATEnvironmentSettingsPort >> supportsMultiple: aSymbol [
 	self subclassResponsibility
 ]
