@@ -25,18 +25,23 @@ Time >> hhmmss24 [
 ]
 
 { #category : #'*EDA-Traits' }
-Time >> yyyyMMhhmmss24 [
-	"Return a string of the form 1123 (for 11:23 am), 2154 (for 9:54 pm), of exactly 4 digits"
-
+Time >> yyyyMMddhhmmss24 [
+	| year month day |
+	self asDateAndTime dayMonthYearDo: [ :d :m :y | year := y. month := m. day := d ].
 	^ String
-		new: 12
+		new: 14
 		streamContents: [ :aStream |
-			self asYear start year
+			year
 				printOn: aStream
 				base: 10
 				length: 4
 				padded: true.
-			self asMonth start month
+			month
+				printOn: aStream
+				base: 10
+				length: 2
+				padded: true.
+			day
 				printOn: aStream
 				base: 10
 				length: 2

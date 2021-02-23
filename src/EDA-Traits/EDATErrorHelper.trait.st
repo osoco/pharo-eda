@@ -26,7 +26,7 @@ Trait {
 
 { #category : #helpers }
 EDATErrorHelper classSide >> basename [
-	^ Time now yyyyMMhhmmss24
+	^ Time now yyyyMMddhhmmss24
 ]
 
 { #category : #helpers }
