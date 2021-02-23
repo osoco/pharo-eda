@@ -39,7 +39,7 @@ Class {
 		'prefetchCount',
 		'timeout'
 	],
-	#category : 'EDA-StompMessaging'
+	#category : #'EDA-StompMessaging'
 }
 
 { #category : #accessing }
@@ -97,13 +97,17 @@ EDAStompTopicListener class >> initialize [
 ]
 
 { #category : #accessing }
-EDAStompTopicListener class >> logFinish: message usingClient: aClient withConfig: aConfig [
-	self logInfoMessage: 'Published message ', message greaseString , ' in ', aConfig destination greaseString , '.'
+EDAStompTopicListener class >> logMessageReceived: message usingClient: aClient from: aSource [
+	self
+		logInfoMessage:
+			'Received message ' , message greaseString , ' in '
+				, aSource greaseString , '.'
 ]
 
 { #category : #accessing }
-EDAStompTopicListener class >> logInit: message usingClient: aClient withConfig: aConfig [
-	self logInfoMessage: 'Publishing message in ', aConfig destination greaseString , '.'
+EDAStompTopicListener class >> logReceivingMessage: message usingClient: aClient from: aSource [
+	self
+		logInfoMessage: 'Receiving message in ' , aSource greaseString , '.'
 ]
 
 { #category : #accessing }
@@ -309,13 +313,13 @@ EDAStompTopicListener >> subscriptionId: val [
 { #category : #enumerating }
 EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig: conf [
 	[ aClient
-		runWith: [ :message |
+		runWith: [ :message | 
 			| text |
 			text := message body greaseString.
 			self
-				logInit: message body greaseString
+				logReceivingMessage: message body greaseString
 				usingClient: aClient
-				withConfig: conf.
+				from: conf destination.
 			[ | ack |
 			aBlock value: text.
 			ack := conf ack.
@@ -323,7 +327,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 				ifFalse: [ self
 						logErrorMessage:
 							(String
-								streamContents: [ :s |
+								streamContents: [ :s | 
 									s
 										nextPutAll: 'ACK was ''';
 										nextPutAll: conf ack greaseString;
@@ -338,15 +342,15 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 				ifFalse: [ self
 						logErrorMessage:
 							(String
-								streamContents: [ :s |
+								streamContents: [ :s | 
 									s
 										nextPutAll: 'Skipping ACK (type is ''';
 										nextPutAll: conf ack greaseString;
 										nextPut: $' ]) ].
 			self
-				logFinish: message body greaseString
+				logMessageReceived: message body greaseString
 				usingClient: aClient
-				withConfig: conf ]
+				from: conf destination ]
 				on: Error - Break
 				do: [ :ex | 
 					((ex isKindOf: StampError) and: ex messageText = 'AMQP channel died')
@@ -354,7 +358,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 					self
 						logErrorMessage:
 							(String
-								streamContents: [ :s |
+								streamContents: [ :s | 
 									s
 										nextPutAll: 'Error consuming message: ';
 										nextPutAll: ex description greaseString;
@@ -366,7 +370,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 							self
 								logDebugMessage:
 									(String
-										streamContents: [ :s |
+										streamContents: [ :s | 
 											s
 												nextPutAll: 'Sending NACK message... ';
 												nextPutAll: text greaseString;
@@ -377,7 +381,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 							self
 								logDebugMessage:
 									(String
-										streamContents: [ :s |
+										streamContents: [ :s | 
 											s
 												nextPutAll: 'NACK message sent ';
 												nextPutAll: text greaseString;
@@ -386,7 +390,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 						manageError: ex
 						forMessage: text
 						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ] ]
-		on: PrimitiveFailed, StampError
+		on: PrimitiveFailed , StampError
 		do: [ :ex | self logErrorMessage: ex greaseString ]
 ]
 

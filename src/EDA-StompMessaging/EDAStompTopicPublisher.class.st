@@ -27,7 +27,7 @@ Class {
 		'errorExchange',
 		'errorRoutingKey'
 	],
-	#category : 'EDA-StompMessaging'
+	#category : #'EDA-StompMessaging'
 }
 
 { #category : #accessing }
@@ -193,13 +193,17 @@ EDAStompTopicPublisher >> initialize [
 ]
 
 { #category : #logging }
-EDAStompTopicPublisher >> logFinish: message usingClient: aClient withConfig: aConfig [
-	self logInfoMessage: 'Published message ', message greaseString , ' in ', aConfig destination greaseString , '.'
+EDAStompTopicPublisher >> logMessagePublished: message usingClient: aClient on: aDestination [
+	self
+		logInfoMessage:
+			'Published message ' , message greaseString , ' in '
+				, aDestination greaseString , '.'
 ]
 
 { #category : #logging }
-EDAStompTopicPublisher >> logInit: message usingClient: aClient withConfig: aConfig [
-	self logInfoMessage: 'Publishing message in ', aConfig destination greaseString , '.'
+EDAStompTopicPublisher >> logPublishingMessage: message usingClient: aClient on: aDestination [
+	self
+		logInfoMessage: 'Publishing message in ' , aDestination greaseString , '.'
 ]
 
 { #category : #private }
@@ -218,21 +222,27 @@ EDAStompTopicPublisher >> publishError: aMessage [
 
 { #category : #API }
 EDAStompTopicPublisher >> publishError: isError message: aMessage usingClient: aClient withConfig: config [
-	| sendFrame |
-	self logInit: aMessage usingClient: aClient withConfig: config.
+	| sendFrame destination |
+	destination := isError
+		ifTrue: [ config errorDestination ]
+		ifFalse: [ config destination ].
+	self
+		logPublishingMessage: aMessage
+		usingClient: aClient
+		on: destination.
 	aClient isConnected
 		ifFalse: [ aClient open ].
-	[ sendFrame := StampSendFrame new.
-	sendFrame
-		destination:
-			(isError
-				ifTrue: [ config errorDestination ]
-				ifFalse: [ config destination ]).
+	[
+	sendFrame := StampSendFrame new.
+	sendFrame destination: destination.
 	sendFrame text: aMessage.
 	sendFrame persistent: config durable.
-	aClient writeWithReceipt: sendFrame ]
-		ensure: [ aClient close ].
-	self logFinish: aMessage usingClient: aClient withConfig: config
+	aClient writeWithReceipt: sendFrame.
+	self
+		logMessagePublished: aMessage
+		usingClient: aClient
+		on: destination ]
+		ensure: [ aClient close ]
 ]
 
 { #category : #API }
@@ -250,8 +260,12 @@ EDAStompTopicPublisher >> publishMessage: aMessage inTransaction: transactionId 
 
 { #category : #API }
 EDAStompTopicPublisher >> publishMessage: aMessage inTransaction: transactionId usingClient: aClient withConfig: config [
-	| sendFrame |
-	self logInit: aMessage usingClient: aClient withConfig: config.
+	| sendFrame destination |
+	self
+		logPublishingMessage: aMessage
+		usingClient: aClient
+		on: config destination.
+	destination := config destination.
 	(sendFrame := StampSendFrame new)
 		text: aMessage;
 		destination: config destination;
@@ -259,7 +273,10 @@ EDAStompTopicPublisher >> publishMessage: aMessage inTransaction: transactionId 
 		timeout: config timeout;
 		transaction: transactionId.
 	aClient writeWithReceipt: sendFrame.
-	self logFinish: aMessage usingClient: aClient withConfig: config
+	self
+		logMessagePublished: aMessage
+		usingClient: aClient
+		on: destination
 ]
 
 { #category : #API }
@@ -269,18 +286,24 @@ EDAStompTopicPublisher >> publishMessage: aMessage withRoutingKey: aRoutingKeySt
 
 { #category : #API }
 EDAStompTopicPublisher >> publishMessage: aMessage withRoutingKey: aRoutingKeyString usingClient: aClient withConfig: config [
-	| sendFrame |
-	self logInit: aMessage usingClient: aClient withConfig: config.
+	| sendFrame destination |
+	destination := config destinationWithRoutingKey: aRoutingKeyString.
+	self
+		logPublishingMessage: aMessage
+		usingClient: aClient
+		on: destination.
 	aClient isConnected
 		ifFalse: [ aClient open ].
-	[ 
-	sendFrame := StampSendFrame new.
-	sendFrame destination: (config destinationWithRoutingKey: aRoutingKeyString). 
+	[ sendFrame := StampSendFrame new.
+	sendFrame destination: destination.
 	sendFrame text: aMessage.
 	sendFrame persistent: config durable.
-	aClient writeWithReceipt: sendFrame ]
-		ensure: [ aClient close ].
-	self logFinish: aMessage usingClient: aClient withConfig: config
+	aClient writeWithReceipt: sendFrame.
+	self
+		logMessagePublished: aMessage
+		usingClient: aClient
+		on: destination ]
+		ensure: [ aClient close ]
 ]
 
 { #category : #API }
