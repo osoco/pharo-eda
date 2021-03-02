@@ -316,7 +316,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 		runWith: [ :message | 
 			| text |
 			text := message body greaseString.
-			self
+			self class
 				logReceivingMessage: message body greaseString
 				usingClient: aClient
 				from: conf destination.
@@ -347,7 +347,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 										nextPutAll: 'Skipping ACK (type is ''';
 										nextPutAll: conf ack greaseString;
 										nextPut: $' ]) ].
-			self
+			self class
 				logMessageReceived: message body greaseString
 				usingClient: aClient
 				from: conf destination ]
