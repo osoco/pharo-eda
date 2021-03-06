@@ -7,7 +7,7 @@ Class {
 		'testCase',
 		'dict'
 	],
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #'instance creation' }
@@ -20,16 +20,27 @@ RegexJsonDictionary class >> newFrom: aDictionary andTestCase: aTestCase [
 
 { #category : #accessing }
 RegexJsonDictionary >> assertAssociationMatches: anAssociation [
-	| v |
+	| v entry |
 	v := anAssociation value.
 	(v isKindOf: Array)
-		ifTrue: [ ^ (RegexJsonArray newFrom: (self dictAt: anAssociation key for: v andTestCase: self testCase)) assertMatches: v ]
+		ifTrue: [ entry := self
+				dictAt: anAssociation key
+				for: v
+				andTestCase: self testCase.
+			entry
+				ifNil: [ ^ v isNil ]
+				ifNotNil: [ ^ (RegexJsonArray newFrom: entry) assertMatches: v ] ]
 		ifFalse: [ (v isKindOf: Dictionary)
-				ifTrue: [ ^ (RegexJsonDictionary newFrom: (self dictAt: anAssociation key)) assertMatches: v ]
+				ifTrue: [ entry := self dictAt: anAssociation key.
+					entry
+						ifNil: [ ^ v isNil ]
+						ifNotNil: [ ^ (self class newFrom: entry) assertMatches: v ] ]
 				ifFalse: [ | result |
 					result := anAssociation key = 'id'
 						ifTrue: [ true ]
-						ifFalse: [ self string: v greaseString matchesRegex: (self at: anAssociation key) greaseString ].
+						ifFalse: [ self
+								string: v greaseString
+								matchesRegex: (self at: anAssociation key) greaseString ].
 					^ result ] ]
 ]
 

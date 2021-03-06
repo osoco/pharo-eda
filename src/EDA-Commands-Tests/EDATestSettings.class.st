@@ -10,7 +10,7 @@ Creates a new menu to explicitly configure test-specific settings.
 Class {
 	#name : #EDATestSettings,
 	#superclass : #EDASettings,
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #settings }
@@ -31,7 +31,7 @@ EDATestSettings class >> doInitialize [
 
 { #category : #settings }
 EDATestSettings class >> edaTestSettingsOn: aBuilder [
-	"<systemsettings>"
+	<systemsettings>
 	(aBuilder group: #edatests)
 		label: 'EDA Tests' translated;
 		description: 'EDA tests';

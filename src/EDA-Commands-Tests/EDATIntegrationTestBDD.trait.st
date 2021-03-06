@@ -24,7 +24,7 @@ Internal Representation and Key Implementation Points.
 Trait {
 	#name : #EDATIntegrationTestBDD,
 	#traits : 'EDATJsonMatchingHelper + EDATLogging',
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #accessing }
@@ -563,13 +563,13 @@ EDATIntegrationTestBDD >> subscriptionId: anObject [
 { #category : #lifecycle }
 EDATIntegrationTestBDD >> tearDown [
 	super tearDown.
-	"self clearPreviousEvents.
+	self clearPreviousEvents.
 	self clearPreviousProjections.
-	self clearQueues."
+	self clearQueues.
 	self unsubscribeToEvents.
 	self restoreOriginalEnvironment.
 	self prepareToStopApplication.
-	"self stopApplication."
+	self stopApplication.
 	self application reset.
 	self
 		logInfoMessage:

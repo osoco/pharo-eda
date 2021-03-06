@@ -41,7 +41,7 @@ Class {
 		'projectors',
 		'projectorsByTenant'
 	],
-	#category : 'EDA-Application'
+	#category : #'EDA-Application'
 }
 
 { #category : #accessing }
@@ -374,12 +374,15 @@ EDAApplication class >> setupProjectionRepositoryForProjection: aProjectionClass
 { #category : #'setup - projections' }
 EDAApplication class >> setupProjections [
 	| projectionClasses |
-projectionClasses := EDAProjection allSubclasses
-				reject: [ :projectionClass | 
-					(projectionClass name beginsWithSubCollection: 'EDATest')
-						or: [ projectionClass isAbstract ] ].
-			projectionClasses
-				do: [ :projectionClass | self setupProjectionRepositoryForProjection: projectionClass ]
+	projectionClasses := EDAProjection allSubclasses
+		reject: [ :projectionClass | 
+			(projectionClass name beginsWithSubCollection: 'EDATest')
+				or: [ projectionClass isAbstract ] ].
+	projectionClasses add: EDAProjection.
+	projectionClasses
+		do:
+			[ :projectionClass | 
+			self setupProjectionRepositoryForProjection: projectionClass ]
 ]
 
 { #category : #'setup - projections' }

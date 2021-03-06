@@ -60,7 +60,7 @@ Class {
 		'errorStrategy',
 		'repository'
 	],
-	#category : 'EDA-Projections-Views'
+	#category : #'EDA-Projections-Views'
 }
 
 { #category : #persistence }
@@ -82,11 +82,12 @@ EDAProjection class >> projectionErrorHandlingStrategy: aStrategy [
 
 { #category : #persistence }
 EDAProjection class >> removeAllProjections [
-	(EDAProjection subclasses
+	(self subclasses
 		reject:
-			[ :projectionClass | projectionClass class name beginsWith: 'EDATest' ])
+			[ :projectionClass | (projectionClass class name beginsWith: 'EDATest') or: [ projectionClass isAbstract ] ])
 		do:
-			[ :aProjectionClass | self voyageRepository ifNotNil: [ :r | r removeProjection: aProjectionClass ] ]
+			[ :aProjectionClass | self repository
+				ifNotNil: [ :r | r removeProjection: aProjectionClass ] ]
 ]
 
 { #category : #persistence }
