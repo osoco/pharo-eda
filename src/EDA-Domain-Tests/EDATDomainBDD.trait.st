@@ -1,7 +1,8 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging',
-	#category : 'EDA-Domain-Tests'
+	#classTraits : 'EDATLogging classTrait',
+	#category : #'EDA-Domain-Tests'
 }
 
 { #category : #BDD }
@@ -32,6 +33,15 @@ EDATDomainBDD >> applyEvents: aCollectionOfEvents onAggregateRootSymbol: anAggre
 aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	aCollectionOfEvents do: [ :anEvent | self applyEvent: anEvent onAggregateRoot: aggregateRoot ].
 	aBlock value: aggregateRoot
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol whenApplyingEvents: historicalEvents then: aBlock [
+	| aggregateRoot |
+	aggregateRoot := EDATestAggregateRoot with: (Smalltalk at: anAggregateRootSymbol) new.
+	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
+	aggregateRoot isDeleted ifTrue: [ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new ].
+	aBlock value: aggregateRoot.
 ]
 
 { #category : #BDD }
