@@ -271,12 +271,11 @@ EDAAggregateRoot >> retrieveApplyEventMethod: event withLogging: aFlag [
 		andVersion: event version.
 	[ found ]
 		whileFalse: [ [ auxClassName isNotEmpty ]
-				whileTrue: [ self class methodDictionary
-						at: aux asSymbol
-						ifPresent: [ :v | 
+				whileTrue: [ (self respondsTo: aux asSymbol)
+						ifTrue: [
 							found := true.
 							^ aux ]
-						ifAbsent: [ aFlag
+						ifFalse: [ aFlag
 								ifTrue: [ self
 										logTraceMessage: ((WriteStream on: String new) nextPutAll: self class greaseString; nextPutAll: '>>'; nextPutAll: aux; nextPutAll: ' not found.'; close; contents) ] ].
 					auxClassName := auxClassName allButFirst.
