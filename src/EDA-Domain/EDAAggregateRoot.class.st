@@ -9,7 +9,8 @@ Class {
 		'isDeleted',
 		'scopeContext',
 		'scopeKey',
-		'brandNew'
+		'brandNew',
+		'tenant'
 	],
 	#category : #'EDA-Domain-Aggregate'
 }
@@ -309,6 +310,16 @@ EDAAggregateRoot >> scopeKey [
 { #category : #accessing }
 EDAAggregateRoot >> scopeKey: anObject [
 	scopeKey := anObject
+]
+
+{ #category : #accessing }
+EDAAggregateRoot >> tenant [
+	^ tenant
+]
+
+{ #category : #accessing }
+EDAAggregateRoot >> tenant: aString [
+	tenant ifNil: [ tenant := aString asString ] ifNotNil: [ :t | self logErrorMessage: 'Tenant cannot be modified. Original: ', t asString, ', rejected: ', aString asString ].
 ]
 
 { #category : #accessing }
