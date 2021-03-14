@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -32,6 +33,19 @@ EDATDomainBDD >> applyEvents: aCollectionOfEvents onAggregateRootSymbol: anAggre
 aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	aCollectionOfEvents do: [ :anEvent | self applyEvent: anEvent onAggregateRoot: aggregateRoot ].
 	aBlock value: aggregateRoot
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> assertEvent: actual equals: expected [
+	| diff |
+	diff := expected diff: actual.
+	^ self
+		assert:
+			(diff isNil
+				or: [ diff isEmpty
+						or: [ (diff select: [ :d | d value isNotNil and: [ d value identical ] ])
+								isNotEmpty ] ])
+		description: [ diff greaseString ]
 ]
 
 { #category : #BDD }
@@ -72,15 +86,21 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 	| aggregateRoot handlerSelectorSymbol commandClassName |
 	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
-	aggregateRoot isDeleted ifTrue: [ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new ].
+	aggregateRoot isDeleted
+		ifTrue: [ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new ].
 	commandClassName := aCommand class name.
 	handlerSelectorSymbol := self retrieveHandlerSelectorSymbol: aCommand.
 	(aggregateRoot respondsTo: handlerSelectorSymbol)
 		ifTrue: [ | event |
-			event := aggregateRoot perform: handlerSelectorSymbol with: aCommand.
+			event := aggregateRoot
+				perform: handlerSelectorSymbol
+				with: aCommand.
 			event aggregateRootVersion: aCommand aggregateRootVersion + 1.
-			self assert: expectedEvent equals: event ]
-		ifFalse: [ self fail: 'Aggregate root ' , anAggregateRootSymbol , ' does not know how to handle command ' , commandClassName ]
+			self assertEvent: expectedEvent equals: event ]
+		ifFalse: [ self
+				fail:
+					'Aggregate root ' , anAggregateRootSymbol
+						, ' does not know how to handle command ' , commandClassName ]
 ]
 
 { #category : #BDD }

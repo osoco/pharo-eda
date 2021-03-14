@@ -1,7 +1,7 @@
 Class {
 	#name : #BaselineOfPharoEDA,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfPharoEDA'
+	#category : #BaselineOfPharoEDA
 }
 
 { #category : #baselines }
@@ -16,6 +16,7 @@ BaselineOfPharoEDA >> baseline: spec [
 			"self declareMongotalkIn: spec."
 			self declareStampIn: spec.
 			self declareDeployUtilsIn: spec.
+			self declareObjectDiffIn: spec.
 			self declarePackagesIn: spec.
 			self declareGroupsIn: spec ]
 ]
@@ -62,6 +63,14 @@ BaselineOfPharoEDA >> declareMongotalkIn: spec [
 { #category : #dependencies }
 BaselineOfPharoEDA >> declareNeoJSONIn: spec [
 	spec baseline: 'NeoJSON' with: [ spec repository: 'github://svenvc/NeoJSON/repository' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> declareObjectDiffIn: spec [
+	spec
+		baseline: 'ObjectDiff'
+		with: [ spec repository: 'github://rydnr/pharo-object-diff/src' ].
 	^ spec
 ]
 
