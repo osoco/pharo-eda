@@ -84,7 +84,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools') ];
 		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Domain-Tests'
-			with: [ spec requires: #('EDA-Domain') ];
+			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ];
 		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
