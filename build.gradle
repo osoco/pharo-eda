@@ -1,10 +1,10 @@
 def tag = 'hotfixes'
-def branchOrTag = 'hotfixes'
-version = "${tag}-SNAPSHOT" // do not forget to update the version also in docker.gradle
+def branchOrTag = 'pharo9Compatibility'
+version = "${branchOrTag}-SNAPSHOT" // do not forget to update the version also in docker.gradle
 apply plugin: PharoPlugin
 
 pharo {
-    imageVersion = '61'
+    imageVersion = '90'
 }
 
 def imageName = "${project.name}-${project.version}"
@@ -22,7 +22,7 @@ task downloadFreshImage(type: DownloadPharoImageTask, dependsOn: removePreviousP
 task loadPharoEDA(type: EvalSmalltalkExpressionTask, dependsOn: downloadFreshImage) {
     pharoPath = customPharoPath
     commonPharoArgs = customPharoArgs
-    expression = "Metacello new repository: 'github://osoco/pharo-eda:develop/${branchOrTag}'; configuration: 'PharoEDA'; version: #development; load"
+    expression = "Metacello new repository: 'github://osoco/pharo-eda:${branchOrTag}'; baseline: 'PharoEDA'; load"
 }
 
 task customizeImage(type: RunSmalltalkScriptTask, dependsOn: loadPharoEDA) {
@@ -74,7 +74,7 @@ class DownloadPharoImageTask extends DefaultTask {
     def downloadFreshImage() {
         def cmd = (System.getProperty('os.name').startsWith('Mac') ? 'curl' : 'wget -O-')
         project.exec {
-            commandLine "bash", "-c", "${cmd} ${project.pharo.zeroConfUrl}/${project.pharo.imageVersion} | bash"
+            commandLine "bash", "-c", "${cmd} ${project.pharo.zeroConfUrl}/64/${project.pharo.imageVersion} | bash"
         }
     }
 }
