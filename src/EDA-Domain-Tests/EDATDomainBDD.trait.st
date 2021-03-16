@@ -38,13 +38,9 @@ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 { #category : #BDD }
 EDATDomainBDD >> assertEvent: actual equals: expected [
 	| diff |
-	diff := expected diff: actual.
+	diff := expected odDiff: actual.
 	^ self
-		assert:
-			(diff isNil
-				or: [ diff isEmpty
-						or: [ (diff select: [ :d | d value isNotNil and: [ d value identical ] ])
-								isNotEmpty ] ])
+		assert: (diff isNil or: [ diff identical ])
 		description: [ diff greaseString ]
 ]
 

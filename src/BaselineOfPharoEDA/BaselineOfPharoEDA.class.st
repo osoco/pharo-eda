@@ -70,7 +70,7 @@ BaselineOfPharoEDA >> declareNeoJSONIn: spec [
 BaselineOfPharoEDA >> declareObjectDiffIn: spec [
 	spec
 		baseline: 'ObjectDiff'
-		with: [ spec repository: 'github://rydnr/pharo-object-diff:main/src' ].
+		with: [ spec repository: 'github://rydnr/object-diff:main/src' ].
 	^ spec
 ]
 
