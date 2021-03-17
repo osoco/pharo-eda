@@ -118,7 +118,7 @@ EDAAggregateRepository >> findAllOfTenant: aTenant withApplyEventsBlock: aBlock 
 EDAAggregateRepository >> findAllOfTenant: aTenant withCriteria: aDictionary [
 	| result criteria events eventsGroupedById |
 	result := OrderedCollection new.
-	criteria := Dictionary with: aDictionary.
+	criteria := Dictionary newFrom: aDictionary.
 	criteria at: '#instanceOf' put: self aggregateClass asString.
 	events := self findAllEventsOfTenant: aTenant matching: criteria.
 	eventsGroupedById := self groupEventsByAggregateRootId: events.
