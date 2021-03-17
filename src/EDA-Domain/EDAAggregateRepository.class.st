@@ -10,7 +10,7 @@ Class {
 		'eventStore',
 		'uniqueInstance'
 	],
-	#category : 'EDA-Domain-Repository'
+	#category : #'EDA-Domain-Repository'
 }
 
 { #category : #accessing }
@@ -110,6 +110,23 @@ EDAAggregateRepository >> findAllOfTenant: aTenant withApplyEventsBlock: aBlock 
 			| aggregate |
 			aggregate := aggregateClass new.
 			aBlock value: aggregate value: eventList.
+			result add: aggregate ].
+	^ result
+]
+
+{ #category : #api }
+EDAAggregateRepository >> findAllOfTenant: aTenant withCriteria: aDictionary [
+	| result criteria events eventsGroupedById |
+	result := OrderedCollection new.
+	criteria := Dictionary with: aDictionary.
+	criteria at: '#instanceOf' put: self aggregateClass asString.
+	events := self findAllEventsOfTenant: aTenant matching: criteria.
+	eventsGroupedById := self groupEventsByAggregateRootId: events.
+	eventsGroupedById
+		keysAndValuesDo: [ :k :v | 
+			| aggregate |
+			aggregate := self aggregateClass new.
+			aggregate applyEvents: v.
 			result add: aggregate ].
 	^ result
 ]
