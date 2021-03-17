@@ -319,7 +319,7 @@ EDAAggregateRoot >> tenant [
 
 { #category : #accessing }
 EDAAggregateRoot >> tenant: aString [
-	tenant ifNil: [ tenant := aString asString ] ifNotNil: [ :t | self logErrorMessage: 'Tenant cannot be modified. Original: ', t asString, ', rejected: ', aString asString ].
+	tenant ifNil: [ tenant := aString asString ] ifNotNil: [ :t | t = aString ifFalse: [ self logErrorMessage: 'Tenant cannot be modified. Original: ', t asString, ', rejected: ', aString asString ] ].
 ]
 
 { #category : #accessing }
