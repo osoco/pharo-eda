@@ -117,7 +117,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 				equals: expectedResultingEvents size.
 			resultingEvents
 				keysAndValuesDo: [ :i :e | 
-					self assertEvent: (expectedResultingEvents at: i) equals: e.
+					self assert: (expectedResultingEvents at: i) equals: e.
 					e aggregateRootClass = aCommand class aggregateRootClass
 						ifTrue: [ e aggregateRootVersion: aCommand aggregateRootVersion + 1 ] ] ]
 		ifFalse: [ self
