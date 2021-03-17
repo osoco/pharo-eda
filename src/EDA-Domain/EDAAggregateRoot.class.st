@@ -96,7 +96,7 @@ EDAAggregateRoot >> applyEvent: anEvent [
 				retrieveApplyEventMethod: anEvent
 				withLogging: false.
 			applyEventSelector
-				ifNotNil: [ :arg |
+				ifNotNil: [ :arg | 
 					| text max last suffix |
 					max := 50.
 					suffix := ''.
@@ -121,7 +121,8 @@ EDAAggregateRoot >> applyEvent: anEvent [
 								contents).
 					self perform: applyEventSelectorSymbol with: anEvent.
 					self id: anEvent id.
-					self brandNew: false ]
+					self brandNew: false.
+					self version: (self version + 1) ]
 				ifNil: [ anEvent class greaseString = self class greaseString
 						ifTrue: [ self
 								logErrorMessage:

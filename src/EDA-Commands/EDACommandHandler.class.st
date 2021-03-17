@@ -7,7 +7,7 @@ Class {
 		'eventStore',
 		'eventBus'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Commands-Handlers'
 }
 
 { #category : #handling }
@@ -24,7 +24,7 @@ EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootCla
 	self
 		logDebugMessage:
 			(String
-				streamContents: [ :s |
+				streamContents: [ :s | 
 					s
 						nextPutAll: 'Retrieving events for ';
 						nextPutAll: anAggregateRootClass greaseString;
@@ -40,7 +40,7 @@ EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootCla
 	self
 		logDebugMessage:
 			(String
-				streamContents: [ :s |
+				streamContents: [ :s | 
 					s
 						nextPutAll: events size greaseString;
 						nextPutAll: ' event(s) retrieved in ';
@@ -52,7 +52,7 @@ EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootCla
 	self
 		logDebugMessage:
 			(String
-				streamContents: [ :s |
+				streamContents: [ :s | 
 					s
 						nextPutAll: 'Applying ';
 						nextPutAll: events size greaseString;
@@ -60,10 +60,11 @@ EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootCla
 						nextPutAll: anAggregateRootClass greaseString;
 						nextPut: $. ]).
 	result applyEvents: events.
+	(result isDeleted and: [ aCommand isCreate ]) ifTrue: [ result := anAggregateRootClass new ].
 	self
 		logDebugMessage:
 			(String
-				streamContents: [ :s |
+				streamContents: [ :s | 
 					s
 						nextPutAll: 'Aggregate ';
 						nextPutAll: result greaseString;
@@ -76,7 +77,7 @@ EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootCla
 		ifFalse: [ self
 				logWarningMessage:
 					(String
-						streamContents: [ :s |
+						streamContents: [ :s | 
 							s
 								nextPutAll: 'Aggregate root''s version (';
 								nextPutAll: result version greaseString;

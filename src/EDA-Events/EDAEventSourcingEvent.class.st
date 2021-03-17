@@ -47,7 +47,7 @@ Class {
 		'voyageRepository',
 		'latestVersion'
 	],
-	#category : 'EDA-Events-Events'
+	#category : #'EDA-Events-Events'
 }
 
 { #category : #meta }
@@ -73,13 +73,15 @@ EDAEventSourcingEvent class >> latestVersion [
 
 { #category : #meta }
 EDAEventSourcingEvent class >> ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs [
-	| result scopeKey scopeContext |
+	| result scopeKey scopeContext aggregateRootVersion |
 	result := self new.
 	result tenant: theTenant.
 	result id: theId.
 	result commandId: theCommandId.
 	result
 		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
+	aggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifAbsent: [ 1 ].
+	result aggregateRootVersion: aggregateRootVersion.
 	result version: self latestVersion.
 	scopeKey := theAttrs at: 'scopeKey' ifAbsent: [ nil ].
 	scopeKey ifNotNil: [ :sk | result scopeKey: sk ].

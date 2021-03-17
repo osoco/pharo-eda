@@ -108,17 +108,22 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 	handlerSelectorSymbol := self retrieveHandlerSelectorSymbol: aCommand.
 	(aggregateRoot respondsTo: handlerSelectorSymbol)
 		ifTrue: [ | resultingEvents |
-			resultingEvents := aggregateRoot perform: handlerSelectorSymbol with: aCommand.
+			resultingEvents := aggregateRoot
+				perform: handlerSelectorSymbol
+				with: aCommand.
 			self assert: resultingEvents isNotNil.
-			resultingEvents do: [ :event |
-				(event aggregateRootClass = aCommand class aggregateRootClass)
-				ifTrue: [   
-				event aggregateRootVersion: aCommand aggregateRootVersion + 1]
-			].
-			self assert: resultingEvents size equals: expectedResultingEvents size.
-			resultingEvents doWithIndex: [ :e :i | self assert: (expectedResultingEvents at: i) equals: e ]
-			"self assertCollection: resultingEvents equals: expectedResultingEvents asOrderedCollection" ]
-		ifFalse: [ self fail: 'Aggregate root ' , anAggregateRootSymbol , ' does not know how to handle command ' , commandClassName ]
+			self
+				assert: resultingEvents size
+				equals: expectedResultingEvents size.
+			resultingEvents
+				keysAndValuesDo: [ :i :e | 
+					self assertEvent: (expectedResultingEvents at: i) equals: e.
+					e aggregateRootClass = aCommand class aggregateRootClass
+						ifTrue: [ e aggregateRootVersion: aCommand aggregateRootVersion + 1 ] ] ]
+		ifFalse: [ self
+				fail:
+					'Aggregate root ' , anAggregateRootSymbol
+						, ' does not know how to handle command ' , commandClassName ]
 ]
 
 { #category : #helper }
