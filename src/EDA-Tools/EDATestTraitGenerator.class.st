@@ -412,10 +412,8 @@ EDATestTraitGenerator >> generateTestHelperBuildEventFromArbitraryFileMethodName
 
 { #category : #'code generation' }
 EDATestTraitGenerator >> generateTestHelperBuildEventMethod [
-	| result eventAttrs cr |
+	| result cr |
 	cr := Character cr.
-	eventAttrs := self
-		retrieveEventAttributesBut: self class skippedEventAttributes.
 	result := WriteStream on: String new.
 	result
 		nextPutAll:
@@ -428,11 +426,16 @@ EDATestTraitGenerator >> generateTestHelperBuildEventMethod [
 		nextPutAll: '	| result |';
 		nextPut: cr.
 	result
-		nextPutAll: '	result := self ';
-		nextPutAll: (self generateTestHelperBuildEventFromArbitraryFileMethodName);
+		nextPutAll: '	result := ';
+		nextPutAll: self appName;
+		nextPutAll: 'Test';
+		nextPutAll: (self toCamelCase: self eventName);
+		nextPutAll: ' fromEvent: (';
+		nextPutAll: self generateTestHelperBuildEventFromArbitraryFileMethodName;
 		nextPutAll: ' self ';
 		nextPutAll: self generateReadEventFromFileTestHelperMethodName;
-		nextPut: $.;		
+		nextPutAll: ')';
+		nextPut: $.;
 		nextPut: cr.
 	result
 		nextPutAll: '	result id: evtId.';
@@ -441,11 +444,7 @@ EDATestTraitGenerator >> generateTestHelperBuildEventMethod [
 		nextPutAll: '	result commandId: inputCommandId.';
 		nextPut: cr.
 	result
-		nextPutAll: '	^ ';
-		nextPutAll: self appName;
-		nextPutAll: 'Test';
-		nextPutAll: (self toCamelCase: self eventName);
-		nextPutAll: ' fromEvent: result';
+		nextPutAll: '	^ result';
 		nextPut: cr.
 	^ result contents
 ]
