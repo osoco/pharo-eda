@@ -1,7 +1,7 @@
 Class {
 	#name : #EDACommandGenerator,
 	#superclass : #EDAGenerator,
-	#category : 'EDA-Tools'
+	#category : #'EDA-Tools'
 }
 
 { #category : #sorting }
