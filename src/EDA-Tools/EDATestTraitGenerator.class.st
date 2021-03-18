@@ -1,7 +1,7 @@
 Class {
 	#name : #EDATestTraitGenerator,
 	#superclass : #EDAGenerator,
-	#category : 'EDA-Tools'
+	#category : #'EDA-Tools'
 }
 
 { #category : #'code generation' }
