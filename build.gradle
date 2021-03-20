@@ -1,10 +1,13 @@
-def tag = 'develop'
+def tag = 'settings'
 def branchOrTag = "${tag}"
+def repo = "github://osoco/pharo-eda:${branchOrTag}"
+def baseline = 'PharoEDA'
+
 version = "${tag}-SNAPSHOT" // do not forget to update the version also in docker.gradle
 apply plugin: PharoPlugin
 
 pharo {
-    imageVersion = '61'
+    imageVersion = '80'
 }
 
 def imageName = "${project.name}-${project.version}"
@@ -14,24 +17,52 @@ properties.load(project.rootProject.file('gradle-local.properties').newDataInput
 def customPharoPath = properties.getProperty('pharoPath')
 def customPharoUiPath = properties.getProperty('pharoUiPath')
 def customPharoArgs = properties.getProperty('pharoArgs').split(",").toList()
+def gtoolkitHome = properties.getProperty('gtoolkitHome')
+def customGtoolkitPath = properties.getProperty('gtoolkitPath')
+def customGtoolkitArgs = properties.getProperty('gtoolkitArgs').split(",").toList()
 
 task removePreviousPharoImage(type: RemovePreviousPharoImageTask)
 
-task downloadFreshImage(type: DownloadPharoImageTask, dependsOn: removePreviousPharoImage)
+task removePreviousGtoolkitImage(type: RemovePreviousGtoolkitImageTask)
 
-task loadPharoEDA(type: EvalSmalltalkExpressionTask, dependsOn: downloadFreshImage) {
-    pharoPath = customPharoPath
-    commonPharoArgs = customPharoArgs
-    expression = "Metacello new repository: 'github://osoco/pharo-eda:${branchOrTag}'; baseline: 'PharoEDA; load"
+task downloadFreshPharoImage(type: DownloadPharoImageTask, dependsOn: removePreviousPharoImage)
+
+task retrieveFreshGtoolkitImage(type: RetrieveFreshGtoolkitImageTask, dependsOn: removePreviousGtoolkitImage) {
+  gtHome = gtoolkitHome
 }
 
-task customizeImage(type: RunSmalltalkScriptTask, dependsOn: loadPharoEDA) {
+task loadProject(type: EvalSmalltalkExpressionTask, dependsOn: downloadFreshPharoImage) {
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+    expression = "Metacello new repository: '${repo}'; baseline: '${baseline}'; onConflictUseLoaded; load"
+}
+
+task loadProjectGt(type: EvalGtoolkitExpressionTask, dependsOn: retrieveFreshGtoolkitImage) {
+    gtoolkitPath = customGtoolkitPath
+    commonGtoolkitArgs = customGtoolkitArgs
+    expression = "[ Metacello new repository: '${repo}'; baseline: '${baseline}'; onConflict: [ :ex | ex useIncoming ]; onUpgrade: [ :ex | ex useIncoming ]; onDowngrade: [ :ex | ex useLoaded ]; ignoreImage; load ] on: MessageNotUnderstood do: [ ]"
+}
+
+task customizeImage(type: RunSmalltalkScriptTask, dependsOn: loadProject) {
+    script = "customize.st"
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task customizeImageGt(type: RunSmalltalkScriptTask, dependsOn: loadProjectGt) {
     script = "customize.st"
     pharoPath = customPharoPath
     commonPharoArgs = customPharoArgs
 }
 
 task assemble(type: SavePharoImageTask, dependsOn: customizeImage) {
+    toImageName = imageName
+    shouldDeleteOldImage = true
+    pharoPath = customPharoPath
+    commonPharoArgs = customPharoArgs
+}
+
+task assembleGt(type: SaveGtoolkitImageTask, dependsOn: customizeImageGt) {
     toImageName = imageName
     shouldDeleteOldImage = true
     pharoPath = customPharoPath
@@ -56,7 +87,7 @@ class PharoPlugin implements Plugin<Project> {
 }
 
 class PharoPluginExtension {
-    String zeroConfUrl = "http://get.pharo.org"
+    String zeroConfUrl = "http://get.pharo.org/64"
     String imageVersion = 'stable'
 }
 
@@ -65,6 +96,15 @@ class RemovePreviousPharoImageTask extends DefaultTask {
     def removePreviousPharoImage() {
         project.exec {
             commandLine "bash", "-c", "rm -f Pharo.image Pharo.changes"
+        }
+    }
+}
+
+class RemovePreviousGtoolkitImageTask extends DefaultTask {
+    @TaskAction
+    def removePreviousGtoolkitImage() {
+        project.exec {
+            commandLine "bash", "-c", "rm -rf GlamorousToolkit"
         }
     }
 }
@@ -79,6 +119,16 @@ class DownloadPharoImageTask extends DefaultTask {
     }
 }
 
+class RetrieveFreshGtoolkitImageTask extends DefaultTask {
+    String gtHome
+    @TaskAction
+    def retrieveFreshImage() {
+        project.exec {
+            commandLine "bash", "-c", "cp ${gtHome}/*.so . && cp ${gtHome}/GlamorousToolkit.image GlamorousToolkit.image; if [[ -e ${gtHome}/GlamorousToolkit.changes ]]; then cp ${gtHome}/GlamorousToolkit.changes GlamorousToolkit.changes; fi"
+        }
+    }
+}
+
 class SavePharoImageTask extends DefaultTask {
     String fromImageName = "Pharo.image"
     String pharoPath = "pharo"
@@ -88,6 +138,28 @@ class SavePharoImageTask extends DefaultTask {
 
     @TaskAction
     def renamePharoImage() {
+        def pharoArgs = []
+        pharoArgs.addAll(commonPharoArgs)
+        pharoArgs.addAll([fromImageName, "save", toImageName])
+        if (shouldDeleteOldImage) {
+            pharoArgs << "--delete-old"
+        }
+        project.exec {
+            executable "${pharoPath}"
+            args pharoArgs
+        }
+    }
+}
+
+class SaveGtoolkitImageTask extends DefaultTask {
+    String fromImageName = "GlamorousToolkit.image"
+    String pharoPath = "pharo"
+    def commonPharoArgs
+    String toImageName
+    boolean shouldDeleteOldImage
+
+    @TaskAction
+    def renameGtoolkitImage() {
         def pharoArgs = []
         pharoArgs.addAll(commonPharoArgs)
         pharoArgs.addAll([fromImageName, "save", toImageName])
@@ -135,6 +207,25 @@ class EvalSmalltalkExpressionTask extends DefaultTask {
         project.exec {
             executable "${pharoPath}"
             args pharoArgs
+        }
+    }
+}
+
+class EvalGtoolkitExpressionTask extends DefaultTask {
+    String image = "GlamorousToolkit.image"
+    String gtoolkitPath = "glamoroustoolkit"
+    def commonGtoolkitArgs
+    String expression
+
+    @TaskAction
+    def evalSmalltalkExpression() {
+        def gtoolkitArgs = []
+        gtoolkitArgs.addAll(commonGtoolkitArgs)
+        gtoolkitArgs.addAll([image, "eval", "--save", expression])
+        println "${gtoolkitPath} ${gtoolkitArgs}"
+        project.exec {
+            executable "${gtoolkitPath}"
+            args gtoolkitArgs
         }
     }
 }

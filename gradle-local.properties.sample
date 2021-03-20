@@ -1,3 +1,7 @@
 pharoPath=/opt/pharo/pharo-vm/pharo
 pharoUiPath=/opt/pharo/pharo-vm/pharo
 pharoArgs=--encoding,utf8,--headless
+gtoolkitHome=/home/pharo
+gtoolkitPath=/home/pharo/glamoroustoolkit
+gtoolkitArgs=--headless
+#
