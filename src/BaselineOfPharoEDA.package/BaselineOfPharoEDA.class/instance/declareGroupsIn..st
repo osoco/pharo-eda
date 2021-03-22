@@ -8,7 +8,7 @@ declareGroupsIn: spec
 			with:
 			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
 		group: 'explainability'
-			with: #(#'EDA-Domain-GT-Extensions');
+			with: #(#'EDA-Domain-GT-Extensions' #'EDA-FamixMetaModel');
 		group: 'default' with: #('core' 'tests');
 		group: 'ALL'
 			with: #('default' 'explainability')
