@@ -1,9 +1,4 @@
 dependencies
 declareBabyMock2In: spec
-	spec
-		project: 'BabyMock2'
-		with: [ spec
-				className: #ConfigurationOfBabyMock2;
-				versionString: #stable;
-				repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock2/main/' ].
+	spec baseline: 'BabyMock2' with: [ spec repository: 'https://github.com/Gotchas99/BabyMock2:main/src' ].
 	^ spec
