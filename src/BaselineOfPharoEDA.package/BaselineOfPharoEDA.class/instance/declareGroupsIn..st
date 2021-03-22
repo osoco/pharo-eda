@@ -11,4 +11,4 @@ declareGroupsIn: spec
 			with: #(#'EDA-Domain-GT-Extensions');
 		group: 'default' with: #('core' 'tests');
 		group: 'ALL'
-			with: #('defaul' 'explainability')
+			with: #('default' 'explainability')

@@ -10,7 +10,7 @@ declarePackagesIn: spec
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
 		package: #'EDA-Domain-GT-Extensions'
-			with: [  spec requires: #(EDA-Domain) ];
+			with: [ spec requires: #('EDA-Domain') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ];
 		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
