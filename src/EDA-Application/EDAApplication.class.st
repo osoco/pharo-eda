@@ -49,6 +49,22 @@ EDAApplication class >> applicationName [
 	self subclassResponsibility
 ]
 
+{ #category : #setup }
+EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore eventProducer: anEventProducer andProjectorClass: aClass [
+	| handlerScanner handlerFactory commandRegistry |
+	handlerScanner := EDAPragmaCommandHandlerMethodsScanner
+		scannerPragma: #useAsCommandHandlerFor:
+		from: EDAAggregateRoot.
+	handlerFactory := EDACommandHandlerFactory
+		factoryWithEventStore: anEventStore
+		eventBus: anEventProducer.
+	commandRegistry := EDACommandHandlersRegistry
+		withScanner: handlerScanner
+		factory: handlerFactory
+		andProjectorClass: aClass.
+	^ EDACommandDispatcher withRegistry: commandRegistry
+]
+
 { #category : #accessing }
 EDAApplication class >> commandConsumer [
 	^ commandConsumer
@@ -323,12 +339,15 @@ EDAApplication class >> setupCommandConsumerWithCommandListener: listener [
 
 { #category : #setup }
 EDAApplication class >> setupCommandDispatcher [
-	| handlerScanner  handlerFactory commandRegistry |
-	EDADeleteCommandHandler eventStore: self eventStore; eventBus: self eventProducer.
-	handlerScanner := EDAPragmaCommandHandlerMethodsScanner scannerPragma: #useAsCommandHandlerFor: from: EDAAggregateRoot.
-	handlerFactory := EDACommandHandlerFactory factoryWithEventStore: self eventStore eventBus: self eventProducer.
-	commandRegistry := EDACommandHandlersRegistry withScanner: handlerScanner factory: handlerFactory.
-	self commandDispatcher: (EDACommandDispatcher withRegistry: commandRegistry).
+	EDADeleteCommandHandler
+		eventStore: self eventStore;
+		eventBus: self eventProducer.
+	self
+		commandDispatcher:
+			(self
+				buildCommandDispatcherWithEventStore: self eventStore
+				eventProducer: self eventProducer
+				andProjectorClass: EDACompositeProjector)
 ]
 
 { #category : #'setup - events' }

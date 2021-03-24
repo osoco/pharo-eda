@@ -6,16 +6,17 @@ Class {
 		'aggregateRoot',
 		'aggregateRootClass'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Commands-Handlers'
 }
 
-{ #category : #factory }
-EDAMethodWrapperCommandHandler class >> newFromHandlerMethod: aMethod eventStore: anEventStore eventBus: anEventBus [
+{ #category : #'instance creation' }
+EDAMethodWrapperCommandHandler class >> newFromHandlerMethod: aMethod eventStore: anEventStore eventBus: anEventBus andProjectorClass: aClass [
 	^ self new
 		eventStore: anEventStore;
 		eventBus: anEventBus;
 		handlerMethod: aMethod;
 		aggregateRootClass: aMethod methodClass;
+		projectorClass: aClass;
 		yourself
 ]
 

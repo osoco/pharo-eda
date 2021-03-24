@@ -11,7 +11,7 @@ Class {
 	#classInstVars : [
 		'restartOnCommandConsumingErrors'
 	],
-	#category : 'EDA-Messaging-Command'
+	#category : #'EDA-Messaging-Command'
 }
 
 { #category : #'instance creation' }
@@ -70,11 +70,11 @@ EDACommandConsumer >> commandMaterializer: anObject [
 ]
 
 { #category : #reading }
-EDACommandConsumer >> consumeCommandMessage: aCommandMessageString [
+EDACommandConsumer >> consumeMessage: aCommandMessageString [
 	| aCommand |
 	aCommand := self commandMaterializer
 		materialize: aCommandMessageString.
-	self commandDispatcher dispatch: aCommand
+	^ self commandDispatcher dispatch: aCommand
 ]
 
 { #category : #helpers }
@@ -106,9 +106,7 @@ EDACommandConsumer >> start [
 	self busListener resetClient.
 	listener := self busListener
 		subscribe;
-		onMessageDo: [ :message | 
-			self
-				consumeCommandMessage: message ].
+		onMessageDo: [ :message | self consumeMessage: message ].
 	listener
 		on: Exception - Break
 		do: [ :error | 

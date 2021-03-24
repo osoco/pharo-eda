@@ -4,7 +4,8 @@ Class {
 	#traits : 'EDAPrintOnHelper + EDATLogging',
 	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
 	#instVars : [
-		'handlersRegistry'
+		'handlersRegistry',
+		'projectorClass'
 	],
 	#classInstVars : [
 		'strategy'
@@ -14,8 +15,14 @@ Class {
 
 { #category : #'instance creation' }
 EDACommandDispatcher class >> withRegistry: aHandlersRegistry [
+	^ self withRegistry: aHandlersRegistry  andProjectorClass: EDACompositeProjector
+]
+
+{ #category : #'instance creation' }
+EDACommandDispatcher class >> withRegistry: aHandlersRegistry andProjectorClass: aClass [
 	^ self new
-		handlersRegistry: aHandlersRegistry ;
+		handlersRegistry: aHandlersRegistry;
+		projectorClass: aClass;
 		yourself
 ]
 
@@ -26,21 +33,18 @@ EDACommandDispatcher >> dispatch: aCommand [
 		ifNil: [ self
 				logErrorMessage:
 					(String
-						streamContents: [ :s |
+						streamContents: [ :s | 
 							s
 								nextPutAll: 'Internal error: ';
 								nextPutAll: self class greaseString;
 								nextPutAll: '>>';
 								nextPutAll: 'dispatch: received a nil command' ])
 				andThrow: EDAInvalidCommandMessage ].
-	
-	handler := aCommand isDelete
-		ifTrue: [ EDADeleteCommandHandler uniqueInstance ]
-		ifFalse: [ aCommand version = aCommand class latestVersion
+	aCommand version = aCommand class latestVersion
 		ifFalse: [ self
 				logErrorMessage:
 					(String
-						streamContents: [ :s |
+						streamContents: [ :s | 
 							s
 								nextPutAll: self class greaseString;
 								nextPutAll: ' rejected: version ';
@@ -49,12 +53,14 @@ EDACommandDispatcher >> dispatch: aCommand [
 								nextPutAll: aCommand class latestVersion greaseString;
 								nextPutAll: ' is supported' ])
 				andThrow: EDAInvalidCommandMessage ].
-			self handlersRegistry handlerForCommand: aCommand ].
+	handler := self handlersRegistry handlerForCommand: aCommand.
+	(handler isNil and: [ aCommand isDelete ])
+		ifTrue: [ handler := EDADeleteCommandHandler uniqueInstance ].
 	handler
 		ifNil: [ self
 				logErrorMessage:
 					(String
-						streamContents: [ :s |
+						streamContents: [ :s | 
 							s
 								nextPutAll: 'Command ';
 								nextPutAll: aCommand class greaseString;
@@ -62,7 +68,7 @@ EDACommandDispatcher >> dispatch: aCommand [
 								nextPutAll: aCommand aggregateRootClass greaseString;
 								nextPutAll: ' is not prepared to handle it' ])
 				andThrow: EDACommandHandlerNotFound ].
-	handler
+	^ handler
 		handle: aCommand
 		withErrorStrategy: EDACommandConsumingErrorBehavior strategy
 ]
@@ -75,4 +81,15 @@ EDACommandDispatcher >> handlersRegistry [
 { #category : #accessing }
 EDACommandDispatcher >> handlersRegistry: aHandlersRegistry [
 	handlersRegistry  := aHandlersRegistry
+]
+
+{ #category : #accessing }
+EDACommandDispatcher >> projectorClass [
+	projectorClass ifNil: [ self projectorClass: EDACompositeProjector ].
+	^ projectorClass
+]
+
+{ #category : #accessing }
+EDACommandDispatcher >> projectorClass: anObject [
+	projectorClass := anObject
 ]

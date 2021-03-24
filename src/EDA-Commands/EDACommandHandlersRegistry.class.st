@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'handlers'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Commands-Handlers'
 }
 
 { #category : #'instance creation' }
@@ -15,15 +15,16 @@ EDACommandHandlersRegistry class >> emptyRegistry [
 ]
 
 { #category : #'instance creation' }
-EDACommandHandlersRegistry class >> withScanner: aCommandHandlersScanner factory: aCommandHandlerFactory [
-	| handlerAssocs commandClass   commandHandler registry handlerMethod |
+EDACommandHandlersRegistry class >> withScanner: aCommandHandlersScanner factory: aCommandHandlerFactory andProjectorClass: aClass [
+	| handlerAssocs commandClass commandHandler registry handlerMethod |
 	registry := self emptyRegistry.
 	handlerAssocs := aCommandHandlersScanner allCommandHandlerMethods.
 	handlerAssocs
 		do: [ :assoc | 
 			commandClass := assoc key.
 			handlerMethod := assoc value.
-			commandHandler := aCommandHandlerFactory newFromHandlerMethod: handlerMethod.
+			commandHandler := aCommandHandlerFactory
+				newFromHandlerMethod: handlerMethod andProjectorClass: aClass.
 			registry registerHandler: commandHandler command: commandClass new ].
 	^ registry
 ]

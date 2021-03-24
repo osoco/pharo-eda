@@ -100,7 +100,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 				perform: handlerSelectorSymbol
 				with: aCommand.
 			event aggregateRootVersion: aCommand aggregateRootVersion + 1.
-			self assertEvent: expectedEvent equals: event ]
+			self assert: expectedEvent equals: event ]
 		ifFalse: [ self
 				fail:
 					'Aggregate root ' , anAggregateRootSymbol
@@ -132,6 +132,36 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 				fail:
 					'Aggregate root ' , anAggregateRootSymbol
 						, ' does not know how to handle command ' , commandClassName ]
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvent: expectedResultingEvent [
+	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: (OrderedCollection with: expectedResultingEvent)
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents [
+	| commandConsumer resultingEvents mock eventStore |
+	mock := EDAAcceptEverything new.
+	eventStore := EDAVolatileEventStore new.
+	eventStore
+		saveEvents: historicalEvents
+		onAggregate: anAggregateRootSymbol asClass new.
+	commandConsumer := EDACommandConsumer
+		busListener: mock
+		commandMaterializer: EDAJsonCommandMaterializer new
+		commandDispatcher:
+			(EDAApplication
+				buildCommandDispatcherWithEventStore: eventStore
+				eventProducer: mock
+				andProjectorClass: mock).
+	resultingEvents := commandConsumer consumeMessage: aString.
+	self assert: resultingEvents isNotNil.
+	self
+		assert: resultingEvents size
+		equals: expectedResultingEvents size.
+	resultingEvents
+		keysAndValuesDo: [ :i :e | self assert: (expectedResultingEvents at: i) equals: e ]
 ]
 
 { #category : #helper }

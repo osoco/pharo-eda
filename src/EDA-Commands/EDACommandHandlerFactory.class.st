@@ -7,7 +7,7 @@ Class {
 		'eventStore',
 		'eventBus'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Commands-Handlers'
 }
 
 { #category : #factory }
@@ -40,5 +40,18 @@ EDACommandHandlerFactory >> eventStore: anObject [
 
 { #category : #factory }
 EDACommandHandlerFactory >> newFromHandlerMethod: aMethod [
-	^ EDAMethodWrapperCommandHandler newFromHandlerMethod: aMethod eventStore: self eventStore eventBus: self eventBus 
+	^ EDAMethodWrapperCommandHandler
+		newFromHandlerMethod: aMethod
+		eventStore: self eventStore
+		eventBus: self eventBus
+		andProjectorClass: self projectorClass
+]
+
+{ #category : #'as yet unclassified' }
+EDACommandHandlerFactory >> newFromHandlerMethod: aMethod andProjectorClass: aProjectorClass [
+	^ EDAMethodWrapperCommandHandler
+		newFromHandlerMethod: aMethod
+		eventStore: self eventStore
+		eventBus: self eventBus
+		andProjectorClass: aProjectorClass
 ]

@@ -1,7 +1,7 @@
 Class {
 	#name : #EDAJsonCommandMaterializer,
 	#superclass : #EDACommandMaterializer,
-	#category : 'EDA-Commands-Materializers'
+	#category : #'EDA-Commands-Materializers'
 }
 
 { #category : #'delete logic' }
@@ -32,5 +32,5 @@ EDAJsonCommandMaterializer >> materialize: json [
 
 { #category : #parsing }
 EDAJsonCommandMaterializer >> retrieveCommandName: aCommandMap [
-	^ aCommandMap at: #name
+	^ (aCommandMap at: #meta) at: #type
 ]

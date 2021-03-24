@@ -5,7 +5,8 @@ Class {
 	#classTraits : 'EDAPrintOnHelper classTrait + EDATErrorHelper classTrait',
 	#instVars : [
 		'eventStore',
-		'eventBus'
+		'eventBus',
+		'projectorClass'
 	],
 	#category : #'EDA-Commands-Handlers'
 }
@@ -143,7 +144,7 @@ EDACommandHandler >> handle: aCommand withErrorStrategy: strategy [
 		ifTrue: [ self
 				logErrorMessage:
 					(String
-						streamContents: [ :s |
+						streamContents: [ :s | 
 							s
 								nextPutAll: aCommand aggregateRootClass greaseString;
 								nextPutAll: ' with id ';
@@ -165,12 +166,12 @@ EDACommandHandler >> handle: aCommand withErrorStrategy: strategy [
 				onAggregateRoot: aggregateRoot ].
 	eventBus produceEvents: processedEvents ]
 		on: Error - Break
-		do: [ :exception |
+		do: [ :exception | 
 			self
 				manageError: exception
 				forCommand: aCommand
 				usingErrorStrategy: strategy ].
-	^ self
+	^ processedEvents
 ]
 
 { #category : #handling }
@@ -184,7 +185,7 @@ EDACommandHandler >> processGeneratedEvents: producedEvents forCommand: aCommand
 	| message |
 	message := ''.
 	producedEvents
-		do: [ :event |
+		do: [ :event | 
 			event aggregateRootVersion: aCommand aggregateRootVersion + 1.
 			message := message , ' ' , event class name ].
 	self
@@ -192,11 +193,23 @@ EDACommandHandler >> processGeneratedEvents: producedEvents forCommand: aCommand
 	self flag: #TODO.	"TODO: transaction including eventstore and eventbus operations"
 	eventStore saveEvents: producedEvents onAggregate: anAggregateRoot.
 	self logInfoMessage: 'Projecting events...'.
-	(EDACompositeProjector ofTenant: aCommand tenant withAllProjectorsAndEventStore: eventStore)
+	(self projectorClass
+		ofTenant: aCommand tenant
+		withAllProjectorsAndEventStore: eventStore)
 		projectFilteredEvents: producedEvents
 		ofTenant: aCommand tenant.
 	self logInfoMessage: 'Done'.
 	^ producedEvents
+]
+
+{ #category : #accessing }
+EDACommandHandler >> projectorClass [
+	^ projectorClass
+]
+
+{ #category : #accessing }
+EDACommandHandler >> projectorClass: anObject [
+	projectorClass := anObject
 ]
 
 { #category : #handling }
