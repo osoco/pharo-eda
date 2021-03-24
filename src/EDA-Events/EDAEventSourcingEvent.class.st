@@ -80,7 +80,7 @@ EDAEventSourcingEvent class >> ofTenant: theTenant withAggregateId: theId comman
 	result commandId: theCommandId.
 	result
 		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
-	aggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifAbsent: [ 1 ].
+	aggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifPresent: [ :arv | arv + 1 ] ifAbsent: [ 1 ].
 	result aggregateRootVersion: aggregateRootVersion.
 	result version: self latestVersion.
 	scopeKey := theAttrs at: 'scopeKey' ifAbsent: [ nil ].
