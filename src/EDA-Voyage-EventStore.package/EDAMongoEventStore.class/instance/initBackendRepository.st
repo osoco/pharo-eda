@@ -9,9 +9,6 @@ initBackendRepository
 		password: self class password.
 	"result cache: EDAMongoNoCache new."
 	result debug: self class debug.
-	self class enableReplication
-		ifTrue: [ result enableReplication ]
-		ifFalse: [ result disableReplication ].
 	self class enableSingleton
 		ifTrue: [ result enableSingleton ]
 		ifFalse: [ result disableSingleton ].
@@ -19,5 +16,4 @@ initBackendRepository
 	result ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
 "	result forceEager: self class forceEager."
 	result lazySynchronize: self class lazySynchronize.
-	result wireProtocolEnabled: self class wireProtocolEnabled.
 	^ result
