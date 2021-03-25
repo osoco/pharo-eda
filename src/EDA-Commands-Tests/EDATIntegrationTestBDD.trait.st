@@ -23,7 +23,6 @@ Internal Representation and Key Implementation Points.
 "
 Trait {
 	#name : #EDATIntegrationTestBDD,
-	#traits : 'EDATJsonMatchingHelper + EDATLogging',
 	#category : #'EDA-Commands-Tests'
 }
 
