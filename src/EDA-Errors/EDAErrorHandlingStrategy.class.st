@@ -26,7 +26,7 @@ Class {
 	#instVars : [
 		'context'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
@@ -34,6 +34,11 @@ EDAErrorHandlingStrategy class >> description [
 	"The strategy description"
 	self subclassResponsibility.
 	^ self
+]
+
+{ #category : #accessing }
+EDAErrorHandlingStrategy class >> shouldPersistFuel [
+	^ true
 ]
 
 { #category : #accessing }

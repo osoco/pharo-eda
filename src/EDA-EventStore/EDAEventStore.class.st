@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'repository'
 	],
-	#category : 'EDA-EventStore'
+	#category : #'EDA-EventStore'
 }
 
 { #category : #persistence }
@@ -78,6 +78,6 @@ EDAEventStore >> repository: aRepository [
 ]
 
 { #category : #persistence }
-EDAEventStore >> saveEvents: anEventCollection onAggregate: aggregateRoot [
+EDAEventStore >> saveEvents: anEventCollection [
 	self subclassResponsibility
 ]

@@ -60,6 +60,11 @@ EDAAggregateRoot class >> checkTenantOfCommandIsValid: aCommand [
 			[ self logErrorMessage: 'tenant is missing' andThrow: InvalidTenant ]
 ]
 
+{ #category : #helpers }
+EDAAggregateRoot class >> newVersionAfter: aVersion [
+	^ aVersion + 1
+]
+
 { #category : #ui }
 EDAAggregateRoot class >> systemIcon [
 	^ Smalltalk ui icons iconNamed: #objects
@@ -70,12 +75,12 @@ EDAAggregateRoot >> aggregateRepository [
 	self subclassResponsibility
 ]
 
-{ #category : #'event handling' }
+{ #category : #'applying events' }
 EDAAggregateRoot >> applyAggregateDeletedEvent: anEvent [
 	self isDeleted: true
 ]
 
-{ #category : #'event handling' }
+{ #category : #'applying events' }
 EDAAggregateRoot >> applyEvent: anEvent [
 	| eventClassName applyEventSelector applyEventSelectorSymbol delete |
 	delete := anEvent delete.
@@ -140,12 +145,12 @@ EDAAggregateRoot >> applyEvent: anEvent [
 					self retrieveApplyEventMethod: anEvent withLogging: true ] ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #'applying events' }
 EDAAggregateRoot >> applyEvents: eventsCollection [
 	eventsCollection do: [ :event | self applyEvent: event ]
 ]
 
-{ #category : #'event handling' }
+{ #category : #'applying events' }
 EDAAggregateRoot >> applyEventsIgnoringExceptions: eventsCollection [
 	eventsCollection
 		do: [ :event | 
@@ -164,12 +169,20 @@ EDAAggregateRoot >> brandNew: aBoolean [
 	brandNew := aBoolean
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDAAggregateRoot >> buildApplyEventMethodNameForEvent: eventName andVersion: eventVersion [
 	^ String streamContents: [ :s | s nextPutAll: 'apply'; nextPutAll: eventName greaseString; nextPut: $v; nextPutAll: eventVersion greaseString; nextPut: $: ]
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
+EDAAggregateRoot >> buildCommonArgsForCommand: aCommand [
+	| result |
+	result := self class buildCommonArgsForCommand: aCommand.
+	result at: 'aggregateRootVersion' put: self version.
+	^ result
+]
+
+{ #category : #helpers }
 EDAAggregateRoot >> buildDeleteCommandResultEvent [
 	| result eventClass candidates |
 	eventClass := nil.
@@ -205,7 +218,7 @@ EDAAggregateRoot >> events [
 	^ self aggregateRepository findEventsById: self id.
 ]
 
-{ #category : #'event handling' }
+{ #category : #'command handling' }
 EDAAggregateRoot >> handleDeleteCommand: aCommand [
 	| result |
 	self id
@@ -218,7 +231,7 @@ EDAAggregateRoot >> handleDeleteCommand: aCommand [
 			r tenant: self tenant.
 			r id: self id.
 			r commandId: aCommand commandId.
-			r version: 1.
+			r version: (result class latestVersion).
 			r timestamp: DateAndTime new asUTC ].
 	^ result
 ]
@@ -240,7 +253,7 @@ EDAAggregateRoot >> initialize [
 	self brandNew: true
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDAAggregateRoot >> is: aString equalTo: anotherString [
 	^ (self normalize: aString) = (self normalize: anotherString)
 ]
@@ -255,12 +268,17 @@ EDAAggregateRoot >> isDeleted: aFlag [
 	isDeleted := aFlag
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
+EDAAggregateRoot >> newVersionAfter: aVersion [
+	^ self class newVersionAfter: aVersion
+]
+
+{ #category : #helpers }
 EDAAggregateRoot >> normalize: aString [
 	^ aString greaseString trimmed asLowercase
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDAAggregateRoot >> retrieveApplyEventMethod: event withLogging: aFlag [
 	| aux auxClass auxClassName result found |
 	found := false.

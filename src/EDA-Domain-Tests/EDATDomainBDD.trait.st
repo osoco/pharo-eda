@@ -62,6 +62,43 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol whenApplyingEvents: histo
 ]
 
 { #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvent: expectedResultingEvent [
+	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: (OrderedCollection with: expectedResultingEvent)
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: expectedResultingEvents [
+	| aux meta msg body aggregateRootVersion |
+	aux := Dictionary new.
+	meta := Dictionary new.
+	meta at: #type put: aString.
+	meta at: #id put: aCommand commandId greaseString.
+	meta at: #version put: aCommand version.
+	meta at: #timestamp put: DateAndTime now asString.
+	aux at: #meta put: meta.
+	body := Dictionary
+		newFrom:
+			(aCommand class allInstVarNames
+				collect: [ :instVar | instVar -> (aCommand instVarNamed: instVar) ]).
+	aCommand fillCommonInfoInto: body.
+	aggregateRootVersion := historicalEvents ifEmpty: [ 0 ] ifNotEmpty: [ historicalEvents last aggregateRootVersion ].
+	body at: #version put: aggregateRootVersion.
+	aux at: #body put: body.
+	msg := String
+		streamContents: [ :stream | 
+			(NeoJSONWriter on: stream)
+				for: DateAndTime
+					customDo:
+						[ :mapping | mapping encoder: [ :dateAndTime | dateAndTime printString ] ];
+				nextPut: aux ].
+	^ self
+		givenAggregate: anAggregateRootSymbol
+		withEvents: historicalEvents
+		whenReceiveMessage: msg
+		thenEvents: expectedResultingEvents
+]
+
+{ #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand shouldNotRaise: anException [
 	| aggregateRoot handlerSelectorSymbol commandClassName |
 	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
@@ -99,8 +136,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			event := aggregateRoot
 				perform: handlerSelectorSymbol
 				with: aCommand.
-			event aggregateRootVersion: aCommand aggregateRootVersion + 1.
-			self assert: expectedEvent equals: event ]
+			self assertEvent: expectedEvent equals: event ]
 		ifFalse: [ self
 				fail:
 					'Aggregate root ' , anAggregateRootSymbol
@@ -109,29 +145,18 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents [
-	| aggregateRoot handlerSelectorSymbol commandClassName |
-	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
-	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
-	commandClassName := aCommand class name.
-	handlerSelectorSymbol := self retrieveHandlerSelectorSymbol: aCommand.
-	(aggregateRoot respondsTo: handlerSelectorSymbol)
-		ifTrue: [ | resultingEvents |
-			resultingEvents := aggregateRoot
-				perform: handlerSelectorSymbol
-				with: aCommand.
-			self assert: resultingEvents isNotNil.
-			self
-				assert: resultingEvents size
-				equals: expectedResultingEvents size.
-			resultingEvents
-				keysAndValuesDo: [ :i :e | 
-					self assert: (expectedResultingEvents at: i) equals: e.
-					e aggregateRootClass = aCommand class aggregateRootClass
-						ifTrue: [ e aggregateRootVersion: aCommand aggregateRootVersion + 1 ] ] ]
-		ifFalse: [ self
-				fail:
-					'Aggregate root ' , anAggregateRootSymbol
-						, ' does not know how to handle command ' , commandClassName ]
+	| aux meta msg |
+	aux := Dictionary new.
+	meta := Dictionary new.
+	meta at: #type put: aCommand name.
+	aux at: #meta put: meta.
+	aux at: #body put: (EDAJsonCommandSerializer new serialize: aCommand).
+	msg := EDAJsonCommandSerializer new serialize: aux.
+	^ self
+		givenAggregate: anAggregateRootSymbol
+		withEvents: historicalEvents
+		whenReceiveMessage: msg
+		thenEvents: expectedResultingEvents
 ]
 
 { #category : #BDD }
@@ -145,8 +170,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 	mock := EDAAcceptEverything new.
 	eventStore := EDAVolatileEventStore new.
 	eventStore
-		saveEvents: historicalEvents
-		onAggregate: anAggregateRootSymbol asClass new.
+		saveEvents: historicalEvents.
 	commandConsumer := EDACommandConsumer
 		busListener: mock
 		commandMaterializer: EDAJsonCommandMaterializer new
@@ -155,13 +179,20 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 				buildCommandDispatcherWithEventStore: eventStore
 				eventProducer: mock
 				andProjectorClass: mock).
-	resultingEvents := commandConsumer consumeMessage: aString.
+	resultingEvents := commandConsumer
+		consumeMessage: aString
+		usingStrategy: EDAThrowError greaseString.
 	self assert: resultingEvents isNotNil.
 	self
 		assert: resultingEvents size
 		equals: expectedResultingEvents size.
 	resultingEvents
-		keysAndValuesDo: [ :i :e | self assert: (expectedResultingEvents at: i) equals: e ]
+		keysAndValuesDo: [ :i :actual | 
+			| expected |
+			(actual respondsTo: #dateCreated:)
+				ifTrue: [ actual dateCreated: '<ANYTHING>' ].
+			expected := expectedResultingEvents at: i.
+			self assertEvent: actual equals: expected ]
 ]
 
 { #category : #helper }

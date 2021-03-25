@@ -1,7 +1,7 @@
 Class {
 	#name : #EDAMemoryEventStore,
 	#superclass : #EDAEventStore,
-	#category : 'EDA-Voyage-EventStore'
+	#category : #'EDA-Voyage-EventStore'
 }
 
 { #category : #persistence }
@@ -31,6 +31,6 @@ EDAMemoryEventStore >> initBackendRepository [
 ]
 
 { #category : #persistence }
-EDAMemoryEventStore >> saveEvents: anEventCollection onAggregate: aggregateRoot [
+EDAMemoryEventStore >> saveEvents: anEventCollection [
 	anEventCollection do: [ :event | event save ]
 ]

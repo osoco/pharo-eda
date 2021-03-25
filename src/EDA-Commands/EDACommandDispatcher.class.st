@@ -27,7 +27,7 @@ EDACommandDispatcher class >> withRegistry: aHandlersRegistry andProjectorClass:
 ]
 
 { #category : #dispatching }
-EDACommandDispatcher >> dispatch: aCommand [
+EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 	| handler |
 	aCommand
 		ifNil: [ self
@@ -70,7 +70,7 @@ EDACommandDispatcher >> dispatch: aCommand [
 				andThrow: EDACommandHandlerNotFound ].
 	^ handler
 		handle: aCommand
-		withErrorStrategy: EDACommandConsumingErrorBehavior strategy
+		withErrorStrategy: aStrategy
 ]
 
 { #category : #accessing }

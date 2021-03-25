@@ -9,6 +9,11 @@ EDADeleteAggregateCommand class >> aggregateRootClass [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+EDADeleteAggregateCommand class >> latestVersion [
+	^ 2
+]
+
 { #category : #helpers }
 EDADeleteAggregateCommand >> isCreate [
 	^ false

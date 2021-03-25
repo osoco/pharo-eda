@@ -31,16 +31,16 @@ EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCr
 ]
 
 { #category : #save }
-EDAVolatileEventStore >> saveEvents: aCollection onAggregate: anInstance [
+EDAVolatileEventStore >> saveEvents: aCollection [
 	aCollection
 		do: [ :e | 
 			| evts evtCollection |
 			evts := self events at: e tenant ifAbsent: [ Dictionary new ].
 			evts ifEmpty: [ self events at: e tenant put: evts ].
 			evtCollection := evts
-				at: anInstance class
+				at: e aggregateRootClass
 				ifAbsent: [ OrderedCollection new ].
 			evtCollection
-				ifEmpty: [ evts at: anInstance class put: evtCollection ].
+				ifEmpty: [ evts at: e aggregateRootClass put: evtCollection ].
 			evtCollection add: e ]
 ]

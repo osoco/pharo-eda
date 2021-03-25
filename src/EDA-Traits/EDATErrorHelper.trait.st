@@ -21,7 +21,8 @@ Public API and Key Messages:
 Trait {
 	#name : #EDATErrorHelper,
 	#traits : 'EDATLogging',
-	#category : 'EDA-Traits'
+	#classTraits : 'EDATLogging classTrait',
+	#category : #'EDA-Traits'
 }
 
 { #category : #helpers }
@@ -42,19 +43,20 @@ EDATErrorHelper classSide >> errorFolderFor: basename [
 { #category : #handling }
 EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy [
 	| errorHandler result context basename dictionary |
-	self
-		logErrorMessage:
-			'Error processing ' , aCommand greaseString , ': '
-				, anException description greaseString.
-	context := thisContext clone.
-	basename := self class basename.
-	self
-		writeFuelContext: context
-		named: anException class greaseString
-		withBasename: basename.
-	self writeCommand: aCommand withBasename: basename.
-	errorHandler := (self class environment at: aStrategy asSymbol) new
-		context: context.
+	errorHandler := (self class environment at: aStrategy asSymbol) new.
+	errorHandler class shouldPersistFuel
+		ifTrue: [ self
+				logErrorMessage:
+					'Error processing ' , aCommand greaseString , ': '
+						, anException description greaseString.
+			context := thisContext clone.
+			basename := self class basename.
+			self
+				writeFuelContext: context
+				named: anException class greaseString
+				withBasename: basename.
+			self writeCommand: aCommand withBasename: basename ].
+	errorHandler context: context.
 	dictionary := Dictionary new.
 	dictionary at: #command put: aCommand.
 	result := errorHandler

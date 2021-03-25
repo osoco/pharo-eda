@@ -5,7 +5,7 @@ Class {
 		'dispatcher',
 		'handlersRegistry'
 	],
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #tests }
@@ -32,7 +32,7 @@ EDACommandDispatcherTestCase >> testDispatchCommand [
 	protocol describe
 		once: aCommandHandler recv: #handle:withErrorStrategy:;
 		with: aCommand.
-	dispatcher dispatch: aCommand
+	dispatcher dispatch: aCommand usingStrategy: EDACommandConsumingErrorBehavior strategy
 ]
 
 { #category : #tests }
@@ -44,11 +44,12 @@ EDACommandDispatcherTestCase >> testDispatchCommandNotRegistered [
 		once: handlersRegistry recv: #handlerForCommand:;
 		with: aCommand;
 		=> nil.
-	self should: [ dispatcher dispatch: aCommand ] raise: EDACommandHandlerNotFound
+	self
+		should: [ dispatcher dispatch: aCommand usingStrategy: EDACommandConsumingErrorBehavior strategy ]
+		raise: EDACommandHandlerNotFound
 ]
 
 { #category : #tests }
 EDACommandDispatcherTestCase >> testDispatchNilCommand [
-	|   |
-	self should: [ dispatcher dispatch: nil ] raise: EDACommandError
+	self should: [ dispatcher dispatch: nil usingStrategy: EDACommandConsumingErrorBehavior strategy ] raise: EDACommandError
 ]

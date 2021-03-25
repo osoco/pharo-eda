@@ -21,7 +21,7 @@ Class {
 		'urls',
 		'tls'
 	],
-	#category : 'EDA-Voyage-EventStore'
+	#category : #'EDA-Voyage-EventStore'
 }
 
 { #category : #accessing }
@@ -293,6 +293,6 @@ EDAMongoEventStore >> mongoRepositoryClass [
 ]
 
 { #category : #persistence }
-EDAMongoEventStore >> saveEvents: anEventCollection onAggregate: aggregateRoot [
-	anEventCollection do: [ :event | event save  ]
+EDAMongoEventStore >> saveEvents: anEventCollection [
+	anEventCollection do: [ :event | event save ]
 ]

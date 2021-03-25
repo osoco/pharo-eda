@@ -261,9 +261,14 @@ EDATestTraitGenerator >> generateTestHelperBuildCommandMethodName [
 EDATestTraitGenerator >> generateTestHelperBuildDeleteEventMethod [
 	| result eventAttrs cr |
 	cr := Character cr.
-	eventAttrs := self retrieveEventAttributesBut: self class skippedEventAttributes.
+	eventAttrs := self
+		retrieveEventAttributesBut: self class skippedEventAttributes.
 	result := WriteStream on: String new.
-	result nextPutAll: (self generateTestHelperBuildDeleteEventMethodNameWithId: 'evtId' andCommandArg: 'aCommand').
+	result
+		nextPutAll:
+			(self
+				generateTestHelperBuildDeleteEventMethodNameWithId: 'evtId'
+				andCommandArg: 'aCommand').
 	result nextPut: cr.
 	result nextPutAll: self generateSignature.
 	result
@@ -276,11 +281,16 @@ EDATestTraitGenerator >> generateTestHelperBuildDeleteEventMethod [
 		nextPutAll: (self toCamelCase: self eventName);
 		nextPutAll: ' new.';
 		nextPut: cr.
+	result nextPutAll: '  result tenant: aCommand tenant';
+	nextPut: cr. 
 	result
 		nextPutAll: '	result id: aCommand aggregateRootId.';
 		nextPut: cr.
 	result
-		nextPutAll: '	result version: aCommand version.';
+		nextPutAll: '	result version: ';
+		nextPutAll: self appName;
+		nextPutAll: (self toCamelCase: self eventName);
+		nextPutAll: ' latestVersion.';
 		nextPut: cr.
 	result
 		nextPutAll: '	result aggregateRootVersion: aCommand aggregateRootVersion + 1.';

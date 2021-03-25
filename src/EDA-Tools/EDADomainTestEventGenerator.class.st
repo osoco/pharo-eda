@@ -1,7 +1,7 @@
 Class {
 	#name : #EDADomainTestEventGenerator,
 	#superclass : #EDAGenerator,
-	#category : 'EDA-Tools'
+	#category : #'EDA-Tools'
 }
 
 { #category : #asserting }
@@ -220,7 +220,7 @@ EDADomainTestEventGenerator >> generateTestEventBuildEventClassMethod [
 		nextPutAll: '	result commandId: newEvent commandId.';
 		nextPut: cr.
 	method
-		nextPutAll: '	result version: newEvent version.';
+		nextPutAll: '	result version: newEvent class latestVersion.';
 		nextPut: cr.
 	method
 		nextPutAll: '	result aggregateRootVersion: newEvent aggregateRootVersion.';

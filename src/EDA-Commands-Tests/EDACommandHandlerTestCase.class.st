@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'classFactory'
 	],
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #running }
@@ -77,9 +77,8 @@ EDACommandHandlerTestCase >> testHandleCommand [
 		with: tenant and: anAggregateRootClass and: aggRootId;
 		=> previousEventsCollection.
 	protocol describe
-		once: anEventStore recv: #saveEvents:onAggregate:;
-		with: producedEventsCollection
-			and: [ :aggregateRoot | aggregateRoot isKindOf: anAggregateRootClass ].
+		once: anEventStore recv: #saveEvents:;
+		with: producedEventsCollection.
 	protocol describe
 		once: anEventBus recv: #produceEvents:;
 		with: producedEventsCollection.
@@ -90,7 +89,7 @@ EDACommandHandlerTestCase >> testHandleCommand [
 	handler aggregateRootClass: anAggregateRootClass.
 	handler
 		handle: aCommand
-		withErrorStrategy: EDADebugErrorStrategy asString.
+		withErrorStrategy: EDALaunchDebuggerErrorStrategy asString.
 	self
 		assertCollection: anAggregateRootClass appliedEvents
 		equals: previousEventsCollection.

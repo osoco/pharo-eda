@@ -71,10 +71,15 @@ EDACommandConsumer >> commandMaterializer: anObject [
 
 { #category : #reading }
 EDACommandConsumer >> consumeMessage: aCommandMessageString [
+	^ self consumeMessage: aCommandMessageString usingStrategy: EDACommandConsumingErrorBehavior strategy
+]
+
+{ #category : #reading }
+EDACommandConsumer >> consumeMessage: aCommandMessageString usingStrategy: aStrategy [
 	| aCommand |
 	aCommand := self commandMaterializer
 		materialize: aCommandMessageString.
-	^ self commandDispatcher dispatch: aCommand
+	^ self commandDispatcher dispatch: aCommand usingStrategy: aStrategy
 ]
 
 { #category : #helpers }

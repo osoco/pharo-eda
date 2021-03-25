@@ -22,12 +22,17 @@ Class {
 	#superclass : #EDAErrorHandlingStrategy,
 	#traits : 'EDATLogging',
 	#classTraits : 'EDATLogging classTrait',
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
 EDAJustLogErrorStrategy class >> description [
 	^ 'Just log error'
+]
+
+{ #category : #accessing }
+EDAJustLogErrorStrategy class >> shouldPersistFuel [
+	^ false
 ]
 
 { #category : #accessing }

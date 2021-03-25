@@ -18,7 +18,7 @@ Class {
 	#classInstVars : [
 		'latestVersion'
 	],
-	#category : 'EDA-Commands-Commands'
+	#category : #'EDA-Commands-Commands'
 }
 
 { #category : #meta }
@@ -39,7 +39,7 @@ EDACommand class >> ofTenant: theTenant withCommandId: theCommandId aggregateRoo
 	result tenant: theTenant.
 	result commandId: theCommandId.
 	result aggregateRootVersion: theVersion.
-	result version: (theAttributes at: 'version' ifAbsent: [ 1 ]).
+	result version: (theAttributes at: 'version' ifAbsent: [ self latestVersion  ]).
 	theAttributes at: 'agent' ifPresent: [ :v | result agent: v ].
 	theAttributes
 		at: 'aggregateRootClass'
@@ -157,6 +157,16 @@ EDACommand >> extractScopeKey: aDictionary target: aString accummulator: anOrder
 										target: aString
 										accummulator: accum) ] ] ].
 	^ result
+]
+
+{ #category : #helpers }
+EDACommand >> fillCommonInfoInto: aDict [
+	aDict
+		at: #name
+		put: (EDAMessageSerializer nameForMessageClass: self class).
+	aDict at: #commandId put: self commandId.
+	aDict at: #id put: self aggregateRootId.
+	aDict at: #version put: self aggregateRootVersion
 ]
 
 { #category : #helpers }
