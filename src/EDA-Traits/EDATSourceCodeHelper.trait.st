@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATSourceCodeHelper,
-	#traits : 'EDATLanguageHelper',
-	#category : 'EDA-Traits'
+	#category : #'EDA-Traits'
 }
 
 { #category : #helper }

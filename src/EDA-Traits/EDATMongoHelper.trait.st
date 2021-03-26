@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATMongoHelper,
-	#traits : 'EDATCollectionHelper',
-	#category : 'EDA-Traits'
+	#category : #'EDA-Traits'
 }
 
 { #category : #persistence }
