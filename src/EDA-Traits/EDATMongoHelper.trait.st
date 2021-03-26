@@ -1,6 +1,5 @@
 Trait {
 	#name : #EDATMongoHelper,
-	#traits : 'EDATCollectionHelper',
 	#category : #'EDA-Traits'
 }
 
