@@ -20,7 +20,6 @@ Public API and Key Messages:
 "
 Trait {
 	#name : #EDATErrorHelper,
-	#traits : 'EDATLogging',
 	#category : #'EDA-Traits'
 }
 
