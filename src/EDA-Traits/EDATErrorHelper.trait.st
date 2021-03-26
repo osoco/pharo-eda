@@ -21,7 +21,6 @@ Public API and Key Messages:
 Trait {
 	#name : #EDATErrorHelper,
 	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Traits'
 }
 
