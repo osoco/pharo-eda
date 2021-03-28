@@ -1,0 +1,19 @@
+OmEntry {
+	#tags : {
+		#prior : OmNullReference [  ],
+		#self : OmReference [ '1' ]
+	},
+	#content : EpMethodAddition {
+		#method : RGMethodDefinition {
+			#annotations : IdentityDictionary {
+				#className : #EDAApplications,
+				#isMetaSide : false
+			},
+			#name : #'register:under:',
+			#protocol : #api,
+			#sourceCode : 'register: anEDAApplication under: anApplicationName\n  self registry\n    at: anApplicationName\n    ifPresent: [ :app | EDAApplicationAlreadyRegistered signal: app printString ]\n    ifAbsentPut: [ anEDAApplication ].\n',
+			#stamp : 'GlamorousAuthor 3/28/2021 17:27',
+			#package : #EDA-Application
+		}
+	}
+}

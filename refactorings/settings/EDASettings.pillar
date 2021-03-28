@@ -33,18 +33,6 @@ The ""registry"" should be accessed via dedicated methods, under the ''accessing
 ${changes:01-EDAApplications_registry_.ombu}$
 ${changes:02-EDAApplications_registry.ombu}$
 
-[[[
-EDAApplications
-  compile: '
-registry
-  | result |
-  result := registry.
-  result ifNil: [ result := Dictionary new. self registry: result ].
-  ^ result
-'
-  classified: 'accessing'
-]]]
-
 We'll throw a ==EDAApplicationAlreadyRegistered== exception in case the application is already registered.
 
 [[[
@@ -56,29 +44,11 @@ Error subclass: #EDAApplicationAlreadyRegistered
 
 Now we can implement a method to register applications. We'll identify each application by its name.
 
-[[[
-EDAApplications
-  compile: '
-register: anEDAApplication under: anApplicationName
-  self registry
-    at: anApplicationName
-    ifPresent: [ :app | EDAApplicationAlreadyRegistered signal: app printString ]
-    ifAbsentPut: [ anEDAApplication ].
-'
-    classified: 'api'
-]]]
+${changes:03-EDAApplications_register_under_.ombu}$
 
 To make the API simpler, let's add a new method in ==EDAApplications==:
-[[[
-EDAApplications
-  compile: '
-register: anEDAApplication
-  self
-    register: anEDAApplication
-    under: anEDAApplication applicationName
-'
-    classified: 'api'
-]]]
+${changes:04-EDAApplications_register_.ombu}$
+
 
 Now each application needs a name, but it could be optional at instance-level. We'd like to omit the instance name if only one instance will ever be created. In other words, an instance can have its own name, but can rely upon the class'.
 
@@ -94,82 +64,30 @@ Object subclass: #EDAApplication
 
 The following accessors deal with that:
 
-[[[
-EDAApplication
-  compile: '
-applicationName
-  ^ applicationName ifNil: [ self class applicationName ]
-'
-    classified: 'accessing'.
-EDAApplication
-  compile: '
-applicationName: aString
-  applicationName := applicationName
-'
-    classified: 'accessing'
-]]]
+${changes:05-EDAApplication_applicationName.ombu}$
+${changes:06-EDAApplication_applicationName_.ombu}$
 
 We'll delegate on the class itself to provide a default name.
 
-[[[
-EDAApplication class
-  compile: '
-applicationName
-  ^ ''default''
-'
-    classified: 'accessing'.
-]]]
+${changes:07-EDAApplication_class_applicationName.ombu}$
 
 Now that every application instance has a name, and it's used to reference the application in the registry, we should provide a way to inspect the applications already registered:
 
-[[[
-EDAApplications
-  compile: '
-edaApplications
-  ^ self registry values
-'
-    classified: 'api'
-]]]
+${changes:08-EDAApplications_edaApplications.ombu}$
 
 Recall that ==EDAApplication== was previously meant to be used as a class, not to create instances. It might be useful to guide developers on how to create new instances. If they use ""new"" and forget to provide a name, they'll end up with unnamed applications, and won't be able to register more than one in the registry. Therefore, we'll miss precisely the point we're trying to make.
 
-This factory method (class-side) ensures the instances are created with a name. Notice we don't use ""new"". We're dealing with that soon enough.
-[[[
-EDAApplication class
-  compile: '
-withName: anApplicationName
-  | result |
-  result := self basicNew initialize.
-  result applicationName: anApplicationName.
-  ^ result
-'
-    classified: 'instance creation'
-]]]
+This factory method (class-side) ensures the instances are created with a name. Notice we don't use ""self new"". We're dealing with that soon enough.
+
+${changes:09-EDAApplication_class_withName.ombu}$
 
 Analogously, we can create "unnamed" instances as well.
 
-[[[
-EDAApplication class
-  compile: '
-unnamed
-  ^ self withName: self applicationName
-'
-    classified: 'instance creation'
-]]]
+${changes:10-EDAApplication_class_unnamed.ombu}$
 
 However, instances can be created without a name (being "unnamed"). If we want to ensure instances are created via the factory methods above, we can override the ""new"" method.
-[[[
-EDAApplication class
-  compile: '
-new
-  MessageNotUnderstood
-    signal:
-      ''Use '' , self class printString , ''>>withName: or ''
-        , self class printString , ''>>unnamed instead''
 
-'
-    classified: 'instance creation'
-]]]
+${changes:11-EDAApplication_class_new.ombu}$
 
 We'd need to convert ==EDAApplications== into a singleton, to ensure there's only one registry of running applications. To do so, we add a ""uniqueInstance"" attribute on the class itself.
 [[[
@@ -182,31 +100,11 @@ Object subclass: #EDAApplications
 
 Again, we use a lazy approach in the getter:
 
-[[[
-EDAApplications class
-  compile: '
-uniqueInstance
-  | result |
-  result := uniqueInstance.
-  result
-    ifNil: [ result := self new.
-      self uniqueInstance: result ].
-  ^ result
-'
-    classified: 'accessing'
-]]]
+${changes:12-EDAApplications_class_uniqueInstance.ombu}$
 
   We use a trivial setter.
 
-[[[
-EDAApplications class
-  compile: '
-uniqueInstance: anInstance
-  | result |
-  uniqueInstance := anInstance
-'
-    classified: 'accessing'
-]]]
+${changes:13-EDAApplications_class_uniqueInstance_.ombu}$
 
 Finally, we can create applications and register them.
 
@@ -219,28 +117,11 @@ And  inspect the registered applications as well.
 [[[
 EDAApplications uniqueInstance edaApplications
 ]]]
-
-
 ! Automatic registration of EDAApplications
 
 At the expense of introducing a cyclic coupling between ==EDAApplication== and ==EDAApplications== classes, it's convenient to make sure all ==EDAApplication== instances get registered automatically.
 
-[[[
-EDAApplication
-  compile: '
-withName: anApplicationName
-  | result |
-  (EDAApplications uniqueInstance edaApplications
-    select: [ :app | app applicationName = anApplicationName ])
-    ifEmpty: [ result := self basicNew initialize.
-      result applicationName: anApplicationName.
-      EDAApplications uniqueInstance register: result ]
-    ifNotEmpty: [ :c | result := c first ].
-  ^ result
-'
-    classified: 'instance creation'
-]]]
-
+${changes:14-EDAApplication_class_withName_.ombu}$
 ! Different subtrees for each application
 
 In ==EDASettings== we need to build subtrees dynamically, based on the already registered applications.
@@ -251,92 +132,18 @@ We need to ensure ==#subtreeSymbol== is unique. Otherwise the subtree will be cr
 Let's remove the current ==<systemsettings>== pragma of ==EDASettings class>>edaSettingsOn:== and rename it to ==EDASettings class>>edaSettingsOn: aBuilder for: anEDAApplication under: aSymbol==, and let's write a new ==EDASettings class>>edaSettingsOn:== from scratch.
 
 Since we haven't created (or registered) any application yet, we can choose either to skip creating anything, or display a message.
-[[[
-EDASettings class
-  compile: '
-edaSettingsOn: aBuilder
-  <systemsettings>
-  | root rootSymbol |
-  rootSymbol := #edaApps.
-  root := aBuilder group: rootSymbol.
-  EDAApplications uniqueInstance edaApplications
-    ifEmpty: [ root
-        label: ''No PharoEDA applications'' translated;
-        description: ''No PharoEDA applications registered'' ]
-    ifNotEmpty: [ :apps |
-      root
-        label: ''PharoEDA application(s)'' translated , '': ''
-               , apps size printString translated;
-        description: ''Registered PharoEDA applications'';
-        noOrdering.
-        apps do: [ :app |
-          self edaSettingsOn: aBuilder for: app under: rootSymbol ] ]
-'
-    classified: 'settings'
-]]]
 
-However, the old ""edaSettings:"" method uses a fixed symbol to place the application settings in the tree. Let's fix that. We'll start with the ==environmentSettingsOn:under:on:==. The rest of the methods will be fixed later.
+${changes:15-EDASettings_class_edaSettingsOn_.ombu}$
 
-[[[
-EDASettings class
-  compile: '
-edaSettingsOn: aBuilder for: anEDAApplication under: aSymbol
-  | parent parentGroup |
-  parent := anEDAApplication applicationName.
-  parentGroup := aBuilder group: parent.
-  parentGroup
-    label: parent translated;
-    parent: aSymbol;
-    description: parent;
-    noOrdering.
-  self
-    environmentSettingsOn: aBuilder
-    under: parent
-    on: anEDAApplication.
-    "
-  self
-    commandListenerSettingsOn: aBuilder
-    under: parent.
-  self
-    eventPublisherSettingsOn: aBuilder
-    under: parent.
-  self
-    eventStoreSettingsOn: aBuilder
-    under: parent.
-  self
-    projectionSettingsOn: aBuilder
-    under: parent
-    populatedWithValuesFrom: ''projections''.
-  self loggingSettingsOn: aBuilder under: parent.
-  "
-'
-    classified: 'settings'
-]]]
+However, the old ""edaSettings:"" method used a fixed symbol to place the application settings in the tree. Let's fix that. We'll start with the ==environmentSettingsOn:under:on:==. The rest of the methods will be fixed later.
 
-As you can see, we've renamed the previou method from ""environmentSettingsOn: aBuilder under: aSymbol"" to ""environmentSettingsOn: aBuilder: under: aSymbol on: anEDAApplication"". To display and manage each application's settings, we need the application instance. Previously, we used class-scoped attributes of predefined classes as settings. Now we're going to access them through the application instance itself.
-We need to create a couple of files under ==config/== folder, with an initial json file in it called ""development.json"" and ""integration-tests.json"".
-[[[
-{}
-]]]
+${changes:16-EDASettings_class_edaSettingsOn_for_under_.ombu}$
 
-  Additionally, we'll comment some settings code in ==EDATestSettings== class as well.
-  [[[
-  EDATestSettings class
-  compile: '
-  edaTestSettingsOn: aBuilder
-	<systemsettings>
-	(aBuilder group: #edatests)
-		label: 'EDA Tests' translated;
-		description: 'EDA tests';
-		noOrdering;
-		parent: #eda.
-	"self commandPublisherSettingsOn: aBuilder.
-	self eventListenerSettingsOn: aBuilder.
-	self queueCleaningSettingsOn: aBuilder"
-  '
-  classified: 'settings'
-]]]
+As you can see, we've renamed the previous method from ""environmentSettingsOn: aBuilder under: aSymbol"" to ""environmentSettingsOn: aBuilder: under: aSymbol on: anEDAApplication"". To display and manage each application's settings, we need the application instance. Previously, we used class-scoped attributes of predefined classes as settings. Now we're going to access them through the application instance itself.
+We need to create the ==config/== folder and two files (""development.json"" and ""integration-tests.json"")  with an initial empty json file (=={}==) in them.
 
+Additionally, we'll comment some settings code in ==EDATestSettings== class as well. We'll deal with it later.
+${changes:17-EDATestSettings_class_edaTestSettingsOn_.ombu}$
 ! Ports and adapters
 
 We might just add the settings as instance attributes of the ==EDAApplication== itself. Such solution would not be flexible enough.
@@ -356,40 +163,16 @@ Trait named: #EDATSettingsPort
 
 The most basic behavior all adapters should support is telling us a brief description of themselves.
 
-[[[
-EDATSettingsPort class
-  compile: '
-description
-  self subclassResponsibility
-'
-    classified: 'settings'
-]]]
-
+${changes:18-EDATSettingsPort_classTrait_description.ombu}$
 ! Environment setting
 
 This setting is used to identify the environment. Currently, it shows the value of the ""PHARO_ENV"" environment variable. The first adapter would be one that supports this feature.
 
 If we inspect the current logic used in ==EDASettings== to inject the environment setting into de ==SettingBrowser== tree, we see the following:
 
-[[[
-EDASettings class
-  compile: '
-environmentSettingsOn: aBuilder under: aParent on: app
-  (aBuilder pickOne: #currentEnvironment)
-    parent: aParent;
-    target: EDADUEnvironment;
-    label: ''Environment'' translated;
-    description: ''Environment'';
-    order: 1;
-    domainValues:
-      (EDADUEnvironment environments
-        collect: [ :level | level translated -> level greaseString ]).
-'
-    classified: 'settings'
-]]]
+${changes:19-EDASettings_class_environmentSettingsOn_under_on_.ombu}$
 
 The nature of this setting is to choose one of the available environment. It's mainly informative, but it might impose certain restrictions or influence other settings as well.
-
 !! Environment variable adapter
 
 As its value is provided by the ""PHARO_ENV"" environment variable, it cannot be changed. We'll change the ""pickOne:"" above with a simple label, as we did before, when there're no registered applications.
@@ -422,38 +205,11 @@ Object subclass: #EDAEnvironmentSettingsEnvVarAdapter
 
 This variation can now be accomodated in the new ==EDATEnvironmentSettingsPort==.
 
-[[[
-EDATEnvironmentSettingsPort
-      compile: '
-supportsMultiple
-  self subclassResponsibility
-'
-    classified: 'testing'
-]]]
+${changes:20-EDATEnvironmentSettingsPort_supportsMultiple.ombu}$
 
 Now, ==EDASettings== can include both variations:
-[[[
-EDASettings class
-      compile: '
-environmentSettingsOn: aBuilder under: aParent on: app
-  | entry port |
-  port := app environmentSettingsPort.
-  (port supportsMultiple)
-    ifTrue: [ entry := aBuilder pickOne: #currentEnvironment.
-      entry
-        domainValues:
-          (EDADUEnvironment environments
-            collect: [ :level | level translated -> level greaseString ]) ]
-    ifFalse: [ entry := aBuilder setting: #currentEnvironment ].
-  entry
-    parent: aParent;
-    target: port;
-    label: ''Environment'' translated;
-    description: ''The current environment'' translated;
-    order: 1
-'
-      classified: 'settings'
-]]]
+
+${changes:21-EDASettings_class_environmentSettingsOn_under_on_.ombu}$
 
 ==EDAApplication== has to provide an adapter for its ""environmentSettingsPort"" somehow. We'll deal with a mechanism to choose from a list of available adapters soon. For now, let's return the one we've just implemented: ==EDAEnvironmentSettingsEnvVarAdapter==.
 
@@ -463,102 +219,44 @@ Object subclass: #EDAApplication
   instanceVariableNames: 'applicationName commandConsumer commandDispatcher commandListenerClientDebug environmentSettingsPort eventAnnouncer  eventProducer eventStore isConfigured isStarted projectorsByTenant projectionSynchronizationEnabled'
   classVariableNames: 'ProjectionSynchronizationEnabled'
   package: 'EDA-Application'.
-
-EDAApplication
-      compile: '
-environmentSettingsPort
-  | result |
-  result := environmentSettingsPort.
-  result ifNil: [
-    result := EDAEnvironmentSettingsEnvVarAdapter new.
-    self environmentSettingsPort: result
-  ].
-  ^ result
-'
-      classified: 'accessing'.
-
-EDAApplication
-  compile: '
-environmentSettingsPort: anAdapter
-  anAdapter = environmentSettingsPort
-  ifTrue: [ ^ self ].
-  environmentSettingsPort := anAdapter
-'
-    classified: 'accessing'
 ]]]
+
+${changes:22-EDAApplication_environmentSettingsPort.ombu}$
+
+
+${changes:23-EDAApplication_environmentSettingsPort_.ombu}$
+
 
 When we launch a ==SettingBrowser== we get an ==SubclassResponsibility== error. Let's implement it in our adapter. But does it support a list of values? Actually, no. We cannot change the value of the environment value.
 
-[[[
-EDAEnvironmentSettingsEnvVarAdapter
-      compile: '
-supportsMultiple
-  ^ false
-'
-      classified: 'testing'
-]]]
+${changes:24-EDAEnvironmentSettingsEnvVarAdapter_supportsMultiple.ombu}$
 
 Running again ==SettingBrowser== will try to call ""currentEnvironment"" on our adapter, but we haven't implemented  it yet. Let's do it now.
 
-[[[
-EDAEnvironmentSettingsEnvVarAdapter
-      compile: '
-currentEnvironment
-  ^ OSPlatform current environment at: ''PHARO_ENV'' ifAbsent: ''(PHARO_ENV not set)''
-'
-      classified: 'environment-variables'
-]]]
+${changes:25-EDAEnvironmentSettingsEnvVarAdapter_currentEnvironment.ombu}$
 
-==SettingBrowser== should render the tree now, but we're not done yet with this adapter. ==EDASettings== assumes the setting can be customized. That is, the adapter supports setting a new value. How can we make it read-only? First of all, ==EDASettings== mustn't make any assumption. It's responsibility of the port to provide that information. Based on that, ==EDASettings== will choose how to properly display the entry it the tree.
-
-[[[
-EDASettings class
-      compile: '
-environmentSettingsOn: aBuilder under: aParent on: app
-  | entry port |
-  port := app environmentSettingsPort.
-  (port supportsMultiple)
-    ifTrue: [ entry := aBuilder pickOne: #currentEnvironment.
-      entry
-        domainValues:
-          (EDADUEnvironment environments
-            collect: [ :level | level translated -> level greaseString ]) ]
-    ifFalse: [ (port isReadOnly)
-      ifTrue: [ entry := aBuilder group: #currentEnvironment.
-        entry dialog: [ LabelMorph newLabel: port currentEnvironment ] ]
-      ifFalse: [ entry := aBuilder setting: #currentEnvironment ]
-    ].
-  entry
-    parent: aParent;
-    target: aConfig;
-    label: aString translated;
-    description: aDescription;
-    order: 1
-'
-      classified: 'settings'
-]]]
+==SettingBrowser== should render the tree now, but we're not done yet with this adapter. ==EDASettings== assumes the setting can be customized. That is, the adapter supports setting a new value. How can we make it read-only? First of all, ==EDASettings== mustn't make any assumption. It's responsibility of the port to provide that information.
 
 So if the port's ""isReadOnly"" returns ""true"", then ==EDASettings== will use a ==LabelMorph== to display the value provided by the port itself.
 
 We're implementing the ports as traits. It makes sense to indicate all adapters need to override this method.
-[[[
-EDATEnvironmentSettingsPort
-      compile: '
-isReadOnly
-  self subclassResponsibility
-'
-      classified: 'testing'
-]]]
+
+${changes:26-EDATEnvironmentSettingsPort_isReadOnly.ombu}$
 
 Our adapter clearly needs to return ""true"":
-[[[
-EDATEnvironmentSettingsEnvVarAdapter
-      compile: '
-isReadOnly
-  ^ true
-'
-      classified: 'testing'
-]]]
+
+${changes:27-EDAEnvironmentSettingsEnvVarAdapter_isReadOnly.ombu}$
+
+
+All adapters will share the same entry in ==SettingsBrowser==. We'll define that label in ==EDATEnvironmentSettingsPort=='s ""description"":
+
+${changes:28-EDATEnvironmentSettingsPort_classTrait_description.ombu}$
+
+
+Based on the port and adapter's metadata, ==EDASettings== will choose how to properly display the entry it the tree.
+
+
+${changes:29-EDASettings_class_environmentSettingsOn_under_on_.ombu}$
 
 !!! Refactoring
 
