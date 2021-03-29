@@ -1,7 +1,9 @@
 Class {
 	#name : #EDACommandMaterializer,
 	#superclass : #Object,
-	#category : 'EDA-Commands-Materializers'
+	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
+	#category : #'EDA-Commands-Materializers'
 }
 
 { #category : #parsing }

@@ -32,7 +32,7 @@ Class {
 	#classVars : [
 		'Mapping'
 	],
-	#category : 'EDA-Commands-Builders'
+	#category : #'EDA-Commands-Builders'
 }
 
 { #category : #API }
@@ -50,8 +50,11 @@ EDACommandBuilderRegistry class >> initializeMapping [
 
 { #category : #API }
 EDACommandBuilderRegistry class >> lookupBuilder: commandName [
-    "Retrieves the builder for given command name"
-    ^ self mapping at: commandName ifAbsent: [ ^ EDADefaultCommandBuilder new ].
+	"Retrieves the builder for given command name"
+
+	^ self mapping
+		at: commandName
+		ifAbsent: [ nil ]
 ]
 
 { #category : #private }
