@@ -27,13 +27,12 @@ EDAJsonCommandMaterializer >> materialize: json [
 	| map builder name |
 	map := NeoJSONReader fromString: json.
 	name := self retrieveCommandName: map.
-	builder := EDACommandBuilderRegistry lookupBuilder: name.
+	builder := EDACommandBuilderRegistry uniqueInstance lookupBuilder: name.
 	builder
 		ifNil: [ self
 				logErrorMessage: 'Received unsupported ' , name greaseString
 				andThrow: EDAInvalidCommandMessage ].
 	^ builder buildWith: map
-
 ]
 
 { #category : #parsing }

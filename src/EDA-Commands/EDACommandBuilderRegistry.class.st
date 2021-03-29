@@ -29,27 +29,64 @@ representing the request.
 Class {
 	#name : #EDACommandBuilderRegistry,
 	#superclass : #Object,
-	#classVars : [
-		'Mapping'
+	#instVars : [
+		'mapping'
+	],
+	#classInstVars : [
+		'uniqueInstance'
 	],
 	#category : #'EDA-Commands-Builders'
 }
 
 { #category : #API }
-EDACommandBuilderRegistry class >> addBuilder: builder forCommand: key [
+EDACommandBuilderRegistry class >> uniqueInstance [
+	uniqueInstance ifNil: [ self uniqueInstance: self new ].
+	^ uniqueInstance
+]
+
+{ #category : #API }
+EDACommandBuilderRegistry class >> uniqueInstance: anInstance [
+	uniqueInstance := anInstance.
+]
+
+{ #category : #API }
+EDACommandBuilderRegistry >> addBuilder: builder forCommand: key [
     "Adds a builder mapping"
 	self mapping at: key put: builder
 ]
 
 { #category : #initialization }
-EDACommandBuilderRegistry class >> initializeMapping [
+EDACommandBuilderRegistry >> doInitialize [
+	self initializeMapping.
+	self findAllPragmas.
+]
+
+{ #category : #private }
+EDACommandBuilderRegistry >> findAllPragmas [
+	(Pragma allNamed: #commandBuilderFor: inAndBelow: EDAApplication)
+		do: [ :pragma | 
+			pragma method origin new
+				perform: pragma method selector
+				withArguments: (Array with: self with: (pragma argumentAt: 1)) ]
+]
+
+{ #category : #initialization }
+EDACommandBuilderRegistry >> initialize [
+	| result |
+	result := super initialize.
+	self doInitialize.
+	^ result
+]
+
+{ #category : #private }
+EDACommandBuilderRegistry >> initializeMapping [
 	"Initializes the mapping"
 
-	Mapping := Dictionary new
+	mapping := Dictionary new
 ]
 
 { #category : #API }
-EDACommandBuilderRegistry class >> lookupBuilder: commandName [
+EDACommandBuilderRegistry >> lookupBuilder: commandName [
 	"Retrieves the builder for given command name"
 
 	^ self mapping
@@ -58,9 +95,9 @@ EDACommandBuilderRegistry class >> lookupBuilder: commandName [
 ]
 
 { #category : #private }
-EDACommandBuilderRegistry class >> mapping [
-    "Retrieves the mapping, initializing it if necessary"
-    Mapping ifNil: [ self initializeMapping ].
-    ^ Mapping.
+EDACommandBuilderRegistry >> mapping [
+	"Retrieves the mapping, initializing it if necessary"
 
+	mapping ifNil: [ self initializeMapping ].
+	^ mapping
 ]
