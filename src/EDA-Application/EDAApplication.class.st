@@ -62,7 +62,11 @@ EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore event
 		withScanner: handlerScanner
 		factory: handlerFactory
 		andProjectorClass: aClass.
-	^ EDACommandDispatcher withRegistry: commandRegistry
+	^ EDACommandDispatcher
+		withRegistry: commandRegistry
+		eventStore: anEventStore
+		eventProducer: anEventProducer
+		andProjectorClass: aClass
 ]
 
 { #category : #accessing }
@@ -339,9 +343,6 @@ EDAApplication class >> setupCommandConsumerWithCommandListener: listener [
 
 { #category : #setup }
 EDAApplication class >> setupCommandDispatcher [
-	EDADeleteCommandHandler
-		eventStore: self eventStore;
-		eventBus: self eventProducer.
 	self
 		commandDispatcher:
 			(self

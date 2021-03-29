@@ -11,7 +11,10 @@ Class {
 { #category : #tests }
 EDACommandDispatcherTestCase >> setUp [
 	handlersRegistry := protocol mock: 'aCommandHandlerRegistry'.
-	dispatcher := EDACommandDispatcher withRegistry: handlersRegistry.
+	dispatcher := EDACommandDispatcher
+		withRegistry: handlersRegistry
+		eventStore: EDAVolatileEventStore new
+		andEventProducer: EDAAcceptEverything new.
 	protocol visualize: dispatcher
 ]
 

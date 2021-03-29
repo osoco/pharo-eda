@@ -5,7 +5,9 @@ Class {
 	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'handlersRegistry',
-		'projectorClass'
+		'projectorClass',
+		'eventStore',
+		'eventProducer'
 	],
 	#classInstVars : [
 		'strategy'
@@ -14,14 +16,20 @@ Class {
 }
 
 { #category : #'instance creation' }
-EDACommandDispatcher class >> withRegistry: aHandlersRegistry [
-	^ self withRegistry: aHandlersRegistry  andProjectorClass: EDACompositeProjector
+EDACommandDispatcher class >> withRegistry: aHandlersRegistry eventStore: anEventStore andEventProducer: anEventProducer [
+	^ self
+		withRegistry: aHandlersRegistry
+		eventStore: anEventStore
+		eventProducer: anEventProducer
+		andProjectorClass: EDACompositeProjector
 ]
 
 { #category : #'instance creation' }
-EDACommandDispatcher class >> withRegistry: aHandlersRegistry andProjectorClass: aClass [
+EDACommandDispatcher class >> withRegistry: aHandlersRegistry eventStore: anEventStore eventProducer: anEventProducer andProjectorClass: aClass [
 	^ self new
 		handlersRegistry: aHandlersRegistry;
+		eventStore: anEventStore;
+		eventProducer: anEventProducer;
 		projectorClass: aClass;
 		yourself
 ]
@@ -55,7 +63,7 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 				andThrow: EDAInvalidCommandMessage ].
 	handler := self handlersRegistry handlerForCommand: aCommand.
 	(handler isNil and: [ aCommand isDelete ])
-		ifTrue: [ handler := EDADeleteCommandHandler uniqueInstance ].
+		ifTrue: [ handler := EDADeleteCommandHandler withEventStore: self eventStore eventBus: self eventProducer andProjectorClass: self projectorClass ].
 	handler
 		ifNil: [ self
 				logErrorMessage:
@@ -68,9 +76,27 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 								nextPutAll: aCommand aggregateRootClass greaseString;
 								nextPutAll: ' is not prepared to handle it' ])
 				andThrow: EDACommandHandlerNotFound ].
-	^ handler
-		handle: aCommand
-		withErrorStrategy: aStrategy
+	^ handler handle: aCommand withErrorStrategy: aStrategy
+]
+
+{ #category : #accessing }
+EDACommandDispatcher >> eventProducer [
+	^ eventProducer
+]
+
+{ #category : #accessing }
+EDACommandDispatcher >> eventProducer: anEventProducer [
+	eventProducer := anEventProducer
+]
+
+{ #category : #accessing }
+EDACommandDispatcher >> eventStore [
+	^ eventStore
+]
+
+{ #category : #accessing }
+EDACommandDispatcher >> eventStore: anEventStore [
+	eventStore := anEventStore
 ]
 
 { #category : #accessing }

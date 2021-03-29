@@ -183,12 +183,11 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents [
-	| commandConsumer resultingEvents mock eventStore expectedEvents eventsToSave aggregateRootVersion msg eventsOfAggregate originalEventStores originalEventBuses |
+	| commandConsumer resultingEvents mock eventStore expectedEvents eventsToSave aggregateRootVersion msg eventsOfAggregate originalEventStores |
 	mock := EDAAcceptEverything new.
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
-	originalEventBuses := self retrieveEventBuses.
-	[ self useEventBus: mock.
+	[
 	self useEventStore: eventStore.
 	eventsToSave := self
 		fixAggregateRootVersionsOfEvents: historicalEvents
@@ -225,8 +224,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			self discardDateCreated: actual.
 			expected := expectedEvents at: i.
 			self assertEvent: actual equals: expected ] ]
-		ensure: [ self restoreEventStores: originalEventStores.
-			self restoreEventBuses: originalEventBuses ]
+		ensure: [ self restoreEventStores: originalEventStores ]
 ]
 
 { #category : #BDD }
@@ -244,35 +242,17 @@ EDATDomainBDD >> readFile: aFile [
 ]
 
 { #category : #'as yet unclassified' }
-EDATDomainBDD >> restoreEventBuses: aDictionary [
-	EDADeleteCommandHandler
-		eventBus: (aDictionary at: EDADeleteCommandHandler greaseString asSymbol).
-]
-
-{ #category : #'as yet unclassified' }
 EDATDomainBDD >> restoreEventStores: aDictionary [
-	EDADeleteCommandHandler
-		eventStore: (aDictionary at: EDADeleteCommandHandler greaseString asSymbol).
 	EDAAggregateRepository
 		allSubclassesDo: [ :c | c setupEventStore: (aDictionary at: c greaseString asSymbol) ]
-]
-
-{ #category : #'as yet unclassified' }
-EDATDomainBDD >> retrieveEventBuses [
-	| result |
-	result := Dictionary new.
-	result
-		at: EDADeleteCommandHandler greaseString asSymbol
-		put: EDADeleteCommandHandler eventBus.
-	^ result
 ]
 
 { #category : #'as yet unclassified' }
 EDATDomainBDD >> retrieveEventStores [
 	| result |
 	result := Dictionary new.
-	result at: EDADeleteCommandHandler greaseString asSymbol put: EDADeleteCommandHandler eventStore.
-	EDAAggregateRepository allSubclassesDo: [ :c | result at: c greaseString asSymbol put: c eventStore ].
+	EDAAggregateRepository
+		allSubclassesDo: [ :c | result at: c greaseString asSymbol put: c eventStore ].
 	^ result
 ]
 
@@ -300,13 +280,7 @@ EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
-EDATDomainBDD >> useEventBus: anEventBus [
-	EDADeleteCommandHandler eventBus: anEventBus
-]
-
-{ #category : #'as yet unclassified' }
 EDATDomainBDD >> useEventStore: anEventStore [
-	EDADeleteCommandHandler eventStore: anEventStore.
 	EDAAggregateRepository
 		allSubclassesDo: [ :c | c setupEventStore: anEventStore ]
 ]

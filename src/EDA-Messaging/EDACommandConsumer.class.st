@@ -16,7 +16,6 @@ Class {
 
 { #category : #'instance creation' }
 EDACommandConsumer class >> busListener: busListener commandMaterializer: commandMaterializer commandDispatcher: commandDispatcher [
-
 	^ self new
 		busListener: busListener;
 		commandMaterializer: commandMaterializer;

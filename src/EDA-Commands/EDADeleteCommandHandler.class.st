@@ -10,42 +10,14 @@ Class {
 }
 
 { #category : #accessing }
-EDADeleteCommandHandler class >> eventBus [
-	^ eventBus
-]
-
-{ #category : #accessing }
-EDADeleteCommandHandler class >> eventBus: aBus [
-	eventBus := aBus.
-	self uniqueInstance: nil
-]
-
-{ #category : #accessing }
-EDADeleteCommandHandler class >> eventStore [
-	^ eventStore
-]
-
-{ #category : #accessing }
-EDADeleteCommandHandler class >> eventStore: aStore [
-	eventStore := aStore.
-	self uniqueInstance: nil.
-]
-
-{ #category : #accessing }
-EDADeleteCommandHandler class >> uniqueInstance [
+EDADeleteCommandHandler class >> withEventStore: anEventStore eventBus: anEventBus andProjectorClass: aProjectorClass [
 	| result |
-	result := uniqueInstance.
-	result ifNil: [
-		result := self new.
-		result eventStore: self eventStore; eventBus: self eventBus.
-		self uniqueInstance: result
-	].
+	result := self new.
+			result
+				eventStore: anEventStore;
+				eventBus: anEventBus;
+				projectorClass: aProjectorClass.
 	^ result
-]
-
-{ #category : #accessing }
-EDADeleteCommandHandler class >> uniqueInstance: anInstance [
-	uniqueInstance := anInstance
 ]
 
 { #category : #handling }
