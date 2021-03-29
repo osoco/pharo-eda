@@ -12,67 +12,40 @@ Class {
 }
 
 { #category : #handling }
-EDACommandHandler >> addVersionToEvents: producedEvents forAggregate: anAggregateRoot [
-	| result versions |
+EDACommandHandler class >> addVersionToEvents: producedEvents usingEventStore: anEventStore [
+	| result versions aggregates |
 	result := OrderedCollection new.
 	versions := Dictionary new.
-	versions
-		at: anAggregateRoot class greaseString , anAggregateRoot id greaseString
-		put: anAggregateRoot version.
+	aggregates := Dictionary new.
 	producedEvents
 		do: [ :e | 
 			| newEvent previousVersion newVersion aggRoot criteria |
-			aggRoot := anAggregateRoot.
-			versions
-				at: e aggregateRootClass greaseString , e id
+			aggRoot := aggregates
+				at: e aggregateRootClass greaseString , e id greaseString
 				ifAbsent: [ criteria := Dictionary new.
 					criteria at: 'id' put: e id.
-					aggRoot := self
+					self
 						buildAggregateRootOfTenant: e tenant
 						ofAggregateRootClass: e aggregateRootClass
-						withCriteria: criteria ].
+						withCriteria: criteria
+						andEventStore: anEventStore ].
+			aggregates
+				at: e aggregateRootClass greaseString , e id greaseString
+				put: aggRoot.
 			previousVersion := versions
-				at: aggRoot class greaseString , aggRoot id
+				at: aggRoot class greaseString , aggRoot id greaseString
 				ifAbsent: [ aggRoot version ].
 			newVersion := aggRoot newVersionAfter: previousVersion.
 			newEvent := EDAVersionedEvent forEvent: e andVersion: newVersion.
 			result add: newEvent.
 			versions
-				at: aggRoot class greaseString , aggRoot id
+				at: aggRoot class greaseString , aggRoot id greaseString
 				put: newVersion ].
 	^ result
 ]
 
 { #category : #handling }
-EDACommandHandler >> buildAggregateRootFromCommand: aCommand [
-	^ self buildAggregateRootFromCommand: aCommand andAggregateRootClass: (self retrieveAggregateRootClass: aCommand)
-]
-
-{ #category : #handling }
-EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootClass: anAggregateRootClass [
-	| result |
-	result := self
-		buildAggregateRootOfTenant: aCommand tenant
-		ofAggregateRootClass: anAggregateRootClass
-		withCriteria: aCommand aggregateSelectionCriteria.
-	(result isDeleted and: [ aCommand isCreate ])
-		ifTrue: [ result := anAggregateRootClass new ].
-	result version = aCommand aggregateRootVersion
-		ifFalse: [ self
-				logWarningMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: 'Aggregate root''s version (';
-								nextPutAll: result version greaseString;
-								nextPutAll: ') does not match command''s (';
-								nextPutAll: aCommand aggregateRootVersion greaseString;
-								nextPutAll: ').' ]) ].
-	^ result
-]
-
-{ #category : #handling }
-EDACommandHandler >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria [
+EDACommandHandler class >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria andEventStore: anEventStore [
 	| result events startRetrievingEventsTimer startBuildingAggregateTimer |
 	"TODO: Compare the version number in the command with the current 
 	version number of the aggregate and, if they are different, it can 
@@ -88,7 +61,7 @@ EDACommandHandler >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: a
 						nextPutAll: aCriteria greaseString;
 						nextPutAll: '.' ]).
 	startRetrievingEventsTimer := DateAndTime now.
-	events := eventStore
+	events := anEventStore
 		findEventsOfTenant: aTenant
 		ofAggregate: anAggregateRootClass
 		whereCriteria: aCriteria.
@@ -119,6 +92,40 @@ EDACommandHandler >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: a
 								greaseString;
 						nextPutAll: ' second(s).' ]).
 	^ result
+]
+
+{ #category : #handling }
+EDACommandHandler >> buildAggregateRootFromCommand: aCommand [
+	^ self buildAggregateRootFromCommand: aCommand andAggregateRootClass: (self retrieveAggregateRootClass: aCommand)
+]
+
+{ #category : #handling }
+EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootClass: anAggregateRootClass [
+	| result |
+	result := self class
+		buildAggregateRootOfTenant: aCommand tenant
+		ofAggregateRootClass: anAggregateRootClass
+		withCriteria: aCommand aggregateSelectionCriteria
+		andEventStore: eventStore.
+	(result isDeleted and: [ aCommand isCreate ])
+		ifTrue: [ result := anAggregateRootClass new ].
+	result version = aCommand aggregateRootVersion
+		ifFalse: [ self
+				logWarningMessage:
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: 'Aggregate root''s version (';
+								nextPutAll: result version greaseString;
+								nextPutAll: ') does not match command''s (';
+								nextPutAll: aCommand aggregateRootVersion greaseString;
+								nextPutAll: ').' ]) ].
+	^ result
+]
+
+{ #category : #helpers }
+EDACommandHandler >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria [
+	^ self class buildAggregateRootOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria andEventStore: eventStore
 ]
 
 { #category : #handling }
@@ -185,18 +192,16 @@ EDACommandHandler >> handle: aCommand withErrorStrategy: strategy [
 								nextPutAll: ' is already deleted' ])
 				andThrow: EDAInvalidCommandMessage ].
 	self checkCreateCommand: aCommand forAggregateRoot: aggregateRoot.
-	producedEvents := OrderedCollection new.
 	handlingResult := self
 		delegateHandlingOfCommand: aCommand
 		toAggregate: aggregateRoot.
-	((handlingResult isKindOf: EDAEventSourcingEvent)
-		or: [ handlingResult isKindOf: OrderedCollection ])
-		ifTrue: [ producedEvents add: handlingResult.
-			producedEvents := producedEvents flattened.
-			processedEvents := self
-				processGeneratedEvents: producedEvents
-				forCommand: aCommand
-				onAggregateRoot: aggregateRoot ].
+	producedEvents := handlingResult isCollection
+		ifTrue: [ handlingResult ]
+		ifFalse: [ OrderedCollection with: handlingResult ].
+	processedEvents := self
+		processGeneratedEvents: producedEvents
+		forCommand: aCommand
+		onAggregateRoot: aggregateRoot.
 	eventBus produceEvents: processedEvents ]
 		on: Error - Break
 		do: [ :exception | 
@@ -222,9 +227,9 @@ EDACommandHandler >> processGeneratedEvents: producedEvents forCommand: aCommand
 	self
 		logInfoMessage: 'Produced event(s): ' , message greaseString , '.'.
 	self flag: #TODO.	"TODO: transaction including eventstore and eventbus operations"
-	versionedEvents := self
+	versionedEvents := self class
 		addVersionToEvents: producedEvents
-		forAggregate: anAggregateRoot.
+		usingEventStore: eventStore.
 	eventStore saveEvents: versionedEvents.
 	self logInfoMessage: 'Projecting events...'.
 	(self projectorClass
@@ -238,7 +243,7 @@ EDACommandHandler >> processGeneratedEvents: producedEvents forCommand: aCommand
 
 { #category : #accessing }
 EDACommandHandler >> projectorClass [
-	^ projectorClass
+	^ projectorClass ifNil: [ EDACompositeProjector ]
 ]
 
 { #category : #accessing }

@@ -6,6 +6,11 @@ Class {
 	#category : #'EDA-Errors-Strategies'
 }
 
+{ #category : #accessing }
+EDAThrowError class >> description [
+	^ 'Throw error'
+]
+
 { #category : #logging }
 EDAThrowError class >> shouldPersistFuel [
 	^ false
@@ -13,7 +18,7 @@ EDAThrowError class >> shouldPersistFuel [
 
 { #category : #accessing }
 EDAThrowError >> description [
-	^ 'Throw error'
+	^ self class description
 ]
 
 { #category : #'error handling' }

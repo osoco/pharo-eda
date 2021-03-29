@@ -1,6 +1,8 @@
 Class {
 	#name : #EDAJsonCommandMaterializer,
 	#superclass : #EDACommandMaterializer,
+	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Commands-Materializers'
 }
 
@@ -22,12 +24,17 @@ EDAJsonCommandMaterializer >> isDeleteCommand: aDict [
 
 { #category : #parsing }
 EDAJsonCommandMaterializer >> materialize: json [
-    "Returns a command instance from given JSON representation"
-	| map builder |
-	map := NeoJSONReader fromString: json.
-	builder := EDACommandBuilderRegistry lookupBuilder: (self retrieveCommandName: map).
-	^ builder buildWith: map
+	"Returns a command instance from given JSON representation"
 
+	| map builder name |
+	map := NeoJSONReader fromString: json.
+	name := self retrieveCommandName: map.
+	builder := EDACommandBuilderRegistry lookupBuilder: name.
+	builder
+		ifNil: [ self
+				logErrorMessage: 'Received unsupported ' , name greaseString
+				andThrow: EDAInvalidCommandMessage ].
+	^ builder buildWith: map
 ]
 
 { #category : #parsing }

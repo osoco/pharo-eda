@@ -161,9 +161,6 @@ EDACommand >> extractScopeKey: aDictionary target: aString accummulator: anOrder
 
 { #category : #helpers }
 EDACommand >> fillCommonInfoInto: aDict [
-	aDict
-		at: #name
-		put: (EDAMessageSerializer nameForMessageClass: self class).
 	aDict at: #commandId put: self commandId.
 	aDict at: #id put: self aggregateRootId.
 	aDict at: #version put: self aggregateRootVersion

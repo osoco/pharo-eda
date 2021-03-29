@@ -6,7 +6,7 @@ Class {
 		'eventBus',
 		'eventStore'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Commands-Handlers'
 }
 
 { #category : #accessing }
@@ -16,7 +16,8 @@ EDADeleteCommandHandler class >> eventBus [
 
 { #category : #accessing }
 EDADeleteCommandHandler class >> eventBus: aBus [
-	eventBus := aBus
+	eventBus := aBus.
+	self uniqueInstance: nil
 ]
 
 { #category : #accessing }
@@ -26,7 +27,8 @@ EDADeleteCommandHandler class >> eventStore [
 
 { #category : #accessing }
 EDADeleteCommandHandler class >> eventStore: aStore [
-	eventStore := aStore
+	eventStore := aStore.
+	self uniqueInstance: nil.
 ]
 
 { #category : #accessing }
