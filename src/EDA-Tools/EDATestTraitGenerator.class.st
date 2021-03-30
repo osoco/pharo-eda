@@ -440,7 +440,7 @@ EDATestTraitGenerator >> generateTestHelperBuildEventMethod [
 		nextPutAll: self appName;
 		nextPutAll: 'Test';
 		nextPutAll: (self toCamelCase: self eventName);
-		nextPutAll: ' fromEvent: (';
+		nextPutAll: ' fromEvent: (self ';
 		nextPutAll: self generateTestHelperBuildEventFromArbitraryFileMethodName;
 		nextPutAll: ' self ';
 		nextPutAll: self generateReadEventFromFileTestHelperMethodName;
