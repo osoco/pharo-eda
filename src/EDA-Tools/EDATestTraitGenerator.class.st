@@ -281,8 +281,9 @@ EDATestTraitGenerator >> generateTestHelperBuildDeleteEventMethod [
 		nextPutAll: (self toCamelCase: self eventName);
 		nextPutAll: ' new.';
 		nextPut: cr.
-	result nextPutAll: '  result tenant: aCommand tenant';
-	nextPut: cr. 
+	result
+		nextPutAll: '  result tenant: aCommand tenant.';
+		nextPut: cr.
 	result
 		nextPutAll: '	result id: aCommand aggregateRootId.';
 		nextPut: cr.
