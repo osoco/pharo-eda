@@ -7,6 +7,23 @@ Class {
 	#category : #'EDA-Domain-Tests'
 }
 
+{ #category : #'as yet unclassified' }
+EDAVolatileEventStore class >> filterEvents: anEventCollection byCriteria: aCriteriaDictionary [
+	^ anEventCollection
+		select: [ :event | 
+			| commonAttrs |
+			commonAttrs := event class allInstVarNames
+				intersection: (aCriteriaDictionary keys collect: [ :k | k asSymbol ]).
+			commonAttrs size = aCriteriaDictionary size
+				ifTrue: [ | attrPassCriteria |
+					attrPassCriteria := commonAttrs
+						select: [ :attr | (event perform: attr) = (aCriteriaDictionary at: attr) ].
+					attrPassCriteria size = commonAttrs size ]
+				ifFalse: [ false ] ].
+			
+
+]
+
 { #category : #accessing }
 EDAVolatileEventStore >> events [
 	events ifNil: [ self events: Dictionary new ].
@@ -20,14 +37,15 @@ EDAVolatileEventStore >> events: anObject [
 
 { #category : #'as yet unclassified' }
 EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCriteria: aDict [
-	| eventsPerAggregate aggregateEvents |
-	eventsPerAggregate := self events
+	| eventsPerTenant aggregateEvents filteredEvents |
+	eventsPerTenant := self events
 		at: aTenant
 		ifAbsent: [ Dictionary new ].
-	aggregateEvents := eventsPerAggregate
+	aggregateEvents := eventsPerTenant
 		at: aClass
 		ifAbsent: [ OrderedCollection new ].
-	^ aggregateEvents
+	filteredEvents := self class filterEvents: aggregateEvents byCriteria:  aDict.
+	^ filteredEvents
 ]
 
 { #category : #save }
