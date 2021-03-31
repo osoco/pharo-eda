@@ -100,6 +100,12 @@ EDATDomainBDD >> buildMetaForCommand: aCommand ofType: aString [
 ]
 
 { #category : #helper }
+EDATDomainBDD >> discardAgent: anEvent [
+	(anEvent respondsTo: #agent:)
+		ifTrue: [ anEvent agent: '<ANYTHING>' ]
+]
+
+{ #category : #helper }
 EDATDomainBDD >> discardDateCreated: anEvent [
 			(anEvent respondsTo: #dateCreated:)
 				ifTrue: [ anEvent dateCreated: '<ANYTHING>' ].
@@ -187,8 +193,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 	mock := EDAAcceptEverything new.
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
-	[
-	self useEventStore: eventStore.
+	[ self useEventStore: eventStore.
 	eventsToSave := self
 		fixAggregateRootVersionsOfEvents: historicalEvents
 		usingEventStore: eventStore.
@@ -221,9 +226,10 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 	resultingEvents
 		keysAndValuesDo: [ :i :actual | 
 			| expected |
-			self discardDateCreated: actual.
 			expected := expectedEvents at: i.
-			self assertEvent: actual equals: expected ] ]
+			self discardDateCreated: expected.
+			self discardAgent: expected.
+			self assertEvent: expected equals: actual ] ]
 		ensure: [ self restoreEventStores: originalEventStores ]
 ]
 
