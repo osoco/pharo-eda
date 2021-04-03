@@ -36,15 +36,11 @@ EDAAggregateRoot class >> checkTenantIsValid: tenantOfCommand [
 
 { #category : #helpers }
 EDAAggregateRoot class >> checkTenantOfCommand: aCommandTenant matches: anAggregateTenant [
-	| result |
-	result := (self checkTenantIsValid: aCommandTenant)
-		ifTrue: [ aCommandTenant = anAggregateTenant ]
-		ifFalse: [ false ].
-	result
-		ifFalse: [ self
+	((self checkTenantIsValid: aCommandTenant) and: [ aCommandTenant = anAggregateTenant ])
+		ifFalse: [  self
 				logErrorMessage:
 					(String
-						streamContents: [ :s |
+						streamContents: [ :s | 
 							s
 								nextPutAll: 'Invalid tenant (';
 								nextPutAll: aCommandTenant;

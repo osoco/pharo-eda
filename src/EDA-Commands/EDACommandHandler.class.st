@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandHandler,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATErrorHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATErrorHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATErrorHelper + EDATRepository',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATErrorHelper classTrait + EDATRepository classTrait',
 	#instVars : [
 		'eventStore',
 		'eventBus',
@@ -18,25 +18,21 @@ EDACommandHandler class >> addVersionToEvents: producedEvents usingEventStore: a
 	versions := Dictionary new.
 	aggregates := Dictionary new.
 	producedEvents
-		do: [ :e | 
+		do: [ :evt | 
 			| newEvent previousVersion newVersion aggRoot criteria |
 			aggRoot := aggregates
-				at: e aggregateRootClass greaseString , e id greaseString
-				ifAbsent: [ criteria := Dictionary new.
-					criteria at: 'id' put: e id.
+				at: evt aggregateRootClass greaseString , evt id greaseString
+				ifAbsentPut: [ criteria := Dictionary with: ('id' -> evt id).
 					self
-						buildAggregateRootOfTenant: e tenant
-						ofAggregateRootClass: e aggregateRootClass
+						buildAggregateRootOfTenant: evt tenant
+						ofAggregateRootClass: evt aggregateRootClass
 						withCriteria: criteria
 						andEventStore: anEventStore ].
-			aggregates
-				at: e aggregateRootClass greaseString , e id greaseString
-				put: aggRoot.
 			previousVersion := versions
 				at: aggRoot class greaseString , aggRoot id greaseString
 				ifAbsent: [ aggRoot version ].
 			newVersion := aggRoot newVersionAfter: previousVersion.
-			newEvent := EDAVersionedEvent forEvent: e andVersion: newVersion.
+			newEvent := EDAVersionedEvent forEvent: evt andVersion: newVersion.
 			result add: newEvent.
 			versions
 				at: aggRoot class greaseString , aggRoot id greaseString

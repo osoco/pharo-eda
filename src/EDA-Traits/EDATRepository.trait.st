@@ -1,6 +1,6 @@
 Trait {
 	#name : #EDATRepository,
-	#category : 'EDA-Traits'
+	#category : #'EDA-Traits'
 }
 
 { #category : #helpers }
