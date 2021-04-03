@@ -1,0 +1,25 @@
+! Different subtrees for each application
+
+In ==EDASettings== we need to build subtrees dynamically, based on the already registered applications.
+We can create a new entry using the ""group:"" method of the ==SettingTreeBuilder== that is passed to the ==<systemsettings>==-tagged method: ==aBuilder group: #subtreeSymbol==
+
+We need to ensure ==#subtreeSymbol== is unique. Otherwise the subtree will be created under an existing entry.
+
+Let's remove the current ==<systemsettings>== pragma of ==EDASettings class>>edaSettingsOn:== and rename it to ==EDASettings class>>edaSettingsOn: aBuilder for: anEDAApplication under: aSymbol==, and let's write a new ==EDASettings class>>edaSettingsOn:== from scratch.
+
+Since we haven't created (or registered) any application yet, we can choose either to skip creating anything, or display a message.
+
+${changes:code/15-EDASettings_class_edaSettingsOn_.ombu}$
+
+However, the old ""edaSettings:"" method used a fixed symbol to place the application settings in the tree. Let's fix that. We'll start with the ==environmentSettingsOn:under:on:==. The rest of the methods will be fixed later.
+
+${changes:code/16-EDASettings_class_edaSettingsOn_for_under_.ombu}$
+
+As you can see, we've renamed the previous method from ""environmentSettingsOn: aBuilder under: aSymbol"" to ""environmentSettingsOn: aBuilder: under: aSymbol on: anEDAApplication"". To display and manage each application's settings, we need the application instance. Previously, we used class-scoped attributes of predefined classes as settings. Now we're going to access them through the application instance itself.
+We need to create the ==config/== folder and two files (""development.json"" and ""integration-tests.json"")  with an initial empty json file (=={}==) in them.
+
+Additionally, we'll comment some settings code in ==EDATestSettings== class as well. We'll deal with it later.
+
+${changes:code/17-EDATestSettings_class_edaTestSettingsOn_.ombu}$
+
+We might just add the settings as instance attributes of the ==EDAApplication== itself. Such solution would not be flexible enough.

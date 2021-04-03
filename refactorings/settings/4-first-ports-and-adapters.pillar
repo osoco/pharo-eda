@@ -1,0 +1,19 @@
+! First Ports and Adapters
+
+To accomodate different ways to access and customize setting values, we can abstract them as a Port. ==EDAApplication== instances will include a reference to a port, regardless of the actual implementation used.
+
+The required ports are: environment, command listener, event publisher, event store, projections, and logging.
+
+!! Minimal behavior shared among all Settings Ports
+
+Even though in Smalltalk there's no such thing as an interface (a definition of the contract exposed by all implementations), we'd like to ensure all adapters share certain behavior. For that, we'll use a trait.
+
+[[[
+Trait named: #EDATSettingsPort
+  uses: {}
+  package: 'EDA-Settings-Ports'
+]]]
+
+The most basic behavior all adapters should support is telling us a brief description of themselves.
+
+${changes:code/18-EDATSettingsPort_classTrait_description.ombu}$

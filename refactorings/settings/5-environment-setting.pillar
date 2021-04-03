@@ -1,0 +1,173 @@
+! Environment setting
+
+This setting is used to identify the environment. Currently, it shows the value of the ""PHARO_ENV"" environment variable. The first adapter would be one that supports this feature.
+
+If we inspect the current logic used in ==EDASettings== to inject the environment setting into de ==SettingBrowser== tree, we see the following:
+
+${changes:code/19-EDASettings_class_environmentSettingsOn_under_on_.ombu}$
+
+The nature of this setting is to choose one of the available environments. It's mainly informative, but it might impose certain restrictions or influence other settings as well.
+
+!! Environment-variable adapter
+
+As its value is currently provided by the ""PHARO_ENV"" environment variable, it cannot be changed. We'll change the ""pickOne:"" above with a simple label, as we did before, when there're no registered applications. We can create a new ==EDA-Settings-Adapters-EnvVars== package for this kind of adapters.
+
+[[[
+Object subclass: #EDAEnvironmentSettingsEnvVarAdapter
+  uses: EDATSettingsPort
+  instanceVariableNames: ''
+  classVariableNames: ''
+  package: 'EDA-Settings-Adapters-EnvVars'
+]]]
+
+Now we need to distinguish between the case in which the value is a single string, and the previous assumption that it'd always be a list of items. A simple way to accomplish it is to ask the port itself. Remember that ==EDASettings== relies on the ==EDAApplication== instance to provide the settings, and the latter only deals with ports, not adapters. It makes sense to create a new custom ==EDATSettingsPort== specifically for the environment-related adapters.
+
+[[[
+Trait named: #EDATEnvironmentSettingsPort
+  uses: EDATSettingsPort
+  package: 'EDA-Settings-Ports'
+]]]
+
+Of course, we'll use that trait in our current adapter instead of the generic one we were using so far.
+
+[[[
+Object subclass: #EDAEnvironmentSettingsEnvVarAdapter
+  uses: EDATEnvironmentSettingsPort
+  instanceVariableNames: ''
+  classVariableNames: ''
+  package: 'EDA-Settings-Adapters-EnvVars'
+]]]
+
+This variation can now be accomodated in the new ==EDATEnvironmentSettingsPort==.
+
+${changes:code/20-EDATEnvironmentSettingsPort_supportsMultiple.ombu}$
+
+Now, ==EDASettings== can include both variations:
+
+${changes:code/21-EDASettings_class_environmentSettingsOn_under_on_.ombu}$
+
+==EDAApplication== has to provide an adapter for its ""environmentSettingsPort"" somehow. We'll deal with a mechanism to choose from a list of available adapters soon. For now, let's return the one we've just implemented: ==EDAEnvironmentSettingsEnvVarAdapter==.
+
+[[[
+Object subclass: #EDAApplication
+  uses: EDATLogging
+  instanceVariableNames: 'applicationName commandConsumer commandDispatcher commandListenerClientDebug environmentSettingsPort eventAnnouncer  eventProducer eventStore isConfigured isStarted projectorsByTenant projectionSynchronizationEnabled'
+  classVariableNames: ''
+  package: 'EDA-Application'.
+]]]
+
+${changes:code/22-EDAApplication_environmentSettingsPort.ombu}$
+
+${changes:code/23-EDAApplication_environmentSettingsPort_.ombu}$
+
+When we launch a ==SettingBrowser== we get an ==SubclassResponsibility== error. Let's implement it in our adapter. But does it support a list of values? Actually, no. We cannot change the value of the environment value.
+
+${changes:code/24-EDAEnvironmentSettingsEnvVarAdapter_supportsMultiple.ombu}$
+
+Running again ==SettingBrowser== will try to call ""currentEnvironment"" on our adapter, but we haven't implemented  it yet. Let's do it now.
+
+${changes:code/25-EDAEnvironmentSettingsEnvVarAdapter_currentEnvironment.ombu}$
+
+==SettingBrowser== should render the tree now, but we're not done yet with this adapter. ==EDASettings== assumes the setting can be customized. That is, the adapter supports setting a new value. How can we make it read-only? First of all, ==EDASettings== mustn't make any assumption. It's responsibility of the port to provide that information.
+
+So if the port's ""isReadOnly"" returns ""true"", then ==EDASettings== will use a ==LabelMorph== to display the value provided by the port itself.
+
+We're implementing the ports as traits. It makes sense to indicate all adapters need to override this method.
+
+${changes:code/26-EDATEnvironmentSettingsPort_isReadOnly.ombu}$
+
+Our adapter clearly needs to return ""true"":
+
+${changes:code/27-EDAEnvironmentSettingsEnvVarAdapter_isReadOnly.ombu}$
+
+All adapters will share the same entry in ==SettingsBrowser==. We'll define that label in ==EDATEnvironmentSettingsPort=='s ""description"":
+
+${changes:code/28-EDATEnvironmentSettingsPort_classTrait_description.ombu}$
+
+Based on the port and adapter's metadata, ==EDASettings== will choose how to properly display the entry it the tree.
+
+${changes:code/29-EDASettings_class_environmentSettingsOn_under_on_.ombu}$
+
+!!! Refactoring
+
+Even though our adapter is working, it's not reusable. Every other setting whose value comes from an environment variable would need to share most of its behavior. Before continuing with the next adapter, let's refactor this one a bit.
+
+First, let's extract the logic to retrieve values from environment variables into its own trait.
+
+[[[
+Trait named: #EDATEnvVarAdapter
+  uses: EDATSettingsPort
+  package: 'EDA-Settings-Adapters-EnvVars'
+]]]
+
+${changes:code/30-EDATEnvVarAdapter_getValueFor_orElse_.ombu}$
+${changes:code/31-EDATEnvVarAdapter_supportsMultiple.ombu}$
+${changes:code/32-EDATEnvVarAdapter_isReadOnly.ombu}$
+
+Our adapter now uses this new trait instead of ==EDATSettingsPort==:
+[[[
+Object subclass: #EDAEnvironmentSettingsEnvVarAdapter
+  uses: EDATEnvVarAdapter
+  instanceVariableNames: ''
+  lassVariableNames: ''
+  package: 'EDA-Settings-Adapters-EnvVars'
+]]]
+
+Finally, the ""currentEnvironment"" implementation delegates the logic to the new trait:
+
+${changes:code/33-EDAEnvironmentSettingsEnvVarAdapter_currentEnvironment.ombu}$
+
+!! Predefined list adapter
+
+This adapter allows the user to choose among a predefined list of possible values for the environment setting.
+From the point of view of ==EDASettings==, if the port supports multiple values, it needs to provide them in advance.
+
+For the new adapter, let's create it under a new package ==EDA-Settings-Adapters-InMemory==.
+
+[[[
+Object subclass: #EDAPredefinedEnvironmentSettingsInMemoryAdapter
+  uses: EDATEnvironmentSettingsPort + EDAPrintOnHelper + EDATCollectionHelper
+  instanceVariableNames: 'currentEnvironment'
+  classVariableNames: ''
+  package: 'EDA-Settings-Adapters-InMemory'
+]]]
+
+${changes:code/34-EDAPredefinedEnvironmentSettingsInMemoryAdapter_currentEnvironment.ombu}$
+
+It needs to store the selected value in memory.
+
+${changes:code/35-EDAPredefinedEnvironmentSettingsInMemoryAdapter_currentEnvironment_.ombu}$
+
+The list of predefined values is provided by the ""availableEnvironments"" method, used also by ==EDASettings==:
+
+${changes:code/36-EDAPredefinedEnvironmentSettingsInMemoryAdapter_availableEnvironments.ombu}$
+
+We need to tell that the new adapter supports multiple values, so ==EDASettings== can use ""pickOne:"" to render the setting.
+
+${changes:code/37-EDAPredefinedEnvironmentSettingsInMemoryAdapter_supportsMultiple.ombu}$
+
+Also, even though now it's not strictly necessary, this adapter supports read-write values, in case anyone needs to know it.
+
+${changes:code/38-EDAPredefinedEnvironmentSettingsInMemoryAdapter_isReadOnly.ombu}$
+
+Finally, to test it we can just change ==EDAApplication== to use it instead of the current one. We'll introduce a mechanism to inject adapters into ports dynamically soon.
+
+${changes:code/39-EDAApplication_environmentSettingsPort.ombu}$
+
+!!! Refactoring
+
+As we did with the environment-variable adapter, let's introduce a new intermediary trait, common to all "in-memory" adapters, to indicate ""isReadOnly"" is by default ""false"".
+
+[[[
+Trait named: #EDATInMemoryAdapter
+  uses: EDATSettingsPort
+  package: 'EDA-Settings-Adapters-InMemory'
+]]]
+
+[[[
+Object subclass: #EDAPredefinedEnvironmentSettingsInMemoryAdapter
+  uses: EDATInMemoryAdapter
+  instanceVariableNames: 'currentEnvironment'
+  classVariableNames: ''
+  package: 'EDA-Settings-Adapters-InMemory'
+]]]

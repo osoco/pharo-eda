@@ -1,0 +1,132 @@
+! Application registry
+
+We need a way to know which ==EDAApplication== instances exist, and a way to interact with them. A simple registry is enough for now.
+
+Let's start by creating the class with a ""registry"" attribute we'll use to annotate the references to the existing applications.
+
+[[[
+Object subclass: #EDAApplications
+  uses: EDATLogging
+  instanceVariableNames: 'registry'
+  classVariableNames: ''
+  package: 'EDA-Application'
+]]]
+
+The ""registry"" should be accessed via dedicated methods, under the ''accessing'' protocol.
+
+${changes:code/01-EDAApplications_registry_.ombu}$
+${changes:code/02-EDAApplications_registry.ombu}$
+
+We'll throw an ==EDAApplicationAlreadyRegistered== exception in case the application is already registered.
+
+[[[
+Error subclass: #EDAApplicationAlreadyRegistered
+  instanceVariableNames: ''
+  classVariableNames: ''
+  package: 'EDA-Application'
+]]]
+
+Now we can implement a method to register applications. We'll identify each application by its name.
+
+${changes:code/03-EDAApplications_register_under_.ombu}$
+
+To make the API simpler, let's add a new method in ==EDAApplications==:
+${changes:code/04-EDAApplications_register_.ombu}$
+
+Now each application needs a name, but it could be optional at instance level. We'd like to omit the instance name if only one instance will ever be created. In other words, an instance can have its own name, but can rely upon the class'.
+
+We need to add the new attribute to ==EDAApplication==:
+
+[[[
+Object subclass: #EDAApplication
+  uses: EDATLogging
+  instanceVariableNames: 'applicationName eventStore eventAnnouncer commandConsumer commandDispatcher eventProducer commandListenerClientDebug isConfigured isStarted projectorsByTenant projectionSynchronizationEnabled'
+  classVariableNames: ''
+  package: 'EDA-Application'
+]]]
+
+The following accessors deal with that:
+
+${changes:code/05-EDAApplication_applicationName.ombu}$
+${changes:code/06-EDAApplication_applicationName_.ombu}$
+
+We'll delegate on the class itself to provide a default name.
+
+${changes:code/07-EDAApplication_class_applicationName.ombu}$
+
+Now that every application instance has a name, and it's used to reference the application in the registry, we should provide a way to inspect the applications already registered:
+
+${changes:code/08-EDAApplications_edaApplications.ombu}$
+
+Recall that ==EDAApplication== was previously meant to be used as a class, not to create instances. It might be useful to guide developers on how to create new instances. If they use ""new"" and forget to provide a name, they'll end up with unnamed applications, and won't be able to register more than one in the registry. Therefore, we'll miss precisely the point we're trying to make.
+
+This factory method (class-side) ensures the instances are created with a name. Notice we don't use ""self new"". We're dealing with that soon enough.
+
+${changes:code/09-EDAApplication_class_withName.ombu}$
+
+Analogously, we can create "unnamed" instances as well.
+
+${changes:code/10-EDAApplication_class_unnamed.ombu}$
+
+However, instances can be created without a name (being "unnamed"). If we want to ensure instances are created via the factory methods above, we can override the ""new"" method.
+
+${changes:code/11-EDAApplication_class_new.ombu}$
+
+We'd need to convert ==EDAApplications== into a singleton, to ensure there's only one registry of running applications. To do so, we add a ""uniqueInstance"" attribute on the class itself.
+[[[
+EDAApplications class
+  uses: EDATLogging classTrait
+  instanceVariableNames: 'uniqueInstance'
+]]]
+
+Again, we use a lazy approach in the getter:
+
+${changes:code/12-EDAApplications_class_uniqueInstance.ombu}$
+
+  For the sake of completeness, we define the trivial setter.
+
+${changes:code/13-EDAApplications_class_uniqueInstance_.ombu}$
+
+!! Registration of EDAApplications
+
+At the expense of introducing a cyclic coupling between ==EDAApplication== and ==EDAApplications== classes, it's convenient to make sure all ==EDAApplication== instances get registered automatically.
+
+${changes:code/14-EDAApplication_class_withName_.ombu}$
+
+Finally, we can create applications and register them.
+
+[[[
+EDAApplications uniqueInstance register: (EDAApplication withName: 'test-1')
+]]]
+
+And  inspect the registered applications as well.
+
+[[[
+EDAApplications uniqueInstance edaApplications
+]]]
+
+!! Different subtrees for each application
+
+In ==EDASettings== we need to build subtrees dynamically, based on the already registered applications.
+We can create a new entry using the ""group:"" method of the ==SettingTreeBuilder== that is passed to the ==<systemsettings>==-tagged method: ==aBuilder group: #subtreeSymbol==
+
+We need to ensure ==#subtreeSymbol== is unique. Otherwise the subtree will be created under an existing entry.
+
+Let's remove the current ==<systemsettings>== pragma of ==EDASettings class>>edaSettingsOn:== and rename it to ==EDASettings class>>edaSettingsOn: aBuilder for: anEDAApplication under: aSymbol==, and let's write a new ==EDASettings class>>edaSettingsOn:== from scratch.
+
+Since we haven't created (or registered) any application yet, we can choose either to skip creating anything, or display a message.
+
+${changes:code/15-EDASettings_class_edaSettingsOn_.ombu}$
+
+However, the old ""edaSettings:"" method used a fixed symbol to place the application settings in the tree. Let's fix that. We'll start with the ==environmentSettingsOn:under:on:==. The rest of the methods will be fixed later.
+
+${changes:code/16-EDASettings_class_edaSettingsOn_for_under_.ombu}$
+
+As you can see, we've renamed the previous method from ""environmentSettingsOn: aBuilder under: aSymbol"" to ""environmentSettingsOn: aBuilder: under: aSymbol on: anEDAApplication"". To display and manage each application's settings, we need the application instance. Previously, we used class-scoped attributes of predefined classes as settings. Now we're going to access them through the application instance itself.
+We need to create the ==config/== folder and two files (""development.json"" and ""integration-tests.json"")  with an initial empty json file (=={}==) in them.
+
+Additionally, we'll comment some settings code in ==EDATestSettings== class as well. We'll deal with it later.
+${changes:code/17-EDATestSettings_class_edaTestSettingsOn_.ombu}$
+! Ports and adapters
+
+We might just add the settings as instance attributes of the ==EDAApplication== itself. Such solution would not be flexible enough.
