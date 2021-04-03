@@ -346,12 +346,12 @@ EDASettings class >> projectionErrorHandlingSettingsOn: aBuilder withConfig: aCo
 			(EDAErrorHandlingStrategy subclasses
 				collect: [ :strategy | strategy description -> strategy printString ]);
 		default: EDAPublishMessageErrorStrategy printString.
-	self
+	"self
 		customProjectionErrorBehaviorsOn: aBuilder
 		withConfig: aConfig
 		under: key
 		populatedWithValuesFrom: aConfigEntry
-		on: app
+		on: app"
 ]
 
 { #category : #settings }

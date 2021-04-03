@@ -185,7 +185,6 @@ EDAApplication >> environmentSettingsPort [
 EDAApplication >> environmentSettingsPort: anAdapter [
 	anAdapter = self portSettingsPort environmentSettingsPort
 		ifTrue: [ ^ self ].
-	self portSettingsPort environmentSettingsPort: anAdapter.
 	self notifyEnvironmentSettingsPortListener: anAdapter
 ]
 
@@ -233,7 +232,6 @@ EDAApplication >> eventStoreSettingsPort [
 EDAApplication >> eventStoreSettingsPort: anAdapter [
 	anAdapter = self portSettingsPort eventStoreSettingsPort
 		ifTrue: [ ^ self ].
-	self portSettingsPort eventStoreSettingsPort: anAdapter.
 	self notifyEventStoreSettingsPortListener: anAdapter
 ]
 
