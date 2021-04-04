@@ -285,7 +285,7 @@ EDATestTraitGenerator >> generateTestHelperBuildDeleteEventMethod [
 		nextPutAll: '  result tenant: aCommand tenant.';
 		nextPut: cr.
 	result
-		nextPutAll: '	result id: aCommand aggregateRootId.';
+		nextPutAll: '	result id: evtId.';
 		nextPut: cr.
 	result
 		nextPutAll: '	result version: ';
