@@ -1,0 +1,43 @@
+! Port resolver
+
+We have implemented two adapters so far. One that takes the ""environment"" information from an environment variable, and another one that lets the user choose among a predefined list of values. Which one is used gets determined by ==EDAApplication== accessor for ""environmentSettingsPort"". How can we decide which adapter should be used? We need a piece to handle that for us.
+
+There's nothing holding us back, coupled to the ""environment"" adapters. Given a port, which we assume it's a trait, we can find the classes using it. We assume that classes are adapters.
+
+${changes:code/044-EDATSettingsPort_availableAdapters_.ombu}$
+
+Maybe those assumptions are not valid. To be sure, we should ask the class whether it accepts the port.
+The purpose of that method is to allow the adapter to choose whether it should be taken into account. By default, the method in the ==EDATEnvironmentSettingsPort== should return ""false"". It's useful if we have unfinished adapters and we don't want them to interfere with ==SettingBrowser==.
+
+${changes:code/045-EDATEnvironmentSettingsPort_classTrait_accepts_.ombu}$
+
+Our existing adapters can override that method, so they can be discovered by ==EDATByPriorityAdapter==.
+
+${changes:code/046-EDAEnvironmentSettingsEnvVarAdapter_class_accepts_.ombu}$
+
+${changes:code/047-EDAPredefinedEnvironmentSettingsInMemoryAdapter_class_accepts_.ombu}$
+
+Let's create a new class ==EDATPortResolver==.
+
+[[[
+Object subclass: #EDAPortResolver
+	uses: EDATSettingsPort
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Settings-Ports'
+]]]
+
+${changes:code/048-EDAPortResolver_resolveSettingsPort_.ombu)$
+
+Third, make ==EDAApplication== use it.
+
+${changes:code/049-EDAApplication_environmentSettingsPort.ombu}$
+
+If we try to open ==SettingBrowser==, it might fail because the ==EDAApplications== registry refers to ==EDAApplication== instances with old code. If that's the case, you can empty the registry and register a new instance.
+
+[[[
+EDAApplications uniqueInstance registry: Dictionary new.
+EDAApplication withName: 'test-2'.
+]]]
+
+Our naive implementation sorts the adapters it finds, sorts them, and picks the first one. But we can now use it to resolve any other port, not only the ""environment""'s, by finding all available adapters and sorting them.

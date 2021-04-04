@@ -16,4 +16,4 @@ Trait named: #EDATSettingsPort
 
 The most basic behavior all adapters should support is telling us a brief description of themselves.
 
-${changes:code/18-EDATSettingsPort_classTrait_description.ombu}$
+${changes:code/018-EDATSettingsPort_classTrait_description.ombu}$
