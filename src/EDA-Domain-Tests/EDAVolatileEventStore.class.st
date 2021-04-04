@@ -48,6 +48,15 @@ EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCr
 	^ filteredEvents
 ]
 
+{ #category : #'as yet unclassified' }
+EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRootClass whereId: aNumber [
+	^ self
+		findEventsOfTenant: aTenant
+		ofAggregate: anAggregateRootClass
+		whereCriteria: (Dictionary
+		with: 'id' -> aNumber)
+]
+
 { #category : #save }
 EDAVolatileEventStore >> saveEvents: aCollection [
 	aCollection

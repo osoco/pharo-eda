@@ -121,12 +121,8 @@ EDAAggregateRepository >> findAllOfTenant: aTenant withCriteria: aDictionary [
 	criteria := Dictionary newFrom: aDictionary.
 	events := self findAllEventsOfTenant: aTenant matching: criteria.
 	eventsGroupedById := self groupEventsByAggregateRootId: events.
-	eventsGroupedById
-		keysAndValuesDo: [ :k :v | 
-			| aggregate |
-			aggregate := self aggregateClass new.
-			aggregate applyEvents: v.
-			result add: aggregate ].
+	result := eventsGroupedById
+		keys collect: [ :id | self findOfTenant: aTenant byId: id  ] thenReject: [ :aggregate | aggregate isNil ].
 	^ result
 ]
 
@@ -262,10 +258,9 @@ EDAAggregateRepository >> groupEventsByAggregateRootId: events [
 	result := Dictionary new.
 	events
 		do: [ :evt | 
-			| list id |
-			id := self aggregateIdFor: evt.
-			list := result at: id ifAbsent: [ OrderedCollection new ].
-			list add: evt.
-			result at: id put: list ].
+			result
+				at: evt id
+				ifPresent: [ :evts | evts add: evt ]
+				ifAbsentPut: [ OrderedCollection with: evt ] ].
 	^ result
 ]
