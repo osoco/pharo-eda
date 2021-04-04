@@ -1,5 +1,7 @@
 ! Port resolver
 
+!! Discovering adapters
+
 We have implemented two adapters so far. One that takes the ""environment"" information from an environment variable, and another one that lets the user choose among a predefined list of values. Which one is used gets determined by ==EDAApplication== accessor for ""environmentSettingsPort"". How can we decide which adapter should be used? We need a piece to handle that for us.
 
 There's nothing holding us back, coupled to the ""environment"" adapters. Given a port, which we assume it's a trait, we can find the classes using it. We assume that classes are adapters.
@@ -9,13 +11,13 @@ ${changes:code/044-EDATSettingsPort_availableAdapters_.ombu}$
 Maybe those assumptions are not valid. To be sure, we should ask the class whether it accepts the port.
 The purpose of that method is to allow the adapter to choose whether it should be taken into account. By default, the method in the ==EDATEnvironmentSettingsPort== should return ""false"". It's useful if we have unfinished adapters and we don't want them to interfere with ==SettingBrowser==.
 
-${changes:code/045-EDATEnvironmentSettingsPort_classTrait_accepts_.ombu}$
+${changes:code/047-EDATEnvironmentSettingsPort_classTrait_accepts_.ombu}$
 
 Our existing adapters can override that method, so they can be discovered by ==EDATByPriorityAdapter==.
 
-${changes:code/046-EDAEnvironmentSettingsEnvVarAdapter_class_accepts_.ombu}$
+${changes:code/048-EDAEnvironmentSettingsEnvVarAdapter_class_accepts_.ombu}$
 
-${changes:code/047-EDAPredefinedEnvironmentSettingsInMemoryAdapter_class_accepts_.ombu}$
+${changes:code/049-EDAPredefinedEnvironmentSettingsInMemoryAdapter_class_accepts_.ombu}$
 
 Let's create a new class ==EDATPortResolver==.
 
@@ -27,11 +29,11 @@ Object subclass: #EDAPortResolver
 	package: 'EDA-Settings-Ports'
 ]]]
 
-${changes:code/048-EDAPortResolver_resolveSettingsPort_.ombu)$
+${changes:code/050-EDAPortResolver_resolveSettingsPort_.ombu)$
 
 Third, make ==EDAApplication== use it.
 
-${changes:code/049-EDAApplication_environmentSettingsPort.ombu}$
+${changes:code/051-EDAApplication_environmentSettingsPort.ombu}$
 
 If we try to open ==SettingBrowser==, it might fail because the ==EDAApplications== registry refers to ==EDAApplication== instances with old code. If that's the case, you can empty the registry and register a new instance.
 
@@ -41,3 +43,72 @@ EDAApplication withName: 'test-2'.
 ]]]
 
 Our naive implementation sorts the adapters it finds, sorts them, and picks the first one. But we can now use it to resolve any other port, not only the ""environment""'s, by finding all available adapters and sorting them.
+
+!! A port to choose adapters
+
+Our purpose now is to avoid the limitation of not being able to select anything but the first adapter. Let's add a new entry in ==SettingBrowser== to let us choose among the available adapters. What we are doing for ""environment"" will be the basis for the rest of the configuration entries.
+
+We need a new ""portSettingsPort"" attribute in ==EDAApplication==:
+
+[[[
+Object subclass: #EDAApplication
+	uses: EDATLogging
+	instanceVariableNames: 'applicationName commandConsumer commandDispatcher commandListenerClientDebug environmentSettingsPort eventAnnouncer eventProducer eventStore isConfigured isStarted projectorsByTenant projectionSynchronizationEnabled portSettingsPort'
+	classVariableNames: 'ProjectionSynchronizationEnabled'
+	package: 'EDA-Application'
+]]]
+
+Do not forget to generate the accessors as well.
+
+${changes:code/052-EDAApplication_portSettingsPort.ombu}$
+${changes:code/053-EDAApplication_portSettingsPort_.ombu}$
+
+The purpose of this port is to let the user choose the adapter (for the other ports) from a list of available options.
+
+Let's define the port itself:
+
+[[[
+Trait named: #EDATPortSettingsPort
+	 uses: EDATSettingsPort
+	 package: 'EDA-Settings-Ports'
+]]]
+
+This new port also needs to provide ""isReadOnly"" and ""supportsMultiple"" information, required when building the settings tree for ==SettingBrowser==. Let's move them from ==EDATEnvironmentSettingsPort== to ==EDATSettingsPort==, so they are defined for any port from now on.
+
+${changes:code/054-EDATSettingsPort_isReadOnly.ombu}$
+
+${changes:code/055-EDATSettingsPort_supportsMultiple.ombu}$
+
+The adapter of this new port will store the selected adapter in memory, so a valid name could be ==EDAPortResolverInMemoryAdapter==:
+
+[[[
+Object subclass: #EDAPortResolverInMemoryAdapter
+	uses: EDATPortSettingsPort + EDAPrintOnHelper + EDATInMemoryAdapter
+	instanceVariableNames: 'environmentSettingsResolverPortClass'
+	classVariableNames: ''
+	package: 'EDA-Settings-Adapters-InMemory'
+]]]
+
+Initially, we'll use it to choose the adapter in charge of the ""environment"" setting. That's why we added it the ""environmentSettingsResolverPortClass"" attribute.
+
+We need its accessors as well. The setter is straightforward.
+
+${changes:code/056-EDAPortResolverInMemoryAdapter_environmentSettingsResolverPortClass_.ombu}$
+
+For the getter, we'll initialize it with ==EDAEnvironmentSettingsInMemoryAdapter==.
+
+${changes:code/057-EDAPortResolverInMemoryAdapter_environmentSettingsResolverPortClass.ombu}$
+
+Now we can fix the ==EDAApplication== ""portSettingsPort"" getter to create a new ==EDAPortResolverInMemoryAdapter== the first time.
+
+${changes:code/058-EDAApplication_portSettingsPort.ombu}$
+
+We are close to be able to manage which adapter to use for our ""environment"" setting. This new method in ==EDASettings== will create the subtree for us.
+
+${changes:code/059-EDASettings_class_portSettingsOn_under_on_.ombu}$
+
+We need only to call it as part of ""edaSettingsOn:for:under:"".
+
+${changes:code/060-EDASettings_class_edaSettingsOn_for_under_.ombu}$
+
+If we open ==SettingBrowser== now, we can see the new subtree. However, it's not working as we expected. It doesn't seem to display the list of available adapters.

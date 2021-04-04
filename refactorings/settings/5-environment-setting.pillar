@@ -197,3 +197,20 @@ Object subclass: #EDAPredefinedEnvironmentSettingsInMemoryAdapter
   package: 'EDA-Settings-Adapters-InMemory'
 ]]]
 
+!! In-memory adapter
+
+Another useful choice is to let the user decide the name of the environment, and store it in memory.
+
+[[[
+Object subclass: #EDAEnvironmentSettingsInMemoryAdapter
+	uses: EDATEnvironmentSettingsPort + EDAPrintOnHelper + EDATInMemoryAdapter
+	instanceVariableNames: 'currentEnvironment'
+	classVariableNames: ''
+	package: 'EDA-Settings-Adapters-InMemory'
+]]]
+
+We just need to provide the accessors for the attribute, and we're done.
+
+${changes:code/044-EDAEnvironmentSettingsInMemoryAdapter_currentEnvironment.ombu}$
+
+${changes:code/045-EDAEnvironmentSettingsInMemoryAdapter_currentEnvironment_.ombu}$
