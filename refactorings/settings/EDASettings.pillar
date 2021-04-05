@@ -1,5 +1,0 @@
-${inputFile:path=1-introduction.pillar}$
-${inputFile:path=2-application-registry.pillar}$
-${inputFile:path=3-different-subtrees-for-each-application.pillar}$
-${inputFile:path=4-first-ports-and-adapters.pillar}$
-${inputFile:path=5-environment-setting.pillar}$

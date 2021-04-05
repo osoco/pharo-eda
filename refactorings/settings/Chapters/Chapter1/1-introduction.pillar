@@ -1,6 +1,16 @@
-! Introduction
+! PharoEDA
 
-Currently, only one PharoEDA application can be running in a Pharo image.
+!! Introduction
+
+PharoEDA is a Pharo framework to simplify the development of event-driven applications, using Event Sourcing, following DDD principles.
+
+At runtime, PharoEDA provides primary adapters for consuming messages and publishing events. Its objective is to take complexity out of the application as much as possible.
+
+It encourages TDD, and also provides a test framework.
+
+!!! Limitations
+
+Currently, only one PharoEDA application can be running in a Pharo image at the same time.
 
 An ==EDAApplication== has configurable properties, that can be inspected and modified using ==SettingBrowser==.
 The ==SettingBrowser== customization is done in ==EDASettings== class, using the ==<systemsettings>== pragma, which requires the method to be on the class side.
@@ -8,15 +18,24 @@ Currently, the methods in charge of creating the customization tree expects each
 
 Additionally, the configuration settings are read from a json file, which gets identified by an environment variable. But that file is only used for the initial values, and its contents are not synchronized with the values of the application after they are modified using ==SettingBrowser==. Ideally, each setting could be managed differently: either from an environment variable, from a json file, from a global value, and so on.
 
-! Motivation
+!!! Motivation
 
 This refactoring attempts, on one hand, to avoid using classes as setting containers, and sharing them between ==EDASettings== and ==EDAApplication==.
 On the other hand, to be able to manage more than one ==EDAApplication== instance. Every instance should have its own settings, and its own subtree in ==SettingBrowser==.
 Finally, to abstract the holder of each setting so the actual value can be obtained from different sources.
 
-! Objective
+!!! Objective
 
 This refactoring is divided in different parts. We'll focus first on customizing settings available through ==EDAApplication== instances. Then, we'll use Ports and Adapters to decouple ==EDAApplication== from the actual settings. We'll go through all settings one by one, replacing the current solution with a new adapter.
 This will enable us to implement new adapters for specific settings. For example, to retrieve credentials from external vaults.
 At the end, we'll be able to have different ==EDAApplication== instances running, each with its own configuration settings, independent of each other.
 
+!!! Load the project
+
+To load the project,
+
+[[[
+Metacello new repository: 'github://osoco/pharo-eda:settings'; baseline: #PharoEDA; load
+]]]
+
+${loader:account=osoco|project=pharo-eda|tag=settings|baseline=PharoEDA}$

@@ -1,0 +1,6 @@
+${inputFile:path=Chapters/Chapter1/1-introduction.pillar}$
+${inputFile:path=Chapters/Chapter2/2-application-registry.pillar}$
+${inputFile:path=Chapters/Chapter3/3-different-subtrees-for-each-application.pillar}$
+${inputFile:path=Chapters/Chapter4/4-first-ports-and-adapters.pillar}$
+${inputFile:path=Chapters/Chapter5/5-environment-setting.pillar}$
+%${inputFile:path=Chapters/Chapter6/6-port-resolver.pillar}$
