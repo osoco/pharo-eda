@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'commandDictionary'
 	],
-	#category : 'EDA-Commands-Builders'
+	#category : #'EDA-Commands-Builders'
 }
 
 { #category : #building }
@@ -60,6 +60,16 @@ EDADefaultCommandBuilder >> buildWith: jsonDict [
 								close;
 								contents)
 						andThrow: EDAInvalidCommandMessage ] ]
+]
+
+{ #category : #accessing }
+EDADefaultCommandBuilder >> commandDictionary [
+	^ commandDictionary
+]
+
+{ #category : #accessing }
+EDADefaultCommandBuilder >> commandDictionary: anObject [
+	commandDictionary := anObject
 ]
 
 { #category : #building }
