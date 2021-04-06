@@ -63,7 +63,10 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 				andThrow: EDAInvalidCommandMessage ].
 	handler := self handlersRegistry handlerForCommand: aCommand.
 	(handler isNil and: [ aCommand isDelete ])
-		ifTrue: [ handler := EDADeleteCommandHandler withEventStore: self eventStore eventBus: self eventProducer andProjectorClass: self projectorClass ].
+		ifTrue: [ handler := EDADeleteCommandHandler
+				withEventStore: self eventStore
+				eventBus: self eventProducer
+				andProjectorClass: self projectorClass ].
 	handler
 		ifNil: [ self
 				logErrorMessage:
@@ -72,9 +75,13 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 							s
 								nextPutAll: 'Command ';
 								nextPutAll: aCommand class greaseString;
-								nextPutAll: ' is not supported. Aggregate ';
-								nextPutAll: aCommand aggregateRootClass greaseString;
-								nextPutAll: ' is not prepared to handle it' ])
+								nextPutAll: ' is not supported.'.
+							aCommand aggregateRootClass
+								ifNotNil: [ :c | 
+									s
+										nextPutAll: 'Aggregate ';
+										nextPutAll: c greaseString;
+										nextPutAll: ' is not prepared to handle it' ] ])
 				andThrow: EDACommandHandlerNotFound ].
 	^ handler handle: aCommand withErrorStrategy: aStrategy
 ]

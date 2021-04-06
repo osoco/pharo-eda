@@ -24,8 +24,8 @@ EDATDomainBDD >> applyEvent: anEvent onAggregateRoot: anAggregateRoot [
 				ifTrue: [ self
 						fail:
 							'Aggregate root ' , anAggregateRoot class name asSymbol
-								, ' is not able to apply events of type ' , eventClassName
-								, ' and version ' , anEvent version greaseString ]
+								, ' is not able to apply ' , eventClassName
+								, ' events of version ' , anEvent version greaseString ]
 				ifFalse: [ anAggregateRoot perform: applyEventSelectorSymbol with: anEvent.
 					anAggregateRoot version: anAggregateRoot version + 1 ] ]
 ]
