@@ -17,11 +17,9 @@ EDAVolatileEventStore class >> filterEvents: anEventCollection byCriteria: aCrit
 			commonAttrs size = aCriteriaDictionary size
 				ifTrue: [ | attrPassCriteria |
 					attrPassCriteria := commonAttrs
-						select: [ :attr | (event perform: attr) = (aCriteriaDictionary at: attr) ].
+						select: [ :attr | EDATestEventStub new attribute: (event perform: attr) named: attr matches: (aCriteriaDictionary at: attr) ].
 					attrPassCriteria size = commonAttrs size ]
-				ifFalse: [ false ] ].
-			
-
+				ifFalse: [ false ] ]
 ]
 
 { #category : #accessing }
