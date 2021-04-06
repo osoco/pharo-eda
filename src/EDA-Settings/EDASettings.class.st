@@ -15,7 +15,7 @@ Class {
 	#classInstVars : [
 		'duEnvironmentClass'
 	],
-	#category : 'EDA-Settings'
+	#category : #'EDA-Settings'
 }
 
 { #category : #settings }
@@ -41,6 +41,22 @@ EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
 					[ :strategy | strategy description translated -> strategy greaseString ]);
 		default: EDAPublishMessageErrorStrategy greaseString.
 	^ self
+]
+
+{ #category : #settings }
+EDASettings class >> customProjectionErrorBehaviorsOn: aBuilder under: parent populatedWithValuesFrom: aConfigEntry [
+	EDAProjectionErrorBehavior subclasses
+		doWithIndex: [ :behavior :index | 
+			(aBuilder pickOne: #strategy)
+				parent: #errors;
+				target: behavior;
+				label: behavior label translated;
+				description: behavior label translated;
+				order: index + 1;
+				domainValues:
+					(EDAErrorHandlingStrategy subclasses
+						collect: [ :strategy | strategy description -> strategy greaseString ]);
+				default: EDAPublishMessageErrorStrategy greaseString ]
 ]
 
 { #category : #accessing }
@@ -144,31 +160,31 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 		label: 'Urls' translated;
 		description: 'Comma-separated MongoDB urls';
 		order: 1;
-		default: (mongoConfig at: 'urls').
+		default: (mongoConfig at: 'urls' ifAbsent: 'mondodb://localhost:27017/admin').
 	(aBuilder setting: #tls)
 		parent: parent;
 		target: container;
 		label: 'Use TLS' translated;
 		description: 'Whether to connect using TLS';
-		default: (mongoConfig at: 'tls').
+		default: (mongoConfig at: 'tls' ifAbsent: false).
 	(aBuilder setting: #username)
 		parent: parent;
 		target: container;
 		label: 'Mongo username' translated;
 		description: 'Mongo username';
-		default: (mongoConfig at: 'username').
+		default: (mongoConfig at: 'username' ifAbsent: 'user').
 	(aBuilder setting: #password)
 		parent: parent;
 		target: container;
 		label: 'Mongo password' translated;
 		description: 'Mongo password';
-		default: (mongoConfig at: 'password').
+		default: (mongoConfig at: 'password' ifAbsent: 'secret').
 	(aBuilder setting: #databaseName)
 		parent: parent;
 		target: container;
 		label: 'Mongo database' translated;
 		description: 'Mongo database name';
-		default: (mongoConfig at: 'database').
+		default: (mongoConfig at: 'database' ifAbsent: 'eda').
 	(aBuilder pickOne: #authenticationMechanism)
 		parent: parent;
 		target: container;
@@ -179,52 +195,52 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 				collect: [ :item | item textDescription -> item ]);
 		default:
 			(MongoAuthMechanism allSubclasses
-				select: [ :item |
+				select: [ :item | 
 					item isAbstract not
-						and: [ item textDescription = (mongoConfig at: 'authenticationMechanism') ] ])
+						and: [ item textDescription = (mongoConfig at: 'authenticationMechanism' ifAbsent: 'SCRAM-SHA-1') ] ])
 				first.
 	(aBuilder setting: #debug)
 		parent: parent;
 		target: container;
 		label: 'Debug' translated;
 		description: 'Debug';
-		default: (mongoConfig at: 'debug').
+		default: (mongoConfig at: 'debug' ifAbsent: true).
 	(aBuilder setting: #enableReplication)
 		parent: parent;
 		target: container;
 		label: 'Enable replication' translated;
 		description: 'Enable replication';
-		default: (mongoConfig at: 'enableReplication').
+		default: (mongoConfig at: 'enableReplication' ifAbsent: false).
 	(aBuilder setting: #enableSingleton)
 		parent: parent;
 		target: container;
 		label: 'Enable singleton' translated;
 		description: 'Enable singleton';
-		default: (mongoConfig at: 'enableSingleton').
+		default: (mongoConfig at: 'enableSingleton' ifAbsent: true).
 	(aBuilder setting: #ensuringCurrentOnSave)
 		parent: parent;
 		target: container;
 		label: 'Current on save' translated;
 		description: 'Ensure current on save';
-		default: (mongoConfig at: 'ensuringCurrentOnSave').
+		default: (mongoConfig at: 'ensuringCurrentOnSave' ifAbsent: true).
 	(aBuilder setting: #ensuringCurrentReferencesOnQueries)
 		parent: parent;
 		target: container;
 		label: 'Current references on queries' translated;
 		description: 'Ensure current references on queries';
-		default: (mongoConfig at: 'ensuringCurrentReferencesOnQueries').
+		default: (mongoConfig at: 'ensuringCurrentReferencesOnQueries' ifAbsent: true).
 	(aBuilder setting: #lazySynchronize)
 		parent: parent;
 		target: container;
 		label: 'Lazy synchronize';
 		description: 'Lazy synchronize';
-		default: (mongoConfig at: 'lazySynchronize').
+		default: (mongoConfig at: 'lazySynchronize' ifAbsent: true).
 	(aBuilder setting: #wireProtocolEnabled)
 		parent: parent;
 		target: container;
 		label: 'Wire protocol' translated;
 		description: 'Whether to enable wire protocol';
-		default: (mongoConfig at: 'wireProtocolEnabled')
+		default: (mongoConfig at: 'wireProtocolEnabled' ifAbsent: true)
 ]
 
 { #category : #settings }
@@ -260,28 +276,28 @@ EDASettings class >> projectionSettingsOn: aBuilder under: parent populatedWithV
 	self
 		projectionsRepositorySettingsOn: aBuilder
 		under: #projections
-		populatedWithValuesFrom: (extSettings at: 'projectionsRepository').
+		populatedWithValuesFrom: (extSettings at: 'projectionsRepository' ifAbsent: 'localhost').
 	(aBuilder setting: #projectionSynchronizationEnabled)
 		parent: #projections;
 		target: EDAApplication;
 		label: 'Synchronize on startup' translated;
 		description:
 			'When the EDAApplication starts, this setting enables a check and conditional automatic synchronization of projections';
-		default: (extSettings at: 'synchronizationEnabled').
+		default: (extSettings at: 'synchronizationEnabled' ifAbsent: false).
 	(aBuilder setting: #concurrentSynchronization)
 		parent: #projections;
 		target: EDACompositeProjector;
 		label: 'Synchronization in parallel' translated;
 		description: 'Whether enable or disable concurrent projection synchronization';
 		order: 2;
-		default: (extSettings at: 'concurrentSynchronization').
+		default: (extSettings at: 'concurrentSynchronization' ifAbsent: false).
 	(aBuilder setting: #headlessMode)
 		parent: #projections;
 		target: EDAProjector;
 		label: 'Headless' translated;
 		description: 'Whether to show the progress when projecting events visually';
 		order: 3;
-		default: (extSettings at: 'headlessMode').
+		default: (extSettings at: 'headlessMode' ifAbsent: false).
 	self
 		projectionErrorHandlingSettingsOn: aBuilder
 		under: parent
@@ -306,7 +322,7 @@ EDASettings class >> resetSettings [
 
 { #category : #settings }
 EDASettings class >> stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: configEntry [
-	| stompConfig ack timeout |
+	| stompConfig ack |
 	stompConfig := self retrieveSettingAsDict: configEntry.
 	(aBuilder setting: #host)
 		parent: parent;
@@ -314,38 +330,38 @@ EDASettings class >> stompListenerSettingsOn: aBuilder withConfig: container und
 		label: 'STOMP host' translated;
 		description: 'STOMP server host address';
 		order: 1;
-		default: (stompConfig at: 'host').
+		default: (stompConfig at: 'host' ifAbsent: 'localhost').
 	(aBuilder setting: #port)
 		parent: parent;
 		target: container;
 		label: 'STOMP port' translated;
 		description: 'STOMP server port';
-		default: (stompConfig at: 'port').
+		default: (stompConfig at: 'port' ifAbsent: 61613).
 	(aBuilder setting: #username)
 		parent: parent;
 		target: container;
 		label: 'STOMP username' translated;
 		description: 'STOMP username';
-		default: (stompConfig at: 'user').
+		default: (stompConfig at: 'user' ifAbsent: 'user').
 	(aBuilder setting: #password)
 		parent: parent;
 		target: container;
 		label: 'STOMP password' translated;
 		description: 'STOMP password';
-		default: (stompConfig at: 'password').
+		default: (stompConfig at: 'password' ifAbsent: 'secret').
 	(aBuilder setting: #queue)
 		parent: parent;
 		target: container;
 		label: 'Queue name' translated;
 		description: 'Queue name';
-		default: (stompConfig at: 'queue').
+		default: (stompConfig at: 'queue' ifAbsent: 'queue').
 	(aBuilder setting: #durable)
 		parent: parent;
 		target: container;
 		label: 'Durable subscription' translated;
 		description: 'Durability of subscription';
-		default: (stompConfig at: 'durable').
-	(stompConfig at: 'ack') asSymbol = #auto
+		default: (stompConfig at: 'durable' ifAbsent: true).
+	(stompConfig at: 'ack' ifAbsent: #auto) asSymbol = #auto
 		ifTrue:
 			[ self logErrorMessage: 'ACK is AUTO. Using client-individual anyway' ].
 	ack := #'client-individual'.
@@ -365,26 +381,25 @@ EDASettings class >> stompListenerSettingsOn: aBuilder withConfig: container und
 		target: container;
 		label: 'Prefetch count' translated;
 		description: 'Prefetch count';
-		default: (stompConfig at: 'prefetchCount').
-	timeout := stompConfig at: 'timeout' ifAbsent: 1.
+		default: (stompConfig at: 'prefetchCount' ifAbsent: 1).
 	(aBuilder setting: #timeout)
 		parent: parent;
 		target: container;
 		label: 'Timeout' translated;
 		description: 'Timeout (in seconds)';
-		default: timeout.
+		default: (stompConfig at: 'timeout' ifAbsent: 60).
 	(aBuilder setting: #commandListenerClientDebug)
 		parent: parent;
 		target: EDAApplication;
 		label: 'STOMP client in debug mode' translated;
 		description: 'Whether enable debug mode in the STOMP client';
-		default: (stompConfig at: 'debug').
+		default: (stompConfig at: 'debug' ifAbsent: true).
 	(aBuilder setting: #restartOnCommandConsumingErrors)
 		parent: parent;
 		target: EDACommandConsumer;
 		label: 'Restart on error' translated;
-		description: 'Whether to restart the client in case of errros';
-		default: (stompConfig at: 'restartOnError')
+		description: 'Whether to restart the client in case of errors';
+		default: (stompConfig at: 'restartOnError' ifAbsent: false)
 ]
 
 { #category : #settings }
@@ -397,59 +412,59 @@ EDASettings class >> stompPublisherSettingsOn: aBuilder withConfig: container un
 		label: 'STOMP host' translated;
 		description: 'STOMP server host address';
 		order: 1;
-		default: (stompConfig at: 'host').
+		default: (stompConfig at: 'host' ifAbsent: 'localhost').
 	(aBuilder setting: #port)
 		parent: parent;
 		target: container;
 		label: 'STOMP port' translated;
 		description: 'STOMP server port';
-		default: (stompConfig at: 'port').
+		default: (stompConfig at: 'port' ifAbsent: 61613).
 	(aBuilder setting: #username)
 		parent: parent;
 		target: container;
 		label: 'STOMP username' translated;
 		description: 'STOMP username';
-		default: (stompConfig at: 'user').
+		default: (stompConfig at: 'user' ifAbsent: 'user').
 	(aBuilder setting: #password)
 		parent: parent;
 		target: container;
 		label: 'STOMP password' translated;
 		description: 'STOMP password';
-		default: (stompConfig at: 'password').
+		default: (stompConfig at: 'password' ifAbsent: 'secret').
 	(aBuilder setting: #exchange)
 		parent: parent;
 		target: container;
 		label: 'Exchange name' translated;
 		description: 'Exchange name';
-		default: (stompConfig at: 'exchange').
+		default: (stompConfig at: 'exchange' ifAbsent: 'exchange').
 	(aBuilder setting: #routingKey)
 		parent: parent;
 		target: container;
 		label: 'Routing key';
 		description: 'Routing key';
-		default: (stompConfig at: 'routingKey').
+		default: (stompConfig at: 'routingKey' ifAbsent: '#').
 	(aBuilder setting: #durable)
 		parent: parent;
 		target: container;
 		label: 'Durable subscription' translated;
 		description: 'Durability of subscription';
-		default: (stompConfig at: 'durable').
+		default: (stompConfig at: 'durable' ifAbsent: true).
 	(aBuilder setting: #timeout)
 		parent: parent;
 		target: container;
 		label: 'Timeout' translated;
 		description: 'Timeout (in seconds)';
-		default: (stompConfig at: 'timeout').
+		default: (stompConfig at: 'timeout' ifAbsent: 60).
 	(aBuilder setting: #errorExchange)
 		parent: parent;
 		target: container;
 		label: 'Error exchange' translated;
 		description: 'The exchange for errors';
-		default: (stompConfig at: 'errorExchange').
+		default: (stompConfig at: 'errorExchange' ifAbsent: 'errors').
 	(aBuilder setting: #errorRoutingKey)
 		parent: parent;
 		target: container;
 		label: 'Error routing key';
 		description: 'Routing key used for errors';
-		default: (stompConfig at: 'errorRoutingKey')
+		default: (stompConfig at: 'errorRoutingKey' ifAbsent: '#')
 ]

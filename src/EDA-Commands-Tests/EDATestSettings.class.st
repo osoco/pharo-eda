@@ -66,27 +66,27 @@ EDATestSettings class >> queueCleanerSettingsOn: aBuilder withConfig: container 
 		parent: parent;
 		target: container;
 		label: 'RabbitMQ host' translated;
-		description: 'RabbitMQ host address' translated;
+		description: 'RabbitMQ host address';
 		order: 1;
-		default: (config at: 'host').
+		default: (config at: 'host' ifAbsent: 'localhost').
 	(aBuilder setting: #port)
 		parent: parent;
 		target: container;
 		label: 'RabbitMQ HTTP port' translated;
-		description: 'RabbitMQ HTTP port' translated;
-		default: (config at: 'httpPort').
+		description: 'RabbitMQ HTTP port';
+		default: (config at: 'httpPort' ifAbsent: 15672).
 	(aBuilder setting: #username)
 		parent: parent;
 		target: container;
 		label: 'RabbitMQ user' translated;
-		description: 'RabbitMQ admin username' translated;
-		default: (config at: 'user').
+		description: 'RabbitMQ admin username';
+		default: (config at: 'user' ifAbsent: 'admin').
 	(aBuilder setting: #password)
 		parent: parent;
 		target: container;
 		label: 'RabbitMQ password' translated;
-		description: 'RabbitMQ admin password' translated;
-		default: (config at: 'password')
+		description: 'RabbitMQ admin password';
+		default: (config at: 'password' ifAbsent: 'secret')
 ]
 
 { #category : #settings }
