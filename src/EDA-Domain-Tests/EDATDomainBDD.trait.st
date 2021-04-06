@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -23,10 +24,10 @@ EDATDomainBDD >> applyEvent: anEvent onAggregateRoot: anAggregateRoot [
 				ifTrue: [ self
 						fail:
 							'Aggregate root ' , anAggregateRoot class name asSymbol
-								, ' is not able to handle events of type ' , eventClassName
+								, ' is not able to apply events of type ' , eventClassName
 								, ' and version ' , anEvent version greaseString ]
 				ifFalse: [ anAggregateRoot perform: applyEventSelectorSymbol with: anEvent.
-					anAggregateRoot version: (anAggregateRoot version + 1) ] ]
+					anAggregateRoot version: anAggregateRoot version + 1 ] ]
 ]
 
 { #category : #BDD }
