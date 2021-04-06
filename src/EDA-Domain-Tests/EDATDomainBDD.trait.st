@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -246,13 +247,13 @@ EDATDomainBDD >> readFile: aFile [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'test support' }
 EDATDomainBDD >> restoreEventStores: aDictionary [
 	EDAAggregateRepository
 		allSubclassesDo: [ :c | c setupEventStore: (aDictionary at: c greaseString asSymbol) ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'test support' }
 EDATDomainBDD >> retrieveEventStores [
 	| result |
 	result := Dictionary new.
@@ -284,7 +285,7 @@ EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'test support' }
 EDATDomainBDD >> useEventStore: anEventStore [
 	EDAAggregateRepository
 		allSubclassesDo: [ :c | c setupEventStore: anEventStore ]

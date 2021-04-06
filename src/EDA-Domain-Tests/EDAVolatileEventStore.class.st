@@ -7,7 +7,7 @@ Class {
 	#category : #'EDA-Domain-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #filtering }
 EDAVolatileEventStore class >> filterEvents: anEventCollection byCriteria: aCriteriaDictionary [
 	^ anEventCollection
 		select: [ :event | 
@@ -17,7 +17,8 @@ EDAVolatileEventStore class >> filterEvents: anEventCollection byCriteria: aCrit
 			commonAttrs size = aCriteriaDictionary size
 				ifTrue: [ | attrPassCriteria |
 					attrPassCriteria := commonAttrs
-						select: [ :attr | EDATestEventStub new attribute: (event perform: attr) named: attr matches: (aCriteriaDictionary at: attr) ].
+						select:
+							[ :attr | (event perform: attr) = (aCriteriaDictionary at: attr) "EDATestEventStub new attribute: (event perform: attr) named: attr matches: (aCriteriaDictionary at: attr)" ].
 					attrPassCriteria size = commonAttrs size ]
 				ifFalse: [ false ] ]
 ]
@@ -33,7 +34,7 @@ EDAVolatileEventStore >> events: anObject [
 	events := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #filtering }
 EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCriteria: aDict [
 	| eventsPerTenant aggregateEvents filteredEvents |
 	eventsPerTenant := self events
@@ -46,7 +47,7 @@ EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCr
 	^ filteredEvents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #filtering }
 EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRootClass whereId: aNumber [
 	^ self
 		findEventsOfTenant: aTenant
