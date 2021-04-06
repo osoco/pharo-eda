@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandHandlersRegistry,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATLogging',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'handlers'
 	],
@@ -19,12 +19,14 @@ EDACommandHandlersRegistry class >> withScanner: aCommandHandlersScanner factory
 	| handlerAssocs commandClass commandHandler registry handlerMethod |
 	registry := self emptyRegistry.
 	handlerAssocs := aCommandHandlersScanner allCommandHandlerMethods.
+	handlerAssocs ifNil: [ self logErrorMessage: 'No handler methods found' andThrow: EDACommandHandlerNotFound ].
 	handlerAssocs
 		do: [ :assoc | 
 			commandClass := assoc key.
 			handlerMethod := assoc value.
 			commandHandler := aCommandHandlerFactory
-				newFromHandlerMethod: handlerMethod andProjectorClass: aClass.
+				newFromHandlerMethod: handlerMethod
+				andProjectorClass: aClass.
 			registry registerHandler: commandHandler command: commandClass new ].
 	^ registry
 ]
