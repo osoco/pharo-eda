@@ -103,8 +103,6 @@ EDACommandHandler >> buildAggregateRootFromCommand: aCommand andAggregateRootCla
 		ofAggregateRootClass: anAggregateRootClass
 		withCriteria: aCommand aggregateSelectionCriteria
 		andEventStore: eventStore.
-	(result isDeleted and: [ aCommand isCreate ])
-		ifTrue: [ result := anAggregateRootClass new ].
 	result version = aCommand aggregateRootVersion
 		ifFalse: [ self
 				logWarningMessage:
@@ -125,26 +123,9 @@ EDACommandHandler >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: a
 ]
 
 { #category : #handling }
-EDACommandHandler >> checkCreateCommand: aCommand forAggregateRoot: anAggregateRoot [
-	aCommand isCreate
-		ifTrue: [ aCommand aggregateRootVersion = 0
-				ifFalse: [ self
-						logWarningMessage:
-							'Received create command with aggregate root version '
-								, aCommand aggregateRootVersion greaseString.
-					aCommand aggregateRootVersion: 0 ] ].
-	(aCommand isCreate not and: [ anAggregateRoot brandNew ])
-		ifTrue: [ self
-				logErrorMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: anAggregateRoot class greaseString;
-								nextPutAll: ' with id ';
-								nextPutAll: aCommand aggregateRootId greaseString;
-								nextPutAll: ' does not exist in tenant ';
-								nextPutAll: aCommand tenant greaseString ])
-				andThrow: EDAInvalidCommandMessage ]
+EDACommandHandler >> checkCommand: aCommand forAggregateRoot: anAggregateRoot [
+
+	aCommand checkForAggregateRoot: anAggregateRoot.
 ]
 
 { #category : #handling }
@@ -176,18 +157,7 @@ EDACommandHandler >> eventStore: anObject [
 EDACommandHandler >> handle: aCommand withErrorStrategy: strategy [
 	| aggregateRoot processedEvents producedEvents handlingResult |
 	[ aggregateRoot := self buildAggregateRootFromCommand: aCommand.
-	aggregateRoot isDeleted
-		ifTrue: [ self
-				logErrorMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: aCommand aggregateRootClass greaseString;
-								nextPutAll: ' with id ';
-								nextPutAll: aCommand aggregateRootId greaseString;
-								nextPutAll: ' is already deleted' ])
-				andThrow: EDAInvalidCommandMessage ].
-	self checkCreateCommand: aCommand forAggregateRoot: aggregateRoot.
+	self checkCommand: aCommand forAggregateRoot: aggregateRoot.
 	handlingResult := self
 		delegateHandlingOfCommand: aCommand
 		toAggregate: aggregateRoot.

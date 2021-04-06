@@ -209,6 +209,53 @@ EDAAggregateRoot >> buildDeleteCommandResultEvent [
 	^ result
 ]
 
+{ #category : #'command checking' }
+EDAAggregateRoot >> checkCreateCommand: aCommand [
+	aCommand aggregateRootVersion = 0
+		ifFalse: [ self
+			logWarningMessage:
+				'Received create command with aggregate root version '
+				, aCommand aggregateRootVersion greaseString.
+				aCommand aggregateRootVersion: 0 ].
+			self brandNew
+				ifFalse: [ self
+						logErrorMessage:
+							(String
+								streamContents: [ :s | 
+									s
+										nextPutAll: self class greaseString;
+										nextPutAll: ' with ';
+										nextPutAll: aCommand aggregateSelectionCriteria greaseString;
+										nextPutAll: ' already exists in tenant ';
+										nextPutAll: aCommand tenant greaseString ])
+						andThrow: EDAInvalidCommandMessage ]
+]
+
+{ #category : #'command checking' }
+EDAAggregateRoot >> checkCreateNonCreateIssuesOnCommand: aCommand [
+	aCommand isCreate
+		ifTrue: [ self checkCreateCommand: aCommand ]
+		ifFalse: [ self checkNonCreateCommand: aCommand ]
+]
+
+{ #category : #'command checking' }
+EDAAggregateRoot >> checkNonCreateCommand: aCommand [
+	self brandNew
+		ifTrue: [ self
+				logErrorMessage:
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: self class greaseString;
+								nextPutAll: ' with ';
+								nextPutAll: aCommand aggregateSelectionCriteria keys first greaseString;
+								nextPutAll: ' equals to ';
+								nextPutAll: aCommand aggregateSelectionCriteria values first greaseString;
+								nextPutAll: ' does not exist in tenant ';
+								nextPutAll: aCommand tenant greaseString ])
+				andThrow: EDAInvalidCommandMessage ]
+]
+
 { #category : #accessing }
 EDAAggregateRoot >> events [
 	^ self aggregateRepository findEventsById: self id.

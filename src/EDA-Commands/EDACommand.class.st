@@ -110,6 +110,12 @@ EDACommand >> applicationKey: anObject [
 	applicationKey := anObject
 ]
 
+{ #category : #'aggregate checking' }
+EDACommand >> checkForAggregateRoot: anAggregateRoot [
+"super checkForAggregateRoot: in the subclasses and add the specific validations necessary for the command"
+	anAggregateRoot checkCreateNonCreateIssuesOnCommand: self
+]
+
 { #category : #helpers }
 EDACommand >> classNameWithoutPrefix [
 	^ self class name asString allButFirst: (self classPrefix) size
