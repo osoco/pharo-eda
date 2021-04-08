@@ -1,7 +1,7 @@
 Class {
 	#name : #EDAVersionedEvent,
 	#superclass : #EDAEventSourcingEvent,
-	#category : #'EDA-Events'
+	#category : #'EDA-Events-Events'
 }
 
 { #category : #'instance creation' }

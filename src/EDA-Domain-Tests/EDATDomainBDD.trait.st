@@ -1,7 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
-	#traits : 'EDATLogging + EDATRegexHelper',
-	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
+	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -111,6 +111,13 @@ EDATDomainBDD >> discardDateCreated: anEvent [
 				ifTrue: [ anEvent dateCreated: '<ANYTHING>' ].
 ]
 
+{ #category : #helpers }
+EDATDomainBDD >> filterPastEvents: events ofAggregate: anAggregateRootSymbol [
+	^ events
+		select:
+			[ :e | e aggregateRootClass greaseString asSymbol = anAggregateRootSymbol ].
+]
+
 { #category : #helper }
 EDATDomainBDD >> fixAggregateRootVersionsOfEvents: anEventCollection usingEventStore: anEventStore [
 	^ EDACommandHandler addVersionToEvents: anEventCollection usingEventStore: anEventStore
@@ -189,48 +196,38 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents [
-	| commandConsumer resultingEvents mock eventStore expectedEvents eventsToSave aggregateRootVersion msg eventsOfAggregate originalEventStores |
-	mock := EDAAcceptEverything new.
-	eventStore := EDAVolatileEventStore new.
-	originalEventStores := self retrieveEventStores.
-	[ self useEventStore: eventStore.
-	eventsToSave := self
-		fixAggregateRootVersionsOfEvents: historicalEvents
-		usingEventStore: eventStore.
-	eventStore saveEvents: eventsToSave.
-	commandConsumer := EDACommandConsumer
-		busListener: mock
-		commandMaterializer: EDAJsonCommandMaterializer new
-		commandDispatcher:
-			(EDAApplication
-				buildCommandDispatcherWithEventStore: eventStore
-				eventProducer: mock
-				andProjectorClass: mock).
-	eventsOfAggregate := eventsToSave
-		select:
-			[ :e | e aggregateRootClass greaseString asSymbol = anAggregateRootSymbol ].
-	aggregateRootVersion := eventsOfAggregate
-		ifEmpty: [ 0 ]
-		ifNotEmpty: [ eventsOfAggregate last aggregateRootVersion ].
-	expectedEvents := self
-		fixAggregateRootVersionsOfEvents: expectedResultingEvents
-		usingEventStore: eventStore.
-	msg := self
-		provideAggregateRootVersion: aggregateRootVersion
-		to: aString.
-	resultingEvents := commandConsumer
-		consumeMessage: aString
-		usingStrategy: EDAThrowError greaseString.
-	self assert: resultingEvents isNotNil.
-	self assert: resultingEvents size equals: expectedEvents size.
-	resultingEvents
-		keysAndValuesDo: [ :i :actual | 
-			| expected |
-			expected := expectedEvents at: i.
-			self discardDateCreated: expected.
-			self discardAgent: expected.
-			self assertEvent: expected equals: actual ] ]
-		ensure: [ self restoreEventStores: originalEventStores ]
+	self
+		givenEvents: historicalEvents
+		processingThem:
+			[ :evts :eventStore | self processPastEvents: evts usingEventStore: eventStore ]
+		whenReceiveMessage: aString
+		processingIt: [ :events :msg | 
+			| eventsOfAggregate aggregateRootVersion |
+			eventsOfAggregate := self
+				filterPastEvents: events
+				ofAggregate: anAggregateRootSymbol.
+			aggregateRootVersion := eventsOfAggregate
+				ifEmpty: [ 0 ]
+				ifNotEmpty: [ eventsOfAggregate last aggregateRootVersion ].
+			self provideAggregateRootVersion: aggregateRootVersion to: aString ]
+		thenEvents: expectedResultingEvents
+		processingThem: [ :events :eventStore | self
+		processEvents: expectedResultingEvents
+		usingEventStore: eventStore ]
+]
+
+{ #category : #helpers }
+EDATDomainBDD >> processEvents: expectedEvents usingEventStore: eventStore [
+	^ self
+		fixAggregateRootVersionsOfEvents: expectedEvents
+		usingEventStore: eventStore
+]
+
+{ #category : #helpers }
+EDATDomainBDD >> processPastEvents: events usingEventStore: anEventStore [
+ 	^ self
+		fixAggregateRootVersionsOfEvents: events
+		usingEventStore: anEventStore
 ]
 
 { #category : #BDD }
@@ -244,21 +241,6 @@ EDATDomainBDD >> readFile: aFile [
 	fileStream := aFile readStream.
 	result := fileStream contents.
 	fileStream close.
-	^ result
-]
-
-{ #category : #'test support' }
-EDATDomainBDD >> restoreEventStores: aDictionary [
-	EDAAggregateRepository
-		allSubclassesDo: [ :c | c setupEventStore: (aDictionary at: c greaseString asSymbol) ]
-]
-
-{ #category : #'test support' }
-EDATDomainBDD >> retrieveEventStores [
-	| result |
-	result := Dictionary new.
-	EDAAggregateRepository
-		allSubclassesDo: [ :c | result at: c greaseString asSymbol put: c eventStore ].
 	^ result
 ]
 
@@ -283,10 +265,4 @@ EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 				ifEmpty: [ ('handle' , aCommand classNameWithoutPrefix , ':') asSymbol ]
 				ifNotEmpty: [ methods first selector ] ].
 	^ result
-]
-
-{ #category : #'test support' }
-EDATDomainBDD >> useEventStore: anEventStore [
-	EDAAggregateRepository
-		allSubclassesDo: [ :c | c setupEventStore: anEventStore ]
 ]

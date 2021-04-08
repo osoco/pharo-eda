@@ -7,7 +7,7 @@ Class {
 		'writer',
 		'errorWriter'
 	],
-	#category : 'EDA-Events-Serializers'
+	#category : #'EDA-Events-Serializers'
 }
 
 { #category : #converting }
@@ -35,15 +35,16 @@ EDAJsonEventSerializer >> buildBodySectionForEvent: anEvent [
 
 { #category : #initialization }
 EDAJsonEventSerializer >> buildMetaSectionForEvent: anEvent [
-	^ Dictionary
-		newFrom:
-			{('id' -> UUID new greaseString).
-			('version' -> anEvent version).
-			('timestamp' -> DateAndTime now asUTC rounded).
-			('correlationId' -> anEvent commandId).
-			('type' -> (self class asEventName: anEvent)).
-			('delete' -> (anEvent delete))}
-
+	| result |
+	result := Dictionary new.
+	result add: 'id' -> UUID new greaseString;
+	
+	add:		('version' -> anEvent version);
+add:			('timestamp' -> DateAndTime now asUTC rounded);
+add: 			('correlationId' -> anEvent correlationId);
+add: 			('type' -> (self class asEventName: anEvent));
+add:			('delete' -> anEvent delete).
+			^ result
 ]
 
 { #category : #accessing }
