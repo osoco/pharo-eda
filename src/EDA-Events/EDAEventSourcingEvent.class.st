@@ -123,6 +123,11 @@ EDAEventSourcingEvent >> aggregateRootVersion: anObject [
 ]
 
 { #category : #accessing }
+EDAEventSourcingEvent >> correlationId [
+	^ ''
+]
+
+{ #category : #accessing }
 EDAEventSourcingEvent >> delete [
 	self flag: #TODO. "Find out why initialize doesn't get called for EDAEventSourcingEvents"
 	delete ifNil: [ self initialize ].

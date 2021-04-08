@@ -33,6 +33,25 @@ EDAJsonEventSerializer class >> buildBodySectionForEvent: anEvent [
 			collect: [ :var | var -> (anEvent instVarNamed: var) ])
 ]
 
+{ #category : #initialization }
+EDAJsonEventSerializer >> buildMetaSectionForEvent: anEvent [
+	| result |
+	result := Dictionary new.
+	result add: 'id' -> UUID new greaseString;
+	
+	add:		('version' -> anEvent version);
+add:			('timestamp' -> DateAndTime now asUTC rounded);
+add: 			('correlationId' -> anEvent correlationId);
+add: 			('type' -> (self class asEventName: anEvent));
+add:			('delete' -> anEvent delete).
+			^ result
+]
+
+{ #category : #accessing }
+EDAJsonEventSerializer >> customJsonMappingsFor: jsonWriter [
+
+]
+
 { #category : #parsing }
 EDAJsonEventSerializer class >> buildMessageFormatDictForEvent: anEvent [ 
 	| eventDict meta body dateCreated |

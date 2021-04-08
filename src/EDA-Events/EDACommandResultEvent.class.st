@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'commandId'
 	],
-	#category : 'EDA-Events-Events'
+	#category : #'EDA-Events-Events'
 }
 
 { #category : #accessing }
@@ -15,4 +15,9 @@ EDACommandResultEvent >> commandId [
 { #category : #accessing }
 EDACommandResultEvent >> commandId: anObject [
 	commandId := anObject
+]
+
+{ #category : #accessing }
+EDACommandResultEvent >> correlationId [
+	^ self commandId
 ]
