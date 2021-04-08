@@ -76,11 +76,11 @@ In the above example, PharoEDA will perform this tasks, in sequence:
   - It will build a new aggregate instance. In this case, an *User*.
   - Every command provides a criteria to find the specific aggregate expected to handle it. In the case of "create" commands, it provides information about the primary key of the aggregate. Other commands typically use just the `id`.
   - The event store provides the events required to assemble the aggregate instance. In this case, it finds none, since there would not be any events in the event store to apply. In general, it will group the events by id (since aggregates with the same primary key might have been deleted in the past), and ask the aggregate to apply the events found.
-  - PharoEDA will ask then this apggregate instance to *handle* the command.
-  - In return, the aggregate could generate one or more events, or throw an error.
-  - For each one of them, it will store it in the MongoDB-based Event Store.
-  - It will publish it in a RabbitMQ exchange.
-  - Some events might be published as announcements, so other parts of the application can perform additional tasks when an event in triggered.
+- The dispatcher will then ask this apggregate instance to *handle* the command.
+- In return, the aggregate could generate one or more events, or throw an error.
+- For each one of them, it will store it in the MongoDB-based Event Store.
+- It will publish it in a RabbitMQ exchange.
+- Some events might be published as announcements, so other parts of the application can perform additional tasks when an event in triggered.
 
 ## What you need to know about Domain-Driven Design to use PharoEDA
 
