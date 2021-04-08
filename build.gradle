@@ -1,5 +1,6 @@
-def tag = 'develop'
-def branchOrTag = "${tag}"
+def tag = ''
+def branch = 'eventlistening'
+def branchOrTag = "${branch}"
 version = "${tag}-SNAPSHOT" // do not forget to update the version also in docker.gradle
 apply plugin: PharoPlugin
 
