@@ -41,7 +41,7 @@ With PharoEDA, to support this new event and command, you'd need:
 - Run `MyDomainGenerator new generateAll`. Here, `MyDomainGenerator` is just a descendant of `EDAGenerator` that deals with the specifics of how to translate a the name of the command into the name of the event and viceversa. Depending on how you name your events and commands, it might need to be customized.
 - Implement the logic to handle the new command, which could be as simple as validating the input and generating the event. PharoEDA expects your command-handling code to be annotated in a certain way, so PharoEDA detects it automatically. A naive example would be:
 ```smalltalk
-User>>handleCreateUser: aCommand
+User >> handleCreateUser: aCommand
     <useAsCommandHandlerFor: #CreateUser>
     self validateCreateUserCommand: aCommand.
     ^ UserCreated withUserId: UUID new greaseString login: aCommand login andPassword: aCommand password
@@ -49,13 +49,13 @@ User>>handleCreateUser: aCommand
 
 That's everything you'd need to do. The beauty of DDD with EventStorming is letting the events guide you while modelling your domain.
 
-Well, you might be suspicious about how the state is managed in the code above. We're storing the *login* or *password* anywhere in the code.
+Well, you might be suspicious about how the state is managed in the code above. We're not storing the *login* or *password* anywhere in the code.
 
 The reason is that PharoEDA uses Event Sourcing. When a new command is received, it's able to know how to rebuild the correct aggregate based on the events registered so far. Well, more specifically, it's able to identify the aggregate instance, retrieve the past events from the Event Store, and ask the aggregate to deal with them.
 In PharoEDA we call that operation "apply an event". Here, we don't use annotations, but naming conventions.
 Back to our example, we could think of the following method:
 ```smalltalk
-User>>aplyUserCreated: anEvent
+User >> applyUserCreated: anEvent
     self userId: anEvent userId.
     self login: anEvent login.
     self password: anEvent password
@@ -71,7 +71,7 @@ Currently, PharoEDA has adapters for RabbitMQ [4] and MongoDB [5] (through Voyag
 ## What you need to know about Domain-Driven Design to use PharoEDA
 
 PharoEDA encourages you to use Domain-Driven Design when developing your application.
-Future releases will provide specific tools to enhance your DDD experience, even to the point of 
+Future releases will provide specific tools to enhance your DDD experience.
 
 - [1] <https://en.wikipedia.org/wiki/Event-driven_architecture>
 - [2] <https://en.wikipedia.org/wiki/Domain-driven_design>
