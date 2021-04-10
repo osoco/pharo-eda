@@ -43,7 +43,7 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Entities' #'EDA-Serializers' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
+			#(#'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Entities' #'EDA-Serializers' #'EDA-Events' #'EDA-Handlers' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
 		group: 'tests'
 			with:
 			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
@@ -89,6 +89,8 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('EDA-Commands-Tests') ];
 		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
+		package: #'EDA-Errors'
+			with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
 		package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Events'
 			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
@@ -97,6 +99,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Entities' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Serializers';
 		package: #'EDA-Errors' with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
+		package: #'EDA-Handlers' with: [ spec requires: #('EDA-Commands' 'EDA-Events') ];
 		package: #'EDA-Logging';
 		package: #'EDA-Projections'
 			with: [ spec requires: #('EDA-Traits') ];
@@ -117,7 +120,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Commands-Tests'
 			with: [ spec
 				requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ]
-
 ]
 
 { #category : #dependencies }
