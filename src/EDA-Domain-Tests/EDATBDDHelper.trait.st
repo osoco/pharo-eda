@@ -32,12 +32,7 @@ EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 ]
 
 { #category : #helpers }
-EDATBDDHelper >> buildEventSerializer [
-	^ EDAJsonEventSerializer new
-]
-
-{ #category : #helpers }
-EDATBDDHelper >> buildonsumerWithEventStore: anEventStore [
+EDATBDDHelper >> buildConsumerWithEventStore: anEventStore [
 	| mock |
 	mock := EDAAcceptEverything new.
 	^ EDAMessageConsumer
@@ -49,12 +44,16 @@ EDATBDDHelper >> buildonsumerWithEventStore: anEventStore [
 				eventProducer: mock
 				andProjectorClass: mock)
 		eventMaterializer: EDAJsonEventMaterializer new
-				eventDispatcher: 
-					(EDAApplication
+		eventDispatcher:
+			(EDAApplication
 				buildEventDispatcherWithEventStore: anEventStore
 				eventProducer: mock
 				andProjectorClass: mock)
+]
 
+{ #category : #helpers }
+EDATBDDHelper >> buildEventSerializer [
+	^ EDAJsonEventSerializer new
 ]
 
 { #category : #helpers }
