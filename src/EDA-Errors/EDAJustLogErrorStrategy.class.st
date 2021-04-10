@@ -35,11 +35,6 @@ EDAJustLogErrorStrategy class >> shouldPersistFuel [
 	^ false
 ]
 
-{ #category : #accessing }
-EDAJustLogErrorStrategy >> description [
-	^ 'Just log error'
-]
-
 { #category : #'error handling' }
 EDAJustLogErrorStrategy >> handleError: anException withExtraContextInformation: aDictionary [
 	| event projection |

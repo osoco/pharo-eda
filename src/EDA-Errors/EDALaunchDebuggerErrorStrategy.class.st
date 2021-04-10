@@ -21,7 +21,7 @@ Class {
 	#classInstVars : [
 		'errors'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
@@ -47,11 +47,6 @@ EDALaunchDebuggerErrorStrategy class >> errors: aCollection [
 { #category : #'class initialization' }
 EDALaunchDebuggerErrorStrategy class >> initialize [
 	self errors: OrderedCollection new
-]
-
-{ #category : #'error handling' }
-EDALaunchDebuggerErrorStrategy >> description [
-	^ 'Launch debugger'
 ]
 
 { #category : #'error handling' }

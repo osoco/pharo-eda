@@ -1,5 +1,5 @@
 Class {
-	#name : #EDAPragmaCommandHandlerMethodsScanner,
+	#name : #EDAPragmaHandlerMethodScanner,
 	#superclass : #Object,
 	#traits : 'EDAPrintOnHelper',
 	#classTraits : 'EDAPrintOnHelper classTrait',
@@ -7,11 +7,11 @@ Class {
 		'pragma',
 		'fromClass'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Handlers-Scanners'
 }
 
 { #category : #'instance creation' }
-EDAPragmaCommandHandlerMethodsScanner class >> scannerPragma: aSymbol from: aClass [
+EDAPragmaHandlerMethodScanner class >> scannerPragma: aSymbol from: aClass [
 	^ self new
 		pragma: aSymbol;
 		fromClass: aClass;
@@ -19,7 +19,7 @@ EDAPragmaCommandHandlerMethodsScanner class >> scannerPragma: aSymbol from: aCla
 ]
 
 { #category : #scanning }
-EDAPragmaCommandHandlerMethodsScanner >> allCommandHandlerMethods [
+EDAPragmaHandlerMethodScanner >> allCommandHandlerMethods [
 	| handlerPragmas handlerMethodAssocs |
 	handlerPragmas := Set new.
 	self fromClass allSubclasses
@@ -37,21 +37,21 @@ EDAPragmaCommandHandlerMethodsScanner >> allCommandHandlerMethods [
 ]
 
 { #category : #accessing }
-EDAPragmaCommandHandlerMethodsScanner >> fromClass [
+EDAPragmaHandlerMethodScanner >> fromClass [
 	^ fromClass
 ]
 
 { #category : #accessing }
-EDAPragmaCommandHandlerMethodsScanner >> fromClass: anObject [
+EDAPragmaHandlerMethodScanner >> fromClass: anObject [
 	fromClass := anObject
 ]
 
 { #category : #accessing }
-EDAPragmaCommandHandlerMethodsScanner >> pragma [
+EDAPragmaHandlerMethodScanner >> pragma [
 	^ pragma
 ]
 
 { #category : #accessing }
-EDAPragmaCommandHandlerMethodsScanner >> pragma: anObject [
+EDAPragmaHandlerMethodScanner >> pragma: anObject [
 	pragma := anObject
 ]

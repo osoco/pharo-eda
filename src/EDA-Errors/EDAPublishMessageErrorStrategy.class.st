@@ -21,7 +21,7 @@ Class {
 	#classInstVars : [
 		'topicPublisher'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
@@ -37,11 +37,6 @@ EDAPublishMessageErrorStrategy class >> topicPublisher [
 { #category : #accessing }
 EDAPublishMessageErrorStrategy class >> topicPublisher: aTopicPublisher [
 	topicPublisher := aTopicPublisher
-]
-
-{ #category : #accessing }
-EDAPublishMessageErrorStrategy >> description [
-	^ 'Errors published as messages'
 ]
 
 { #category : #'error handling' }

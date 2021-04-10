@@ -8,7 +8,7 @@ Class {
 		'eventBus',
 		'projectorClass'
 	],
-	#category : #'EDA-Commands-Handlers'
+	#category : #'EDA-Handlers-Commands'
 }
 
 { #category : #handling }

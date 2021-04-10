@@ -9,7 +9,7 @@ Class {
 		'aCommandHandlerSuperclass',
 		'anotherCommandClass'
 	],
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #running }
@@ -36,7 +36,7 @@ EDAPragmaCommandHandlerMethodsScannerTestCase >> testScannerCreation [
 	| aClass aPragma scanner |
 	aClass := protocol mock: 'aClass'.
 	aPragma := protocol mock: 'aPragma'.
-	scanner := EDAPragmaCommandHandlerMethodsScanner scannerPragma: aPragma from: aClass.
+	scanner := EDAPragmaHandlerMethodScanner scannerPragma: aPragma from: aClass.
 	self assert: scanner pragma equals: aPragma.
 	self assert: scanner fromClass equals: aClass
 ]
@@ -46,7 +46,7 @@ EDAPragmaCommandHandlerMethodsScannerTestCase >> testScanning [
 	| aCommandHandlerClass scanner |
 	aCommandHandlerClass := self newSubclassOf: aCommandHandlerSuperclass instanceVariableNames: '' classVariableNames: ''.
 	aCommandHandlerClass duringTestCompileSilently: 'handlerCommandMethod: aCommand <pragmaTest: EDACommandClassStub> ^2'.
-	scanner := EDAPragmaCommandHandlerMethodsScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
+	scanner := EDAPragmaHandlerMethodScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
 	self
 		assert: (scanner allCommandHandlerMethods)
 		equals: {(aCommandClass -> (aCommandHandlerClass >> #handlerCommandMethod:))} asSet
@@ -58,7 +58,7 @@ EDAPragmaCommandHandlerMethodsScannerTestCase >> testScanningIfPragmaIsNotInSubc
 	| aCommandHandlerClass scanner |
 	aCommandHandlerClass := self newClass.
 	aCommandHandlerClass duringTestCompileSilently: 'handlerCommandMethod: aCommand <pragmaTest: EDACommandClassStub> ^2'.
-	scanner := EDAPragmaCommandHandlerMethodsScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
+	scanner := EDAPragmaHandlerMethodScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
 	self
 		assert: (scanner allCommandHandlerMethods)
 		equals: nil.
@@ -76,7 +76,7 @@ EDAPragmaCommandHandlerMethodsScannerTestCase >> testScanningMultipleMethodsAndS
 	aCommandHandlerClass duringTestCompileSilently: 'handlerCommandMethod: aCommand <pragmaTest: EDACommandClassStub> ^nil'.
 	anotherCommandHandlerClass
 		duringTestCompileSilently: 'handlerOtherCommandMethod: aCommand <pragmaTest: EDAAnotherCommandClassStub> ^nil'.
-	scanner := EDAPragmaCommandHandlerMethodsScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
+	scanner := EDAPragmaHandlerMethodScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
 	self
 		assert: scanner allCommandHandlerMethods
 		equals:

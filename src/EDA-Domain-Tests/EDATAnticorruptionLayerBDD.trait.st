@@ -5,6 +5,20 @@ Trait {
 	#category : #'EDA-Domain-Tests'
 }
 
+{ #category : #helpers }
+EDATAnticorruptionLayerBDD >> buildCommandConsumerWithEventStore: anEventStore [
+	| mock |
+	mock := EDAAcceptEverything new.
+	^ EDAMessageConsumer
+		busListener: mock
+		materializer: EDAJsonCommandMaterializer new
+		dispatcher:
+			(EDAApplication
+				buildCommandDispatcherWithEventStore: anEventStore
+				eventProducer: mock
+				andProjectorClass: mock)
+]
+
 { #category : #BDD }
 EDATAnticorruptionLayerBDD >> givenAnticorruptionLayer: aSymbol whenReceivingExternalEvent: anEvent then: aBlock [
 	| anticorruptionLayer |

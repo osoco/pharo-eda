@@ -21,10 +21,10 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 	| mock |
 	mock := EDAAcceptEverything new.
-	^ EDACommandConsumer
+	^ EDAMessageConsumer
 		busListener: mock
-		commandMaterializer: EDAJsonCommandMaterializer new
-		commandDispatcher:
+		materializer: EDAJsonCommandMaterializer new
+		dispatcher:
 			(EDAApplication
 				buildCommandDispatcherWithEventStore: anEventStore
 				eventProducer: mock
@@ -37,6 +37,27 @@ EDATBDDHelper >> buildEventSerializer [
 ]
 
 { #category : #helpers }
+EDATBDDHelper >> buildonsumerWithEventStore: anEventStore [
+	| mock |
+	mock := EDAAcceptEverything new.
+	^ EDAMessageConsumer
+		busListener: mock
+		commandMaterializer: EDAJsonCommandMaterializer new
+		commandDispatcher:
+			(EDAApplication
+				buildCommandDispatcherWithEventStore: anEventStore
+				eventProducer: mock
+				andProjectorClass: mock)
+		eventMaterializer: EDAJsonEventMaterializer new
+				eventDispatcher: 
+					(EDAApplication
+				buildEventDispatcherWithEventStore: anEventStore
+				eventProducer: mock
+				andProjectorClass: mock)
+
+]
+
+{ #category : #helpers }
 EDATBDDHelper >> consumeMessage: aMessage using: aCommandConsumer [
 	^ aCommandConsumer
 		consumeMessage: aMessage
@@ -45,7 +66,7 @@ EDATBDDHelper >> consumeMessage: aMessage using: aCommandConsumer [
 
 { #category : #BDD }
 EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock thenEvents: expectedResultingEvents processingThem: aProcessingExpectedEventsBlock [
-	| commandConsumer resultingEvents eventStore expectedEvents eventsToSave originalEventStores aMessage |
+	| consumer resultingEvents eventStore expectedEvents eventsToSave originalEventStores aMessage |
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
 	[ self useEventStore: eventStore.
@@ -53,35 +74,15 @@ EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBl
 		value: pastEvents
 		value: eventStore.
 	eventStore saveEvents: eventsToSave.
-	commandConsumer := self
-		buildCommandConsumerWithEventStore: eventStore.
-	expectedEvents := aProcessingExpectedEventsBlock value: expectedResultingEvents value: eventStore.
+	consumer := self
+		buildConsumerWithEventStore: eventStore.
+	expectedEvents := aProcessingExpectedEventsBlock
+		value: expectedResultingEvents
+		value: eventStore.
 	aMessage := aMessageBlock value: eventsToSave value: aString.
 	resultingEvents := self
 		consumeMessage: aMessage
-		using: commandConsumer.
-	self assertEvents: resultingEvents matchExpected: expectedEvents ]
-		ensure: [ self restoreEventStores: originalEventStores ]
-]
-
-{ #category : #BDD }
-EDATBDDHelper >> givenEvents: historicalEvents processingThem: aProcessingBlock whenReceiveMessage: aMessage thenEvents: expectedResultingEvents [
-	| commandConsumer resultingEvents eventStore expectedEvents eventsToSave originalEventStores |
-	eventStore := EDAVolatileEventStore new.
-	originalEventStores := self retrieveEventStores.
-	[ self useEventStore: eventStore.
-	eventsToSave := aProcessingBlock
-		value: historicalEvents
-		value: eventStore.
-	eventStore saveEvents: eventsToSave.
-	commandConsumer := self
-		buildCommandConsumerWithEventStore: eventStore.
-	expectedEvents := self
-		processEvents: expectedResultingEvents
-		usingEventStore: eventStore.
-	resultingEvents := self
-		consumeMessage: aMessage
-		using: commandConsumer.
+		using: consumer.
 	self assertEvents: resultingEvents matchExpected: expectedEvents ]
 		ensure: [ self restoreEventStores: originalEventStores ]
 ]

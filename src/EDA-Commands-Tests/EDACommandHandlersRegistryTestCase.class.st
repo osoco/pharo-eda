@@ -16,8 +16,8 @@ EDACommandHandlersRegistryTestCase >> testCreateRegistryWithScannerAndFactory [
 		once: aScanner recv: #allCommandHandlerMethods;
 		=> {(aCommand class -> aHandlerMethod)}.
 	protocol describe
-		once: aFactory recv: #newFromHandlerMethod:;
-		with: aHandlerMethod;
+		once: aFactory recv: #newFromHandlerMethod:andProjectorClass:;
+		with: aHandlerMethod and: EDACompositeProjector;
 		=> aCommandHandler.
 	registry := EDACommandHandlersRegistry
 		withScanner: aScanner

@@ -1,5 +1,5 @@
 Class {
 	#name : #EDAProjectionErrorBehavior,
 	#superclass : #EDAErrorBehavior,
-	#category : #'EDA-Errors'
+	#category : #'EDA-Errors-Behaviors'
 }

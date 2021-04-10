@@ -396,7 +396,7 @@ EDASettings class >> stompListenerSettingsOn: aBuilder withConfig: container und
 		default: (stompConfig at: 'debug' ifAbsent: true).
 	(aBuilder setting: #restartOnCommandConsumingErrors)
 		parent: parent;
-		target: EDACommandConsumer;
+		target: EDAMessageConsumer;
 		label: 'Restart on error' translated;
 		description: 'Whether to restart the client in case of errors';
 		default: (stompConfig at: 'restartOnError' ifAbsent: false)

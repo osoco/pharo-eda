@@ -180,6 +180,11 @@ EDACommand >> isDelete [
 	^ false
 ]
 
+{ #category : #testing }
+EDACommand >> latestVersion [
+	^ self class latestVersion
+]
+
 { #category : #accessing }
 EDACommand >> originalTimestamp [
 	^ originalTimestamp

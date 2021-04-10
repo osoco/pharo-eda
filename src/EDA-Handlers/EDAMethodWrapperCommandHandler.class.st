@@ -6,7 +6,7 @@ Class {
 		'aggregateRoot',
 		'aggregateRootClass'
 	],
-	#category : #'EDA-Commands-Handlers'
+	#category : #'EDA-Handlers-Commands'
 }
 
 { #category : #'instance creation' }
