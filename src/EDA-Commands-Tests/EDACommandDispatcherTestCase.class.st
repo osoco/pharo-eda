@@ -34,8 +34,16 @@ EDACommandDispatcherTestCase >> testDispatchCommand [
 		=> aCommandHandler.
 	protocol describe
 		once: aCommandHandler recv: #handle:withErrorStrategy:;
-		with: aCommand.
-	dispatcher dispatch: aCommand usingStrategy: EDACommandConsumingErrorBehavior strategy
+		with: aCommand and: EDACommandConsumingErrorBehavior strategy.
+	protocol describe
+		once: aCommand recv: #version;
+		=> 1.
+	protocol describe
+		once: aCommand recv: #latestVersion;
+		=> 1.
+	dispatcher
+		dispatch: aCommand
+		usingStrategy: EDACommandConsumingErrorBehavior strategy
 ]
 
 { #category : #tests }
@@ -47,12 +55,30 @@ EDACommandDispatcherTestCase >> testDispatchCommandNotRegistered [
 		once: handlersRegistry recv: #handlerForCommand:;
 		with: aCommand;
 		=> nil.
+	protocol describe
+		once: aCommand recv: #version;
+		=> 1.
+	protocol describe
+		once: aCommand recv: #isDelete;
+		=> false.
+	protocol describe
+		once: aCommand recv: #aggregateRootClass;
+		=> EDAAggregateRoot.
+	protocol describe
+		once: aCommand recv: #latestVersion;
+		=> 1.
 	self
-		should: [ dispatcher dispatch: aCommand usingStrategy: EDACommandConsumingErrorBehavior strategy ]
+		should: [ dispatcher
+				dispatch: aCommand
+				usingStrategy: EDACommandConsumingErrorBehavior strategy ]
 		raise: EDACommandHandlerNotFound
 ]
 
 { #category : #tests }
 EDACommandDispatcherTestCase >> testDispatchNilCommand [
-	self should: [ dispatcher dispatch: nil usingStrategy: EDACommandConsumingErrorBehavior strategy ] raise: EDACommandError
+	self
+		should: [ dispatcher
+				dispatch: nil
+				usingStrategy: EDACommandConsumingErrorBehavior strategy ]
+		raise: EDAInvalidCommandMessage 
 ]

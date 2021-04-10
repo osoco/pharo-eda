@@ -65,6 +65,11 @@ EDAEventSourcingEvent class >> isEventGenerated: attr [
 	^ self attributesWhoseValuesGetGenerated anySatisfy: [ :v | v = attr ]
 ]
 
+{ #category : #testing }
+EDAEventSourcingEvent class >> isEventSourcingEvent [
+	^ true
+]
+
 { #category : #accessing }
 EDAEventSourcingEvent class >> latestVersion [
 	<doc: 'Retrieves the latest version of the event class'>
@@ -155,6 +160,11 @@ EDAEventSourcingEvent >> initialize [
 	self delete: false.
 	self timestamp ifNil: [ self timestamp: DateAndTime now asUTC ].
 	aggregateRootClass := self aggregateRootClass greaseString
+]
+
+{ #category : #testing }
+EDAEventSourcingEvent >> isEventSourcingEvent [
+	^ self class isEventSourcingEvent
 ]
 
 { #category : #accessing }

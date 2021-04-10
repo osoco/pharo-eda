@@ -52,9 +52,29 @@ EDAApplication class >> applicationName [
 { #category : #setup }
 EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore eventProducer: anEventProducer andProjectorClass: aClass [
 	| handlerScanner handlerFactory commandRegistry |
-	handlerScanner := EDAPragmaCommandHandlerMethodsScanner
+	handlerScanner := EDAPragmaHandlerMethodScanner
 		scannerPragma: #useAsCommandHandlerFor:
 		from: EDAAggregateRoot.
+	handlerFactory := EDACommandHandlerFactory
+		factoryWithEventStore: anEventStore
+		eventBus: anEventProducer.
+	commandRegistry := EDACommandHandlersRegistry
+		withScanner: handlerScanner
+		factory: handlerFactory
+		andProjectorClass: aClass.
+	^ EDACommandDispatcher
+		withRegistry: commandRegistry
+		eventStore: anEventStore
+		eventProducer: anEventProducer
+		andProjectorClass: aClass
+]
+
+{ #category : #setup }
+EDAApplication class >> buildEventDispatcherWithEventStore: anEventStore eventProducer: anEventProducer andProjectorClass: aClass [
+	| handlerScanner handlerFactory commandRegistry |
+	handlerScanner := EDAPragmaHandlerMethodScanner
+		scannerPragma: #useAsCommandHandlerFor:
+		from: EDAAnticorruptionLayer.
 	handlerFactory := EDACommandHandlerFactory
 		factoryWithEventStore: anEventStore
 		eventBus: anEventProducer.
@@ -338,7 +358,7 @@ EDAApplication class >> setupCommandConsumerWithCommandListener: listener [
 	listener client debug: self commandListenerClientDebug.
 	materializer := EDAJsonCommandMaterializer new.
 	self
-		commandConsumer: (EDACommandConsumer busListener: listener commandMaterializer: materializer commandDispatcher: self commandDispatcher)
+		commandConsumer: (EDAMessageConsumer busListener: listener materializer: materializer dispatcher: self commandDispatcher)
 ]
 
 { #category : #setup }

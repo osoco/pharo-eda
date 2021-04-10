@@ -1,7 +1,7 @@
 Class {
 	#name : #EDACommandHandlerFactoryTestCase,
 	#superclass : #BabyMock2TestCase,
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #tests }
@@ -20,11 +20,15 @@ EDACommandHandlerFactoryTestCase >> testFactoryFromHandlerMethod [
 	anEventStore := protocol mock: 'anEventStore'.
 	anEventBus := protocol mock: 'anEventBus'.
 	aMethod := protocol mock: 'aMethod'.
-	protocol describe allow: aMethod recv: #methodClass; => Anything class.
-	factory := EDACommandHandlerFactory factoryWithEventStore: anEventStore eventBus: anEventBus.
-	handler := factory newFromHandlerMethod: aMethod.
+	protocol describe
+		allow: aMethod recv: #methodClass;
+		=> Anything class.
+	factory := EDACommandHandlerFactory
+		factoryWithEventStore: anEventStore
+		eventBus: anEventBus.
+	handler := factory newFromHandlerMethod: aMethod andProjectorClass: nil.
 	self assert: (handler isKindOf: EDAMethodWrapperCommandHandler).
 	self assert: handler eventStore equals: anEventStore.
 	self assert: handler eventBus equals: anEventBus.
-	self assert: handler handlerMethod equals: aMethod.
+	self assert: handler handlerMethod equals: aMethod
 ]

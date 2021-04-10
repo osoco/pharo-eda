@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'handlers'
 	],
-	#category : #'EDA-Commands-Handlers'
+	#category : #'EDA-Handlers-Commands'
 }
 
 { #category : #'instance creation' }

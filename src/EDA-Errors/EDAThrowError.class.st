@@ -16,11 +16,6 @@ EDAThrowError class >> shouldPersistFuel [
 	^ false
 ]
 
-{ #category : #accessing }
-EDAThrowError >> description [
-	^ self class description
-]
-
 { #category : #'error handling' }
 EDAThrowError >> handleError: error withExtraContextInformation: aDictionary [
 	"Handles the error"

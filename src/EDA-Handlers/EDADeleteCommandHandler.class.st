@@ -6,7 +6,7 @@ Class {
 		'eventBus',
 		'eventStore'
 	],
-	#category : #'EDA-Commands-Handlers'
+	#category : #'EDA-Handlers-Commands'
 }
 
 { #category : #accessing }

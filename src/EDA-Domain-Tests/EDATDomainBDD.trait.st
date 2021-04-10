@@ -71,6 +71,20 @@ EDATDomainBDD >> buildBodyForCommand: aCommand andAggregateRootVersion: aVersion
 
 ]
 
+{ #category : #helpers }
+EDATDomainBDD >> buildCommandConsumerWithEventStore: anEventStore [
+	| mock |
+	mock := EDAAcceptEverything new.
+	^ EDAMessageConsumer
+		busListener: mock
+		materializer: EDAJsonCommandMaterializer new
+		dispatcher:
+			(EDAApplication
+				buildCommandDispatcherWithEventStore: anEventStore
+				eventProducer: mock
+				andProjectorClass: mock)
+]
+
 { #category : #helper }
 EDATDomainBDD >> buildMessageForCommand: aCommand ofType: aString [
 	| aux |

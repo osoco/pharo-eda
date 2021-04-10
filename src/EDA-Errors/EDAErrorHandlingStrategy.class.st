@@ -60,15 +60,10 @@ EDAErrorHandlingStrategy >> context: ctx [
 
 { #category : #accessing }
 EDAErrorHandlingStrategy >> description [
-	"The strategy description"
-	self subclassResponsibility.
-	^ self
+	^ self class description
 ]
 
 { #category : #'error handling' }
-EDAErrorHandlingStrategy >> handleError: env withExtraContextInformation: aDictionary [
-	"Handles the error"
-
-	self subclassResponsibility.
-	^ self
+EDAErrorHandlingStrategy >> handleError: anException withExtraContextInformation: aDictionary [
+	self subclassResponsibility
 ]

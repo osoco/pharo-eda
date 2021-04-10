@@ -44,11 +44,6 @@ EDAPublishMessageErrorStrategy class >> topicPublisher: aTopicPublisher [
 	topicPublisher := aTopicPublisher
 ]
 
-{ #category : #accessing }
-EDAPublishMessageErrorStrategy >> description [
-	^ 'Errors published as messages'
-]
-
 { #category : #'error handling' }
 EDAPublishMessageErrorStrategy >> handleError: anError withExtraContextInformation: aDictionary [
 	| serializer message |

@@ -10,6 +10,11 @@ Class {
 	#category : #'EDA-Events-External'
 }
 
+{ #category : #testing }
+EDAExternalEvent class >> isEventSourcingEvent [
+	^ false
+]
+
 { #category : #'instance creation' }
 EDAExternalEvent class >> new [
 	MessageNotUnderstood signal: 'Instances of EDAExternalEvent need to be instantiated using #newForVersion:'
@@ -41,6 +46,11 @@ EDAExternalEvent >> delete [
 EDAExternalEvent >> initialize [
 	super initialize.
 	self timestamp: DateAndTime now
+]
+
+{ #category : #testing }
+EDAExternalEvent >> isEventSourcingEvent [
+	^ self class isEventSourcingEvent
 ]
 
 { #category : #accessing }

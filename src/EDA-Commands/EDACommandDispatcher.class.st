@@ -48,7 +48,7 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 								nextPutAll: '>>';
 								nextPutAll: 'dispatch: received a nil command' ])
 				andThrow: EDAInvalidCommandMessage ].
-	aCommand version = aCommand class latestVersion
+	aCommand version = aCommand latestVersion
 		ifFalse: [ self
 				logErrorMessage:
 					(String

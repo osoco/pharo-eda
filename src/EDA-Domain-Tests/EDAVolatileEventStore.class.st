@@ -37,6 +37,11 @@ EDAVolatileEventStore class >> selectorsFromCriteriaDictionary: aCriteriaDiction
 	^ aCriteriaDictionary keys collect: [ :k | (k splitOn: '.') first asSymbol ]
 ]
 
+{ #category : #helpers }
+EDAVolatileEventStore >> canBeSavedInTheEventStore: anEvent [
+	^ anEvent isEventSourcingEvent
+]
+
 { #category : #accessing }
 EDAVolatileEventStore >> events [
 	events ifNil: [ self events: Dictionary new ].
@@ -75,6 +80,7 @@ EDAVolatileEventStore >> saveEvents: aCollection [
 	aCollection
 		do: [ :e | 
 			| evts evtCollection |
+			(self canBeSavedInTheEventStore: e) ifTrue: [ 
 			evts := self events at: e tenant ifAbsent: [ Dictionary new ].
 			evts ifEmpty: [ self events at: e tenant put: evts ].
 			evtCollection := evts
@@ -82,5 +88,5 @@ EDAVolatileEventStore >> saveEvents: aCollection [
 				ifAbsent: [ OrderedCollection new ].
 			evtCollection
 				ifEmpty: [ evts at: e aggregateRootClass put: evtCollection ].
-			evtCollection add: e ]
+			evtCollection add: e ] ]
 ]
