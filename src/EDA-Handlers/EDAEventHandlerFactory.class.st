@@ -1,17 +1,15 @@
 Class {
-	#name : #EDACommandHandlerFactory,
+	#name : #EDAEventHandlerFactory,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
 	#instVars : [
 		'eventStore',
 		'eventBus'
 	],
-	#category : #'EDA-Handlers-Commands'
+	#category : #'EDA-Handlers-Events'
 }
 
 { #category : #'instance creation' }
-EDACommandHandlerFactory class >> factoryWithEventStore: anEventStore eventBus: anEventBus [
+EDAEventHandlerFactory class >> factoryWithEventStore: anEventStore eventBus: anEventBus [
 	^ self new
 		eventStore: anEventStore;
 		eventBus: anEventBus;
@@ -19,27 +17,27 @@ EDACommandHandlerFactory class >> factoryWithEventStore: anEventStore eventBus: 
 ]
 
 { #category : #accessing }
-EDACommandHandlerFactory >> eventBus [
+EDAEventHandlerFactory >> eventBus [
 	^ eventBus
 ]
 
 { #category : #accessing }
-EDACommandHandlerFactory >> eventBus: anObject [
+EDAEventHandlerFactory >> eventBus: anObject [
 	eventBus := anObject
 ]
 
 { #category : #accessing }
-EDACommandHandlerFactory >> eventStore [
+EDAEventHandlerFactory >> eventStore [
 	^ eventStore
 ]
 
 { #category : #accessing }
-EDACommandHandlerFactory >> eventStore: anObject [
+EDAEventHandlerFactory >> eventStore: anObject [
 	eventStore := anObject
 ]
 
-{ #category : #factory }
-EDACommandHandlerFactory >> newFromHandlerMethod: aMethod andProjectorClass: aProjectorClass [
+{ #category : #'instance creation' }
+EDAEventHandlerFactory >> newFromHandlerMethod: aMethod andProjectorClass: aProjectorClass [
 	^ EDAMethodWrapperCommandHandler
 		newFromHandlerMethod: aMethod
 		eventStore: self eventStore

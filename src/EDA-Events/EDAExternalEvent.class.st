@@ -16,13 +16,9 @@ EDAExternalEvent class >> isEventSourcingEvent [
 ]
 
 { #category : #'instance creation' }
-EDAExternalEvent class >> new [
-	MessageNotUnderstood signal: 'Instances of EDAExternalEvent need to be instantiated using #newForVersion:'
-]
-
-{ #category : #'instance creation' }
 EDAExternalEvent class >> newForVersion: aVersion [
-	^ self basicNew initialize;
+	^ self
+		new
 		version: aVersion;
 		yourself
 ]

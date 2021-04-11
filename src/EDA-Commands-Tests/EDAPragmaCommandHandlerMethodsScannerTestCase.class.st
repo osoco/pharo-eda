@@ -48,7 +48,7 @@ EDAPragmaCommandHandlerMethodsScannerTestCase >> testScanning [
 	aCommandHandlerClass duringTestCompileSilently: 'handlerCommandMethod: aCommand <pragmaTest: EDACommandClassStub> ^2'.
 	scanner := EDAPragmaHandlerMethodScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
 	self
-		assert: (scanner allCommandHandlerMethods)
+		assert: (scanner allHandlerMethods)
 		equals: {(aCommandClass -> (aCommandHandlerClass >> #handlerCommandMethod:))} asSet
 
 ]
@@ -60,7 +60,7 @@ EDAPragmaCommandHandlerMethodsScannerTestCase >> testScanningIfPragmaIsNotInSubc
 	aCommandHandlerClass duringTestCompileSilently: 'handlerCommandMethod: aCommand <pragmaTest: EDACommandClassStub> ^2'.
 	scanner := EDAPragmaHandlerMethodScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
 	self
-		assert: (scanner allCommandHandlerMethods)
+		assert: (scanner allHandlerMethods)
 		equals: nil.
 
 ]
@@ -78,7 +78,7 @@ EDAPragmaCommandHandlerMethodsScannerTestCase >> testScanningMultipleMethodsAndS
 		duringTestCompileSilently: 'handlerOtherCommandMethod: aCommand <pragmaTest: EDAAnotherCommandClassStub> ^nil'.
 	scanner := EDAPragmaHandlerMethodScanner scannerPragma: #pragmaTest: from: aCommandHandlerSuperclass.
 	self
-		assert: scanner allCommandHandlerMethods
+		assert: scanner allHandlerMethods
 		equals:
 			{(aCommandClass -> (aCommandHandlerClass >> #handlerCommandMethod:)).
 			(anotherCommandClass -> (anotherCommandHandlerClass >> #handlerOtherCommandMethod:))} asSet

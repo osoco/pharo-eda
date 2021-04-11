@@ -1,25 +1,28 @@
 Class {
-	#name : #EDACommandHandlersRegistry,
+	#name : #EDAEventHandlersRegistry,
 	#superclass : #Object,
 	#traits : 'EDAPrintOnHelper + EDATLogging',
 	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'handlers'
 	],
-	#category : #'EDA-Handlers-Commands'
+	#category : #'EDA-Handlers-Events'
 }
 
 { #category : #'instance creation' }
-EDACommandHandlersRegistry class >> emptyRegistry [
-	^ self new handlers: Dictionary new.
+EDAEventHandlersRegistry class >> emptyRegistry [
+	^ self new handlers: Dictionary new
 ]
 
 { #category : #'instance creation' }
-EDACommandHandlersRegistry class >> withScanner: aCommandHandlersScanner factory: aCommandHandlerFactory andProjectorClass: aClass [
+EDAEventHandlersRegistry class >> withScanner: aCommandHandlersScanner factory: aCommandHandlerFactory andProjectorClass: aClass [
 	| handlerAssocs commandClass commandHandler registry handlerMethod |
 	registry := self emptyRegistry.
 	handlerAssocs := aCommandHandlersScanner allHandlerMethods.
-	handlerAssocs ifNil: [ self logErrorMessage: 'No handler methods found' andThrow: EDACommandHandlerNotFound ].
+	handlerAssocs
+		ifNil: [ self
+				logErrorMessage: 'No handler methods found'
+				andThrow: EDAEventHandlerNotFound ].
 	handlerAssocs
 		do: [ :assoc | 
 			commandClass := assoc key.
@@ -32,22 +35,22 @@ EDACommandHandlersRegistry class >> withScanner: aCommandHandlersScanner factory
 ]
 
 { #category : #registry }
-EDACommandHandlersRegistry >> handlerForCommand: aCommand [
-	^ self handlers at: aCommand class ifAbsent: [ nil ]
+EDAEventHandlersRegistry >> handlerForEvent: anEvent [
+	^ self handlers at: anEvent class ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }
-EDACommandHandlersRegistry >> handlers [
+EDAEventHandlersRegistry >> handlers [
 	^ handlers
 ]
 
 { #category : #accessing }
-EDACommandHandlersRegistry >> handlers: anObject [
+EDAEventHandlersRegistry >> handlers: anObject [
 	handlers := anObject
 ]
 
 { #category : #registry }
-EDACommandHandlersRegistry >> registerHandler: aCommandHandler command: aCommand [
-	aCommand ifNil: [ EDACommandError signal ].
-	self handlers at: aCommand class put: aCommandHandler
+EDAEventHandlersRegistry >> registerHandler: anEventHandler event: anEvent [
+	anEvent ifNil: [ EDAEventError signal ].
+	self handlers at: anEvent class put: anEventHandler
 ]
