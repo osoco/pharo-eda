@@ -1,7 +1,7 @@
 Class {
 	#name : #EDAFuelHelper,
 	#superclass : #Object,
-	#category : 'EDA-Tools'
+	#category : #'EDA-Traits'
 }
 
 { #category : #handling }

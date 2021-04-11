@@ -1,18 +1,13 @@
 Class {
 	#name : #EDACommandDispatcher,
-	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATLogging',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
+	#superclass : #EDADispatcher,
 	#instVars : [
-		'handlersRegistry',
-		'projectorClass',
-		'eventStore',
-		'eventProducer'
+		'projectorClass'
 	],
 	#classInstVars : [
 		'strategy'
 	],
-	#category : #'EDA-Commands-Handlers'
+	#category : #'EDA-Dispatchers-Command'
 }
 
 { #category : #'instance creation' }
@@ -84,36 +79,6 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 										nextPutAll: ' is not prepared to handle it' ] ])
 				andThrow: EDACommandHandlerNotFound ].
 	^ handler handle: aCommand withErrorStrategy: aStrategy
-]
-
-{ #category : #accessing }
-EDACommandDispatcher >> eventProducer [
-	^ eventProducer
-]
-
-{ #category : #accessing }
-EDACommandDispatcher >> eventProducer: anEventProducer [
-	eventProducer := anEventProducer
-]
-
-{ #category : #accessing }
-EDACommandDispatcher >> eventStore [
-	^ eventStore
-]
-
-{ #category : #accessing }
-EDACommandDispatcher >> eventStore: anEventStore [
-	eventStore := anEventStore
-]
-
-{ #category : #accessing }
-EDACommandDispatcher >> handlersRegistry [
-	^ handlersRegistry 
-]
-
-{ #category : #accessing }
-EDACommandDispatcher >> handlersRegistry: aHandlersRegistry [
-	handlersRegistry  := aHandlersRegistry
 ]
 
 { #category : #accessing }

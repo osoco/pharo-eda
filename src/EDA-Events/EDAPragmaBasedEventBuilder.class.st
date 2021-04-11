@@ -26,7 +26,18 @@ EDAPragmaBasedEventBuilder >> build [
 				signal: self name greaseString , ' event is not supported' ].
 	class := self class environment
 		at: pragma methodClass allInstances first greaseString asSymbol.
-	event := class perform: pragma method selector with: self.
+	(pragma method hasPragmaNamed: #builderClass:)
+		ifTrue: [ | builder |
+			builder := (self class environment
+				at:
+					((pragma method pragmas select: [ :p | p selector = #builderClass: ])
+						first argumentAt: 1)) with: (self params at: #body).
+			event := class perform: pragma method selector with: builder ]
+		ifFalse: [ EDAInternalError
+				signal:
+					'Method ' , pragma method
+						,
+							' does not contain a #builderClass: pragma specifying its builder class' ].
 	^ event
 ]
 

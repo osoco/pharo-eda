@@ -43,10 +43,10 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-Handlers' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
+			#(#'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-Handlers' #'EDA-Dispatchers' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
 		group: 'tests'
 			with:
-			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
+			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests' #'EDA-Application-Tests');
 		group: 'default' with: #('core' 'tests')
 ]
 
@@ -83,10 +83,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools') ];
 		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Domain-Tests'
-			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
-		package: #'EDA-Commands-Tests-Tests'
-			with: [ spec requires: #('EDA-Commands-Tests') ];
 		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Errors'
@@ -96,7 +92,10 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
 		package: #'EDA-Commands'
 			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
-		package: #'EDA-Handlers' with: [ spec requires: #('EDA-Commands' 'EDA-Events') ];
+		package: #'EDA-Handlers'
+			with: [ spec requires: #('EDA-Commands' 'EDA-Events') ];
+		package: #'EDA-Dispatchers'
+			with: [ spec requires: #('EDA-Commands' 'EDA-Events' 'EDA-Handlers') ];
 		package: #'EDA-Logging';
 		package: #'EDA-Projections'
 			with: [ spec requires: #('EDA-Traits') ];
@@ -112,11 +111,19 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec
 				requires:
 					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging') ];
+		package: #'EDA-Application-Tests'
+			with: [ spec
+				requires:
+					#('EDA-Application') ];
 		package: #'EDA-Settings'
 			with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application') ];
+		package: #'EDA-Domain-Tests'
+			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec
-				requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ]
+				requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
+		package: #'EDA-Commands-Tests-Tests'
+			with: [ spec requires: #('EDA-Commands-Tests') ]
 ]
 
 { #category : #dependencies }
