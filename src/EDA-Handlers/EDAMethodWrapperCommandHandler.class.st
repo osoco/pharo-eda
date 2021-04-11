@@ -11,13 +11,14 @@ Class {
 
 { #category : #'instance creation' }
 EDAMethodWrapperCommandHandler class >> newFromHandlerMethod: aMethod eventStore: anEventStore eventBus: anEventBus andProjectorClass: aClass [
-	^ self new
-		eventStore: anEventStore;
-		eventBus: anEventBus;
+	| result |
+	result :=  self newFromEventStore: anEventStore
+		eventBus: anEventBus
+		andProjectorClass: aClass.
+		result
 		handlerMethod: aMethod;
-		aggregateRootClass: aMethod methodClass;
-		projectorClass: aClass;
-		yourself
+		aggregateRootClass: aMethod methodClass.
+		^ result
 ]
 
 { #category : #accessing }
@@ -59,13 +60,6 @@ EDAMethodWrapperCommandHandler >> handlerMethod [
 { #category : #accessing }
 EDAMethodWrapperCommandHandler >> handlerMethod: anObject [
 	handlerMethod := anObject
-]
-
-{ #category : #handling }
-EDAMethodWrapperCommandHandler >> invokeMethodHandlerWith: aCommand on: aReceiver [
-	self
-		logDebugMessage: (String streamContents: [ :s | s nextPutAll: 'Handling command '; nextPutAll: aCommand class greaseString ]).
-	^ aReceiver perform: self handlerMethod selector with: aCommand
 ]
 
 { #category : #helper }

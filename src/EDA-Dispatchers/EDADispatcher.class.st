@@ -11,6 +11,15 @@ Class {
 	#category : #'EDA-Dispatchers-Dispatchers'
 }
 
+{ #category : #'instance creation' }
+EDADispatcher class >> withRegistry: aHandlersRegistry eventStore: anEventStore andEventProducer: anEventProducer [
+	^ self new
+		handlersRegistry: aHandlersRegistry;
+		eventStore: anEventStore;
+		eventProducer: anEventProducer;
+		yourself
+]
+
 { #category : #dispatching }
 EDADispatcher >> dispatch: anObject usingStrategy: aStrategy [
 	self subclassResponsibility

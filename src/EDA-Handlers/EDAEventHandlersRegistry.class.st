@@ -15,22 +15,22 @@ EDAEventHandlersRegistry class >> emptyRegistry [
 ]
 
 { #category : #'instance creation' }
-EDAEventHandlersRegistry class >> withScanner: aCommandHandlersScanner factory: aCommandHandlerFactory andProjectorClass: aClass [
-	| handlerAssocs commandClass commandHandler registry handlerMethod |
+EDAEventHandlersRegistry class >> withScanner: anEventHandlersScanner factory: anEventHandlerFactory andProjectorClass: aClass [
+	| handlerAssocs registry |
 	registry := self emptyRegistry.
-	handlerAssocs := aCommandHandlersScanner allHandlerMethods.
+	handlerAssocs := anEventHandlersScanner allHandlerMethods.
 	handlerAssocs
 		ifNil: [ self
 				logErrorMessage: 'No handler methods found'
 				andThrow: EDAEventHandlerNotFound ].
 	handlerAssocs
-		do: [ :assoc | 
-			commandClass := assoc key.
+		do: [ :assoc | | eventClass handlerMethod eventHandler |
+			eventClass := assoc key.
 			handlerMethod := assoc value.
-			commandHandler := aCommandHandlerFactory
+			eventHandler := anEventHandlerFactory
 				newFromHandlerMethod: handlerMethod
 				andProjectorClass: aClass.
-			registry registerHandler: commandHandler command: commandClass new ].
+			registry registerHandler: eventHandler event: eventClass new ].
 	^ registry
 ]
 

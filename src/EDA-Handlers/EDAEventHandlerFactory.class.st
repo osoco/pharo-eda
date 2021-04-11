@@ -38,7 +38,7 @@ EDAEventHandlerFactory >> eventStore: anObject [
 
 { #category : #'instance creation' }
 EDAEventHandlerFactory >> newFromHandlerMethod: aMethod andProjectorClass: aProjectorClass [
-	^ EDAMethodWrapperCommandHandler
+	^ EDAMethodWrapperEventHandler
 		newFromHandlerMethod: aMethod
 		eventStore: self eventStore
 		eventBus: self eventBus

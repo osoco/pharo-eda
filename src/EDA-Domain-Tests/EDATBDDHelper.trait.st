@@ -1,8 +1,18 @@
 Trait {
 	#name : #EDATBDDHelper,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
+
+{ #category : #assertions }
+EDATBDDHelper >> assertEvent: actual equals: expected [
+	| diff |
+	diff := expected odDiff: actual.
+	^ self
+		assert: (diff isNil or: [ diff identical ])
+		description: [ diff greaseString ]
+]
 
 { #category : #helpers }
 EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
@@ -61,6 +71,25 @@ EDATBDDHelper >> consumeMessage: aMessage using: aCommandConsumer [
 		consumeMessage: aMessage
 		usingStrategyForCommands: EDAThrowError greaseString
 		andStrategyForEvents: EDAThrowError greaseString
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> discardAgent: anEvent [
+	(anEvent respondsTo: #agent:)
+		ifTrue: [ anEvent agent: '<ANYTHING>' ]
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> discardDateCreated: anEvent [
+	(anEvent respondsTo: #dateCreated:)
+		ifTrue: [ anEvent dateCreated: '<ANYTHING>' ]
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> filterPastEvents: events ofAggregate: anAggregateRootSymbol [
+	^ events
+		select:
+			[ :e | e aggregateRootClass greaseString asSymbol = anAggregateRootSymbol ]
 ]
 
 { #category : #BDD }

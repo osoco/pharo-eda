@@ -91,8 +91,7 @@ EDAApplication class >> buildEventDispatcherWithEventStore: anEventStore eventPr
 	^ EDAEventDispatcher
 		withRegistry: eventRegistry
 		eventStore: anEventStore
-		eventProducer: anEventProducer
-		andProjectorClass: aClass
+		andEventProducer: anEventProducer
 ]
 
 { #category : #accessing }

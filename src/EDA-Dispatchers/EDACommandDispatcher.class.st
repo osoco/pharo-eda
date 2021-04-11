@@ -21,12 +21,14 @@ EDACommandDispatcher class >> withRegistry: aHandlersRegistry eventStore: anEven
 
 { #category : #'instance creation' }
 EDACommandDispatcher class >> withRegistry: aHandlersRegistry eventStore: anEventStore eventProducer: anEventProducer andProjectorClass: aClass [
-	^ self new
-		handlersRegistry: aHandlersRegistry;
-		eventStore: anEventStore;
-		eventProducer: anEventProducer;
-		projectorClass: aClass;
-		yourself
+	| result |
+	result := super
+		withRegistry: aHandlersRegistry
+		eventStore: anEventStore
+		andEventProducer: anEventProducer.
+	result
+		projectorClass: aClass.
+^ result
 ]
 
 { #category : #dispatching }
