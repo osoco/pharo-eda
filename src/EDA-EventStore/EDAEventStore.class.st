@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAEventStore,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDATPrintOnHelper',
+	#classTraits : 'EDATPrintOnHelper classTrait',
 	#instVars : [
 		'repository'
 	],
