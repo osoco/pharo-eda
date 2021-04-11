@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAHandler,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATErrorHelper + EDATRepository',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATErrorHelper classTrait + EDATRepository classTrait',
+	#traits : 'EDATPrintOnHelper + EDATErrorHelper + EDATRepository',
+	#classTraits : 'EDATPrintOnHelper classTrait + EDATErrorHelper classTrait + EDATRepository classTrait',
 	#instVars : [
 		'eventStore',
 		'eventBus',

@@ -1,8 +1,8 @@
 Class {
 	#name : #EDASmtpClient,
 	#superclass : #ZdcSecureSMTPClient,
-	#traits : 'EDAPrintOnHelper + EDATLogging',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
+	#traits : 'EDATPrintOnHelper + EDATLogging',
+	#classTraits : 'EDATPrintOnHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'pendingLog'
 	],

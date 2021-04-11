@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAEventHandlersRegistry,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATLogging',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
+	#traits : 'EDATPrintOnHelper + EDATLogging',
+	#classTraits : 'EDATPrintOnHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'handlers'
 	],

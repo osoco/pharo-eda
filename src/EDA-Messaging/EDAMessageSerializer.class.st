@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAMessageSerializer,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDATPrintOnHelper',
+	#classTraits : 'EDATPrintOnHelper classTrait',
 	#category : 'EDA-Messaging-Serializers'
 }
 
