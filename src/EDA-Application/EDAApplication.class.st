@@ -81,12 +81,14 @@ EDAApplication class >> buildEventDispatcherWithEventStore: anEventStore eventPr
 	handlerFactory := EDAEventHandlerFactory
 		factoryWithEventStore: anEventStore
 		eventBus: anEventProducer.
-	handlerScanner := EDACompositeHandlerScanner with: anticorruptionLayerHandlerScanner and: aggregateRootHandlerScanner.
+	handlerScanner := EDACompositeHandlerScanner
+		with: anticorruptionLayerHandlerScanner
+		and: aggregateRootHandlerScanner.
 	eventRegistry := EDAEventHandlersRegistry
 		withScanner: handlerScanner
 		factory: handlerFactory
 		andProjectorClass: aClass.
-	^ EDACommandDispatcher
+	^ EDAEventDispatcher
 		withRegistry: eventRegistry
 		eventStore: anEventStore
 		eventProducer: anEventProducer
