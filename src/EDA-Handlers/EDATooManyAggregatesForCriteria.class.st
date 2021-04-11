@@ -1,5 +1,5 @@
 Class {
 	#name : #EDATooManyAggregatesForCriteria,
 	#superclass : #Error,
-	#category : #'EDA-Commands-Handlers'
+	#category : #'EDA-Handlers-Commands'
 }

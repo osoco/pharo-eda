@@ -1,5 +1,5 @@
 Class {
 	#name : #EDAInternalError,
 	#superclass : #Error,
-	#category : #'EDA-Errors'
+	#category : #'EDA-Errors-Errors'
 }

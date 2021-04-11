@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -40,15 +41,6 @@ EDATDomainBDD >> applyEvents: aCollectionOfEvents onAggregateRootSymbol: anAggre
 aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	aCollectionOfEvents do: [ :anEvent | self applyEvent: anEvent onAggregateRoot: aggregateRoot ].
 	aBlock value: aggregateRoot
-]
-
-{ #category : #BDD }
-EDATDomainBDD >> assertEvent: actual equals: expected [
-	| diff |
-	diff := expected odDiff: actual.
-	^ self
-		assert: (diff isNil or: [ diff identical ])
-		description: [ diff greaseString ]
 ]
 
 { #category : #helper }
@@ -110,25 +102,6 @@ EDATDomainBDD >> buildMetaForCommand: aCommand ofType: aString [
 	meta at: #version put: aCommand version.
 	meta at: #timestamp put: DateAndTime now asString.
 	^ meta
-]
-
-{ #category : #helper }
-EDATDomainBDD >> discardAgent: anEvent [
-	(anEvent respondsTo: #agent:)
-		ifTrue: [ anEvent agent: '<ANYTHING>' ]
-]
-
-{ #category : #helper }
-EDATDomainBDD >> discardDateCreated: anEvent [
-			(anEvent respondsTo: #dateCreated:)
-				ifTrue: [ anEvent dateCreated: '<ANYTHING>' ].
-]
-
-{ #category : #helpers }
-EDATDomainBDD >> filterPastEvents: events ofAggregate: anAggregateRootSymbol [
-	^ events
-		select:
-			[ :e | e aggregateRootClass greaseString asSymbol = anAggregateRootSymbol ].
 ]
 
 { #category : #helper }

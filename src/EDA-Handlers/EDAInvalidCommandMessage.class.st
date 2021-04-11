@@ -1,5 +1,5 @@
 Class {
 	#name : #EDAInvalidCommandMessage,
 	#superclass : #Error,
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Handlers-Commands'
 }
