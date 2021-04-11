@@ -5,7 +5,7 @@ Class {
 		'context',
 		'extraContextInformation'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #'instance creation' }
@@ -32,9 +32,8 @@ EDAJsonErrorSerializer >> customJsonMappingsFor: aJsonWriter [
 		allSubclassesDo: [ :cls | self print: cls inJsonWriter: aJsonWriter ].
 	EDAEventSourcingEvent
 		allSubclassesDo: [ :cls | self print: cls inJsonWriter: aJsonWriter ].
-		EDAAggregateRoot
-				allSubclassesDo: [ :cls | self print: cls inJsonWriter: aJsonWriter ].
-
+	EDAAggregateRoot
+		allSubclassesDo: [ :cls | self print: cls inJsonWriter: aJsonWriter ]
 ]
 
 { #category : #accessing }

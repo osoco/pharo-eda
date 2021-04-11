@@ -1,6 +1,6 @@
 Trait {
 	#name : #EDATLanguageHelper,
-	#category : 'EDA-Traits'
+	#category : #'EDA-Traits'
 }
 
 { #category : #helper }
@@ -97,6 +97,11 @@ EDATLanguageHelper classSide >> removeSuffix: suffix from: value [
 	^ ((suffix copyReplaceAll: ':' with: '\:') , '$') asRegexIgnoringCase copy: value replacingMatchesWith: ''
 ]
 
+{ #category : #testing }
+EDATLanguageHelper classSide >> string: string startsWith: value [
+	^ (value copyReplaceAll: ':' with: '\:') asRegexIgnoringCase matchesPrefix: string
+]
+
 { #category : #helper }
 EDATLanguageHelper classSide >> verbInPastTense: aVerb [
 	| result |
@@ -172,6 +177,11 @@ EDATLanguageHelper >> removePrefix: prefix from: value [
 EDATLanguageHelper >> removeSuffix: suffix from: value [
 	^ self class removeSuffix: suffix from: value
 
+]
+
+{ #category : #helper }
+EDATLanguageHelper >> string: string startsWith: value [
+	^ self class string: string startsWith: value
 ]
 
 { #category : #helper }
