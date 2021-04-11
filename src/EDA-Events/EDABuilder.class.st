@@ -1,6 +1,8 @@
 Class {
 	#name : #EDABuilder,
 	#superclass : #Object,
+	#traits : 'EDATSourceCodeHelper',
+	#classTraits : 'EDATSourceCodeHelper classTrait',
 	#instVars : [
 		'params',
 		'accessorMapping'
@@ -9,9 +11,19 @@ Class {
 }
 
 { #category : #'instance creation' }
-EDABuilder class >> with: aDict [
+EDABuilder class >> with: anInstance [
 	^ self new
-		params: aDict;
+		params: anInstance asDictionary;
+		yourself
+]
+
+{ #category : #'instance creation' }
+EDABuilder class >> with: anInstance and: anotherInstance [
+	| dict |
+	dict := anInstance asDictionary.
+	dict addAll: (anotherInstance asDictionary).
+	^ self new
+		params: dict;
 		yourself
 ]
 
@@ -23,6 +35,15 @@ EDABuilder >> accessorMapping [
 { #category : #accessing }
 EDABuilder >> accessorMapping: aDictionary [
 	accessorMapping := aDictionary
+]
+
+{ #category : #building }
+EDABuilder >> addAccessor: methodName [
+	| attr |
+	attr := self
+		toCamelCase: (self removePrefix: 'with' from: methodName).
+		attr := attr uncapitalized.
+	self withAccessor: (attr , ':') asSymbol for: attr asSymbol
 ]
 
 { #category : #builder }
@@ -37,6 +58,15 @@ EDABuilder >> build: aClass [
 				ifAbsent: [ EDAInvalidEventMessage signal: symbol greaseString , ' not found' ].
 			result perform: method with: v ].
 	^ result
+]
+
+{ #category : #building }
+EDABuilder >> doesNotUnderstand: aMessage [
+	| methodName |
+	methodName := aMessage selector greaseString.
+	(self string: methodName startsWith: 'with')
+		ifTrue: [ self addAccessor: methodName ]
+		ifFalse: [ super doesNotUnderstand: aMessage ]
 ]
 
 { #category : #accessing }

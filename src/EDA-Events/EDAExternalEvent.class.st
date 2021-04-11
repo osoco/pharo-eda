@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAExternalEvent,
-	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#superclass : #EDAEvent,
+	#traits : 'EDATPrintOnHelper',
+	#classTraits : 'EDATPrintOnHelper classTrait',
 	#instVars : [
 		'timestamp',
 		'version'

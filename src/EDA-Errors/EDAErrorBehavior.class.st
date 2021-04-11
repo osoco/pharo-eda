@@ -1,12 +1,12 @@
 Class {
 	#name : #EDAErrorBehavior,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDATPrintOnHelper',
+	#classTraits : 'EDATPrintOnHelper classTrait',
 	#classInstVars : [
 		'strategy'
 	],
-	#category : 'EDA-Errors-Behaviors'
+	#category : #'EDA-Errors-Behaviors'
 }
 
 { #category : #accessing }

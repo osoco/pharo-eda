@@ -1,7 +1,7 @@
 Class {
 	#name : #EDACommandConsumingErrorBehavior,
 	#superclass : #EDAErrorBehavior,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
-	#category : 'EDA-Errors-Behaviors'
+	#traits : 'EDATPrintOnHelper',
+	#classTraits : 'EDATPrintOnHelper classTrait',
+	#category : #'EDA-Errors-Behaviors'
 }
