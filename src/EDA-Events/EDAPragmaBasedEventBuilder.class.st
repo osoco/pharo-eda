@@ -24,8 +24,9 @@ EDAPragmaBasedEventBuilder >> build [
 	pragma
 		ifNil: [ EDAInvalidEventMessage new
 				signal: self name greaseString , ' event is not supported' ].
-	class := pragma methodClass allInstances first.
-	event := class perform: pragma method with: self.
+	class := self class environment
+		at: pragma methodClass allInstances first greaseString asSymbol.
+	event := class perform: pragma method selector with: self.
 	^ event
 ]
 
