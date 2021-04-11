@@ -11,3 +11,10 @@ DateAndTime >> asYYYYmmddHMS [
 			s nextPut: $-.
 			self printHMSOn: s separatedBy: $- ]
 ]
+
+{ #category : #'*EDA-Traits' }
+DateAndTime >> jsonWriteOn: aStream [
+	aStream nextPut: $'.
+	self printOn: aStream.
+	aStream nextPut: $'
+]
