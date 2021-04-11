@@ -5,12 +5,12 @@ Class {
 	#classTraits : 'EDATLogging classTrait + EDATPrintOnHelper classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
 	#instVars : [
 		'id',
-		'version',
 		'isDeleted',
 		'scopeContext',
 		'scopeKey',
 		'brandNew',
-		'tenant'
+		'tenant',
+		'aggregateRootVersion'
 	],
 	#category : #'EDA-Domain-Aggregate'
 }
@@ -69,6 +69,21 @@ EDAAggregateRoot class >> newVersionAfter: aVersion [
 { #category : #ui }
 EDAAggregateRoot class >> systemIcon [
 	^ Smalltalk ui icons iconNamed: #objects
+]
+
+{ #category : #accessing }
+EDAAggregateRoot >> aggregateRepository [
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+EDAAggregateRoot >> aggregateRootVersion [
+	^ aggregateRootVersion
+]
+
+{ #category : #accessing }
+EDAAggregateRoot >> aggregateRootVersion: aNumber [
+	aggregateRootVersion := aNumber
 ]
 
 { #category : #'applying events' }
@@ -385,10 +400,10 @@ EDAAggregateRoot >> tenant: aString [
 
 { #category : #accessing }
 EDAAggregateRoot >> version [
-	^ version
+	^ self aggregateRootVersion
 ]
 
 { #category : #accessing }
 EDAAggregateRoot >> version: aNumber [
-	version := aNumber
+	self aggregateRootVersion: aNumber
 ]

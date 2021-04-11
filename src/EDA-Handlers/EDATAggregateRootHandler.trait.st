@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATAggregateRootHandler,
 	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Handlers-Handlers'
 }
 
@@ -36,37 +35,14 @@ EDATAggregateRootHandler classSide >> addVersionToEvents: producedEvents usingEv
 
 { #category : #handling }
 EDATAggregateRootHandler classSide >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria andEventStore: anEventStore [
-	| nonDeletedAggregates events startRetrievingEventsTimer startBuildingAggregateTimer eventsById aggregate |
+	| nonDeletedAggregates events eventsById aggregate |
 	"TODO: Compare the version number in the command with the current 
 	version number of the aggregate and, if they are different, it can 
 	raise a concurrency error and reject the change"
-	self
-		logDebugMessage:
-			(String
-				streamContents: [ :s | 
-					s
-						nextPutAll: 'Retrieving events for ';
-						nextPutAll: anAggregateRootClass greaseString;
-						nextPutAll: ' matching ';
-						nextPutAll: aCriteria greaseString;
-						nextPutAll: '.' ]).
-	startRetrievingEventsTimer := DateAndTime now.
 	events := anEventStore
 		findEventsOfTenant: aTenant
 		ofAggregate: anAggregateRootClass
 		whereCriteria: aCriteria.
-	startBuildingAggregateTimer := DateAndTime now.
-	self
-		logDebugMessage:
-			(String
-				streamContents: [ :s | 
-					s
-						nextPutAll: events size greaseString;
-						nextPutAll: ' event(s) retrieved in ';
-						nextPutAll:
-							(startBuildingAggregateTimer - startRetrievingEventsTimer)
-								totalSeconds greaseString;
-						nextPutAll: ' second(s).' ]).
 	eventsById := self groupEventsById: events.
 	nonDeletedAggregates := eventsById keys
 		collect: [ :id | 
@@ -90,18 +66,6 @@ EDATAggregateRootHandler classSide >> buildAggregateRootOfTenant: aTenant ofAggr
 	aggregate := nonDeletedAggregates
 		ifEmpty: [ anAggregateRootClass new ]
 		ifNotEmpty: [ :ndAggr | ndAggr anyOne ].
-	self
-		logDebugMessage:
-			(String
-				streamContents: [ :s | 
-					s
-						nextPutAll: 'Aggregate ';
-						nextPutAll: aggregate greaseString;
-						nextPutAll: ' successfully built in ';
-						nextPutAll:
-							(DateAndTime now - startBuildingAggregateTimer) totalSeconds
-								greaseString;
-						nextPutAll: ' second(s).' ]).
 	^ aggregate
 ]
 

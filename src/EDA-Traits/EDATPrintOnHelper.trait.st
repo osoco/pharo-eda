@@ -9,7 +9,7 @@ EDATPrintOnHelper >> asDictionary [
 	result := Dictionary new.
 	self class allInstVarNames
 		do:
-			[ :varName | result add: varName -> (self instVarNamed: varName) asJsonString ].
+			[ :varName | result add: varName -> (self instVarNamed: varName) ].
 	^ result
 ]
 
