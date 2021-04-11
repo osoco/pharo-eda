@@ -8,10 +8,8 @@ Class {
 
 { #category : #handling }
 EDAEventHandler >> buildAggregateRootsFrom: anEvent [
-	^ (self retrieveAggregateRootClasses: anEvent) collect: [ :c | 
-	self
-		buildAggregateRootFrom: anEvent
-		andAggregateRootClass: c ]
+	^ (self retrieveAggregateRootClasses: anEvent)	
+		collect: [ :c | self buildAggregateRootFrom: anEvent andAggregateRootClass: c ]
 ]
 
 { #category : #handling }
@@ -51,7 +49,9 @@ EDAEventHandler >> handle: anEvent withErrorStrategy: strategy [
 
 { #category : #handling }
 EDAEventHandler >> retrieveAggregateRootClasses: anEvent [
-	^ ((Pragma
+	^ (((Pragma
 		allNamed: #useAsEventHandlerFor:
-		inAndBelow: EDAAggregateRoot) collect: [ :p | p methodClass ]) asSet
+		inAndBelow: EDAAggregateRoot)
+		select: [ :p | (p argumentAt: 1) = anEvent class greaseString ])
+		collect: [ :p | p methodClass ]) asSet
 ]
