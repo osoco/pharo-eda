@@ -71,19 +71,23 @@ EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore event
 
 { #category : #setup }
 EDAApplication class >> buildEventDispatcherWithEventStore: anEventStore eventProducer: anEventProducer andProjectorClass: aClass [
-	| handlerScanner handlerFactory commandRegistry |
-	handlerScanner := EDAPragmaHandlerMethodScanner
-		scannerPragma: #useAsCommandHandlerFor:
+	| anticorruptionLayerHandlerScanner aggregateRootHandlerScanner handlerFactory eventRegistry handlerScanner |
+	anticorruptionLayerHandlerScanner := EDAPragmaHandlerMethodScanner
+		scannerPragma: #useAsEventHandlerFor:
 		from: EDAAnticorruptionLayer.
-	handlerFactory := EDACommandHandlerFactory
+	aggregateRootHandlerScanner := EDAPragmaHandlerMethodScanner
+		scannerPragma: #useAsEventHandlerFor:
+		from: EDAAggregateRoot.
+	handlerFactory := EDAEventHandlerFactory
 		factoryWithEventStore: anEventStore
 		eventBus: anEventProducer.
-	commandRegistry := EDACommandHandlersRegistry
+	handlerScanner := EDACompositeHandlerScanner with: anticorruptionLayerHandlerScanner and: aggregateRootHandlerScanner.
+	eventRegistry := EDAEventHandlersRegistry
 		withScanner: handlerScanner
 		factory: handlerFactory
 		andProjectorClass: aClass.
 	^ EDACommandDispatcher
-		withRegistry: commandRegistry
+		withRegistry: eventRegistry
 		eventStore: anEventStore
 		eventProducer: anEventProducer
 		andProjectorClass: aClass

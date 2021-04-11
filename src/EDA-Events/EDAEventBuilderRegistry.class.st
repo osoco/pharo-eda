@@ -4,8 +4,21 @@ Class {
 	#instVars : [
 		'mapping'
 	],
+	#classInstVars : [
+		'uniqueInstance'
+	],
 	#category : #'EDA-Events-Builders'
 }
+
+{ #category : #singleton }
+EDAEventBuilderRegistry class >> uniqueInstance [
+	^ uniqueInstance ifNil: [ self uniqueInstance: self new. uniqueInstance ]
+]
+
+{ #category : #singleton }
+EDAEventBuilderRegistry class >> uniqueInstance: anInstance [
+	uniqueInstance := anInstance
+]
 
 { #category : #API }
 EDAEventBuilderRegistry >> doInitialize [
@@ -31,7 +44,7 @@ EDAEventBuilderRegistry >> initializeMapping [
 EDAEventBuilderRegistry >> lookupBuilder: eventName [
 	"Retrieves the builder for given event name"
 
-	^ self mapping at: eventName ifAbsent: [ EDADefaultEventBuilder ]
+	^ self mapping at: eventName ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }

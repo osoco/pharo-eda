@@ -9,6 +9,6 @@ EDATEventMaterializer >> builderFor: aString with: aMap [
 	builder := EDAEventBuilderRegistry uniqueInstance
 		lookupBuilder: aString.
 	builder
-		ifNil: [ builder := EDADefaultEventBuilder newFor: aString with: aMap ].
+		ifNil: [ builder := EDAPragmaBasedEventBuilder newFor: aString with: aMap ].
 	^ builder
 ]

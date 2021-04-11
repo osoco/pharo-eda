@@ -19,7 +19,7 @@ EDAPragmaHandlerMethodScanner class >> scannerPragma: aSymbol from: aClass [
 ]
 
 { #category : #scanning }
-EDAPragmaHandlerMethodScanner >> allCommandHandlerMethods [
+EDAPragmaHandlerMethodScanner >> allHandlerMethods [
 	| handlerPragmas handlerMethodAssocs |
 	handlerPragmas := Set new.
 	self fromClass allSubclasses

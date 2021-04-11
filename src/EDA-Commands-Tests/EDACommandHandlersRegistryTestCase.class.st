@@ -13,7 +13,7 @@ EDACommandHandlersRegistryTestCase >> testCreateRegistryWithScannerAndFactory [
 	aHandlerMethod := protocol mock: 'aHandlerMethod'.
 	aCommandHandler := protocol mock: 'aCommandHandler'.
 	protocol describe
-		once: aScanner recv: #allCommandHandlerMethods;
+		once: aScanner recv: #allHandlerMethods;
 		=> {(aCommand class -> aHandlerMethod)}.
 	protocol describe
 		once: aFactory recv: #newFromHandlerMethod:andProjectorClass:;
