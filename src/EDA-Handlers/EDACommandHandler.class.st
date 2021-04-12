@@ -66,7 +66,7 @@ EDACommandHandler >> handle: aCommand withErrorStrategy: strategy [
 		do: [ :exception | 
 			self
 				manageError: exception
-				forCommand: aCommand
+				for: aCommand
 				usingErrorStrategy: strategy ].
 	^ processedEvents
 ]

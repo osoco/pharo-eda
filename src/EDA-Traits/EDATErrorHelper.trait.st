@@ -21,6 +21,7 @@ Public API and Key Messages:
 Trait {
 	#name : #EDATErrorHelper,
 	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Traits'
 }
 
@@ -40,13 +41,13 @@ EDATErrorHelper classSide >> errorFolderFor: basename [
 ]
 
 { #category : #handling }
-EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy [
+EDATErrorHelper >> manageError: anException for: aCommandOrEvent usingErrorStrategy: aStrategy [
 	| errorHandler result context basename dictionary |
 	errorHandler := (self class environment at: aStrategy asSymbol) new.
 	errorHandler class shouldPersistFuel
 		ifTrue: [ self
 				logErrorMessage:
-					'Error processing ' , aCommand greaseString , ': '
+					'Error processing ' , aCommandOrEvent greaseString , ': '
 						, anException description greaseString.
 			context := thisContext clone.
 			basename := self class basename.
@@ -54,10 +55,10 @@ EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrat
 				writeFuelContext: context
 				named: anException class greaseString
 				withBasename: basename.
-			self writeCommand: aCommand withBasename: basename ].
+			self write: aCommandOrEvent withBasename: basename ].
 	errorHandler context: context.
 	dictionary := Dictionary new.
-	dictionary at: #command put: aCommand.
+	dictionary at: #commandOrEvent put: aCommandOrEvent.
 	result := errorHandler
 		handleError: anException
 		withExtraContextInformation: dictionary.
@@ -133,12 +134,12 @@ EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingEr
 ]
 
 { #category : #handling }
-EDATErrorHelper >> writeCommand: aCommand withBasename: aBasename [
+EDATErrorHelper >> write: aCommandOrEvent withBasename: aBasename [
 	| result |
 	result := (self class errorFolderFor: aBasename)
-		/ (aCommand class printString , '.txt').
+		/ (aCommandOrEvent class printString , '.txt').
 	result writeStream
-		nextPutAll: aCommand printString;
+		nextPutAll: aCommandOrEvent printString;
 		close.
 	^ result
 ]

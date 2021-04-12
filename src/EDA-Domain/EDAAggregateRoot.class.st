@@ -56,6 +56,11 @@ EDAAggregateRoot class >> checkTenantOfCommandIsValid: aCommand [
 			[ self logErrorMessage: 'tenant is missing' andThrow: InvalidTenant ]
 ]
 
+{ #category : #testing }
+EDAAggregateRoot class >> isAggregateRoot [
+	^ true
+]
+
 { #category : #helpers }
 EDAAggregateRoot class >> newVersionAfter: aVersion [
 	^ aVersion + 1

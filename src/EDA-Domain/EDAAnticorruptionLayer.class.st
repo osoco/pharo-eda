@@ -5,3 +5,8 @@ Class {
 	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Domain-Services'
 }
+
+{ #category : #testing }
+EDAAnticorruptionLayer class >> isAggregateRoot [
+	^ false
+]

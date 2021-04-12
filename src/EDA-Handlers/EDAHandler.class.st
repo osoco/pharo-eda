@@ -52,6 +52,31 @@ EDAHandler >> invokeMethodHandlerWith: anObject on: aReceiver [
 	^ aReceiver perform: self handlerMethod selector with: anObject
 ]
 
+{ #category : #handling }
+EDAHandler >> manageError: anException for: aCommandOrEvent usingErrorStrategy: aStrategy [
+	| errorHandler result context basename dictionary |
+	errorHandler := (self class environment at: aStrategy asSymbol) new.
+	errorHandler class shouldPersistFuel
+		ifTrue: [ self
+				logErrorMessage:
+					'Error processing ' , aCommandOrEvent greaseString , ': '
+						, anException description greaseString.
+			context := thisContext clone.
+			basename := self class basename.
+			self
+				writeFuelContext: context
+				named: anException class greaseString
+				withBasename: basename.
+			self write: aCommandOrEvent withBasename: basename ].
+	errorHandler context: context.
+	dictionary := Dictionary new.
+	dictionary at: #commandOrEvent put: aCommandOrEvent.
+	result := errorHandler
+		handleError: anException
+		withExtraContextInformation: dictionary.
+	^ result
+]
+
 { #category : #'event processing' }
 EDAHandler >> processGeneratedEvents: producedEvents for: aCommandOrEvent onAggregateRoot: anAggregateRoot [
 	| message versionedEvents |
@@ -73,6 +98,27 @@ EDAHandler >> processGeneratedEvents: producedEvents for: aCommandOrEvent onAggr
 		ofTenant: aCommandOrEvent tenant.
 	self logInfoMessage: 'Done'.
 	^ producedEvents
+]
+
+{ #category : #'event processing' }
+EDAHandler >> processGeneratedProjections: producedProjections for: aCommandOrEvent onAnticorruptionLayer: anAnticorruptionLayer [
+	| message |
+	message := WriteStream with: String new.
+	producedProjections
+		do: [ :projection | 
+			message
+				nextPut: Character space;
+				nextPutAll: projection class greaseString ].
+	self
+		logInfoMessage: 'Produced projections(s): ' , message contents greaseString , '.'.
+	self logInfoMessage: 'Projecting ...'.
+	(self projectorClass
+		ofTenant: aCommandOrEvent tenant
+		withAllProjectorsAndEventStore: eventStore)
+		project: producedProjections
+		ofTenant: aCommandOrEvent tenant.
+	self logInfoMessage: 'Done'.
+	^ producedProjections
 ]
 
 { #category : #accessing }

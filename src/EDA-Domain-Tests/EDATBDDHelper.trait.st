@@ -7,11 +7,7 @@ Trait {
 
 { #category : #assertions }
 EDATBDDHelper >> assertEvent: actual equals: expected [
-	| diff |
-	diff := expected odDiff: actual.
-	^ self
-		assert: (diff isNil or: [ diff identical ])
-		description: [ diff greaseString ]
+	^ self assertObject: actual equals: expected
 ]
 
 { #category : #helpers }
@@ -23,6 +19,35 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 			self discardDateCreated: expected.
 			self discardAgent: expected.
 			self is: expected equalTo: actual ]) isNotEmpty ]
+]
+
+{ #category : #assertions }
+EDATBDDHelper >> assertObject: actual equals: expected [
+	| diff |
+	diff := expected odDiff: actual.
+	^ self
+		assert: (diff isNil or: [ diff identical ])
+		description: [ diff greaseString ]
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> assertProjections: actualProjections matchExpected: expectedProjections [
+	self assert: actualProjections size equals: expectedProjections size.
+	expectedProjections
+		keysAndValuesDo: [ :i :expected | 
+			| classMatches instanceMatches |
+			self discardDateCreated: expected.
+			self discardLastModified: expected.
+			self discardCreatedAt: expected.
+			classMatches := actualProjections
+				select: [ :actual | actual class = expected class ].
+			self
+				assert: classMatches isNotEmpty
+				description: 'No projections created of class ' , expected class greaseString , '.'.
+			instanceMatches := actualProjections
+				select: [ :actual | self is: expected equalTo: actual ].
+			instanceMatches
+				ifEmpty: [ self assertObject: expected equals: classMatches any ] ]
 ]
 
 { #category : #helpers }
@@ -73,15 +98,31 @@ EDATBDDHelper >> consumeMessage: aMessage using: aCommandConsumer [
 ]
 
 { #category : #helpers }
-EDATBDDHelper >> discardAgent: anEvent [
-	(anEvent respondsTo: #agent:)
-		ifTrue: [ anEvent agent: '<ANYTHING>' ]
+EDATBDDHelper >> discard: anAttribute on: anEventOrProjection [
+	| selector |
+	selector := (anAttribute , ':') asSymbol.
+	(anEventOrProjection respondsTo: selector)
+		ifTrue: [ anEventOrProjection perform: (anEventOrProjection class methodNamed: selector) withArguments: (OrderedCollection with: '<ANYTHING>') ]
 ]
 
 { #category : #helpers }
-EDATBDDHelper >> discardDateCreated: anEvent [
-	(anEvent respondsTo: #dateCreated:)
-		ifTrue: [ anEvent dateCreated: '<ANYTHING>' ]
+EDATBDDHelper >> discardAgent: anEvent [
+	^ self discard: #agent: on: anEvent
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> discardCreatedAt: anEventOrProjection [
+	^ self discard: #createdAt: on: anEventOrProjection
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> discardDateCreated: anEventOrProjection [
+	^ self discard: #dateCreated: on: anEventOrProjection
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> discardLastModified: anEventOrProjection [
+	^ self discard: #lastModified: on: anEventOrProjection
 ]
 
 { #category : #helpers }
