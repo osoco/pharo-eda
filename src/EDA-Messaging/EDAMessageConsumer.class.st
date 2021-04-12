@@ -136,6 +136,31 @@ EDAMessageConsumer >> eventMaterializer: anObject [
 	eventMaterializer := anObject
 ]
 
+{ #category : #handling }
+EDAMessageConsumer >> manageError: anException for: aCommandOrEvent usingErrorStrategy: aStrategy [
+	| errorHandler result context basename dictionary |
+	errorHandler := (self class environment at: aStrategy asSymbol) new.
+	errorHandler class shouldPersistFuel
+		ifTrue: [ self
+				logErrorMessage:
+					'Error processing ' , aCommandOrEvent greaseString , ': '
+						, anException description greaseString.
+			context := thisContext clone.
+			basename := self class basename.
+			self
+				writeFuelContext: context
+				named: anException class greaseString
+				withBasename: basename.
+			self write: aCommandOrEvent withBasename: basename ].
+	errorHandler context: context.
+	dictionary := Dictionary new.
+	dictionary at: #commandOrEvent put: aCommandOrEvent.
+	result := errorHandler
+		handleError: anException
+		withExtraContextInformation: dictionary.
+	^ result
+]
+
 { #category : #helpers }
 EDAMessageConsumer >> printOn: t1 [
 	| t2 |

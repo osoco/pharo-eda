@@ -22,6 +22,11 @@ EDAMethodWrapperEventHandler class >> newFromHandlerMethod: aMethod eventStore: 
 ]
 
 { #category : #handling }
+EDAMethodWrapperEventHandler >> delegateHandlingOfEvent: anEvent to: anInstance [
+	^ self invokeMethodHandlerWith: anEvent on: anInstance
+]
+
+{ #category : #handling }
 EDAMethodWrapperEventHandler >> delegateHandlingOfEvent: anEvent toAggregate: anAggregateRoot [
 	^ self invokeMethodHandlerWith: anEvent on: anAggregateRoot
 ]
