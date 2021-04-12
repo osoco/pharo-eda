@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATBDDHelper,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -18,11 +19,10 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 	self assert: resultingEvents size equals: expectedEvents size.
 	resultingEvents
 		keysAndValuesDo: [ :i :actual | 
-			| expected |
-			expected := expectedEvents at: i.
+			self assert: (expectedEvents select: [ :expected | 
 			self discardDateCreated: expected.
 			self discardAgent: expected.
-			self assertEvent: expected equals: actual ]
+			self is: expected equalTo: actual ]) isNotEmpty ]
 ]
 
 { #category : #helpers }
@@ -112,6 +112,14 @@ EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBl
 		using: consumer.
 	self assertEvents: resultingEvents matchExpected: expectedEvents ]
 		ensure: [ self restoreEventStores: originalEventStores ]
+]
+
+{ #category : #assertions }
+EDATBDDHelper >> is: actual equalTo: expected [
+	| diff |
+	diff := expected odDiff: actual.
+	^ diff isNil or: [ diff identical ]
+
 ]
 
 { #category : #helpers }

@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATAggregateRootHandler,
 	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Handlers-Handlers'
 }
 
@@ -35,10 +36,34 @@ EDATAggregateRootHandler classSide >> addVersionToEvents: producedEvents usingEv
 
 { #category : #handling }
 EDATAggregateRootHandler classSide >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria andEventStore: anEventStore [
-	| nonDeletedAggregates events eventsById aggregate |
+	| nonDeletedAggregates aggregate |
 	"TODO: Compare the version number in the command with the current 
 	version number of the aggregate and, if they are different, it can 
 	raise a concurrency error and reject the change"
+	nonDeletedAggregates := self
+		buildAggregateRootsOfTenant: aTenant
+		ofAggregateRootClass: anAggregateRootClass
+		withCriteria: aCriteria
+		andEventStore: anEventStore.
+	nonDeletedAggregates size > 1
+		ifTrue: [ self
+				logErrorMessage:
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: 'Too many non deleted aggregates found matching ';
+								nextPutAll: aCriteria greaseString;
+								nextPutAll: '.' ])
+				andThrow: EDATooManyAggregatesForCriteria ].
+	aggregate := nonDeletedAggregates
+		ifEmpty: [ anAggregateRootClass new ]
+		ifNotEmpty: [ :ndAggr | ndAggr anyOne ].
+	^ aggregate
+]
+
+{ #category : #handling }
+EDATAggregateRootHandler classSide >> buildAggregateRootsOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria andEventStore: anEventStore [
+	| nonDeletedAggregates events eventsById |
 	events := anEventStore
 		findEventsOfTenant: aTenant
 		ofAggregate: anAggregateRootClass
@@ -53,20 +78,7 @@ EDATAggregateRootHandler classSide >> buildAggregateRootOfTenant: aTenant ofAggr
 				whereId: id.
 			anAggregateRootClass new applyEvents: idEvents ]
 		thenReject: [ :aggr | aggr isDeleted ].
-	nonDeletedAggregates size > 1
-		ifTrue: [ self
-				logErrorMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: 'Too many non deleted aggregates founds matching ';
-								nextPutAll: aCriteria greaseString;
-								nextPutAll: '.' ])
-				andThrow: EDATooManyAggregatesForCriteria ].
-	aggregate := nonDeletedAggregates
-		ifEmpty: [ anAggregateRootClass new ]
-		ifNotEmpty: [ :ndAggr | ndAggr anyOne ].
-	^ aggregate
+	^ nonDeletedAggregates
 ]
 
 { #category : #handling }
@@ -86,6 +98,15 @@ EDATAggregateRootHandler >> buildAggregateRootOfTenant: aTenant ofAggregateRootC
 		buildAggregateRootOfTenant: aTenant
 		ofAggregateRootClass: anAggregateRootClass
 		withCriteria: aCriteria
+		andEventStore: self eventStore
+]
+
+{ #category : #handling }
+EDATAggregateRootHandler >> buildAggregateRootsFrom: anInstance andAggregateRootClass: anAggregateRootClass [
+	^ self class
+		buildAggregateRootsOfTenant: anInstance tenant
+		ofAggregateRootClass: anAggregateRootClass
+		withCriteria: (anAggregateRootClass aggregateSelectionCriteriaFor: anInstance)
 		andEventStore: self eventStore
 ]
 
