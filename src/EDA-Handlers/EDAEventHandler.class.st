@@ -8,8 +8,8 @@ Class {
 
 { #category : #handling }
 EDAEventHandler >> buildAggregateRootsFrom: anEvent [
-	^ (self retrieveAggregateRootClasses: anEvent)	
-		collect: [ :c | self buildAggregateRootFrom: anEvent andAggregateRootClass: c ]
+	^ ((self retrieveAggregateRootClasses: anEvent)
+		collect: [ :c | self buildAggregateRootsFrom: anEvent andAggregateRootClass: c ]) flattened
 ]
 
 { #category : #handling }
