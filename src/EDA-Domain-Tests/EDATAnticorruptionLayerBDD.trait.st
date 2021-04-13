@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATAnticorruptionLayerBDD,
 	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
-	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 

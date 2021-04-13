@@ -32,6 +32,9 @@ EDATBDDHelper >> assertObject: actual equals: expected [
 
 { #category : #helpers }
 EDATBDDHelper >> assertProjections: actualProjections matchExpected: expectedProjections [
+	| previouslyEnabled |
+	previouslyEnabled := ODWildcards enabled.
+	ODWildcards enable.
 	self assert: actualProjections size equals: expectedProjections size.
 	expectedProjections
 		keysAndValuesDo: [ :i :expected | 
@@ -47,7 +50,10 @@ EDATBDDHelper >> assertProjections: actualProjections matchExpected: expectedPro
 			instanceMatches := actualProjections
 				select: [ :actual | self is: expected equalTo: actual ].
 			instanceMatches
-				ifEmpty: [ self assertObject: expected equals: classMatches any ] ]
+				ifEmpty: [ | actual |
+					actual := classMatches any.
+					self assertObject: expected equals: actual ] ].
+			previouslyEnabled ifTrue: [ ODWildcards enable ] ifFalse: [ ODWildcards disable ]
 ]
 
 { #category : #helpers }
@@ -98,31 +104,48 @@ EDATBDDHelper >> consumeMessage: aMessage using: aCommandConsumer [
 ]
 
 { #category : #helpers }
-EDATBDDHelper >> discard: anAttribute on: anEventOrProjection [
-	| selector |
-	selector := (anAttribute , ':') asSymbol.
+EDATBDDHelper >> discard: selector on: anEventOrProjection [
 	(anEventOrProjection respondsTo: selector)
-		ifTrue: [ anEventOrProjection perform: (anEventOrProjection class methodNamed: selector) withArguments: (OrderedCollection with: '<ANYTHING>') ]
+		ifTrue: [ | class method |
+			anEventOrProjection
+				class classAndMethodFor: selector
+				do: [ :c :m | 
+					class := c.
+					method := m ]
+				ifAbsent: [ false ].
+			anEventOrProjection
+				perform: method selector
+				withArguments: (OrderedCollection with: '<ANYTHING>')
+				inSuperclass: class ]
 ]
 
 { #category : #helpers }
 EDATBDDHelper >> discardAgent: anEvent [
-	^ self discard: #agent: on: anEvent
+	^ self if: anEvent supports: #agent: then: [ anEvent agent: '<ANYTHING>' ]
 ]
 
 { #category : #helpers }
 EDATBDDHelper >> discardCreatedAt: anEventOrProjection [
-	^ self discard: #createdAt: on: anEventOrProjection
+	^ self
+		if: anEventOrProjection
+		supports: #createdAt:
+		then: [ anEventOrProjection createdAt: '<ANYTHING>' ]
 ]
 
 { #category : #helpers }
 EDATBDDHelper >> discardDateCreated: anEventOrProjection [
-	^ self discard: #dateCreated: on: anEventOrProjection
+	^ self
+		if: anEventOrProjection
+		supports: #dateCreated:
+		then: [ anEventOrProjection dateCreated: '<ANYTHING>' ]
 ]
 
 { #category : #helpers }
 EDATBDDHelper >> discardLastModified: anEventOrProjection [
-	^ self discard: #lastModified: on: anEventOrProjection
+	^ self
+		if: anEventOrProjection
+		supports: #lastModified:
+		then: [ anEventOrProjection lastModified: '<ANYTHING>' ]
 ]
 
 { #category : #helpers }
@@ -153,6 +176,12 @@ EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBl
 		using: consumer.
 	self assertEvents: resultingEvents matchExpected: expectedEvents ]
 		ensure: [ self restoreEventStores: originalEventStores ]
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> if: anObject supports: aSelector then: aBlock [
+	(anObject respondsTo: aSelector)
+		ifTrue: [ aBlock value ]
 ]
 
 { #category : #assertions }
