@@ -1,7 +1,7 @@
 Class {
 	#name : #EDAProjectionMemoryRepository,
 	#superclass : #EDAProjectionVoyageRepository,
-	#category : 'EDA-Projections-Voyage-Repository'
+	#category : #'EDA-Projections-Voyage-Repository'
 }
 
 { #category : #accessing }
@@ -27,6 +27,15 @@ EDAProjectionMemoryRepository >> initBackendRepository [
 { #category : #persistence }
 EDAProjectionMemoryRepository >> selectMany: aProjectionClass where: aDictionary [
 	^ aProjectionClass selectMany: (self convertDictonaryToConditionalBlock: aDictionary)
+]
+
+{ #category : #persistence }
+EDAProjectionMemoryRepository >> selectOfTenant: aTenant one: aProjectionClass where: aDictionary [
+	| criteria |
+	criteria := Dictionary newFrom: aDictionary.
+	criteria at: 'tenant' put: aTenant.
+	^ aProjectionClass
+		selectOne: (self convertDictonaryToConditionalBlock: criteria)
 ]
 
 { #category : #persistence }
