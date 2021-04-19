@@ -26,7 +26,7 @@ EDAJsonMaterializer >> materialize: json [
 	map := NeoJSONReader fromString: json.
 	name := self retrieveName: map.
 	builder := self builderFor: name with: map.
-	^ builder buildWith: map
+	^ builder build
 ]
 
 { #category : #parsing }
