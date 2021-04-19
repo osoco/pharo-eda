@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATBDDHelper,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -14,10 +15,14 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 	self assert: resultingEvents size equals: expectedEvents size.
 	resultingEvents
 		keysAndValuesDo: [ :i :actual | 
-			self assert: (expectedEvents select: [ :expected | 
-			self discardDateCreated: expected.
-			self discardAgent: expected.
-			self is: expected equalTo: actual ]) isNotEmpty ]
+			self
+				assert:
+					(expectedEvents
+						select: [ :expected | 
+							self discardDateCreated: expected.
+							self discardAgent: expected.
+							self discardTimestamp: expected.
+							self is: expected equalTo: actual ]) isNotEmpty ]
 ]
 
 { #category : #assertions }
@@ -145,6 +150,14 @@ EDATBDDHelper >> discardLastModified: anEventOrProjection [
 		if: anEventOrProjection
 		supports: #lastModified:
 		then: [ anEventOrProjection lastModified: '<ANYTHING>' ]
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> discardTimestamp: anEventOrProjection [
+	^ self
+		if: anEventOrProjection
+		supports: #timestamp:
+		then: [ anEventOrProjection timestamp: '<ANYTHING>' ]
 ]
 
 { #category : #helpers }
