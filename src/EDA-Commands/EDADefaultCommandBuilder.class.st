@@ -104,18 +104,18 @@ EDADefaultCommandBuilder >> initialize [
 
 { #category : #initialization }
 EDADefaultCommandBuilder >> initializeCommandBuilders [
-	self subclassResponsibility
+	
 
 ]
 
 { #category : #initialization }
 EDADefaultCommandBuilder >> initializeCommandMappings [
-	self subclassResponsibility
+	
 ]
 
 { #category : #initialization }
 EDADefaultCommandBuilder >> initializeSpecificCommandMappings [
-	self subclassResponsibility
+	
 ]
 
 { #category : #initialization }

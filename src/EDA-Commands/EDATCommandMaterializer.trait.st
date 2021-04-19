@@ -9,8 +9,6 @@ EDATCommandMaterializer >> builderFor: aString with: map [
 	builder := EDACommandBuilderRegistry uniqueInstance
 		lookupBuilder: aString.
 	builder
-		ifNil: [ self
-				logErrorMessage: 'Received unsupported ' , aString greaseString
-				andThrow: EDAInvalidCommandMessage ].
+		ifNil: [ builder := EDAPragmaBasedCommandBuilder newFor: aString with: map ].
 	^ builder
 ]
