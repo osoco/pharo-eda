@@ -26,6 +26,11 @@ EDACommand class >> aggregateRootClass [
 	self subclassResponsibility 
 ]
 
+{ #category : #override }
+EDACommand class >> invalidCommandMessageException [
+	^ EDAInvalidCommandMessage
+]
+
 { #category : #accessing }
 EDACommand class >> latestVersion [
 	<doc: 'Updates the latest version of the command class'>

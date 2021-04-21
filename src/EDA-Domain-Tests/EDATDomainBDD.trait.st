@@ -126,6 +126,11 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol whenApplyingEvents: histo
 ]
 
 { #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString shouldRaise: anException [
+	^ self should: [ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: OrderedCollection empty ] raise: anException
+]
+
+{ #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvent: expectedResultingEvent [
 	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: (OrderedCollection with: expectedResultingEvent)
 ]
@@ -157,14 +162,11 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand shouldRaise: anException [
-	| aggregateRoot handlerSelectorSymbol commandClassName |
-	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
-	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
-	commandClassName := aCommand class name.
-	handlerSelectorSymbol := self retrieveHandlerSelectorSymbol: aCommand.
-	(aggregateRoot respondsTo: handlerSelectorSymbol)
-		ifTrue: [ self should: [ aggregateRoot perform: handlerSelectorSymbol with: aCommand ] raise: anException ]
-		ifFalse: [ self fail: 'Aggregate root ' , anAggregateRootSymbol , ' does not know how to handle command ' , commandClassName ]
+	self
+		should: [ 
+			self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: OrderedCollection empty ]
+		raise: anException
+		
 ]
 
 { #category : #BDD }
@@ -231,6 +233,18 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			self discardAgent: expected.
 			self assertEvent: expected equals: actual ] ]
 		ensure: [ self restoreEventStores: originalEventStores ]
+]
+
+{ #category : #'as yet unclassified' }
+EDATDomainBDD >> old_givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand shouldRaise: anException [
+	| aggregateRoot handlerSelectorSymbol commandClassName |
+	aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
+	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
+	commandClassName := aCommand class name.
+	handlerSelectorSymbol := self retrieveHandlerSelectorSymbol: aCommand.
+	(aggregateRoot respondsTo: handlerSelectorSymbol)
+		ifTrue: [ self should: [ aggregateRoot perform: handlerSelectorSymbol with: aCommand ] raise: anException ]
+		ifFalse: [ self fail: 'Aggregate root ' , anAggregateRootSymbol , ' does not know how to handle command ' , commandClassName ]
 ]
 
 { #category : #BDD }

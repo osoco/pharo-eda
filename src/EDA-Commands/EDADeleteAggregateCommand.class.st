@@ -9,6 +9,11 @@ EDADeleteAggregateCommand class >> aggregateRootClass [
 	^ self subclassResponsibility
 ]
 
+{ #category : #override }
+EDADeleteAggregateCommand class >> invalidCommandMessageException [
+	^ EDAInvalidDeleteAggregateCommandMessage
+]
+
 { #category : #accessing }
 EDADeleteAggregateCommand class >> latestVersion [
 	^ 2

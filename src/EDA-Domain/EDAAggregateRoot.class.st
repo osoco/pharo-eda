@@ -228,7 +228,7 @@ EDAAggregateRoot >> checkCreateCommand: aCommand [
 										nextPutAll: aCommand aggregateSelectionCriteria greaseString;
 										nextPutAll: ' already exists in tenant ';
 										nextPutAll: aCommand tenant greaseString ])
-						andThrow: EDAInvalidCommandMessage ]
+						andThrow: aCommand class invalidCommandMessageException ]
 ]
 
 { #category : #'command checking' }
@@ -253,7 +253,7 @@ EDAAggregateRoot >> checkNonCreateCommand: aCommand [
 								nextPutAll: aCommand aggregateSelectionCriteria values first greaseString;
 								nextPutAll: ' does not exist in tenant ';
 								nextPutAll: aCommand tenant greaseString ])
-				andThrow: EDAInvalidCommandMessage ]
+				andThrow: aCommand class invalidCommandMessageException ]
 ]
 
 { #category : #accessing }
