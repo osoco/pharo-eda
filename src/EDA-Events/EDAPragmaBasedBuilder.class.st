@@ -40,7 +40,7 @@ EDAPragmaBasedBuilder >> buildOrElseError: anErrorClass [
 			builder := (self class environment
 				at:
 					((pragma method pragmas select: [ :p | p selector = #builderClass: ])
-						first argumentAt: 1)) with: (self params at: #body).
+						first argumentAt: 1)) with: self params.
 			result := class perform: pragma method selector with: builder ]
 		ifFalse: [ EDAInternalError
 				signal:
@@ -84,8 +84,9 @@ EDAPragmaBasedBuilder >> retrievePragma [
 EDAPragmaBasedBuilder >> retrievePragma: aSymbol inAndBelow: aClass [
 	| candidates |
 	candidates := (Pragma allNamed: aSymbol inAndBelow: aClass)
-		select: [ :p | (p argumentAt: 1) = self name ]. candidates
-		ifNil: [ self errorClass new
+		select: [ :p | (p argumentAt: 1) = self name ].
+	candidates
+		ifEmpty: [ self errorClass new
 				signal: 'No pragma found for ' , aSymbol greaseString ].
 	candidates size > 1
 		ifTrue: [ | message |
