@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -49,10 +50,11 @@ EDATDomainBDD >> buildBodyForCommand: aCommand [
 
 { #category : #helper }
 EDATDomainBDD >> buildBodyForCommand: aCommand andAggregateRootVersion: aVersion [
-	| body |
+	| body bodyInstVars |
+	bodyInstVars := aCommand class allInstVarNames difference: #(#commandId #version #originalTimestamp #aggregateRootId #aggregateRootVersion).
 	body := Dictionary
 		newFrom:
-			(aCommand class allInstVarNames
+			(bodyInstVars
 				collect: [ :instVar | instVar -> (aCommand instVarNamed: instVar) ]).
 	aCommand fillCommonInfoInto: body.
 

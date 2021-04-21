@@ -11,12 +11,13 @@ EDAPragmaBasedEventBuilder class >> errorClass [
 
 { #category : #building }
 EDAPragmaBasedEventBuilder >> retrievePragma [
-	| pragmas |
+	^ self retrievePragma: #eventName: inAndBelow: EDAEvent class
+"	| pragmas |
 	pragmas := (Pragma allNamed: #eventName: inAndBelow: EDAExternalEvent class)
 		select: [ :p | (p argumentAt: 1) = self name ].
-	pragmas
-		addAll:
+	pragmas := pragmas
+		union:
 			((Pragma allNamed: #eventName: inAndBelow: EDAEventSourcingEvent class)
 				select: [ :p | (p argumentAt: 1) = self name ]).
-	^ pragmas ifEmpty: [ nil ] ifNotEmpty: [ pragmas first ]
+	^ pragmas ifEmpty: [ nil ] ifNotEmpty: [ pragmas first ]"
 ]

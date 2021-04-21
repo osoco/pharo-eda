@@ -1,8 +1,8 @@
 Class {
 	#name : #EDABuilder,
 	#superclass : #Object,
-	#traits : 'EDATSourceCodeHelper',
-	#classTraits : 'EDATSourceCodeHelper classTrait',
+	#traits : 'EDATSourceCodeHelper + EDATLogging',
+	#classTraits : 'EDATSourceCodeHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'params',
 		'accessorMapping'
@@ -55,7 +55,10 @@ EDABuilder >> build: aClass [
 			| v |
 			v := self params
 				at: symbol
-				ifAbsent: [ EDAInvalidEventMessage signal: symbol greaseString , ' not found' ].
+				ifAbsent: [ "EDAInvalidEventMessage signal: symbol greaseString , ' not found'"
+					self
+						logWarningMessage: symbol greaseString , ' does not exist in message.'.
+					nil ].
 			result perform: method with: v ].
 	^ result
 ]
