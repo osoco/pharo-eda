@@ -13,7 +13,8 @@ Class {
 EDAExample class >> given: givenObject when: whenObject then: thenObject [
 	^ self new
 		given: givenObject;
-		when: whenObject; then: thenObject;
+		when: whenObject;
+		then: thenObject;
 		yourself
 ]
 

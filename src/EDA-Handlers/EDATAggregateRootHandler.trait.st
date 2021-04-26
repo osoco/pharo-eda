@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATAggregateRootHandler,
 	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Handlers-Handlers'
 }
 

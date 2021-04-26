@@ -7,7 +7,7 @@ Class {
 		'params',
 		'accessorMapping'
 	],
-	#category : #'EDA-Events-Builders'
+	#category : #'EDA-Messaging-Builders'
 }
 
 { #category : #'instance creation' }
