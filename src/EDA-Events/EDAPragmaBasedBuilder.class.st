@@ -1,6 +1,8 @@
 Class {
 	#name : #EDAPragmaBasedBuilder,
 	#superclass : #Object,
+	#traits : 'EDATPragmaHelper',
+	#classTraits : 'EDATPragmaHelper classTrait',
 	#instVars : [
 		'params',
 		'name'
@@ -78,27 +80,4 @@ EDAPragmaBasedBuilder >> params: anObject [
 { #category : #pragmas }
 EDAPragmaBasedBuilder >> retrievePragma [
 	self subclassResponsibility
-]
-
-{ #category : #pragmas }
-EDAPragmaBasedBuilder >> retrievePragma: aSymbol inAndBelow: aClass [
-	| candidates |
-	candidates := (Pragma allNamed: aSymbol inAndBelow: aClass)
-		select: [ :p | (p argumentAt: 1) = self name ].
-	candidates
-		ifEmpty: [ self errorClass new
-				signal: 'No pragma found for ' , aSymbol greaseString ].
-	candidates size > 1
-		ifTrue: [ | message |
-			message := String new
-				streamContents: [ :str | 
-					str
-						nextPutAll: 'More than one pragma found for ';
-						nextPutAll: aSymbol greaseString;
-						nextPutAll: '. Found: '.
-					candidates
-						do: [ :c | str nextPutAll: c selector greaseString ]
-						separatedBy: [ str nextPutAll: ', ' ] ].
-			self errorClass signal: message ].
-	^ candidates first
 ]

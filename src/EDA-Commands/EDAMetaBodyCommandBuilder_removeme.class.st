@@ -1,6 +1,6 @@
 Class {
-	#name : #'EDADefaultCommandBuilder_deprecated',
-	#superclass : #EDABaseCommandBuilder,
+	#name : #'EDAMetaBodyCommandBuilder_removeme',
+	#superclass : #Object,
 	#traits : 'EDATLogging',
 	#classTraits : 'EDATLogging classTrait',
 	#instVars : [
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #building }
-EDADefaultCommandBuilder_deprecated >> buildCommandFromCommandName: commandName [
+EDAMetaBodyCommandBuilder_removeme >> buildCommandFromCommandName: commandName [
 	| result |
 	result := commandDictionary at: commandName ifAbsent: [ nil ].
 	result
@@ -24,7 +24,7 @@ EDADefaultCommandBuilder_deprecated >> buildCommandFromCommandName: commandName 
 ]
 
 { #category : #building }
-EDADefaultCommandBuilder_deprecated >> buildEmptyFromJsonDict: jsonDict [
+EDAMetaBodyCommandBuilder_removeme >> buildEmptyFromJsonDict: jsonDict [
 	| meta body |
 	meta := jsonDict at: #meta.
 	body := jsonDict at: #body.
@@ -32,7 +32,7 @@ EDADefaultCommandBuilder_deprecated >> buildEmptyFromJsonDict: jsonDict [
 ]
 
 { #category : #building }
-EDADefaultCommandBuilder_deprecated >> buildWith: jsonDict [
+EDAMetaBodyCommandBuilder_removeme >> buildWith: jsonDict [
 	| command meta body |
 	meta := jsonDict at: #meta ifAbsent: [ nil ].
 	body := jsonDict at: #body ifAbsent: [ nil ].
@@ -63,17 +63,17 @@ EDADefaultCommandBuilder_deprecated >> buildWith: jsonDict [
 ]
 
 { #category : #accessing }
-EDADefaultCommandBuilder_deprecated >> commandDictionary [
+EDAMetaBodyCommandBuilder_removeme >> commandDictionary [
 	^ commandDictionary
 ]
 
 { #category : #accessing }
-EDADefaultCommandBuilder_deprecated >> commandDictionary: anObject [
+EDAMetaBodyCommandBuilder_removeme >> commandDictionary: anObject [
 	commandDictionary := anObject
 ]
 
 { #category : #building }
-EDADefaultCommandBuilder_deprecated >> copyFromDict: aDictionary intoCommand: aCommand [
+EDAMetaBodyCommandBuilder_removeme >> copyFromDict: aDictionary intoCommand: aCommand [
 	aDictionary
 		associationsDo: [ :assoc |
 			| key |
@@ -96,35 +96,35 @@ EDADefaultCommandBuilder_deprecated >> copyFromDict: aDictionary intoCommand: aC
 ]
 
 { #category : #initialization }
-EDADefaultCommandBuilder_deprecated >> initialize [
+EDAMetaBodyCommandBuilder_removeme >> initialize [
 	commandDictionary := Dictionary new.
 	self initializeCommandMappings.
 	self initializeSpecificCommandMappings
 ]
 
 { #category : #initialization }
-EDADefaultCommandBuilder_deprecated >> initializeCommandBuilders [
+EDAMetaBodyCommandBuilder_removeme >> initializeCommandBuilders [
 	
 
 ]
 
 { #category : #initialization }
-EDADefaultCommandBuilder_deprecated >> initializeCommandMappings [
+EDAMetaBodyCommandBuilder_removeme >> initializeCommandMappings [
 	
 ]
 
 { #category : #initialization }
-EDADefaultCommandBuilder_deprecated >> initializeSpecificCommandMappings [
+EDAMetaBodyCommandBuilder_removeme >> initializeSpecificCommandMappings [
 	
 ]
 
 { #category : #initialization }
-EDADefaultCommandBuilder_deprecated >> retrieveAggregateRootClass: commandParams [
+EDAMetaBodyCommandBuilder_removeme >> retrieveAggregateRootClass: commandParams [
 	^ (self retrieveCommandClassFromJsonDict: commandParams) new aggregateRootClass
 ]
 
 { #category : #building }
-EDADefaultCommandBuilder_deprecated >> retrieveCommandClassFromCommandName: commandName [
+EDAMetaBodyCommandBuilder_removeme >> retrieveCommandClassFromCommandName: commandName [
 	| result |
 	result := commandDictionary at: commandName ifAbsent: [ nil ].
 	result
@@ -138,7 +138,7 @@ EDADefaultCommandBuilder_deprecated >> retrieveCommandClassFromCommandName: comm
 ]
 
 { #category : #building }
-EDADefaultCommandBuilder_deprecated >> retrieveCommandClassFromJsonDict: jsonDict [
+EDAMetaBodyCommandBuilder_removeme >> retrieveCommandClassFromJsonDict: jsonDict [
 	| meta body |
 	meta := jsonDict at: #meta.
 	body := jsonDict at: #body.

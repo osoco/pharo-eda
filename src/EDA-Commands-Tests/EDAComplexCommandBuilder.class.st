@@ -1,6 +1,6 @@
 Class {
 	#name : #EDAComplexCommandBuilder,
-	#superclass : #EDABaseCommandBuilder,
+	#superclass : #'EDAMetaBodyCommandBuilder_removeme',
 	#category : #'EDA-Commands-Tests'
 }
 
