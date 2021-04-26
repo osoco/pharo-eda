@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATBDDHelper,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -65,7 +66,7 @@ EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 	mock := EDAAcceptEverything new.
 	^ EDAMessageConsumer
 		busListener: mock
-		materializer: EDAJsonCommandMaterializer new
+		materializer: EDACommandMaterializer new
 		dispatcher:
 			(EDAApplication
 				buildCommandDispatcherWithEventStore: anEventStore
@@ -79,13 +80,13 @@ EDATBDDHelper >> buildConsumerWithEventStore: anEventStore [
 	mock := EDAAcceptEverything new.
 	^ EDAMessageConsumer
 		busListener: mock
-		commandMaterializer: EDAJsonCommandMaterializer new
+		commandMaterializer: EDACommandMaterializer new
 		commandDispatcher:
 			(EDAApplication
 				buildCommandDispatcherWithEventStore: anEventStore
 				eventProducer: mock
 				andProjectorClass: mock)
-		eventMaterializer: EDAJsonEventMaterializer new
+		eventMaterializer: EDAEventMaterializer new
 		eventDispatcher:
 			(EDAApplication
 				buildEventDispatcherWithEventStore: anEventStore

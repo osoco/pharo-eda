@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -68,7 +69,7 @@ EDATDomainBDD >> buildCommandConsumerWithEventStore: anEventStore [
 	mock := EDAAcceptEverything new.
 	^ EDAMessageConsumer
 		busListener: mock
-		materializer: EDAJsonCommandMaterializer new
+		materializer: EDACommandMaterializer new
 		dispatcher:
 			(EDAApplication
 				buildCommandDispatcherWithEventStore: anEventStore

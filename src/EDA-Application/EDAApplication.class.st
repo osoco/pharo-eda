@@ -361,9 +361,13 @@ EDAApplication class >> setupCommandConsumer [
 EDAApplication class >> setupCommandConsumerWithCommandListener: listener [
 	| materializer |
 	listener client debug: self commandListenerClientDebug.
-	materializer := EDAJsonCommandMaterializer new.
+	materializer := EDACommandMaterializer new.
 	self
-		commandConsumer: (EDAMessageConsumer busListener: listener materializer: materializer dispatcher: self commandDispatcher)
+		commandConsumer:
+			(EDAMessageConsumer
+				busListener: listener
+				materializer: materializer
+				dispatcher: self commandDispatcher)
 ]
 
 { #category : #setup }
