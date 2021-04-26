@@ -69,7 +69,7 @@ EDATDomainBDD >> buildCommandConsumerWithEventStore: anEventStore [
 	mock := EDAAcceptEverything new.
 	^ EDAMessageConsumer
 		busListener: mock
-		materializer: EDAJsonCommandMaterializer new
+		materializer: EDACommandMaterializer new
 		dispatcher:
 			(EDAApplication
 				buildCommandDispatcherWithEventStore: anEventStore

@@ -3,13 +3,28 @@ Class {
 	#superclass : #EDACommandBuilder,
 	#traits : 'EDATMetaBodyTypeHelper',
 	#classTraits : 'EDATMetaBodyTypeHelper classTrait',
+	#instVars : [
+		'metaBodyParams'
+	],
 	#category : #'EDA-Commands-Builders'
 }
 
-{ #category : #builder }
-EDAMetaBodyCommandBuilder >> build [
-	self params: (self transfomCommandJsonToParams: self params).
-	^ super build
+{ #category : #accessing }
+EDAMetaBodyCommandBuilder >> metaBodyParams [
+	^ metaBodyParams
+		ifNil: [ self metaBodyParams: self params copy.
+			self params: (self transfomCommandJsonToParams: self metaBodyParams).
+			metaBodyParams ]
+]
+
+{ #category : #accessing }
+EDAMetaBodyCommandBuilder >> metaBodyParams: anObject [
+	metaBodyParams := anObject
+]
+
+{ #category : #testing }
+EDAMetaBodyCommandBuilder >> retrieveType [
+	^ self retrieveType: self metaBodyParams
 ]
 
 { #category : #accessing }
@@ -23,17 +38,21 @@ EDAMetaBodyCommandBuilder >> transfomCommandJsonToParams: unprocessedParams [
 				andThrow: self errorClass ]
 		ifFalse: [ [ meta
 				at: #timestamp
-				put: (DateAndTime fromString: (meta at: #timestamp) greaseString).
-			meta at: #commandId put: (meta at: #id).
-			meta removeKey: #id ifAbsent: [  ].
+				put:
+					(meta
+						at: #timestamp
+						ifPresent: [ :v | DateAndTime fromString: v ]
+						ifAbsent: [ DateAndTime now ]).
+			meta at: #id ifPresent: [ :v | meta at: #commandId put: v ].
+			meta removeKey: #id ifAbsent: [ ].
 			meta at: #originalTimestamp put: (meta at: #timestamp).
 			meta removeKey: #timestamp ifAbsent: [  ].
-			body at: #aggregateRootId put: (body at: #id ifAbsent: [  ]).
-			body removeKey: #id ifAbsent: [  ].
+			body at: #aggregateRootId put: (body at: #id ifAbsent: [ ]).
+			body removeKey: #id ifAbsent: [ ].
 			body
 				at: #aggregateRootVersion
-				put: (body at: #version ifAbsent: [  ]).
-			body removeKey: #version ifAbsent: [  ].
+				put: (body at: #version ifAbsent: [ ]).
+			body removeKey: #version ifAbsent: [ ].
 			^ (Dictionary newFrom: meta)
 				addAll: body;
 				yourself ]

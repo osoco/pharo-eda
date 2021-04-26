@@ -6,18 +6,15 @@ Trait {
 { #category : #pragmas }
 EDATPragmaHelper classSide >> retrievePragma: aSymbol inAndBelow: aClass [
 	| candidates |
-	candidates := (Pragma allNamed: aSymbol inAndBelow: aClass)
-	candidates
-		ifEmpty: [ self errorClass new
-				signal: 'No pragma ' , aSymbol greaseString , ' found' ].
+	candidates := self retrievePragmas: aSymbol inAndBelow: aClass.
 	candidates size > 1
 		ifTrue: [ | message |
 			message := String new
 				streamContents: [ :str | 
 					str
-						nextPutAll: 'More than one pragma ';
+						nextPutAll: 'More than one pragma <';
 						nextPutAll: aSymbol greaseString;
-						nextPutAll: ' found: '.
+						nextPutAll: '> found: '.
 					candidates
 						do: [ :c | str nextPutAll: c selector greaseString ]
 						separatedBy: [ str nextPutAll: ', ' ] ].
@@ -28,19 +25,17 @@ EDATPragmaHelper classSide >> retrievePragma: aSymbol inAndBelow: aClass [
 { #category : #pragmas }
 EDATPragmaHelper classSide >> retrievePragma: aSymbol with: aValue inAndBelow: aClass [
 	| candidates |
-	candidates := (Pragma allNamed: aSymbol inAndBelow: aClass)
-		select: [ :p | (p argumentAt: 1) = aValue ].
-	candidates
-		ifEmpty: [ self errorClass new
-				signal: 'No pragma ' , aSymbol greaseString , ' ' , aValue greaseString, ' found' ].
+	candidates := self retrievePragmas: aSymbol with: aValue inAndBelow: aClass.
 	candidates size > 1
 		ifTrue: [ | message |
 			message := String new
 				streamContents: [ :str | 
 					str
-						nextPutAll: 'More than one pragma ';
+						nextPutAll: 'More than one pragma <';
 						nextPutAll: aSymbol greaseString;
-						nextPutAll: ' found: '.
+						nextPut: Character space;
+						nextPutAll: aValue greaseString;
+						nextPutAll: '> found: '.
 					candidates
 						do: [ :c | str nextPutAll: c selector greaseString ]
 						separatedBy: [ str nextPutAll: ', ' ] ].
@@ -51,22 +46,10 @@ EDATPragmaHelper classSide >> retrievePragma: aSymbol with: aValue inAndBelow: a
 { #category : #pragmas }
 EDATPragmaHelper classSide >> retrievePragmas: aSymbol inAndBelow: aClass [
 	| result |
-	result := (Pragma allNamed: aSymbol inAndBelow: aClass).
-		result
+	result := Pragma allNamed: aSymbol inAndBelow: aClass.
+	result
 		ifEmpty: [ self errorClass new
-				signal: 'No pragma ' , aSymbol greaseString , ' found' ].
-	result size > 1
-		ifTrue: [ | message |
-			message := String new
-				streamContents: [ :str | 
-					str
-						nextPutAll: 'More than one pragma ';
-						nextPutAll: aSymbol greaseString;
-						nextPutAll: ' found: '.
-					result
-						do: [ :c | str nextPutAll: c selector greaseString ]
-						separatedBy: [ str nextPutAll: ', ' ] ].
-			self errorClass signal: message ].
+				signal: 'No pragma <' , aSymbol greaseString , '> found' ].
 	^ result
 ]
 
@@ -78,8 +61,8 @@ EDATPragmaHelper classSide >> retrievePragmas: aSymbol with: aValue inAndBelow: 
 	result
 		ifEmpty: [ self errorClass new
 				signal:
-					'No pragma ' , aSymbol greaseString , ' ' , aValue greaseString
-						, ' found' ].
+					'No pragma <' , aSymbol greaseString , ' ' , aValue greaseString
+						, '> found' ].
 	^ result
 ]
 
