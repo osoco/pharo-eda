@@ -18,7 +18,7 @@ Class {
 	#classInstVars : [
 		'latestVersion'
 	],
-	#category : #'EDA-Commands-Commands'
+	#category : #'EDA-Domain-Commands'
 }
 
 { #category : #meta }

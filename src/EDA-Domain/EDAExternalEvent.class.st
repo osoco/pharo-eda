@@ -7,7 +7,7 @@ Class {
 		'timestamp',
 		'version'
 	],
-	#category : #'EDA-Events-External'
+	#category : #'EDA-Domain-External'
 }
 
 { #category : #testing }

@@ -47,7 +47,7 @@ Class {
 		'voyageRepository',
 		'latestVersion'
 	],
-	#category : #'EDA-Events-Events'
+	#category : #'EDA-Domain-Events'
 }
 
 { #category : #meta }

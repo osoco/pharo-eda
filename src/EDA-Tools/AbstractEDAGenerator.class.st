@@ -16,7 +16,7 @@ Class {
 		'eventName',
 		'version'
 	],
-	#category : 'EDA-Tools'
+	#category : #'EDA-Tools'
 }
 
 { #category : #customization }
@@ -108,7 +108,7 @@ AbstractEDAGenerator >> commandRaw: aString [
 
 { #category : #helper }
 AbstractEDAGenerator >> eventClassForContract: aString [
-	^ ATSEDAApplication eventClassPrefix , (self dotSeparatedToCamelCase: aString)
+	self shouldBeImplemented 
 ]
 
 { #category : #accessing }
@@ -212,8 +212,8 @@ AbstractEDAGenerator >> readCommandExampleFile [
 ]
 
 { #category : #helper }
-AbstractEDAGenerator >> readCommandFromContract: contractName version: version [
-	^ self readFromContract: [ self retrieveCommandFile: contractName version: version ]
+AbstractEDAGenerator >> readCommandFromContract: contractName version: aVersion [
+	^ self readFromContract: [ self retrieveCommandFile: contractName version: aVersion ]
 ]
 
 { #category : #helper }
@@ -228,9 +228,9 @@ AbstractEDAGenerator >> readEventExampleFile [
 ]
 
 { #category : #helper }
-AbstractEDAGenerator >> readFromContract: evtName version: version using: aBlock [
+AbstractEDAGenerator >> readFromContract: evtName version: aVersion using: aBlock [
 	| result file fileContents |
-	file := aBlock cull: evtName cull: version.
+	file := aBlock cull: evtName cull: aVersion.
 	fileContents := file readStream.
 	result := NeoJSONReader fromString: fileContents.
 	fileContents close.
@@ -365,13 +365,13 @@ AbstractEDAGenerator >> retrieveEventName [
 ]
 
 { #category : #helper }
-AbstractEDAGenerator >> retrieveImplementedCommandsFor: appName [
+AbstractEDAGenerator >> retrieveImplementedCommandsFor: anAppName [
 	"Finds all pragmas like [appName]CommandName: #[COMMAND_NAME]"
 
 	| cmds |
 	cmds := {} asDictionary.
 	EDACommand
-		allSubclassesDo: [ :cls | (Pragma allNamed: (appName asLowercase , 'CommandName:') asSymbol in: cls class) do: [ :pragma | cmds at: (pragma arguments at: 1) put: pragma methodClass ] ].
+		allSubclassesDo: [ :cls | (Pragma allNamed: (anAppName asLowercase , 'CommandName:') asSymbol in: cls class) do: [ :pragma | cmds at: (pragma arguments at: 1) put: pragma methodClass ] ].
 	^ cmds
 ]
 

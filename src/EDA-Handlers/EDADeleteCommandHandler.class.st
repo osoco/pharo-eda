@@ -26,7 +26,7 @@ EDADeleteCommandHandler >> delegateHandlingOfCommand: aCommand toAggregate: anAg
 		ifTrue: [
 			^ anAggregateRoot handleDeleteCommand: aCommand
 		] ifFalse: [
-			EDAInvalidCommandMessage signal
+			EDAInvalidCommand signal
 		]
 					
 

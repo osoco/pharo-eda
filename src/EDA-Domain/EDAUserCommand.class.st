@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'authorUsername'
 	],
-	#category : #'EDA-Commands-Commands'
+	#category : #'EDA-Domain-Commands'
 }
 
 { #category : #accessing }

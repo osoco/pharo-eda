@@ -1,7 +1,7 @@
 Class {
 	#name : #EDADeleteCommandResultEvent,
 	#superclass : #EDACommandResultEvent,
-	#category : 'EDA-Events-Events'
+	#category : #'EDA-Domain-Events'
 }
 
 { #category : #'generated-v1' }

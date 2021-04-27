@@ -1,7 +1,7 @@
 Class {
 	#name : #EDADeleteAggregateCommand,
 	#superclass : #EDACommand,
-	#category : #'EDA-Commands-Commands'
+	#category : #'EDA-Domain-Commands'
 }
 
 { #category : #accessing }
