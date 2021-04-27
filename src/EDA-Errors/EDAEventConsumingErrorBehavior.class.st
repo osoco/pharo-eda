@@ -1,5 +1,5 @@
 Class {
 	#name : #EDAEventConsumingErrorBehavior,
-	#superclass : #Object,
-	#category : #'EDA-Errors-Behavior'
+	#superclass : #EDAErrorBehavior,
+	#category : #'EDA-Errors-Behaviors'
 }

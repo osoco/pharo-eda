@@ -10,5 +10,5 @@ It's a regular EDAStompTopicListener, containing configuration settings used onl
 Class {
 	#name : #EDAEventStompTopicListener,
 	#superclass : #EDAStompTopicListener,
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-StompMessaging'
 }
