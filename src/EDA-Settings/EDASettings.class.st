@@ -93,6 +93,7 @@ EDASettings class >> edaSettingsOn: aBuilder [
 			(EDADUEnvironment environments
 				collect: [ :level | level translated -> level greaseString ]).
 	self commandListenerSettingsOn: aBuilder under: #eda.
+	self eventListenerSettingsOn: aBuilder under: #eda.
 	self eventPublisherSettingsOn: aBuilder under: #eda.
 	self eventStoreSettingsOn: aBuilder under: #eda.
 	self
@@ -100,6 +101,31 @@ EDASettings class >> edaSettingsOn: aBuilder [
 		under: #eda
 		populatedWithValuesFrom: 'projections'.
 	self loggingSettingsOn: aBuilder under: #eda
+]
+
+{ #category : #settings }
+EDASettings class >> eventListenerSettingsOn: aBuilder under: parent [
+	(aBuilder group: #eventListener)
+		label: 'Event Listener' translated;
+		description: 'Event listener';
+		parent: parent.
+	self
+		stompListenerSettingsOn: aBuilder
+		withConfig: EDAEventStompTopicListener
+		under: #eventListener
+		populatedWithValuesFrom: 'eventListener'.
+	(aBuilder pickOne: #strategy)
+		parent: #eventListener;
+		target: EDAEventConsumingErrorBehavior;
+		label: 'Event Consuming Error' translated;
+		description: 'Strategy when dealing with event consuming errors';
+		order: 1;
+		domainValues:
+			(EDAErrorHandlingStrategy subclasses
+				collect:
+					[ :strategy | strategy description translated -> strategy greaseString ]);
+		default: EDAPublishMessageErrorStrategy greaseString.
+	^ self
 ]
 
 { #category : #settings }
@@ -318,7 +344,7 @@ EDASettings class >> projectionsRepositorySettingsOn: aBuilder under: parent pop
 
 { #category : #settings }
 EDASettings class >> resetSettings [
-	#(EDACommandStompTopicListener EDAEventStompTopicPublisher EDAMongoEventStore EDALoggingSettings EDAApplication  EDAProjector 	 EDACompositeProjector  EDAProjectionMongoRepository)
+	#(EDACommandStompTopicListener EDAEventStompTopicListener EDAEventStompTopicPublisher EDAMongoEventStore EDALoggingSettings EDAApplication EDAProjector EDACompositeProjector EDAProjectionMongoRepository)
 		do: [ :cls | cls initialize ]
 ]
 

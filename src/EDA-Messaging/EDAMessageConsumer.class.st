@@ -5,10 +5,8 @@ Class {
 	#classTraits : 'EDATPrintOnHelper classTrait + EDATErrorHelper classTrait',
 	#instVars : [
 		'busListener',
-		'commandMaterializer',
-		'commandDispatcher',
-		'eventMaterializer',
-		'eventDispatcher'
+		'materializer',
+		'dispatcher'
 	],
 	#classInstVars : [
 		'restartOnCommandConsumingErrors',
@@ -73,11 +71,6 @@ EDAMessageConsumer >> close [
 ]
 
 { #category : #accessing }
-EDAMessageConsumer >> commandDispatcher [
-	^ commandDispatcher
-]
-
-{ #category : #accessing }
 EDAMessageConsumer >> commandDispatcher: anObject [
 	commandDispatcher := anObject
 ]
@@ -114,6 +107,16 @@ EDAMessageConsumer >> consumeMessage: aMessageString usingStrategyForCommands: a
 				dispatch: anEvent
 				usingStrategy: anotherStrategy ].
 	^ result
+]
+
+{ #category : #accessing }
+EDAMessageConsumer >> dispatcher [
+	^ dispatcher
+]
+
+{ #category : #accessing }
+EDAMessageConsumer >> dispatcher: anObject [
+	dispatcher := anObject
 ]
 
 { #category : #accessing }
@@ -159,6 +162,16 @@ EDAMessageConsumer >> manageError: anException for: aCommandOrEvent usingErrorSt
 		handleError: anException
 		withExtraContextInformation: dictionary.
 	^ result
+]
+
+{ #category : #accessing }
+EDAMessageConsumer >> materializer [
+	^ materializer
+]
+
+{ #category : #accessing }
+EDAMessageConsumer >> materializer: anObject [
+	materializer := anObject
 ]
 
 { #category : #helpers }

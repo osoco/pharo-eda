@@ -32,6 +32,8 @@ Class {
 	#classInstVars : [
 		'eventStore',
 		'eventAnnouncer',
+		'eventConsumer',
+		'eventDispatcher',
 		'commandConsumer',
 		'commandDispatcher',
 		'eventProducer',
@@ -155,6 +157,8 @@ EDAApplication class >> doSetup [
 		ifTrue: [ self synchronizeProjections ].
 	self setupCommandDispatcher.
 	self setupCommandConsumer.
+	self setupEventDispatcher.
+	self setupEventConsumer.
 	self setupEventSubscriptions
 ]
 
@@ -166,6 +170,26 @@ EDAApplication class >> eventAnnouncer [
 { #category : #accessing }
 EDAApplication class >> eventAnnouncer: anObject [
 	eventAnnouncer := anObject
+]
+
+{ #category : #accessing }
+EDAApplication class >> eventConsumer [
+	^ eventConsumer
+]
+
+{ #category : #accessing }
+EDAApplication class >> eventConsumer: anObject [
+	eventConsumer := anObject
+]
+
+{ #category : #accessing }
+EDAApplication class >> eventDispatcher [
+	^ eventDispatcher
+]
+
+{ #category : #accessing }
+EDAApplication class >> eventDispatcher: anObject [
+	eventDispatcher := anObject
 ]
 
 { #category : #accessing }
@@ -269,6 +293,8 @@ EDAApplication class >> reset [
 	self resetProjectors.
 	self resetCommandDispatcher.
 	self resetCommandConsumer.
+	self resetEventDispatcher.
+	self resetEventConsumer.
 	self resetEventSubscriptions.
 	self resetEventAnnouncer.
 	self isConfigured: false
@@ -288,6 +314,17 @@ EDAApplication class >> resetCommandDispatcher [
 { #category : #'reset - events' }
 EDAApplication class >> resetEventAnnouncer [
 	eventAnnouncer := nil
+]
+
+{ #category : #'reset - commands' }
+EDAApplication class >> resetEventConsumer [
+	self eventConsumer ifNotNil: [ :c | c close ].
+	self eventConsumer: nil
+]
+
+{ #category : #'reset - commands' }
+EDAApplication class >> resetEventDispatcher [
+	self eventDispatcher: nil
 ]
 
 { #category : #'reset - events' }
@@ -344,6 +381,11 @@ EDAApplication class >> retrieveAllTenants [
 	self shouldBeImplemented
 ]
 
+{ #category : #settings }
+EDAApplication class >> settingsGroup [
+	self subclassResponsibility
+]
+
 { #category : #setup }
 EDAApplication class >> setup [
 	self isConfigured ifNil: [ self isConfigured: false ].
@@ -364,7 +406,7 @@ EDAApplication class >> setupCommandConsumerWithCommandListener: listener [
 	materializer := EDACommandMaterializer new.
 	self
 		commandConsumer:
-			(EDAMessageConsumer
+			(EDACommandConsumer
 				busListener: listener
 				materializer: materializer
 				dispatcher: self commandDispatcher)
@@ -383,6 +425,35 @@ EDAApplication class >> setupCommandDispatcher [
 { #category : #'setup - events' }
 EDAApplication class >> setupEventAnnouncer [
 	self eventAnnouncer: Announcer new
+]
+
+{ #category : #'setup - commands' }
+EDAApplication class >> setupEventConsumer [
+	^ self
+		setupEventConsumerWithEventListener: EDAEventStompTopicListener new
+]
+
+{ #category : #'setup - commands' }
+EDAApplication class >> setupEventConsumerWithEventListener: listener [
+	| materializer |
+	listener client debug: self eventListenerClientDebug.
+	materializer := EDAEventMaterializer new.
+	self
+		eventConsumer:
+			(EDAEventConsumer
+				busListener: listener
+				materializer: materializer
+				dispatcher: self eventDispatcher)
+]
+
+{ #category : #setup }
+EDAApplication class >> setupEventDispatcher [
+	self
+		eventDispatcher:
+			(self
+				buildEventDispatcherWithEventStore: self eventStore
+				eventProducer: self eventProducer
+				andProjectorClass: EDACompositeProjector)
 ]
 
 { #category : #'setup - events' }
