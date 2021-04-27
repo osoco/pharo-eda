@@ -44,7 +44,7 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 								nextPutAll: self class greaseString;
 								nextPutAll: '>>';
 								nextPutAll: 'dispatch: received a nil command' ])
-				andThrow: EDAInvalidCommandMessage ].
+				andThrow: EDAInvalidCommand ].
 	aCommand version = aCommand latestVersion
 		ifFalse: [ self
 				logErrorMessage:
@@ -57,7 +57,7 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 								nextPutAll: ' is not supported. Only version ';
 								nextPutAll: aCommand class latestVersion greaseString;
 								nextPutAll: ' is supported' ])
-				andThrow: EDAInvalidCommandMessage ].
+				andThrow: EDAInvalidCommand ].
 	handler := self handlersRegistry handlerForCommand: aCommand.
 	(handler isNil and: [ aCommand isDelete ])
 		ifTrue: [ handler := EDADeleteCommandHandler

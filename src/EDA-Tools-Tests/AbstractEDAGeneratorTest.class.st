@@ -1,7 +1,7 @@
 Class {
 	#name : #AbstractEDAGeneratorTest,
 	#superclass : #TestCase,
-	#category : 'EDA-Tools-Tests'
+	#category : #'EDA-Tools-Tests'
 }
 
 { #category : #running }
@@ -15,7 +15,8 @@ AbstractEDAGeneratorTest >> setUp [
 
 { #category : #running }
 AbstractEDAGeneratorTest >> tearDown [
-	RBRefactoringManager instance addRefactoring: (RBRemoveClassRefactoring classNames: { #EDADummyAggregateRoot } ) transform.
+	self flag: #TODO
+	"RBRefactoringManager instance addRefactoring: (RBRemoveClassRefactoring classNames: { #EDADummyAggregateRoot } ) transform."
 
 ]
 

@@ -51,14 +51,14 @@ EDAAggregateRoot class >> checkTenantOfCommand: aCommandTenant matches: anAggreg
 								nextPutAll: aCommandTenant;
 								nextPutAll: '), aggregate''s tenant: ';
 								nextPutAll: anAggregateTenant greaseString ])
-				andThrow: InvalidTenant ]
+				andThrow: EDAInvalidTenant ]
 ]
 
 { #category : #helpers }
 EDAAggregateRoot class >> checkTenantOfCommandIsValid: aCommand [
 	(self checkTenantIsValid: aCommand tenant)
 		ifFalse:
-			[ self logErrorMessage: 'tenant is missing' andThrow: InvalidTenant ]
+			[ self logErrorMessage: 'tenant is missing' andThrow: EDAInvalidTenant ]
 ]
 
 { #category : #testing }
@@ -214,7 +214,7 @@ EDAAggregateRoot >> buildDeleteCommandResultEvent [
 							s
 								nextPutAll: 'Cannot find delete event for aggregate ';
 								nextPutAll: self class greaseString ])
-				andThrow: MissingDeleteEventClassForAggregate ]
+				andThrow: EDAMissingDeleteEventClassForAggregate ]
 		ifNotEmpty: [ :c | 
 			c size > 1
 				ifTrue: [ self
@@ -223,7 +223,7 @@ EDAAggregateRoot >> buildDeleteCommandResultEvent [
 								streamContents: [ :s |
 									s
 										nextPutAll: 'Too many delete events for aggregate: ';
-										nextPutAll: self class greaseString ]) andThrow: TooManyDeleteEventClassesForAggregate ].
+										nextPutAll: self class greaseString ]) andThrow: EDATooManyDeleteEventClassesForAggregate ].
 			eventClass := c first ].
 	result := eventClass ifNotNil: [ :cls | cls new ].
 	^ result

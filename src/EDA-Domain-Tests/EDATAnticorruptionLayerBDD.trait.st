@@ -31,11 +31,11 @@ EDATAnticorruptionLayerBDD >> givenEvents: pastEvents whenReceiveMessage: aStrin
 	| eventStore originalEventStores |
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
-	[ | consumer resultingProjections |
+	[ | eventConsumer resultingProjections |
 	self useEventStore: eventStore.
 	eventStore saveEvents: pastEvents.
-	consumer := self buildConsumerWithEventStore: eventStore.
-	resultingProjections := self consumeMessage: aString using: consumer.
+	eventConsumer := self buildEventConsumerWithEventStore: eventStore.
+	resultingProjections := self consumeMessage: aString using: eventConsumer.
 	self
 		assertProjections: resultingProjections
 		matchExpected: expectedProjections ]

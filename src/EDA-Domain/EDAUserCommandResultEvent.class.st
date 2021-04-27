@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'authorUsername'
 	],
-	#category : 'EDA-Events-Events'
+	#category : #'EDA-Domain-Events'
 }
 
 { #category : #accessing }

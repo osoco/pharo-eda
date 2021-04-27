@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'busListener',
 		'materializer',
-		'dispatcher'
+		'dispatcher',
+		'strategy'
 	],
 	#classInstVars : [
 		'restartOnCommandConsumingErrors',
@@ -16,22 +17,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-EDAMessageConsumer class >> busListener: busListener commandMaterializer: commandMaterializer commandDispatcher: commandDispatcher eventMaterializer: eventMaterializer eventDispatcher: eventDispatcher [
+EDAMessageConsumer class >> busListener: aBusListener materializer: aMaterializer dispatcher: aDispatcher strategy: aStrategy [
 	^ self new
-		busListener: busListener;
-		commandMaterializer: commandMaterializer;
-		commandDispatcher: commandDispatcher;
-		eventMaterializer: eventMaterializer;
-		eventDispatcher: eventDispatcher;
-		yourself
-]
-
-{ #category : #'instance creation' }
-EDAMessageConsumer class >> busListener: busListener materializer: commandMaterializer dispatcher: commandDispatcher [
-	^ self new
-		busListener: busListener;
-		commandMaterializer: commandMaterializer;
-		commandDispatcher: commandDispatcher;
+		busListener: aBusListener;
+		materializer: aMaterializer;
+		dispatcher: aDispatcher;
+		strategy: aStrategy
 		yourself
 ]
 
@@ -70,43 +61,16 @@ EDAMessageConsumer >> close [
 	self busListener close
 ]
 
-{ #category : #accessing }
-EDAMessageConsumer >> commandDispatcher: anObject [
-	commandDispatcher := anObject
-]
-
-{ #category : #accessing }
-EDAMessageConsumer >> commandMaterializer [
-	^ commandMaterializer
-]
-
-{ #category : #accessing }
-EDAMessageConsumer >> commandMaterializer: anObject [
-	commandMaterializer := anObject
-]
-
 { #category : #reading }
 EDAMessageConsumer >> consumeMessage: aMessageString [
 	^ self
 		consumeMessage: aMessageString
-		usingStrategyForCommands: EDACommandConsumingErrorBehavior strategy andStrategyForEvents: EDAEventConsumingErrorBehavior strategy
+		usingStrategy: self strategy
 ]
 
 { #category : #reading }
-EDAMessageConsumer >> consumeMessage: aMessageString usingStrategyForCommands: aStrategy andStrategyForEvents: anotherStrategy [
-	| result aCommand commandFailed |
-	commandFailed := false.
-	[ aCommand := self commandMaterializer materialize: aMessageString.
-	result := self commandDispatcher dispatch: aCommand usingStrategy: aStrategy ]
-		on: Error
-		do: [ commandFailed := true ].
-	commandFailed
-		ifTrue: [ | anEvent |
-			anEvent := self eventMaterializer materialize: aMessageString.
-			result := self eventDispatcher
-				dispatch: anEvent
-				usingStrategy: anotherStrategy ].
-	^ result
+EDAMessageConsumer >> consumeMessage: aMessageString usingStrategy: aStrategy [
+	^ self dispatcher dispatch: (self materializer materialize: aMessageString) usingStrategy: aStrategy 
 ]
 
 { #category : #accessing }
@@ -117,26 +81,6 @@ EDAMessageConsumer >> dispatcher [
 { #category : #accessing }
 EDAMessageConsumer >> dispatcher: anObject [
 	dispatcher := anObject
-]
-
-{ #category : #accessing }
-EDAMessageConsumer >> eventDispatcher [
-	^ eventDispatcher
-]
-
-{ #category : #accessing }
-EDAMessageConsumer >> eventDispatcher: anObject [
-	eventDispatcher := anObject
-]
-
-{ #category : #accessing }
-EDAMessageConsumer >> eventMaterializer [
-	^ eventMaterializer
-]
-
-{ #category : #accessing }
-EDAMessageConsumer >> eventMaterializer: anObject [
-	eventMaterializer := anObject
 ]
 
 { #category : #handling }
@@ -222,4 +166,14 @@ EDAMessageConsumer >> stop [
 		do: [ :ex |
 			self
 				logErrorMessage: 'Error stopping Command Consumer: ' , ex description , '.' ]
+]
+
+{ #category : #accessing }
+EDAMessageConsumer >> strategy [
+	^ strategy
+]
+
+{ #category : #accessing }
+EDAMessageConsumer >> strategy: anObject [
+	strategy := anObject
 ]

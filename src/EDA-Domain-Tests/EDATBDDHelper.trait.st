@@ -75,19 +75,13 @@ EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 ]
 
 { #category : #helpers }
-EDATBDDHelper >> buildConsumerWithEventStore: anEventStore [
+EDATBDDHelper >> buildEventConsumerWithEventStore: anEventStore [
 	| mock |
 	mock := EDAAcceptEverything new.
 	^ EDAMessageConsumer
 		busListener: mock
-		commandMaterializer: EDACommandMaterializer new
-		commandDispatcher:
-			(EDAApplication
-				buildCommandDispatcherWithEventStore: anEventStore
-				eventProducer: mock
-				andProjectorClass: mock)
-		eventMaterializer: EDAEventMaterializer new
-		eventDispatcher:
+		materializer: EDAEventMaterializer new
+		dispatcher:
 			(EDAApplication
 				buildEventDispatcherWithEventStore: anEventStore
 				eventProducer: mock
@@ -169,7 +163,7 @@ EDATBDDHelper >> filterPastEvents: events ofAggregate: anAggregateRootSymbol [
 
 { #category : #BDD }
 EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock thenEvents: expectedResultingEvents processingThem: aProcessingExpectedEventsBlock [
-	| consumer resultingEvents eventStore expectedEvents eventsToSave originalEventStores aMessage |
+	| commandConsumer resultingEvents eventStore expectedEvents eventsToSave originalEventStores aMessage |
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
 	[ self useEventStore: eventStore.
@@ -177,15 +171,15 @@ EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBl
 		value: pastEvents
 		value: eventStore.
 	eventStore saveEvents: eventsToSave.
-	consumer := self
-		buildConsumerWithEventStore: eventStore.
+	commandConsumer := self
+		buildCommandConsumerWithEventStore: eventStore.
 	expectedEvents := aProcessingExpectedEventsBlock
 		value: expectedResultingEvents
 		value: eventStore.
 	aMessage := aMessageBlock value: eventsToSave value: aString.
 	resultingEvents := self
 		consumeMessage: aMessage
-		using: consumer.
+		using: commandConsumer.
 	self assertEvents: resultingEvents matchExpected: expectedEvents ]
 		ensure: [ self restoreEventStores: originalEventStores ]
 ]

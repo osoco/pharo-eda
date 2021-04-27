@@ -108,7 +108,7 @@ EDAMaterializer >> parse: aString [
 				logErrorMessage:
 					'No parsers know how to handle the input message ' , Character cr
 						, aString greaseString
-				andThrow: EDAInvalidCommandMessage ].
+				andThrow: EDAInvalidMessage ].
 	^ parserCollection first parse
 ]
 

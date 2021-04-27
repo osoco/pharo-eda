@@ -80,5 +80,5 @@ EDACommandDispatcherTestCase >> testDispatchNilCommand [
 		should: [ dispatcher
 				dispatch: nil
 				usingStrategy: EDACommandConsumingErrorBehavior strategy ]
-		raise: EDAInvalidCommandMessage 
+		raise: EDAInvalidCommand
 ]
