@@ -169,12 +169,6 @@ EDAEventSourcingEvent >> isEventSourcingEvent [
 ]
 
 { #category : #accessing }
-EDAEventSourcingEvent >> routingKey [
-	^ EDASourceCodeHelperStub new
-		camelCaseToDotSeparated: (EDAMessageSerializer nameWithoutPrefixForMessageClass: self class)
-]
-
-{ #category : #accessing }
 EDAEventSourcingEvent >> scopeContext [
 	^ scopeContext
 ]

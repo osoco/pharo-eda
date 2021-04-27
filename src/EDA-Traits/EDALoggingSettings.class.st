@@ -78,7 +78,7 @@ EDALoggingSettings class >> loggingLevel: aLevel [
 	self errorEnabled: (self warningEnabled or: [ (aLevel = 'error') ]).
 	failed := (self traceEnabled or: [ self debugEnabled or: [ self infoEnabled or: [ self warningEnabled or: [ self errorEnabled  ] ] ] ]) not.
 	failed
-		ifTrue: [ InvalidLoggingLevel signal ]
+		ifTrue: [ EDAInvalidLoggingLevel signal ]
 		ifFalse: [ loggingLevel := aLevel ]
 
 ]

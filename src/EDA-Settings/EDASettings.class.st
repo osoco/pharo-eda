@@ -29,17 +29,6 @@ EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
 		withConfig: EDACommandStompTopicListener
 		under: #commandListener
 		populatedWithValuesFrom: 'commandListener'.
-	(aBuilder pickOne: #strategy)
-		parent: #commandListener;
-		target: EDACommandConsumingErrorBehavior;
-		label: 'Command Consuming Error' translated;
-		description: 'Strategy when dealing with command consuming errors';
-		order: 1;
-		domainValues:
-			(EDAErrorHandlingStrategy subclasses
-				collect:
-					[ :strategy | strategy description translated -> strategy greaseString ]);
-		default: EDAPublishMessageErrorStrategy greaseString.
 	^ self
 ]
 
@@ -112,17 +101,6 @@ EDASettings class >> eventListenerSettingsOn: aBuilder under: parent [
 		withConfig: EDAEventStompTopicListener
 		under: #eventListener
 		populatedWithValuesFrom: 'eventListener'.
-	(aBuilder pickOne: #strategy)
-		parent: #eventListener;
-		target: EDAEventConsumingErrorBehavior;
-		label: 'Event Consuming Error' translated;
-		description: 'Strategy when dealing with event consuming errors';
-		order: 1;
-		domainValues:
-			(EDAErrorHandlingStrategy subclasses
-				collect:
-					[ :strategy | strategy description translated -> strategy greaseString ]);
-		default: EDAPublishMessageErrorStrategy greaseString.
 	^ self
 ]
 
@@ -350,6 +328,17 @@ EDASettings class >> resetSettings [
 EDASettings class >> stompListenerSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: configEntry [
 	| stompConfig ack |
 	stompConfig := self retrieveSettingAsDict: configEntry.
+	(aBuilder pickOne: #strategy)
+		parent: parent;
+		target: container;
+		label: 'Error strategy' translated;
+		description: 'Strategy when dealing with command consuming errors';
+		order: 1;
+		domainValues:
+			(EDAErrorHandlingStrategy subclasses
+				collect:
+					[ :strategy | strategy description translated -> strategy greaseString ]);
+		default: EDAPublishMessageErrorStrategy greaseString.
 	(aBuilder setting: #host)
 		parent: parent;
 		target: container;

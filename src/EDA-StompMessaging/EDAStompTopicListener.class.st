@@ -29,6 +29,7 @@ Class {
 		'config'
 	],
 	#classInstVars : [
+		'strategy',
 		'username',
 		'queue',
 		'port',
@@ -151,6 +152,16 @@ EDAStompTopicListener class >> queue: val [
 ]
 
 { #category : #accessing }
+EDAStompTopicListener class >> strategy [
+	^ strategy
+]
+
+{ #category : #accessing }
+EDAStompTopicListener class >> strategy: anObject [
+	strategy := anObject
+]
+
+{ #category : #accessing }
 EDAStompTopicListener class >> timeout [
 	^ timeout
 ]
@@ -171,9 +182,13 @@ EDAStompTopicListener class >> username: val [
 ]
 
 { #category : #lifecycle }
-EDAStompTopicListener >> asyncOnMessageDo: aBlock usingClient: aClient withConfig: aConfig [
+EDAStompTopicListener >> asyncOnMessageDo: aBlock usingClient: aClient withConfig: aConfig andStrategy: aStrategy [
 	| result |
-	result := [ self syncOnMessageDo: aBlock usingClient: aClient withConfig: aConfig ] newProcess.
+	result := [ self
+		syncOnMessageDo: aBlock
+		usingClient: aClient
+		withConfig: aConfig
+		andStrategy: aStrategy ] newProcess.
 	result priority: Processor systemBackgroundPriority.
 	^ result
 ]
@@ -293,7 +308,13 @@ EDAStompTopicListener >> nextId [
 
 { #category : #lifecycle }
 EDAStompTopicListener >> onMessageDo: aBlock [
-	self listenerProcess: (self asyncOnMessageDo: aBlock usingClient: self client withConfig: self config).
+	self
+		listenerProcess:
+			(self
+				asyncOnMessageDo: aBlock
+				usingClient: self client
+				withConfig: self config
+				andStrategy: self strategy).
 	self listenerProcess resume.
 	^ self listenerProcess
 ]
@@ -301,6 +322,11 @@ EDAStompTopicListener >> onMessageDo: aBlock [
 { #category : #initialization }
 EDAStompTopicListener >> resetClient [
 	self client: (self buildClientWith: self config)
+]
+
+{ #category : #accessing }
+EDAStompTopicListener >> strategy [
+	^ self class strategy
 ]
 
 { #category : #lifecycle }
@@ -336,7 +362,7 @@ EDAStompTopicListener >> subscriptionId: val [
 ]
 
 { #category : #enumerating }
-EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig: conf [
+EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig: conf andStrategy: aStrategy [
 	[ aClient
 		runWith: [ :message | 
 			| text |
@@ -414,7 +440,7 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 					self
 						manageError: ex
 						forMessage: text
-						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ] ]
+						usingErrorStrategy: aStrategy ] ] ]
 		on: PrimitiveFailed , StampError
 		do: [ :ex | self logErrorMessage: ex greaseString ]
 ]
