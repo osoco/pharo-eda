@@ -8,7 +8,7 @@ Class {
 		'publisher',
 		'announcer'
 	],
-	#category : 'EDA-Messaging-Event'
+	#category : #'EDA-Messaging-Events'
 }
 
 { #category : #'instance creation' }

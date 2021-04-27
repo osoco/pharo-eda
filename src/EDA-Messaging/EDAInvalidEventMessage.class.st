@@ -1,5 +1,5 @@
 Class {
 	#name : #EDAInvalidEventMessage,
 	#superclass : #EDAInvalidMessage,
-	#category : #'EDA-Handlers-Events'
+	#category : #'EDA-Messaging-Events'
 }
