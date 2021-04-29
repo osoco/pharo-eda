@@ -44,7 +44,7 @@ EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCr
 		at: aClass
 		ifAbsent: [ OrderedCollection new ].
 	filteredEvents := self class filterEvents: aggregateEvents byCriteria:  aDict.
-	^ filteredEvents
+	^ filteredEvents deepCopy
 ]
 
 { #category : #filtering }
