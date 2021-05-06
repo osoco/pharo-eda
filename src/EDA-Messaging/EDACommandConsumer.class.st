@@ -105,20 +105,21 @@ EDACommandConsumer >> restart [
 
 { #category : #lifecycle }
 EDACommandConsumer >> start [
-	| listener |
+	| listenerProcess |
 	self logWarningMessage: 'Starting Command Consumer...'.
 	self busListener resetClient.
-	listener := self busListener
+	listenerProcess := self busListener
 		subscribe;
 		onMessageDo: [ :message | self consumeMessage: message ].
-	listener
+	listenerProcess
 		on: Exception - Break
 		do: [ :error | 
 			self
 				manageError: error
 				usingErrorStrategy: EDACommandConsumingErrorBehavior strategy.
 			self class restartOnCommandConsumingErrors
-				ifTrue: [ self restart ] ]
+				ifTrue: [ self restart ] ].
+	listenerProcess resume
 ]
 
 { #category : #lifecycle }

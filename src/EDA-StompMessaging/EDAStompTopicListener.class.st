@@ -269,7 +269,6 @@ EDAStompTopicListener >> nextId [
 { #category : #lifecycle }
 EDAStompTopicListener >> onMessageDo: aBlock [
 	self listenerProcess: (self asyncOnMessageDo: aBlock usingClient: self client withConfig: self config).
-	self listenerProcess resume.
 	^ self listenerProcess
 ]
 
@@ -391,7 +390,8 @@ EDAStompTopicListener >> syncOnMessageDo: aBlock usingClient: aClient withConfig
 						forMessage: text
 						usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ] ] ]
 		on: PrimitiveFailed , StampError
-		do: [ :ex | self logErrorMessage: ex greaseString ]
+		do: [ :ex | self logErrorMessage: ex greaseString.
+			ex signal ]
 ]
 
 { #category : #lifecycle }
