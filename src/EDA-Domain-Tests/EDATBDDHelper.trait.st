@@ -97,8 +97,7 @@ EDATBDDHelper >> buildEventSerializer [
 EDATBDDHelper >> consumeMessage: aMessage using: aCommandConsumer [
 	^ aCommandConsumer
 		consumeMessage: aMessage
-		usingStrategyForCommands: EDAThrowError greaseString
-		andStrategyForEvents: EDAThrowError greaseString
+		usingStrategy: EDAThrowError greaseString
 ]
 
 { #category : #helpers }
