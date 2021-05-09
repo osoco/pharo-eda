@@ -1,5 +1,5 @@
 Class {
-	#name : #EDAMessageBuilder,
+	#name : #EDAPragmaBasedMessageBuilder,
 	#superclass : #EDABuilder,
 	#traits : 'EDATPragmaHelper',
 	#classTraits : 'EDATPragmaHelper classTrait',
@@ -7,39 +7,39 @@ Class {
 }
 
 { #category : #builder }
-EDAMessageBuilder >> build [
+EDAPragmaBasedMessageBuilder >> build [
 	| pragma |
 	pragma := self retrieveBuildPragma.
 	^ pragma method methodClass allInstances first perform: pragma method selector with: self
 ]
 
 { #category : #meta }
-EDAMessageBuilder >> errorClass [
+EDAPragmaBasedMessageBuilder >> errorClass [
 	self subclassResponsibility
 ]
 
 { #category : #meta }
-EDAMessageBuilder >> messageClass [
+EDAPragmaBasedMessageBuilder >> messageClass [
 	self subclassResponsibility 
 ]
 
 { #category : #testing }
-EDAMessageBuilder >> messageSupported [
+EDAPragmaBasedMessageBuilder >> messageSupported [
 	^ self retrieveBuildPragma isNotNil
 ]
 
 { #category : #meta }
-EDAMessageBuilder >> pragmaSymbol [
+EDAPragmaBasedMessageBuilder >> pragmaSymbol [
 	self subclassResponsibility
 ]
 
 { #category : #testing }
-EDAMessageBuilder >> retrieveBuildPragma [
+EDAPragmaBasedMessageBuilder >> retrieveBuildPragma [
 	^ self retrieveBuildPragmaFor: self pragmaSymbol inAndBelow: self messageClass
 ]
 
 { #category : #testing }
-EDAMessageBuilder >> retrieveBuildPragmaFor: aSymbol inAndBelow: aMessageClass [
+EDAPragmaBasedMessageBuilder >> retrieveBuildPragmaFor: aSymbol inAndBelow: aMessageClass [
 	| type pragmas |
 	type := self retrieveType.
 	pragmas := self
@@ -63,11 +63,11 @@ EDAMessageBuilder >> retrieveBuildPragmaFor: aSymbol inAndBelow: aMessageClass [
 ]
 
 { #category : #testing }
-EDAMessageBuilder >> retrieveType [
+EDAPragmaBasedMessageBuilder >> retrieveType [
 	^ self retrieveType: self params
 ]
 
 { #category : #testing }
-EDAMessageBuilder >> retrieveType: aDictionary [
+EDAPragmaBasedMessageBuilder >> retrieveType: aDictionary [
 	self subclassResponsibility
 ]

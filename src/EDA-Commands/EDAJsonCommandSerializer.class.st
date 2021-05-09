@@ -13,20 +13,24 @@ Class {
 EDAJsonCommandSerializer >> initialize [
 	| paramsDictionary |
 	writer := [ :aCommand | 
-	| aux |
-	aux := Dictionary new.
 	paramsDictionary := Dictionary
 		newFrom:
 			(aCommand class instVarNames
 				collect: [ :instVar | instVar -> (aCommand instVarNamed: instVar) ]).
-	aux at: #params put: paramsDictionary.
+	paramsDictionary at: #type ifAbsentPut: [ aCommand class greaseString ].
 	String
 		streamContents: [ :stream | 
 			(NeoJSONWriter on: stream)
 				for: DateAndTime
 					customDo:
 						[ :mapping | mapping encoder: [ :dateAndTime | dateAndTime printString ] ];
-				nextPut: aux ] ]
+				for: BlockClosure
+					customDo: [ :mapping | mapping encoder: [ :closure | closure printString ] ];
+				for: Object
+					customDo: [ :mapping | mapping encoder: [ :obj | obj printString ] ];
+				for: Object class
+					customDo: [ :mapping | mapping encoder: [ :cls | cls printString ] ];
+				nextPut: paramsDictionary ] ]
 ]
 
 { #category : #parsing }

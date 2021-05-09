@@ -25,6 +25,11 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 							self is: expected equalTo: actual ]) isNotEmpty ]
 ]
 
+{ #category : #asserting }
+EDATBDDHelper >> assertMethod: aString existsIn: aClass [
+	self assert: (aClass respondsTo: aString)
+]
+
 { #category : #assertions }
 EDATBDDHelper >> assertObject: actual equals: expected [
 	| diff |
@@ -72,6 +77,12 @@ EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 				buildCommandDispatcherWithEventStore: anEventStore
 				eventProducer: mock
 				andProjectorClass: mock)
+		strategy: EDAThrowError greaseString
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> buildCommandSerializer [
+	^ EDAJsonCommandSerializer new
 ]
 
 { #category : #helpers }
@@ -161,8 +172,8 @@ EDATBDDHelper >> filterPastEvents: events ofAggregate: anAggregateRootSymbol [
 ]
 
 { #category : #BDD }
-EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock thenEvents: expectedResultingEvents processingThem: aProcessingExpectedEventsBlock [
-	| commandConsumer resultingEvents eventStore expectedEvents eventsToSave originalEventStores aMessage |
+EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock then: assertBlock [
+	| commandConsumer resultingEvents eventStore eventsToSave originalEventStores aMessage |
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
 	[ self useEventStore: eventStore.
@@ -172,15 +183,27 @@ EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBl
 	eventStore saveEvents: eventsToSave.
 	commandConsumer := self
 		buildCommandConsumerWithEventStore: eventStore.
-	expectedEvents := aProcessingExpectedEventsBlock
-		value: expectedResultingEvents
-		value: eventStore.
 	aMessage := aMessageBlock value: eventsToSave value: aString.
 	resultingEvents := self
 		consumeMessage: aMessage
 		using: commandConsumer.
-	self assertEvents: resultingEvents matchExpected: expectedEvents ]
+	assertBlock value: resultingEvents value: eventStore ]
 		ensure: [ self restoreEventStores: originalEventStores ]
+]
+
+{ #category : #BDD }
+EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock thenEvents: expectedResultingEvents processingThem: aProcessingExpectedEventsBlock [
+	^ self
+		givenEvents: pastEvents
+		processingThem: aProcessingPastEventsBlock
+		whenReceiveMessage: aString
+		processingIt: aMessageBlock
+		then: [ :actualEvents :eventStore | 
+			| expected |
+			expected := aProcessingExpectedEventsBlock
+				value: expectedResultingEvents
+				value: eventStore.
+			self assertEvents: actualEvents matchExpected: expected ]
 ]
 
 { #category : #helpers }
@@ -213,6 +236,11 @@ EDATBDDHelper >> retrieveEventStores [
 ]
 
 { #category : #helpers }
+EDATBDDHelper >> serializeCommand: aCommand [
+	^ self buildCommandSerializer serialize: aCommand
+]
+
+{ #category : #helpers }
 EDATBDDHelper >> serializeEvent: anEvent [
 	^ self buildEventSerializer serialize: anEvent
 ]
@@ -221,4 +249,14 @@ EDATBDDHelper >> serializeEvent: anEvent [
 EDATBDDHelper >> useEventStore: anEventStore [
 	EDAAggregateRepository
 		allSubclassesDo: [ :c | c setupEventStore: anEventStore ]
+]
+
+{ #category : #BDD }
+EDATBDDHelper >> whenReceiveCommand: aCommand ofType: aString then: aBlockClosure [
+	^ self
+		givenEvents: OrderedCollection empty
+		processingThem: [ :pastEvents :eventStore | pastEvents ]
+		whenReceiveMessage: aCommand
+		processingIt: [ :events :str | str ]
+		then: [ aBlockClosure value ]
 ]
