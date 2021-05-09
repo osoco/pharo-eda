@@ -10,6 +10,11 @@ Class {
 }
 
 { #category : #accessing }
+EDAMetaBodyCommandBuilder class >> priority [
+	^ 50
+]
+
+{ #category : #accessing }
 EDAMetaBodyCommandBuilder >> metaBodyParams [
 	^ metaBodyParams
 		ifNil: [ self metaBodyParams: self params copy.

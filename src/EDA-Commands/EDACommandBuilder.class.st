@@ -1,6 +1,6 @@
 Class {
 	#name : #EDACommandBuilder,
-	#superclass : #EDAMessageBuilder,
+	#superclass : #EDAPragmaBasedMessageBuilder,
 	#traits : 'EDATPragmaHelper',
 	#classTraits : 'EDATPragmaHelper classTrait',
 	#category : #'EDA-Commands-Builders'

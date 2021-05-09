@@ -1,6 +1,6 @@
 Class {
 	#name : #EDAEventBuilder,
-	#superclass : #EDAMessageBuilder,
+	#superclass : #EDAPragmaBasedMessageBuilder,
 	#category : #'EDA-Events-Builders'
 }
 
