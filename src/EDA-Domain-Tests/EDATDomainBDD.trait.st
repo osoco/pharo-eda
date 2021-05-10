@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -266,4 +267,16 @@ EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 				ifEmpty: [ ('handle' , aCommand classNameWithoutPrefix , ':') asSymbol ]
 				ifNotEmpty: [ methods first selector ] ].
 	^ result
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> whenReceiveMessage: aString thenEvents: expectedResultingEvents [
+	self
+		givenEvents: OrderedCollection empty
+		processingThem: [ :evts :eventStore | evts ]
+		whenReceiveMessage: aString
+		processingIt: [ :events :msg | msg ]
+		thenEvents: expectedResultingEvents
+		processingThem: [ :events :eventStore | 
+			events ]
 ]

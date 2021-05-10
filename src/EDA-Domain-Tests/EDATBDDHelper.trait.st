@@ -148,6 +148,14 @@ EDATBDDHelper >> discardDateCreated: anEventOrProjection [
 ]
 
 { #category : #helpers }
+EDATBDDHelper >> discardId: anEventOrProjection [
+	^ self
+		if: anEventOrProjection
+		supports: #id:
+		then: [ anEventOrProjection id: '<ANYTHING>' ]
+]
+
+{ #category : #helpers }
 EDATBDDHelper >> discardLastModified: anEventOrProjection [
 	^ self
 		if: anEventOrProjection
