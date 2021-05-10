@@ -32,13 +32,9 @@ Class {
 	#traits : 'EDATPrintOnHelper',
 	#classTraits : 'EDATPrintOnHelper classTrait',
 	#instVars : [
-		'id',
-		'timestamp',
 		'aggregateRootVersion',
-		'version',
 		'delete',
 		'aggregateRootClass',
-		'tenant',
 		'scopeContext',
 		'scopeKey',
 		'agent'
@@ -145,21 +141,10 @@ EDAEventSourcingEvent >> delete: aFlag [
 	delete := aFlag
 ]
 
-{ #category : #accessing }
-EDAEventSourcingEvent >> id [
-	^ id
-]
-
-{ #category : #accessing }
-EDAEventSourcingEvent >> id: anObject [
-	id := anObject
-]
-
 { #category : #initialization }
 EDAEventSourcingEvent >> initialize [
 	super initialize.
 	self delete: false.
-	self timestamp ifNil: [ self timestamp: DateAndTime now asUTC ].
 	aggregateRootClass := self aggregateRootClass greaseString
 ]
 
@@ -189,41 +174,6 @@ EDAEventSourcingEvent >> scopeKey: anOrderedCollection [
 ]
 
 { #category : #accessing }
-EDAEventSourcingEvent >> tenant [
-	^ tenant
-]
-
-{ #category : #accessing }
-EDAEventSourcingEvent >> tenant: aString [
-	tenant := aString
-]
-
-{ #category : #accessing }
-EDAEventSourcingEvent >> timestamp [
-	^ timestamp
-]
-
-{ #category : #accessing }
-EDAEventSourcingEvent >> timestamp: anObject [
-	timestamp := anObject
-]
-
-{ #category : #accessing }
 EDAEventSourcingEvent >> uniqueId [
 	^ self id
-]
-
-{ #category : #accessing }
-EDAEventSourcingEvent >> version [
-	| result |
-	result := version.
-	result
-		ifNil: [ result := 1.
-			self version: result ].
-	^ result
-]
-
-{ #category : #accessing }
-EDAEventSourcingEvent >> version: aNumber [
-	version := aNumber
 ]

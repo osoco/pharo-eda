@@ -15,14 +15,13 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 	self assert: resultingEvents size equals: expectedEvents size.
 	resultingEvents
 		keysAndValuesDo: [ :i :actual | 
-			self
-				assert:
-					(expectedEvents
-						select: [ :expected | 
-							self discardDateCreated: expected.
-							self discardAgent: expected.
-							self discardTimestamp: expected.
-							self is: expected equalTo: actual ]) isNotEmpty ]
+			| expected |
+			expected := expectedEvents at: i.
+			self discardDateCreated: expected.
+			self discardAgent: expected.
+			self discardTimestamp: expected.
+			self discardId: expected.
+			self assertEvent:  (resultingEvents at: i) equals: expected ]
 ]
 
 { #category : #asserting }
@@ -146,6 +145,14 @@ EDATBDDHelper >> discardDateCreated: anEventOrProjection [
 		if: anEventOrProjection
 		supports: #dateCreated:
 		then: [ anEventOrProjection dateCreated: '<ANYTHING>' ]
+]
+
+{ #category : #helpers }
+EDATBDDHelper >> discardId: anEventOrProjection [
+	^ self
+		if: anEventOrProjection
+		supports: #id:
+		then: [ anEventOrProjection id: '<ANYTHING>' ]
 ]
 
 { #category : #helpers }
