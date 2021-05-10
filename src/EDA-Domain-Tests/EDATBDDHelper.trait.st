@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATBDDHelper,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -256,5 +257,5 @@ EDATBDDHelper >> whenReceiveCommand: aCommand ofType: aString then: aBlockClosur
 		processingThem: [ :pastEvents :eventStore | pastEvents ]
 		whenReceiveMessage: aCommand
 		processingIt: [ :events :str | str ]
-		then: [ aBlockClosure value ]
+		then: [ :resultingEvents :eventStore | aBlockClosure value: resultingEvents value: eventStore ]
 ]
