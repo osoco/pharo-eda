@@ -7,6 +7,6 @@ Class {
 }
 
 { #category : #initialization }
-EDAEventMaterializer class >> parentBuilderClass [
-	^ EDAEventBuilder
+EDAEventMaterializer class >> builderTrait [
+	^ EDATEventBuilder
 ]

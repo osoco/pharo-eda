@@ -40,6 +40,11 @@ EDAHandler >> eventStore: anObject [
 	eventStore := anObject
 ]
 
+{ #category : #accessing }
+EDAHandler >> handle: arg1 withErrorStrategy: arg2 [ 
+	^ self subclassResponsibility
+]
+
 { #category : #handling }
 EDAHandler >> invokeMethodHandlerWith: anObject on: aReceiver [
 	self

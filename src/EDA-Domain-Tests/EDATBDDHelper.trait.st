@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATBDDHelper,
 	#traits : 'EDATLogging + EDATRegexHelper',
-	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
