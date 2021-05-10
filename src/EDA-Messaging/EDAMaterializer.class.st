@@ -11,8 +11,8 @@ Class {
 }
 
 { #category : #initialization }
-EDAMaterializer class >> parentBuilderClass [
-	self subclassResponsibility
+EDAMaterializer class >> builderTrait [
+	self subclassResponsibility 
 ]
 
 { #category : #initialization }
@@ -60,6 +60,11 @@ EDAMaterializer >> builderFor: aString with: aMap [
 ]
 
 { #category : #initialization }
+EDAMaterializer >> builderTrait [
+	^ self class builderTrait
+]
+
+{ #category : #initialization }
 EDAMaterializer >> buildersFor: aDictionary [
 	^ (self builderClasses collect: [ :c | c with: aDictionary ])
 		select: [ :i | i messageSupported ]
@@ -67,7 +72,7 @@ EDAMaterializer >> buildersFor: aDictionary [
 
 { #category : #initialization }
 EDAMaterializer >> findBuilderClasses [
-	^ (self parentBuilderClass subclasses)
+	^ self builderTrait users
 		sorted: [ :a :b | a priority > b priority ]
 ]
 
@@ -82,11 +87,6 @@ EDAMaterializer >> materialize: aString [
 	"Returns a command or event instance from given message"
 
 	^ self build: (self parse: aString)
-]
-
-{ #category : #initialization }
-EDAMaterializer >> parentBuilderClass [
-	^ self class parentBuilderClass
 ]
 
 { #category : #initialization }

@@ -17,7 +17,9 @@ EDAJsonCommandSerializer >> initialize [
 		newFrom:
 			(aCommand class instVarNames
 				collect: [ :instVar | instVar -> (aCommand instVarNamed: instVar) ]).
-	paramsDictionary at: #type ifAbsentPut: [ aCommand class greaseString ].
+	paramsDictionary
+		at: #type
+		ifAbsentPut: [ aCommand class commandName greaseString ].
 	String
 		streamContents: [ :stream | 
 			(NeoJSONWriter on: stream)

@@ -1,8 +1,6 @@
 Class {
 	#name : #EDAEventHandler,
 	#superclass : #EDAHandler,
-	#traits : 'EDATAggregateRootHandler',
-	#classTraits : 'EDATAggregateRootHandler classTrait',
 	#category : #'EDA-Handlers-Events'
 }
 

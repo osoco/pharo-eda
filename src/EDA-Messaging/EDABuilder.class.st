@@ -57,7 +57,7 @@ EDABuilder >> build: aClass [
 				at: symbol
 				ifAbsent: [ "EDAInvalidEventMessage signal: symbol greaseString , ' not found'"
 					self
-						logWarningMessage: symbol greaseString , ' does not exist in message.'.
+						logWarningMessage: 'Non-existent requested data: ' , symbol greaseString.
 					nil ].
 			result perform: method with: v ].
 	^ result
@@ -70,6 +70,11 @@ EDABuilder >> doesNotUnderstand: aMessage [
 	(self string: methodName startsWith: 'with')
 		ifTrue: [ self addAccessor: methodName ]
 		ifFalse: [ super doesNotUnderstand: aMessage ]
+]
+
+{ #category : #testing }
+EDABuilder >> messageSupported [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }

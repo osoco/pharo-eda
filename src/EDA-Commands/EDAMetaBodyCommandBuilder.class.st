@@ -1,17 +1,28 @@
 Class {
 	#name : #EDAMetaBodyCommandBuilder,
-	#superclass : #EDACommandBuilder,
-	#traits : 'EDATMetaBodyTypeHelper',
-	#classTraits : 'EDATMetaBodyTypeHelper classTrait',
+	#superclass : #EDABuilder,
+	#traits : 'EDATCommandBuilder + EDATMetaBodyTypeHelper + EDATPragmaBasedMessageBuilder',
+	#classTraits : 'EDATCommandBuilder classTrait + EDATMetaBodyTypeHelper classTrait + EDATPragmaBasedMessageBuilder classTrait',
 	#instVars : [
 		'metaBodyParams'
 	],
 	#category : #'EDA-Commands-Builders'
 }
 
+{ #category : #meta }
+EDAMetaBodyCommandBuilder class >> pragmaSymbol [
+	^ #commandName:
+]
+
 { #category : #accessing }
 EDAMetaBodyCommandBuilder class >> priority [
 	^ 50
+]
+
+{ #category : #testing }
+EDAMetaBodyCommandBuilder >> messageSupported [
+	^ (self params at: 'meta' ifPresent: [ true ] ifAbsent: [ false ])
+		and: [ self params at: 'body' ifPresent: [ true ] ifAbsent: [ false ] ]
 ]
 
 { #category : #accessing }
