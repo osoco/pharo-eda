@@ -18,7 +18,7 @@ The ""registry"" should be accessed via dedicated methods, under the ''accessing
 EDAApplications >> registry: aDictionary
   registry := aDictionary
 ]]]
-% ${changes:code/001-EDAApplications_registry_.ombu}$
+% ${changes:path=code/001-EDAApplications_registry_.ombu}$
 
 [[[methodDefinition=true|lineNumber=true
 EDAApplications >> registry
@@ -30,7 +30,7 @@ EDAApplications >> registry
   ].
   ^ result
 ]]]
-% ${changes:code/002-EDAApplications_registry.ombu}$
+% ${changes:path=code/002-EDAApplications_registry.ombu}$
 
 We'll throw an ==EDAApplicationAlreadyRegistered== exception in case the application is already registered.
 
@@ -50,7 +50,7 @@ EDAApplications >> register: anEDAApplication under: anApplicationName
     ifPresent: [ :app | EDAApplicationAlreadyRegistered signal: app printString ]
     ifAbsentPut: [ anEDAApplication ]
 ]]]
-% ${changes:code/003-EDAApplications_register_under_.ombu}$
+% ${changes:path=code/003-EDAApplications_register_under_.ombu}$
 
 [[[methodDefinition=true|lineNumber=true
 EDAApplications >> register: anEDAApplication
@@ -58,7 +58,7 @@ EDAApplications >> register: anEDAApplication
     register: anEDAApplication
     under: anEDAApplication applicationName
 ]]]
-% ${changes:code/004-EDAApplications_register_.ombu}$
+% ${changes:path=code/004-EDAApplications_register_.ombu}$
 
 Now each application needs a name, but it could be optional at instance level. We'd like to omit the instance name if only one instance will ever be created. In other words, an instance can have its own name, but can rely upon the class'.
 
@@ -79,12 +79,12 @@ EDAApplication >> applicationName
   ^ applicationName ifNil: [ self class applicationName ]
 ]]]
 
-% ${changes:code/005-EDAApplication_applicationName.ombu}$
+% ${changes:path=code/005-EDAApplication_applicationName.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDAApplication >> applicationName: aString
   applicationName := applicationName
 ]]]
-% ${changes:code/006-EDAApplication_applicationName_.ombu}$
+% ${changes:path=code/006-EDAApplication_applicationName_.ombu}$
 
 We'll delegate on the class itself to provide a default name.
 
@@ -92,11 +92,11 @@ We'll delegate on the class itself to provide a default name.
 EDAApplication class >> applicationName
   ^ 'default'
 ]]]
-% ${changes:code/007-EDAApplication_class_applicationName.ombu}$
+% ${changes:path=code/007-EDAApplication_class_applicationName.ombu}$
 
 Now that every application instance has a name, and it's used to reference the application in the registry, we should provide a way to inspect the applications already registered:
 
-%${changes:code/008-EDAApplications_edaApplications.ombu}$
+%${changes:path=code/008-EDAApplications_edaApplications.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDAApplications >> edaApplications
   ^ self registry values
@@ -113,7 +113,7 @@ EDAApplication class >> withName: anApplicationName
   result applicationName: anApplicationName.
   ^ result
 ]]]
-% ${changes:code/009-EDAApplication_class_withName.ombu}$
+% ${changes:path=code/009-EDAApplication_class_withName.ombu}$
 
 Analogously, we can create "unnamed" instances as well.
 
@@ -121,7 +121,7 @@ Analogously, we can create "unnamed" instances as well.
 EDAApplication class >> unnamed
   ^ self withName: self applicationName
 ]]]
-% ${changes:code/010-EDAApplication_class_unnamed.ombu}$
+% ${changes:path=code/010-EDAApplication_class_unnamed.ombu}$
 
 However, instances can be created without a name (being "unnamed"). If we want to ensure instances are created via the factory methods above, we can override the ""new"" method.
 
@@ -131,7 +131,7 @@ EDAApplication class >> new
     signal:
       'Use ' , self class printString , ' >> withName: or ' , self class printString , ' >> unnamed instead'
 ]]]
-% ${changes:code/011-EDAApplication_class_new.ombu}$
+% ${changes:path=code/011-EDAApplication_class_new.ombu}$
 
 We'd need to convert ==EDAApplications== into a singleton, to ensure there's only one registry of running applications. To do so, we add a ""uniqueInstance"" attribute on the class itself.
 [[[classDefinition=true
@@ -153,7 +153,7 @@ EDAApplications class >> uniqueInstance
     ].
   ^ result
 ]]]
-% ${changes:code/012-EDAApplications_class_uniqueInstance.ombu}$
+% ${changes:path=code/012-EDAApplications_class_uniqueInstance.ombu}$
 
 For the sake of completeness, we define the trivial setter.
 
@@ -162,7 +162,7 @@ EDAApplications class >> uniqueInstance: anInstance
   | result |
   uniqueInstance := anInstance
 ]]]
-% ${changes:code/013-EDAApplications_class_uniqueInstance_.ombu}$
+% ${changes:path=code/013-EDAApplications_class_uniqueInstance_.ombu}$
 
 !!! Registration of EDAApplications
 
@@ -180,7 +180,7 @@ EDAApplication class >> withName: anApplicationName
     ifNotEmpty: [ :c | result := c first ].
   ^ result
 ]]]
-% ${changes:code/014-EDAApplication_class_withName_.ombu}$
+% ${changes:path=code/014-EDAApplication_class_withName_.ombu}$
 
 Finally, we can create applications and register them.
 

@@ -16,8 +16,8 @@ Trait named: #EDATSettingsPort
 
 The most basic behavior all adapters should support is telling us a brief description of themselves.
 
+% ${changes:path=code/001-EDATSettingsPort_classTrait_description.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDATSettingsPort classTrait >> description
   self subclassResponsibility
 ]]]
-% ${changes:code/001-EDATSettingsPort_classTrait_description.ombu}$

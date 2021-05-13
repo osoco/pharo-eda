@@ -1,0 +1,14 @@
+!! Priorities in adapters
+
+Recall we're using ""collect:sorted:"" when building the list of adapters for a given port (so far, the ''environment'' one).
+In the ''sorted'' block, we are using ""<"" to find out which adapter should appear first. To provide a common way to compare adapters, let's introduce the concept of **priority**.
+
+The idea is two fold: to define a way to sort adapters, and also a way to implement which adapter should be used by default. Keep in mind this only affects adapters for the same port.
+
+Let's make sure all adapters implement it.
+
+% ${changes:path=code/001-EDATSettingsPort_classTrait_priority}
+[[[methodDefinition=true
+EDATSettingsPort classTrait >> priority
+  self subclassResponsibility
+]]]

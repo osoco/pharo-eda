@@ -9,7 +9,7 @@ Let's remove the current ==<systemsettings>== pragma of ==EDASettings class>>eda
 
 Since we haven't created (or registered) any application yet, we can choose either to skip creating anything, or display a message.
 
-% ${changes:code/001-EDASettings_class_edaSettingsOn_.ombu}$
+% ${changes:path=code/001-EDASettings_class_edaSettingsOn_.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDASettings class >> edaSettingsOn: aBuilder
   <systemsettings>
@@ -35,7 +35,7 @@ EDASettings class >> edaSettingsOn: aBuilder
 
 However, the old ""edaSettings:"" method used a fixed symbol to place the application settings in the tree. Let's fix that. We'll start with the ==environmentSettingsOn:under:on:==. The rest of the methods will be fixed later.
 
-% ${changes:code/002-EDASettings_class_edaSettingsOn_for_under_.ombu}$
+% ${changes:path=code/002-EDASettings_class_edaSettingsOn_for_under_.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDASettings class >> edaSettingsOn: aBuilder for: anEDAApplication under: aSymbol
   | parent parentGroup |
@@ -57,7 +57,7 @@ We need to create the ==config/== folder and two files (""development.json"" and
 
 Additionally, we'll comment some settings code in ==EDATestSettings== class as well. We'll deal with it later.
 
-% ${changes:code/003-EDATestSettings_class_edaTestSettingsOn_.ombu}$
+% ${changes:path=code/003-EDATestSettings_class_edaTestSettingsOn_.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDATestSettings class >> edaTestSettingsOn: aBuilder
   <systemsettings>
