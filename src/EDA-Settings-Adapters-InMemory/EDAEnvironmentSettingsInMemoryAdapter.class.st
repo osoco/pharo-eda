@@ -15,7 +15,7 @@ EDAEnvironmentSettingsInMemoryAdapter class >> accepts: anEDAApplication [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 EDAEnvironmentSettingsInMemoryAdapter class >> priority [
 	^ 99
 ]

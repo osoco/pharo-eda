@@ -21,6 +21,34 @@ Class {
 }
 
 { #category : #settings }
+EDASettings class >> NEW_portSettingsOn: aBuilder under: aParent on: app [
+	| entry values byPriorityAdapter key |
+	key := aParent , 'ports'.
+	entry := aBuilder group: key.
+	entry
+		label: 'Ports' translated;
+		parent: aParent.
+	byPriorityAdapter := EDAPortResolverByPriorityAdapter new.
+	priorizedAdapter := byPriorityAdapter resolveEnvironmentSettingsPort.
+	values := OrderedCollection
+		with:
+			('By priority (' , priorizedAdapter class description , ')')
+				-> EDAPortResolverByPriorityAdapter.
+	values
+		addAll:
+			((byPriorityAdapter availableEnvironmentSettingsAdapters
+				reject: [ :adapterClass | adapterClass = priorizedAdapter class ]
+				thenCollect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ])
+				sorted: [ :a :b | a value < b value ]).
+	(aBuilder pickOne: #environmentSettingsResolverPortClass)
+		label: 'Environment adapter' translated;
+		target: app portSettingsPort;
+		parent: key;
+		domainValues: values
+]
+
+{ #category : #settings }
 EDASettings class >> commandListenerSettingsOn: aBuilder under: parent on: app [
 	| key |
 	key := parent , 'commandListener'.
@@ -300,27 +328,19 @@ EDASettings class >> mongodbUsernameSettingOn: aBuilder withConfig: aConfig unde
 
 { #category : #settings }
 EDASettings class >> portSettingsOn: aBuilder under: aParent on: app [
-	| entry values byPriorityAdapter key |
+	| entry values key portResolver |
 	key := aParent , 'ports'.
 	entry := aBuilder group: key.
 	entry
 		label: 'Ports' translated;
 		parent: aParent.
-	byPriorityAdapter := EDAPortResolverByPriorityAdapter new.
-	priorizedAdapter := byPriorityAdapter resolveEnvironmentSettingsPort.
+	portResolver := EDAPortResolver new.
 	values := OrderedCollection
-		with:
-			('By priority (' , priorizedAdapter class description , ')')
-				-> EDAPortResolverByPriorityAdapter.
-	values
-		addAll:
-			((EDAPortResolverByPriorityAdapter new
-				availableEnvironmentSettingsAdapters
-				reject: [ :adapterClass | adapterClass = priorizedAdapter class ]
-				thenCollect:
-					[ :adapterClass | adapterClass description translated -> adapterClass ])
-				sorted: [ :a :b | a value < b value ]).
-	(aBuilder pickOne: #environmentSettingsResolverPortClass)
+		withAll:
+			(portResolver availableEnvironmentSettingsAdapters
+				collect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ]).
+	(aBuilder pickOne: #environmentSettingsAdaptertClass)
 		label: 'Environment adapter' translated;
 		target: app portSettingsPort;
 		parent: key;

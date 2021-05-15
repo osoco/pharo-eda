@@ -17,7 +17,7 @@ EDAStompTopicListenerSettingsInMemoryAdapter class >> accepts: anEDAApplication 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 EDAStompTopicListenerSettingsInMemoryAdapter class >> priority [
 	^ 0
 ]

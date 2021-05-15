@@ -11,7 +11,7 @@ EDAMongoEventStoreSettingsInMemoryAdapter class >> accepts: anEDAApplication [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 EDAMongoEventStoreSettingsInMemoryAdapter class >> priority [
 	^ 0
 ]

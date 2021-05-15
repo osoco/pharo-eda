@@ -5,5 +5,25 @@ Trait {
 
 { #category : #logic }
 EDATPortResolver >> availableAdapters: aPort [
-	^ aPort traitUsers select: [ :cls | cls accepts: self ]
+	^ (aPort traitUsers select: [ :cls | cls accepts: self ]) sorted
+]
+
+{ #category : #logic }
+EDATPortResolver >> availableEnvironmentSettingsAdapters [
+	^ self availableAdapters: EDATEnvironmentSettingsPort
+]
+
+{ #category : #accessing }
+EDATPortResolver >> resolveEnvironmentSettingsPort [
+	^ self resolvePort: EDATEnvironmentSettingsPort
+]
+
+{ #category : #api }
+EDATPortResolver >> resolvePort: aPort [
+	| candidates candidate |
+	candidates := (self availableAdapters: aPort) sorted.
+	candidate := candidates
+		ifEmpty: [ nil ]
+		ifNotEmpty: [ :col | col first ].
+	^ candidate ifNil: [ nil ] ifNotNil: [ :c | c withApp: self ]
 ]

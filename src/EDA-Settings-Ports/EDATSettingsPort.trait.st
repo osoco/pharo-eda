@@ -35,9 +35,9 @@ EDATSettingsPort classSide >> description [
 	self subclassResponsibility 
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 EDATSettingsPort classSide >> priority [
-	self subclassResponsibility
+	self shouldBeImplemented 
 ]
 
 { #category : #testing }
@@ -45,4 +45,14 @@ EDATSettingsPort classSide >> withApp: anEDAApplication [
 	^ self new
 		edaApplication: anEDAApplication;
 		yourself
+]
+
+{ #category : #testing }
+EDATSettingsPort >> isReadOnly [
+	self shouldBeImplemented
+]
+
+{ #category : #testing }
+EDATSettingsPort >> supportsMultiple [
+	self shouldBeImplemented
 ]

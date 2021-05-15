@@ -21,10 +21,10 @@ EDAEnvironmentSettingsEnvVarAdapter class >> description [
 
 { #category : #testing }
 EDAEnvironmentSettingsEnvVarAdapter class >> environmentVariableName [
-	^ DUEnvironment environmentVariableName 
+	^ 'EDA_ENV'
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 EDAEnvironmentSettingsEnvVarAdapter class >> priority [
 	^ 50
 ]

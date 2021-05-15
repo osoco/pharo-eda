@@ -317,7 +317,8 @@ EDAApplication >> notifyEventStoreSettingsResolverPortListener: anAdapter [
 EDAApplication >> portSettingsPort [
 	^ portSettingsPort
 		ifNil: [ | result |
-			result := EDAPortResolverInMemoryAdapter withApp: self.
+			result := EDAPortResolver new.
+			self portSettingsPort: result.
 			result ]
 ]
 
@@ -413,7 +414,7 @@ EDAApplication >> resetLogging [
 
 { #category : #reset }
 EDAApplication >> resetPortSettingsPort [
-	self portSettingsPort: (EDAPortResolverInMemoryAdapter withApp: self).
+	self portSettingsPort: EDAPortResolver new
 ]
 
 { #category : #'reset - projections' }
