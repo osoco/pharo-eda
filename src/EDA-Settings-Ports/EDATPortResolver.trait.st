@@ -14,6 +14,11 @@ EDATPortResolver >> availableEnvironmentSettingsAdapters [
 ]
 
 { #category : #accessing }
+EDATPortResolver >> environmentSettingsPort [
+	^ self resolveEnvironmentSettingsPort
+]
+
+{ #category : #accessing }
 EDATPortResolver >> resolveEnvironmentSettingsPort [
 	^ self resolvePort: EDATEnvironmentSettingsPort
 ]

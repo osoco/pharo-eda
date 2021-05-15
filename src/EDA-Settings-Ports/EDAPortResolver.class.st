@@ -3,8 +3,21 @@ Class {
 	#superclass : #Object,
 	#traits : 'EDATPortResolver',
 	#classTraits : 'EDATPortResolver classTrait',
+	#instVars : [
+		'environmentSettingsAdapterClass'
+	],
 	#category : #'EDA-Settings-Ports'
 }
+
+{ #category : #accessing }
+EDAPortResolver >> environmentSettingsAdapterClass [
+	^ environmentSettingsAdapterClass
+]
+
+{ #category : #accessing }
+EDAPortResolver >> environmentSettingsAdapterClass: aClass [
+	environmentSettingsAdapterClass := aClass
+]
 
 { #category : #logic }
 EDAPortResolver >> resolveSettingsPort: aPort [

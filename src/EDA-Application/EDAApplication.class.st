@@ -317,7 +317,7 @@ EDAApplication >> notifyEventStoreSettingsResolverPortListener: anAdapter [
 EDAApplication >> portSettingsPort [
 	^ portSettingsPort
 		ifNil: [ | result |
-			result := EDAPortResolver new.
+			result := EDAPortSettingsPort new.
 			self portSettingsPort: result.
 			result ]
 ]

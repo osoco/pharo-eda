@@ -134,7 +134,7 @@ EDASettings class >> edaSettingsOn: aBuilder for: anEDAApplication under: aSymbo
 		environmentSettingsOn: aBuilder
 		under: parent
 		on: anEDAApplication.
-	self
+	"self
 		commandListenerSettingsOn: aBuilder
 		under: parent
 		on: anEDAApplication.
@@ -151,7 +151,7 @@ EDASettings class >> edaSettingsOn: aBuilder for: anEDAApplication under: aSymbo
 		under: parent
 		populatedWithValuesFrom: 'projections'
 		on: anEDAApplication.
-	self loggingSettingsOn: aBuilder under: parent on: anEDAApplication.
+	self loggingSettingsOn: aBuilder under: parent on: anEDAApplication."
 	self portSettingsOn: aBuilder under: parent on: anEDAApplication
 ]
 
@@ -340,7 +340,7 @@ EDASettings class >> portSettingsOn: aBuilder under: aParent on: app [
 			(portResolver availableEnvironmentSettingsAdapters
 				collect:
 					[ :adapterClass | adapterClass description translated -> adapterClass ]).
-	(aBuilder pickOne: #environmentSettingsAdaptertClass)
+	(aBuilder pickOne: #environmentSettingsAdapterClass)
 		label: 'Environment adapter' translated;
 		target: app portSettingsPort;
 		parent: key;
