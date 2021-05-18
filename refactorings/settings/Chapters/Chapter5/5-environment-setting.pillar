@@ -2,9 +2,9 @@
 
 !! Environment setting
 
-This setting is used to identify the environment. Currently, it shows the value of the ""PHARO_ENV"" environment variable. The first adapter would be one that supports this feature.
+This setting is used to identify the environment. Currently, it shows the value of the ""PHARO_ENV"" environment variable. The first adapter would be one that implements this behavior.
 
-If we inspect the current logic used in ==EDASettings== to inject the environment setting into de ==SettingBrowser== tree, we see the following:
+If we inspect the current logic used in ==EDASettings== to inject the environment setting into the ==SettingBrowser== tree, we see the following:
 
 % ${changes:path=code/001-EDASettings_class_environmentSettingsOn_under_on_.ombu}$
 [[[methodDefinition=true|lineNumber=true
@@ -24,7 +24,7 @@ The nature of this setting is to choose one of the available environments. It's 
 
 !!! Environment-variable adapter
 
-As its value is currently provided by the ""PHARO_ENV"" environment variable, it cannot be changed. We'll change the ""pickOne:"" above with a simple label, as we did before, when there're no registered applications. We can create a new ==EDA-Settings-Adapters-EnvVars== package for this kind of adapters.
+As its value is currently provided by the ""PHARO_ENV"" environment variable, it cannot be changed. We'll change the ""pickOne:"" above with a simple label, as we did before (when there're no registered applications). We can create a new ==EDA-Settings-Adapters-EnvVars== package for this kind of adapters.
 
 [[[classDefinition=true
 Object subclass: #EDAEnvironmentSettingsEnvVarAdapter
@@ -57,7 +57,7 @@ This variation can now be accomodated in the new ==EDATEnvironmentSettingsPort==
 % ${changes:path=code/002-EDATEnvironmentSettingsPort_supportsMultiple.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDATEnvironmentSettingsPort >> supportsMultiple
-  self subclassResponsibility
+  self shouldBeImplemented
 ]]]
 
 Now, ==EDASettings== can include both variations:
@@ -122,7 +122,7 @@ EDAEnvironmentSettingsEnvVarAdapter >> supportsMultiple
   ^ false
 ]]]
 
-Running again ==SettingBrowser== will try to call ""currentEnvironment"" on our adapter, but we haven't implemented  it yet. Let's do it now.
+Running again ==SettingBrowser==, it will try to call ""currentEnvironment"" on our adapter, but we haven't implemented it yet. Let's do it now.
 
 % ${changes:path=code/007-EDAEnvironmentSettingsEnvVarAdapter_currentEnvironment.ombu}$
 [[[methodDefinition=true|lineNumber=true
@@ -139,7 +139,7 @@ We're implementing the ports as traits. It makes sense to indicate all adapters 
 % ${changes:path=code/008-EDATEnvironmentSettingsPort_isReadOnly.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDATEnvironmentSettingsPort >> isReadOnly
-  self subclassResponsibility
+  self shouldBeImplemented
 ]]]
 
 Our adapter clearly needs to return ""true"":
@@ -243,7 +243,7 @@ Let's fix it as well.
 % ${changes:path=code/016-EDAEnvironmentSettingsEnvVarAdapter_environmentVariableName.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDAEnvironmentSettingsEnvVarAdapter >> environmentVariableName
-  ^ 'EDA_ENV'
+  ^ DUEnvironment environmentVariableName
 ]]]
 
 We can refactor the ""currentEnvironment"" implementation:
@@ -369,13 +369,26 @@ EDAPredefinedEnvironmentSettingsInMemoryAdapter class >> description
 
 !!!! Refactoring
 
-As we did with the environment-variable adapter, let's introduce a new intermediary trait, common to all "in-memory" adapters, to indicate ""isReadOnly"" is by default ""false"".
+As we did with the environment-variable adapter, let's introduce a new intermediary trait, common to all "in-memory" adapters, to indicate ""isReadOnly"" and "supportsMultiple" are ""false"" for this kind of adapters.
 
 [[[classDefinition=true
 Trait named: #EDATInMemoryAdapter
   uses: EDATSettingsPort
   package: 'EDA-Settings-Adapters-InMemory'
 ]]]
+
+% ${changes:path=code/026-EDATInMemoryAdapter_isReadOnly.ombu}$
+[[[methodDefinition=true|lineNumber=true
+EDAEnvironmentSettingsInMemoryAdapter >> isReadOnly
+  ^ false
+]]]
+
+% ${changes:path=code/027-EDATInMemoryAdapter_supportsMultiple.ombu}$
+[[[methodDefinition=true|lineNumber=true
+EDAEnvironmentSettingsInMemoryAdapter >> supportsMultiple
+  ^ false
+]]]
+
 
 [[[classDefinition=true
 Object subclass: #EDAPredefinedEnvironmentSettingsInMemoryAdapter
@@ -399,13 +412,13 @@ Object subclass: #EDAEnvironmentSettingsInMemoryAdapter
 
 We just need to provide the accessors for the attribute, and we're done.
 
-% ${changes:path=code/026-EDAEnvironmentSettingsInMemoryAdapter_currentEnvironment.ombu}$
+% ${changes:path=code/028-EDAEnvironmentSettingsInMemoryAdapter_currentEnvironment.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDAEnvironmentSettingsInMemoryAdapter >> currentEnvironment
   ^ currentEnvironment ifNil: [ '' ]
 ]]]
 
-% ${changes:path=code/027-EDAEnvironmentSettingsInMemoryAdapter_currentEnvironment_.ombu}$
+% ${changes:path=code/029-EDAEnvironmentSettingsInMemoryAdapter_currentEnvironment_.ombu}$
 [[[methodDefinition=true|lineNumber=true
 EDAEnvironmentSettingsInMemoryAdapter >> currentEnvironment: anObject
   currentEnvironment := anObject

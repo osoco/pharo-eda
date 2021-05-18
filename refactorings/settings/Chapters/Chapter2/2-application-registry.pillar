@@ -104,7 +104,7 @@ EDAApplications >> edaApplications
 
 Recall that ==EDAApplication== was previously meant to be used as a class, not to create instances. It might be useful to guide developers on how to create new instances. If they use ""new"" and forget to provide a name, they'll end up with unnamed applications, and won't be able to register more than one in the registry. Therefore, we'll miss precisely the point we're trying to make.
 
-This factory method (class-side) ensures the instances are created with a name. Notice we don't use ""self new"". We're dealing with that soon enough.
+This (class-side) factory method ensures the instances are created with a name. Notice we don't use ""self new"". We're dealing with that soon enough.
 
 [[[methodDefinition=true|lineNumber=true
 EDAApplication class >> withName: anApplicationName
@@ -159,7 +159,6 @@ For the sake of completeness, we define the trivial setter.
 
 [[[methodDefinition=true|lineNumber=true
 EDAApplications class >> uniqueInstance: anInstance
-  | result |
   uniqueInstance := anInstance
 ]]]
 % ${changes:path=code/013-EDAApplications_class_uniqueInstance_.ombu}$
@@ -182,13 +181,8 @@ EDAApplication class >> withName: anApplicationName
 ]]]
 % ${changes:path=code/014-EDAApplication_class_withName_.ombu}$
 
-Finally, we can create applications and register them.
+Finally, we can create applications and get them automatically registered.
 
 [[[
-EDAApplications uniqueInstance register: (EDAApplication withName: 'test-1')
-]]]
-
-And  inspect the registered applications as well.
-[[[
-EDAApplications uniqueInstance edaApplications
+EDAApplication withName: 'test-1'
 ]]]

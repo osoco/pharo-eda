@@ -1,14 +1,253 @@
 !! Priorities in adapters
 
-Recall we're using ""collect:sorted:"" when building the list of adapters for a given port (so far, the ''environment'' one).
-In the ''sorted'' block, we are using ""<"" to find out which adapter should appear first. To provide a common way to compare adapters, let's introduce the concept of **priority**.
+The list of adapters visible to ==EDAPortResolver== are not sorted in any way. The straightforward way to sort them is by using ""collect:sorted:"".
 
-The idea is two fold: to define a way to sort adapters, and also a way to implement which adapter should be used by default. Keep in mind this only affects adapters for the same port.
+In the ''sorted'' block, we need to define how we want them sorted. To avoid unnecessary coupling, we'll use ""<"" to find out if a given adapter should appear before another. To provide a common way to compare adapters, let's introduce the concept of **priority**.
+
+The idea is two fold: to define a way to sort adapters, and also a way to implement which adapter should be used by default. Keep in mind this is meant to only compare adapters fitting in a common port.
 
 Let's make sure all adapters implement it.
 
-% ${changes:path=code/001-EDATSettingsPort_classTrait_priority}
+% ${changes:path=code/001-EDATSettingsPort_classTrait_priority.ombu}
 [[[methodDefinition=true
 EDATSettingsPort classTrait >> priority
-  self subclassResponsibility
+  self shouldBeImplemented
 ]]]
+
+Now we can use it to compare adapters with ""<"", "">"", ""<="", "">="".
+
+% ${changes:path=code/002-EDATSettingsPort_classTrait_<.ombu}
+[[[methodDefinition=true
+EDATSettingsPort classTrait >> < anotherAdapterClass
+  ^ self priority < anotherAdapterClass priority
+]]]
+
+% ${changes:path=code/003-EDATSettingsPort_classTrait_>.ombu}
+[[[methodDefinition=true
+EDATSettingsPort classTrait >> > anotherAdapterClass
+  ^ anotherAdapterClass priority < self priority
+]]]
+
+% ${changes:path=code/004-EDATSettingsPort_classTrait_<=.ombu}
+[[[methodDefinition=true
+EDATSettingsPort classTrait >> <= anotherAdapterClass
+	^ self priority = anotherAdapterClass priority
+		or: [ self < anotherAdapterClass ]
+]]]
+
+% ${changes:path=code/005-EDATSettingsPort_classTrait_>=.ombu}
+[[[methodDefinition=true
+EDATSettingsPort classTrait >> >= anotherAdapterClass
+	^ self priority = anotherAdapterClass priority
+		or: [ anotherAdapterClass < self ]
+]]]
+
+Now we can present them sorted by priority (the "Environment adapter" setting under the Port section of each application).
+
+% ${changes:path=code/006-EDASettings_class_portSettingsOn_under_on_.ombu}
+[[[methodDefinition=true
+portSettingsOn: aBuilder under: aParent on: app
+	| entry values key portResolver |
+	key := aParent , 'ports'.
+	entry := aBuilder group: key.
+	entry
+		label: 'Ports' translated;
+		parent: aParent.
+	portResolver := EDAPortResolver new.
+	values := OrderedCollection
+		withAll:
+			(((portResolver availableAdapters: EDATEnvironmentSettingsPort)
+				collect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ])
+				sorted: [ :a :b | a < b ]).
+	(aBuilder pickOne: #environmentSettingsResolverPortClass)
+		label: 'Environment adapter' translated;
+		target: app portSettingsPort;
+		parent: key;
+		domainValues: values
+]]]
+
+!!! Refactoring ==EDASettings==
+
+==EDASettings== is maybe too clever regarding how to get the list of available adapters. Let's make ==EDAPortResolver== hide that instead.
+
+% ${changes:path=code/007-EDATPortResolver_availableEnvironmentSettingsAdapters.ombu}
+[[[methodDefinition=true
+availableEnvironmentSettingsAdapters
+	^ self availableAdapters: EDATSettingsPort
+]]]
+
+==EDASettings== now gets a little bit simpler.
+
+% ${changes:path=code/008-EDASettings_portSettingsOn_under_on_.ombu}
+[[[methodDefinition=true
+portSettingsOn: aBuilder under: aParent on: app
+	| entry values key portResolver |
+	key := aParent , 'ports'.
+	entry := aBuilder group: key.
+	entry
+		label: 'Ports' translated;
+		parent: aParent.
+	portResolver := EDAPortResolver new.
+	values := OrderedCollection
+		withAll:
+			((portResolver availableEnvironmentSettingsAdapters
+				collect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ])
+				sorted: [ :a :b | a < b ]).
+	(aBuilder pickOne: #environmentSettingsResolverPortClass)
+		label: 'Environment adapter' translated;
+		target: app portSettingsPort;
+		parent: key;
+		domainValues: values
+]]]
+
+Additionally, we can move the sorting logic to the ==portResolver==.
+
+% ${changes:path=code/009-EDATPortResolver_availableAdapters_.ombu}
+[[[methodDefinition=true
+availableAdapters: aPort
+	^ (aPort traitUsers select: [ :cls | cls accepts: self ]) sorted
+]]]
+
+==EDASettings== now can be unaware of any sorting.
+
+% ${changes:path=code/010-EDASettings_class_portSettingsOn_under_on_.ombu}
+[[[methodDefinition=true
+portSettingsOn: aBuilder under: aParent on: app
+	| entry values key portResolver |
+	key := aParent , 'ports'.
+	entry := aBuilder group: key.
+	entry
+		label: 'Ports' translated;
+		parent: aParent.
+	portResolver := EDAPortResolver new.
+	values := OrderedCollection
+		withAll:
+			(portResolver availableEnvironmentSettingsAdapters
+				collect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ]).
+	(aBuilder pickOne: #environmentSettingsResolverPortClass)
+		label: 'Environment adapter' translated;
+		target: app portSettingsPort;
+		parent: key;
+		domainValues: values
+]]]
+
+!!! Refactoring ==EDAApplication==
+
+Currently, ==EDAApplication== has a reference to the ''environmentSettingsPort''. Recall this is not the same as the ''environment'', but the instance able to provide the ''environment'' value. ==EDAApplication== will delegate which adapter is used in every port to its ''portSettingsPort''.
+
+% ${changes:path=code/011-EDAApplication_portSettingsPort.ombu}
+[[[methodDefinition=true
+portSettingsPort
+	^ portSettingsPort
+		ifNil: [ | result |
+			result := EDAPortSettingsPort new.
+			self portSettingsPort: result.
+			result ]
+]]]
+
+% ${changes:path=code/012-EDAApplication_portSettingsPort_.ombu}
+[[[methodDefinition=true
+portSettingsPort: anAdapter
+	portSettingsPort := anAdapter
+]]]
+
+==EDASettings== doesn't need to know how adapters are resolved. It just need to use them to build the settings tree.
+
+% ${changes:path=code/013-EDASettings_class_environmentSettingsOn_under_on_.ombu}
+[[[methodDefinition=true
+environmentSettingsOn: aBuilder under: aParent on: app
+	^ self
+		settingOn: aBuilder
+		named: #currentEnvironment
+		labelled: 'Environment'
+		withDescription: 'Environment'
+		usingConfig: app environmentSettingsPort
+		under: aParent
+		on: app
+]]]
+
+Let's recall what we are doing again. Each ==EDAApplication== needs certain configuration settings. Instead of storing those values in attributes in certain specific classes, they're now different for each ==EDAApplication==. However, they're not stored directly in the ==EDAApplication== instance, but in adapters.
+
+==EDASettings== retrieves the list of ==EDAApplication== via the ==EDAApplications== registry. For each application, it builds a configuration tree. Each configurable entry is managed by the adapters accessible to the ==EDAApplication== via its ''portSettingsPort''. Additionally, the ''portSettingsPort'' itself, which stores the references of the adapters used, has its own section in the ==SettingBrowser==.
+
+For the environment setting, ==EDASettings== asks the ==EDAApplication== to provide the value, sending it the ''environmentSettingsPort'' message. ==EDAApplication== acts as an intermediary and delegates it to its ''portSettingsPort''.
+
+% ${changes:path=code/014-EDAApplication_environmentSettingPort.ombu}
+[[[methodDefinition=true
+environmentSettingsPort
+	^ self portSettingsPort environmentSettingsPort
+]]]
+
+% ${changes:path=code/015-EDAApplication_environmentSettingPort_.ombu}
+[[[methodDefinition=true
+environmentSettingsPort: anAdapter
+	anAdapter = self portSettingsPort environmentSettingsPort
+		ifTrue: [ ^ self ]
+		ifFalse: [ self portSettingsPort environmentSettingsPort: anAdapter ].
+]]]
+
+We now need to store the adapter in ==EDAPortSettingsPort==, in  ''environmentSettingsPort'', and provide accessors for it.
+
+% ${changes:path=code/016-EDAPortSettingsPort.ombu}
+[[[classDefinition=true
+Object subclass: #EDAPortSettingsPort
+	instanceVariableNames: 'environmentSettingsPort'
+	classVariableNames: ''
+	package: 'EDA-Settings-Ports'
+]]]
+
+% ${changes:path=code/017-EDAPortSettingsPort_environmentSettingsPort.ombu}
+[[[methodDefinition=true
+environmentSettingsPort
+	^ environmentSettingsPort
+]]]
+
+% ${changes:path=code/018-EDAPortSettingsPort_environmentSettingsPort_.ombu}
+[[[methodDefinition=true
+environmentSettingsPort: anAdapter
+	environmentSettingsPort := anAdapter
+]]]
+
+However, ==EDAPortSettingsPort== needs to provide a default adapter. Otherwise ==EDASettings== will fail when it tries to build the setting tree. Since all adapters can now be sorted by priority, ==EDAPortSettingsPort== can use that criteria to provide one the first time.
+
+% ${changes:path=code/019-EDAPortSettingsPort_environmentSettingsPort.ombu}
+[[[methodDefinition=true
+environmentSettingsPort
+	^ environmentSettingsPort ifNil: [
+        | result |
+        result := EDAPortResolver new resolveEnvironmentSettingsPort.
+        self environmentSettingsPort: result.
+        result
+    ]
+]]]
+
+There's one missing piece to implement. ==EDASettings== builds a subtree to let the user choose which class of adapter used in each port, in its ''portSettingsOn:under:on:'' method. The actual option sends the message ==#environmentSettingsAdapterClass== to ''app portSettingsPort''. So ==EDAPortSettingsPort== needs to keep track of the **class** of the adapter used too.
+
+% ${changes:path=code/020-EDAPortSettingsPort.ombu}
+[[[classDefinition=true
+Object subclass: #EDAPortSettingsPort
+	instanceVariableNames: 'environmentSettingsPort environmentSettingsAdapterClass'
+	classVariableNames: ''
+	package: 'EDA-Settings-Ports'
+]]]
+
+It might appear a bit confusing: we're refering to the class in ''environmentSettingsAdapterClass'', but we are using ''environmentSettingsPort'' to reference the instance (of the class). We use **port** for the instance since it's how ==EDAApplication== sees it. But from the point of view of ==EDASettings==, we're choosing among a list of **adapter classes**. It's unaware how they're used elsewhere.
+
+We need to provide accessors, as they are used by ==EDASettings==.
+
+% ${changes:path=code/021-EDAPortSettingsPort_environmentSettingsAdapterClass.ombu}
+[[[methodDefinition=true
+environmentSettingsAdapterClass
+	^ environmentSettingsAdapterClass
+]]]
+
+% ${changes:path=code/022-EDAPortSettingsPort_environmentSettingsAdapterClass_.ombu}
+[[[methodDefinition=true
+environmentSettingsAdapterClass := aClass
+	environmentSettingsAdapterClass := aClass
+]]]
+
+==SettingBrowser== should run fine now.
