@@ -162,7 +162,7 @@ EDASettings class >> environmentSettingsOn: aBuilder under: aParent on: app [
 		named: #currentEnvironment
 		labelled: 'Environment'
 		withDescription: 'Environment'
-		usingConfig:  app environmentSettingsPort
+		usingConfig: app environmentSettingsPort
 		under: aParent
 		on: app
 ]

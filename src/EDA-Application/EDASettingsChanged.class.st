@@ -2,28 +2,20 @@ Class {
 	#name : #EDASettingsChanged,
 	#superclass : #Announcement,
 	#instVars : [
-		'adapter',
+		'oldValue',
+		'newValue',
 		'edaApplication'
 	],
 	#category : #'EDA-Application'
 }
 
 { #category : #'instance creation' }
-EDASettingsChanged class >> with: anAdapter on: anEDAApplication [
+EDASettingsChanged class >> old: anOldValue new: aNewValue on: anEDAApplication [
 	^ self new
-		adapter: anAdapter;
+		oldValue: anOldValue;
+		newValue: aNewValue;
 		edaApplication: anEDAApplication;
 		yourself
-]
-
-{ #category : #accessing }
-EDASettingsChanged >> adapter [
-	^ adapter
-]
-
-{ #category : #accessing }
-EDASettingsChanged >> adapter: anAdapter [
-	adapter := anAdapter
 ]
 
 { #category : #accessing }
@@ -34,4 +26,24 @@ EDASettingsChanged >> edaApplication [
 { #category : #accessing }
 EDASettingsChanged >> edaApplication: anEDAApplication [
 	edaApplication := anEDAApplication 
+]
+
+{ #category : #accessing }
+EDASettingsChanged >> newValue [
+	^ newValue
+]
+
+{ #category : #accessing }
+EDASettingsChanged >> newValue: anObject [
+	newValue := anObject
+]
+
+{ #category : #accessing }
+EDASettingsChanged >> oldValue [
+	^ oldValue
+]
+
+{ #category : #accessing }
+EDASettingsChanged >> oldValue: anObject [
+	oldValue := anObject
 ]
