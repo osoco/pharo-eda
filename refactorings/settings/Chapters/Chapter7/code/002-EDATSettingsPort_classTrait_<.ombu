@@ -1,0 +1,19 @@
+OmEntry {
+	#tags : {
+		#prior : OmNullReference [  ],
+		#self : OmReference [ '1' ]
+	},
+	#content : EpMethodAddition {
+		#method : RGMethodDefinition {
+			#annotations : IdentityDictionary {
+				#className : #'EDATSettingsPort classTrait',
+				#isMetaSide : true
+			},
+			#name : #'<',
+			#protocol : #testing,
+			#sourceCode : '< anotherAdapterClass\r\t^ self priority < anotherAdapterClass priority',
+			#stamp : 'JoseSanLeandro 5/13/2021 07:05',
+			#package : #EDA-Settings-Ports
+		}
+	}
+}

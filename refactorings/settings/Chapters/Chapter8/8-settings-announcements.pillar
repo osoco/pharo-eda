@@ -1,0 +1,497 @@
+!! Announcing setting changes
+
+Now, once an ==EDAApplication== is created, it will access its configuration settings via ''portSettingsPort''. If it's not configured via ==EDASettings== (==SettingBrowser==), ==EDAPortSettingsPort== will use ==EDAPortResolver== and provide a suitable adapter to store each ==EDAApplication== setting.
+
+What happens if we change the class of the adapter using ==SettingBrowser==? Right now, nothing. The ==EDAApplication== doesn't notice. In other words, it doesn't have any effect. Well, ==EDAPortSettingsPort== will refer to an instance in ''environmentSettingsPort'' which won't necessarily match the ''environmentSettingsAdapterClass'' class.
+
+Later, we'll extend the approach we're following with the ''environment'' setting to the rest of the configurable parameters.
+Instead of hard-wiring what to do to the adapters when the ==PortSettingPort== adapter classes change, we can use Announcements. In the future we'll refactor further, and use PharoEDA events.
+
+Let's start by creating a new generic event.
+
+% ${changes:path=code/001-EDASettingsChanged.ombu}
+[[[classDefinition=true
+Announcement subclass: #EDASettingsChanged
+	instanceVariableNames: 'oldValue newValue edaApplication'
+	classVariableNames: ''
+	package: 'EDA-Application'
+]]]
+
+Let's Pharo create the accessors for us.
+
+% ${changes:path=code/002-EDASettingsChanged_oldValue.ombu}
+[[[methodDefinition=true
+oldValue
+    ^ oldValue
+]]]
+
+% ${changes:path=code/003-EDASettingsChanged_oldValue_.ombu}
+[[[methodDefinition=true
+oldValue: anObject
+    oldValue := anObject
+]]]
+
+% ${changes:path=code/004-EDASettingsChanged_newValue.ombu}
+[[[methodDefinition=true
+newValue
+    ^ newValue
+]]]
+
+% ${changes:path=code/005-EDASettingsChanged_newValue_.ombu}
+[[[methodDefinition=true
+newValue: anObject
+    newValue := anObject
+]]]
+
+% ${changes:path=code/006-EDASettingsChanged_edaApplication.ombu}
+[[[methodDefinition=true
+edaApplication
+    ^ edaApplication
+]]]
+
+% ${changes:path=code/007-EDASettingsChanged_edaApplication_.ombu}
+[[[methodDefinition=true
+edaApplication: anApplication
+    edaApplication := anApplication
+]]]
+
+It's a good habit to provide a factory method as well.
+% ${changes:path=code/008-EDASettingsChanged_class_with_on_.ombu}
+[[[methodDefinition=true
+old: anOldValue new: aNewValue on: anApplication
+	^ self new
+		oldValue: anOldValue;
+        newValue: aNewValue;
+		edaApplication := anApplication;
+		yourself
+]]]
+
+We want to emit an event whenever the ''environmentSettingAdapterClass'' changes. Let's create that class first.
+
+% ${changes:path=code/009-EDAEnvironmentSettingsAdapterClassChanged.ombu}
+[[[classDefinition=true
+EDASettingsChanged subclass: #EDAEnvironmentSettingsAdapterClassChanged
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Application'
+]]]
+
+At the end of the day, we would like to close and reopen any ==SettingBrowser==. Let's add that feature in a trait.
+% ${changes:path=code/010-EDATSettingBrowserHelper.ombu}
+[[[classDefinition=true
+Trait named: #EDATSettingBrowserHelper
+	 uses: {}
+	 package: 'EDA-Traits'
+]]]
+
+The code is pretty rudimentary. It inspects all submorphs existing in the "world" matching ==SettingBrowser== class, deletes them, and creates a new one.
+
+% ${changes:path=code/011-EDATSettingBrowserHelper_classTrait_refreshSettingBrowsers.ombu}
+[[[methodDefinition=true
+refreshSettingBrowsers
+	self currentWorld submorphs
+		select: [ :w | w model class = SettingBrowser ]
+		thenCollect: [ :w |
+			w delete.
+			SettingBrowser open ]
+]]]
+
+We find useful to create a instance method as well.
+% ${changes:path=code/012-EDATSettingBrowserHelper_refreshSettingBrowsers.ombu}
+[[[methodDefinition=true
+refreshSettingBrowsers
+	self currentWorld submorphs
+		select: [ :w | w model class = SettingBrowser ]
+		thenCollect: [ :w |
+			w delete.
+			SettingBrowser open ]
+]]]
+
+Next thing to do is to write a announcement subscriber, i.e., an instance that gets notified of any ==EDASettingsChanged== event and performs some action in response. In our case, a suitable name could be ==EDASettingsSubscriber==.
+
+% ${changes:path=code/013-EDASettingsSubscriber.ombu}
+[[[classDefinition=true
+Object subclass: #EDASettingsSubscriber
+	uses: EDATSettingBrowserHelper
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Application'
+]]]
+
+This subscriber will receive events of type ==EDAEnvironmentSettingsAdapterClassChanged==.
+% ${changes:path=code/014-EDASettingsSubscriber_setupAnnouncer_application_.ombu}
+[[[methodDefinition=true
+setupAnnouncer: anAnnouncer application: anEDAApplication
+	anAnnouncer
+		ifNotNil: [ :announcer |
+			announcer
+				when: EDAEnvironmentSettingsAdapterClassChanged
+				do: [ :event |
+					self
+						onEnvironmentSettingsAdapterClassChanged: event
+						on: anEDAApplication ] ]
+]]]
+
+We now need to refresh any open ==SettingBrowser== windows.
+% ${changes:path=code/015-EDASettingsSubscriber_onEnvironmentSettingsAdapterClassChanged_on_.ombu}
+[[[methodDefinition=true
+onEnvironmentSettingsAdapterClassChanged: anEvent on: anEDAApplication
+	self refreshSettingBrowsers
+]]]
+
+The last piece involves ==EDAApplication==. Whenever the adapter class changes, it'll emit an event. For this, we'll use an ==Announcer==.
+
+% ${changes:path=code/016-EDAApplication.ombu}
+[[[classDefinition=true
+Object subclass: #EDAApplication
+	uses: EDATLogging
+	instanceVariableNames: 'commandConsumer commandDispatcher eventAnnouncer eventProducer eventStore isConfigured isStarted projectorsByTenant applicationName portSettingsPort environmentSettingsPort settingsAnnouncer'
+	classVariableNames: 'ProjectionSynchronizationEnabled'
+	package: 'EDA-Application'
+]]]
+
+With its usual accessors.
+
+% ${changes:path=code/017-EDAApplication_settingsAnnouncer.ombu}
+[[[methodDefinition=true
+settingsAnnouncer
+	settingsAnnouncer ifNil: [ self settingsAnnouncer: Announcer new ].
+	^ settingsAnnouncer
+]]]
+
+% ${changes:path=code/018-EDAApplication_settingsAnnouncer_.ombu}
+[[[methodDefinition=true
+settingsAnnouncer: anObject
+	settingsAnnouncer := anObject
+]]]
+
+On the other hand, ==EDAApplication== is interested in reacting upon changes in settings. For example, if the port is changed, the actual setting value would likely change as well. That's precisely the responsibility of the ==EDASettingsSubscriber==.
+
+% ${changes:path=code/019-EDAApplication.ombu}
+[[[classDefinition=true
+Object subclass: #EDAApplication
+	uses: EDATLogging
+	instanceVariableNames: 'commandConsumer commandDispatcher eventAnnouncer eventProducer eventStore isConfigured isStarted projectorsByTenant applicationName portSettingsPort environmentSettingsPort settingsAnnouncer settingsSubscriber'
+	classVariableNames: 'ProjectionSynchronizationEnabled'
+	package: 'EDA-Application'
+]]]
+
+% ${changes:path=code/020-EDAApplication_settingsSubscriber.ombu}
+[[[methodDefinition=true
+settingsSubscriber
+	settingsSubscriber
+		ifNil: [ self settingsSubscriber: EDASettingsSubscriber new ].
+	^ settingsSubscriber
+]]]
+
+% ${changes:path=code/021-EDAApplication_settingsSubscriber_.ombu}
+[[[methodDefinition=true
+settingsSubscriber: anObject
+	settingsSubscriber := anObject
+]]]
+
+When an ==EDAApplication== prepares itself, it now needs to set the announcer.
+
+% ${changes:path=code/022-EDAApplication_setupSettingsAnnouncer.ombu}
+[[[methodDefinition=true
+setupSettingsAnnouncer
+	self settingsAnnouncer: Announcer new
+]]]
+
+Likewise, for setting up the subscriptions.
+
+% ${changes:path=code/023-EDAApplication_setupSettingsSubscriptions.ombu}
+[[[methodDefinition=true
+setupSettingsSubscriptions
+	self settingsSubscriber
+		setupAnnouncer: self settingsAnnouncer
+		application: self
+]]]
+
+To ensure the ''portSettingsPort'' attribute of ==EDAApplication== is initialized properly, let's add a new method.
+
+% ${changes:path=code/024-EDAApplication_resetPortSettingsPort.ombu}
+[[[methodDefinition=true
+resetPortSettingsPort
+	self portSettingsPort: EDAPortSettingsPort new
+]]]
+
+Finally, ==EDAApplication== initialization process should include setting up the announcer and subscriber of settings events.
+
+% ${changes:path=code/025-EDAApplication_doInitialize.ombu}
+[[[methodDefinition=true
+doInitialize
+	self isStarted: false.
+	self isConfigured: false.
+	self resetPortSettingsPort.
+	self projectorsByTenant: Dictionary new.
+	self setupSettingsAnnouncer.
+	self setupEventAnnouncer.
+	self setupSettingsSubscriptions
+]]]
+
+We now need to emit an event whenever the class of the ''environment'' adapter changes. To create an event instance, we need the reference of the associated ==EDAApplication==.
+
+Let's recap for a second the responsibilities of each one:
+- ==EDAApplication==: The root of the setting tree, the scope of related settings.
+- ==EDASettingsSubscriber==: Registers hooks in ==EDAApplication== whenever settings changes.
+- ==EDAPortSettingsPort==: Holds which adapter is used for each setting, which is itself a setting.
+- ==EDASettingsChanged==: The event to emit when a setting changes, which includes the reference to the ==EDAApplication==.
+
+==EDAApplication== holds a reference to ==EDASettingsSubscriber==, but it's only used to add the event listeners, which act back on the ==EDAApplication== itself. We could pass that responsibility to ==EDAPortSettingsPort==. Actually, let's remove ==EDASettingsSubscriber== altogether (including ==EDAApplication== accessors).
+
+A feasible design for this problem is to build ==EDAPortSettingsPort==, and any other adapter, with a reference to a new ==EDASettingsAnnouncer==. Its main purpose is to be used to send settings events, and to register subscribers to those events.
+
+% ${changes:path=code/026-EDASettingsAnnouncer.ombu}
+[[[classDefinition=true
+Announcer subclass: #EDASettingsAnnouncer
+	instanceVariableNames: 'edaApplication'
+	classVariableNames: ''
+	package: 'EDA-Settings'
+]]]
+
+The usual accessors:
+% ${changes:path=code/027-EDASettingsAnnouncer_edaApplication.ombu}
+[[[methodDefinition=true
+edaApplication
+	^ edaApplication
+]]]
+
+% ${changes:path=code/028-EDASettingsAnnouncer_edaApplication_.ombu}
+[[[methodDefinition=true
+edaApplication: anObject
+	edaApplication := anObject
+]]]
+
+And a factory method:
+
+% ${changes:path=code/029-EDASettingsAnnouncer_class_forApp_.ombu}
+[[[methodDefinition=true
+forApp: anEDAApplication
+	^ self new
+		edaApplication: anEDAApplication;
+		yourself
+]]]
+
+==EDAApplication== now can create instances of this class, instead of plain ==Announcer==:
+
+% ${changes:path=code/030-EDAApplication_settingsAnnouncer.ombu}
+[[[methodDefinition=true
+settingsAnnouncer
+	settingsAnnouncer
+		ifNil: [ self settingsAnnouncer: (EDASettingsAnnouncer forApp: self) ].
+	^ settingsAnnouncer
+]]]
+
+Additionally, ==PortSettingsPort== can hold a reference to it as well.
+
+% ${changes:path=code/031-EDAPortSettingsPort.ombu}
+[[[classDefinition=true
+Object subclass: #EDAPortSettingsPort
+	instanceVariableNames: 'announcer environmentSettingsPort environmentSettingsAdapterClass'
+	classVariableNames: ''
+	package: 'EDA-Settings-Ports'
+]]]
+
+% ${changes:path=code/032-EDAPortSettingsPort_announcer.ombu}
+[[[methodDefinition=true
+announcer
+	^ announcer
+]]]
+
+% ${changes:path=code/033-EDAPortSettingsPort_announcer_.ombu}
+[[[methodDefinition=true
+announcer: anObject
+	announcer := anObject
+]]]
+
+% ${changes:path=code/034-EDAPortSettingsPort_class_withAnnouncer_.ombu}
+[[[methodDefinition=true
+withAnnouncer: anEDASettingsAnnouncer
+	^ self new
+		announcer: anEDASettingsAnnouncer;
+		yourself
+]]]
+
+We need to skip setting up the settings subscriber in the initialization phase of the ==EDAApplication==, and to remove the method ==EDAApplication >> setupSettingsAnnouncer== we introduced earlier.
+
+% ${changes:path=code/035-EDAPortSettingsPort_class_withAnnouncer_.ombu}
+[[[methodDefinition=true
+doInitialize
+	self isStarted: false.
+	self isConfigured: false.
+	self resetPortSettingsPort.
+	self projectorsByTenant: Dictionary new.
+	self setupEventAnnouncer
+]]]
+
+The next thing to do is to make sure ==EDAApplication== creates ==EDAPortSettingsPort== using the announcer.
+
+% ${changes:path=code/036-EDAApplication_portSettingsPort.ombu}
+[[[methodDefinition=true
+portSettingsPort
+	^ portSettingsPort
+		ifNil: [ | result |
+			result := EDAPortSettingsPort withAnnouncer: self settingsAnnouncer.
+			self portSettingsPort: result.
+			result ]
+]]]
+
+% ${changes:path=code/037-EDAApplication_resetPortSettingsPort.ombu}
+[[[methodDefinition=true
+resetPortSettingsPort
+	self portSettingsPort: nil
+]]]
+
+
+==EDAPortSettingsPort== can now emit a ==EDAEnvironmentSettingsAdapterClassChanged== event whenever the adapter class changes.
+
+% ${changes:path=code/038-EDAPortSettingsPort_environmentSettingsAdapterClass_.ombu}
+[[[methodDefinition=true
+environmentSettingsAdapterClass: newValue
+	| oldValue |
+	oldValue := environmentSettingsAdapterClass.
+	environmentSettingsAdapterClass := newValue.
+	oldValue = newValue
+		ifFalse: [ self announcer
+				announce:
+					(EDAEnvironmentSettingsAdapterClassChanged
+						old: oldValue
+						new: newValue
+						on: self announcer edaApplication) ]
+]]]
+
+!!! Refreshing ==SettingBrowser== windows
+
+Now that the event is emitted, we want to react in response. For sure, we want to refresh all ==SettingBrowser== windows.
+
+% ${changes:path=code/039-EDASettingBrowserRefresher.ombu}
+[[[classDefinition=true
+Object subclass: #EDASettingBrowserRefresher
+	uses: EDATSettingBrowserHelper
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Settings'
+]]]
+
+% ${changes:path=code/040-EDASettingBrowserRefresher_class_subscribeToSettingsChangedEventsIn_.ombu}
+[[[methodDefinition=true
+subscribeToSettingsChangedEventsIn: anEDASettingsAnnouncer
+	anEDASettingsAnnouncer
+		when: EDASettingsChanged
+		do: [ self refreshSettingBrowsers ]
+]]]
+
+We could call this method of ==EDASettingBrowserRefresher== whenever we initialize a new ==EDASettingsAnnouncer==. However, we aim to dynamically discover classes interested in listening to ==EDASettingsChanged== events. Let's do it using traits.
+
+% ${changes:path=code/041-EDATSettingsChangedListener.ombu}
+[[[classDefinition=true
+Trait named: #EDATSettingsChangedListener
+	 uses: {}
+	 package: 'EDA-Settings'
+]]]
+
+At this moment we only expect users of this trait to override the following method:
+
+% ${changes:path=code/042-EDATSettingsChangedListener_traitClass_subscribeToSettingsChangedEventsIn_.ombu}
+[[[methodDefinition=true
+subscribeToSettingsChangedEventsIn: anEDASettingsAnnouncer
+	self shouldBeImplemented
+]]]
+
+==EDASettingBrowserRefresher== can now become user of this trait.
+
+% ${changes:path=code/043-EDASettingBrowserRefresher.ombu}
+[[[classDefinition=true
+Object subclass: #EDASettingBrowserRefresher
+	uses: EDATSettingsChangedListener + EDATSettingBrowserHelper
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Settings'
+]]]
+
+We can now deal with the logic to let users of the trait to subscribe to the events they need.
+
+% ${changes:path=code/044-EDASettingsAnnouncer_initialize.ombu}
+[[[methodDefinition=true
+initialize
+	super initialize.
+	self setupListeners
+]]]
+
+% ${changes:path=code/045-EDASettingsAnnouncer_setupListeners.ombu}
+[[[methodDefinition=true
+setupListeners
+	EDATSettingsChangedListener traitUsers
+		do: [ :l | lsubscribeToSettingsChangedEventsIn: self ]
+]]]
+
+We can check the ==SettingBrowser== windows are refreshed if we reset the applications and create a new application with:
+[[[
+EDAApplications uniqueInstance registry: nil
+EDAApplication withName: 'app-1'
+]]]
+
+!!! Refreshing the environment adapter
+
+If the user changes the adapter class for the ''environment'' port, the adapter itself should change accordingly.
+We can model this behavior by calling the ''environmentSettingPort:'' accessor on ==EDAApplication==, in a separate class.
+
+% ${changes:path=code/046-EDAEnvironmentSettingsRefresher.ombu}
+[[[classDefinition=true
+Object subclass: #EDAEnvironmentSettingsRefresher
+	uses: EDATSettingsChangedListener
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Settings'
+]]]
+
+The behavior is straight forward: whenever an ==EDAEnvironmentSettingsAdapterClassChanged== is emitted, we want the ==EDAApplication== to use a new adapter instance.
+
+% ${changes:path=code/047-EDAEnvironmentSettingsRefresher_class_subscribeToSettingsChangedEventsIn_.ombu}
+[[[methodDefinition=true
+subscribeToSettingsChangedEventsIn: anEDASettingsAnnouncer
+	anEDASettingsAnnouncer
+		when: EDAEnvironmentSettingsAdapterClassChanged
+		do:
+			[ :event | event edaApplication environmentSettingsPort: event newValue new ]
+]]]
+
+If you open a ==SettingBrowser== you'll experience a weird behavior. The reason is that ==EDASettingBrowserRefresher== refreshes the ==SettingBrowser== windows before the adapter in ==EDAApplication== is replaced.
+
+A simple test doesn't show any clear behavior regarding the order in which "listeners" are notified.
+
+[[[
+announcer := Announcer new.
+announcer when: EDAEnvironmentSettingsAdapterClassChanged do: [ Transcript print: 'child 1\n' ].
+announcer when: EDASettingsChanged do: [ Transcript print: 'parent 1\n' ].
+announcer when: EDASettingsChanged do: [ Transcript print: 'parent 2\n' ].
+announcer when: EDAEnvironmentSettingsAdapterClassChanged do: [ Transcript print: 'child 2\n' ].
+announcer announce: EDAEnvironmentSettingsAdapterClassChanged.
+Transcript flush
+]]]
+
+==Transcript== shows the order is not guaranteed.
+
+In this situation, we could either include ==EDATSettingBrowserRefresher== trait in all listeners, or make each listener emit a new event after its own processing. The former option is simpler, and we could remove ==EDASettingBrowserRefresher==.
+
+% ${changes:path=code/048-EDAEnvironmentSettingsRefresher.ombu}
+[[[classDefinition=true
+Object subclass: #EDAEnvironmentSettingsRefresher
+	uses: EDATSettingsChangedListener + EDATSettingBrowserHelper
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Settings'
+]]]
+
+% ${changes:path=code/049-EDAEnvironmentSettingsRefresher_class_subscribeToSettingsChangedEventsIn_.ombu}
+[[[methodDefinition=true
+subscribeToSettingsChangedEventsIn: anEDASettingsAnnouncer
+	anEDASettingsAnnouncer
+		when: EDAEnvironmentSettingsAdapterClassChanged
+		do: [ :event |
+			event edaApplication environmentSettingsPort: event newValue new.
+			self refreshSettingBrowsers ]
+]]]
+
+Voilà. Now it works just fine.
