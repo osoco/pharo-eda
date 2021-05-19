@@ -9,6 +9,11 @@ EDATPortResolver >> availableAdapters: aPort [
 ]
 
 { #category : #logic }
+EDATPortResolver >> availableCommandListenerSettingsErrorStrategyAdapters [
+	^ self availableAdapters: EDATCommandListenerSettingsErrorStrategyPort
+]
+
+{ #category : #logic }
 EDATPortResolver >> availableEnvironmentSettingsAdapters [
 	^ self availableAdapters: EDATEnvironmentSettingsPort
 ]

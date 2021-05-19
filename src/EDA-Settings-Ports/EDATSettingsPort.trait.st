@@ -26,7 +26,7 @@ EDATSettingsPort classSide >> >= anotherAdapterClass [
 ]
 
 { #category : #testing }
-EDATSettingsPort classSide >> accepts: anEDAApplication [
+EDATSettingsPort classSide >> accepts: aPortResolver [
 	^ false
 ]
 

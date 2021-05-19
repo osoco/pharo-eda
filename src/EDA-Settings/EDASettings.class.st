@@ -328,14 +328,14 @@ EDASettings class >> mongodbUsernameSettingOn: aBuilder withConfig: aConfig unde
 
 { #category : #settings }
 EDASettings class >> portSettingsOn: aBuilder under: aParent on: app [
-	| entry values key portResolver |
+	| entry environmentValues key portResolver commandListenerErrorStrategyValues |
 	key := aParent , 'ports'.
 	entry := aBuilder group: key.
 	entry
 		label: 'Ports' translated;
 		parent: aParent.
 	portResolver := EDAPortResolver new.
-	values := OrderedCollection
+	environmentValues := OrderedCollection
 		withAll:
 			(portResolver availableEnvironmentSettingsAdapters
 				collect:
@@ -344,7 +344,14 @@ EDASettings class >> portSettingsOn: aBuilder under: aParent on: app [
 		label: 'Environment adapter' translated;
 		target: app portSettingsPort;
 		parent: key;
-		domainValues: values
+		domainValues: environmentValues.
+	commandListenerErrorStrategyValues := OrderedCollection withAll: (portResolver availableCommandListenerSettingsErrorStrategyAdapters collect: [ :adapterClass | adapterClass description translated -> adapterClass ]).
+	(aBuilder pickOne: #commandListenerErrorStrategyAdapterClass)
+		label: 'Error strategy' translated;
+		target: app portSettingsPort;
+		parent: key;
+		domainValues: commandListenerErrorStrategyValues.
+	
 ]
 
 { #category : #settings }

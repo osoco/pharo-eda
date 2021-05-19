@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'announcer',
 		'environmentSettingsPort',
-		'environmentSettingsAdapterClass'
+		'environmentSettingsAdapterClass',
+		'commandListenerErrorStrategyAdapterClass'
 	],
 	#category : #'EDA-Settings-Ports'
 }
@@ -22,6 +23,16 @@ EDAPortSettingsPort >> announcer [
 { #category : #accessing }
 EDAPortSettingsPort >> announcer: anObject [
 	announcer := anObject
+]
+
+{ #category : #accessing }
+EDAPortSettingsPort >> commandListenerErrorStrategyAdapterClass [
+	^ commandListenerErrorStrategyAdapterClass
+]
+
+{ #category : #accessing }
+EDAPortSettingsPort >> commandListenerErrorStrategyAdapterClass: anObject [
+	commandListenerErrorStrategyAdapterClass := anObject
 ]
 
 { #category : #accessing }
