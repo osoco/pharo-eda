@@ -3,7 +3,7 @@ Class {
 	#superclass : #EDAProjector,
 	#traits : 'EDATLogging + EDATErrorHelper',
 	#classTraits : 'EDATLogging classTrait + EDATErrorHelper classTrait',
-	#category : 'EDA-Projections-Projectors'
+	#category : #'EDA-Projections-Projectors'
 }
 
 { #category : #'projection creation' }
@@ -60,7 +60,7 @@ EDAMultipleProjectionsPerEventProjector >> projectEvent: anEvent usingEmittingBl
 		ifEmpty:
 			[ self logDebugMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') cannot be projected since projector ' , self class greaseString , ' doesn''t support it.' ].
 	projectionHandlers size > 1
-		ifTrue: [ self logErrorMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') will be projected twice in projections ' , self projectionClass greaseString , '.' ].
+		ifTrue: [ self logErrorMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') will be projected twice in projections ' , self class projectionClass greaseString , '.' ].
 	projectionHandlers
 		ifNotEmpty: [ :ph | 
 			projections := self retrieveProjectionsForEvent: anEvent.

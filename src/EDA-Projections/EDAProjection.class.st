@@ -151,6 +151,14 @@ EDAProjection >> initialize [
 	self lastModified: self createdAt
 ]
 
+{ #category : #checking }
+EDAProjection >> isNecessary [
+	"Override. Returns if the projection is necessary based on the information it contains "
+	^ true
+	
+
+]
+
 { #category : #accessing }
 EDAProjection >> lastModified [
 	^ lastModified
@@ -185,7 +193,11 @@ EDAProjection >> removeProjectionOfTenant: aTenant [
 
 { #category : #persistence }
 EDAProjection >> saveProjection [
-	self class repository save: self
+	self isNecessary
+		ifTrue: [ self class repository save: self ]
+		ifFalse: [ self remove ]
+	
+
 ]
 
 { #category : #persistence }
