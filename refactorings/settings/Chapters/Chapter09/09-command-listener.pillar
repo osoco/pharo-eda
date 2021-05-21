@@ -1,0 +1,274 @@
+!! Command listener
+
+We used the ''environment'' setting to guide us in our refactoring journey. We can now go on with the next settings to migrate, the ones needed by the command listener:
+- Error behavior
+- STOMP host
+- STOMP port
+- STOMP user name
+- STOMP user password
+- Queue name
+- Durable subscription
+- ACK policy
+- Prefetch count
+- Timeout
+- STOMP client in debug mode
+- Restart on error
+
+We'll start by using an adapter for each one of them, similarly as what we've done with the ''environment'' setting.
+Later, we might want to introduce a way to group ports together. The ==EDAApplication== settings won't be affected, but the ==EDAPortSettingsPort== will become quickly unmanageable otherwise.
+
+!!! Error behavior
+
+This setting, due to its nature, does not allow any adapter but a predefined list.
+Anyway, for the sake of consistency, let's avoid dealing with particular cases.
+After adding this adapter class setting to ''portSettingsOn:under:on:" in ==EDASettings== we get:
+
+% ${changes:path=code/001-EDASettings_class_portSettingsOn_under_on_.ombu}
+[[[methodDefinition=true
+portSettingsOn: aBuilder under: aParent on: app
+	| entry environmentValues key portResolver commandListenerErrorStrategyValues |
+	key := aParent , 'ports'.
+	entry := aBuilder group: key.
+	entry
+		label: 'Ports' translated;
+		parent: aParent.
+	portResolver := EDAPortResolver new.
+	environmentValues := OrderedCollection
+		withAll:
+			(portResolver availableEnvironmentSettingsAdapters
+				collect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ]).
+	(aBuilder pickOne: #environmentSettingsAdapterClass)
+		label: 'Environment adapter' translated;
+		target: app portSettingsPort;
+		parent: key;
+		domainValues: environmentValues.
+	commandListenerErrorStrategyValues := OrderedCollection
+		withAll:
+			(portResolver availableCommandListenerErrorStrategyAdapters
+				collect:
+					[ :adapterClass | adapterClass description translated -> adapterClass ]).
+	(aBuilder pickOne: #commandListenerErrorStrategyAdapterClass)
+		label: 'Error strategy' translated;
+		target: app portSettingsPort;
+		parent: key;
+		domainValues: commandListenerErrorStrategyValues
+]]]
+
+This method is becoming too large, but we'll refactor it soon enough. Using Pharo's debugger-driven development, we'll be asked to create the missing method ''availableCommandListenerErrorStrategyAdapters'' in ==EDAPortResolver==. Let's create it, but in ==EDATPortResolver== trait instead.
+
+% ${changes:path=code/002-EDATPortResolver_availableCommandListenerErrorStrategyAdapters.ombu}
+[[[methodDefinition=true
+availableCommandListenerErrorStrategyAdapters
+	^ self
+		availableAdapters: EDATCommandListenerSettingsErrorStrategyPort
+]]]
+
+We need to create the new trait as well.
+
+% ${changes:path=code/003-EDATCommandListenerErrorStrategySettingsPort.ombu}
+[[[classDefinition=true
+Trait named: #EDATCommandListenerErrorStrategySettingsPort
+	 uses: EDATSettingsPort
+	 package: 'EDA-Settings-Ports'
+]]]
+
+Opening ==SettingBrowser== again will detect a missing method. We told ==SettingBrowser== ==EDAPortSettingsPort== can deal with ''commandListenerErrorStrategyAdapterClass'', but it doesn't. Let's add the new attribute and accessors to the class.
+
+% ${changes:path=code/004-EDAPortSettingsPort.ombu}
+[[[classDefinition=true
+Object subclass: #EDAPortSettingsPort
+	instanceVariableNames: 'announcer environmentSettingsPort environmentSettingsAdapterClass commandListenerErrorStrategyAdapterClass'
+	classVariableNames: ''
+	package: 'EDA-Settings-Ports'
+]]]
+
+% ${changes:path=code/005-EDAPortSettingsPort_commandListenerErrorStrategyAdapterClass.ombu}
+[[[methodDefinition=true
+commandListenerErrorStrategyAdapterClass
+	^ commandListenerErrorStrategyAdapterClass
+]]]
+
+% ${changes:path=code/006-EDAPortSettingsPort_commandListenerErrorStrategyAdapterClass_.ombu}
+[[[methodDefinition=true
+commandListenerErrorStrategyAdapterClass: anObject
+	commandListenerErrorStrategyAdapterClass := anObject
+]]]
+
+Since we don't expect more than one adapter class, we won't emit a new event when the port changes.
+We need to implement the only adapter: a predefined list of strategies.
+
+% ${changes:path=code/007-EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter.ombu}
+[[[classDefinition=true
+Object subclass: #EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter
+	uses: EDATCommandListenerErrorStrategySettingsPort
+	instanceVariableNames: 'errorStrategy'
+	classVariableNames: ''
+	package: 'EDA-Settings-Adapters-InMemory'
+]]]
+
+The setting value is stored in the ''errorStrategy'' attribute.
+
+% ${changes:path=code/008-EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter_errorStrategy.ombu}
+[[[methodDefinition=true
+errorStrategy
+	^ errorStrategy
+		ifNil: [ self errorStrategy: self availableStrategies first.
+			errorStrategy ]
+]]]
+
+% ${changes:path=code/009-EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter_errorStrategy_.ombu}
+[[[methodDefinition=true
+errorStrategy: anObject
+	errorStrategy := anObject
+]]]
+
+The ''availableStrategies'' can be implemented on the class side.
+
+% ${changes:path=code/010-EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter_availableErrorStrategies.ombu}
+[[[methodDefinition=true
+availableErrorStrategies
+	^ self class availableErrorStrategies
+]]]
+
+% ${changes:path=code/011-EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter_class_availableErrorStrategies.ombu}
+[[[methodDefinition=true
+availableErrorStrategies
+	^ EDAErrorHandlingStrategy subclasses
+]]]
+
+We need the new adapter to provide a description.
+
+% ${changes:path=code/012-EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter_class_description.ombu}
+[[[methodDefinition=true
+description
+	^ 'Predefined list'
+]]]
+
+Finally, we can enable it.
+
+% ${changes:path=code/013-EDAPredefinedECommandListenerErrorStrategyInMemoryAdapter_class_accepts_.ombu}
+[[[methodDefinition=true
+accepts: aPortResolver
+	^ true
+]]]
+
+TODO: Clarify ''accepts:'' semantics.
+
+Let's now add this setting back to our tree.
+
+% ${changes:path=code/014-EDASettings_class_edaSettingsOn_for_under_.ombu}
+[[[methodDefinition=true
+edaSettingsOn: aBuilder for: anEDAApplication under: aSymbol
+	| parent parentGroup |
+	parent := anEDAApplication applicationName.
+	parentGroup := aBuilder group: parent.
+	parentGroup
+		label: parent translated;
+		parent: aSymbol;
+		description: parent;
+		noOrdering.
+	self
+		environmentSettingsOn: aBuilder
+		under: parent
+		on: anEDAApplication.
+	self
+		commandListenerSettingsOn: aBuilder
+		under: parent
+		on: anEDAApplication.
+]]]
+
+==EDAApplication== needs to include a reference to its own port storing the settings related to the command listener.
+
+% ${changes:path=code/015-EDAApplication.ombu}
+[[[classDefinition=true
+Object subclass: #EDAApplication
+	uses: EDATLogging
+	instanceVariableNames: 'commandConsumer commandDispatcher eventAnnouncer eventProducer eventStore isConfigured isStarted projectorsByTenant applicationName portSettingsPort environmentSettingsPort commandListenerSettingsPort settingsAnnouncer'
+	classVariableNames: 'ProjectionSynchronizationEnabled'
+	package: 'EDA-Application'
+]]]
+
+The getter accessor uses lazy-loading.
+% ${changes:path=code/016-EDAApplication_commandListenerSettingsPort.ombu}
+[[[methodDefinition=true
+commandListenerSettingsPort
+	^ commandListenerSettingsPort
+		ifNil: [ self
+				commandListenerSettingsPort: EDAStompTopicListenerSettingsInMemoryAdapter new.
+			commandListenerSettingsPort ]
+]]]
+
+The setter accessor is just the default.
+
+% ${changes:path=code/016-EDAApplication_commandListenerSettingsPort_.ombu}
+[[[methodDefinition=true
+commandListenerSettingsPort: anObject
+	commandListenerSettingsPort := anObject
+]]]
+
+We're adding two new classes, meant to store the actual settings used by ==EDAApplication==.
+
+% ${changes:path=code/017-EDAStompSettingsInMemoryAdapter.ombu}
+[[[classDefinition=true
+Object subclass: #EDAStompSettingsInMemoryAdapter
+	uses: EDAPrintOnHelper + EDATInMemoryAdapter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Settings-Adapters-InMemory'
+]]]
+
+==EDAStompSettingsInMemoryAdapter== will contain the shared properties of both listener and publisher.
+
+% ${changes:path=code/018-EDAStompTopicListenerSettingsInMemoryAdapter.ombu}
+[[[classDefinition=true
+EDAStompSettingsInMemoryAdapter subclass: #EDAStompTopicListenerSettingsInMemoryAdapter
+	uses: EDATCommandListenerSettingsPort
+	instanceVariableNames: 'strategy'
+	classVariableNames: ''
+	package: 'EDA-Settings-Adapters-InMemory'
+]]]
+
+The accessors can be generated by Pharo.
+
+% ${changes:path=code/018-EDAStompTopicListenerSettingsInMemoryAdapter_strategy.ombu}
+[[[methodDefinition=true
+strategy
+	^ strategy
+]]]
+
+% ${changes:path=code/020-EDAStompTopicListenerSettingsInMemoryAdapter_strategy_.ombu}
+[[[methodDefinition=true
+strategy: aStrategy
+	strategy := aStrategy
+]]]
+
+==EDASettings== can now export the command listener group.
+
+% ${changes:path=code/021-EDASettings_class_commandListenerSettingsOn_under_on_.ombu}
+[[[methodDefinition=true
+commandListenerSettingsOn: aBuilder under: parent on: app
+	| key |
+	key := parent , 'commandListener'.
+	(aBuilder group: key)
+		label: 'Command Listener' translated;
+		description: 'Command listener';
+		parent: parent.
+	^ self
+		settingOn: aBuilder
+		named: #commandListenerErrorStrategy
+		labelled: 'Command Consuming Error'
+		withDescription: 'Strategy when dealing with command consuming errors'
+		usingConfig: app commandListenerSettingsPort
+		under: key
+		on: app
+]]]
+
+We need to implement the ports for both the group and the specific setting.
+
+% ${changes:path=code/022-EDATCommandListenerErrorStrategySettingsPort.ombu}
+[[[classDefinition=true
+Trait named: #EDATCommandListenerErrorStrategySettingsPort
+	 uses: EDATSettingsPort
+	 package: 'EDA-Settings-Ports'
+]]]

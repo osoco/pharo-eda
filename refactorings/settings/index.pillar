@@ -1,6 +1,10 @@
-${inputFile:path=Chapters/Chapter1/1-introduction.pillar}$
-${inputFile:path=Chapters/Chapter2/2-application-registry.pillar}$
-${inputFile:path=Chapters/Chapter3/3-different-subtrees-for-each-application.pillar}$
-${inputFile:path=Chapters/Chapter4/4-first-ports-and-adapters.pillar}$
-${inputFile:path=Chapters/Chapter5/5-environment-setting.pillar}$
-%${inputFile:path=Chapters/Chapter6/6-port-resolver.pillar}$
+${inputFile:path=Chapters/Chapter01/01-introduction.pillar}$
+${inputFile:path=Chapters/Chapter02/02-application-registry.pillar}$
+${inputFile:path=Chapters/Chapter03/03-different-subtrees-for-each-application.pillar}$
+${inputFile:path=Chapters/Chapter04/04-first-ports-and-adapters.pillar}$
+${inputFile:path=Chapters/Chapter05/05-environment-setting.pillar}$
+${inputFile:path=Chapters/Chapter06/06-port-resolver.pillar}$
+${inputFile:path=Chapters/Chapter07/07-adapters-priority.pillar}$
+${inputFile:path=Chapters/Chapter08/08-settings-announcements.pillar}$
+${inputFile:path=Chapters/Chapter09/09-command-listener.pillar}$
+${inputFile:path=Chapters/Chapter10/10-pivoting.pillar}$
