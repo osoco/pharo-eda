@@ -12,6 +12,9 @@ BaselineOfPharoEDA >> baseline: spec [
 		do: [ spec blessing: #baseline.
 			self includePharoEDAApi: spec.
 			self includePharoEDAAdapters: spec.
+			self includePharoEDAApi: spec.
+			self includePharoEDAPorts: spec.
+			self includePharoEDASettings: spec.
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
 			self declareVoyageIn: spec.
@@ -162,5 +165,29 @@ BaselineOfPharoEDA >> includePharoEDAApi: spec [
 spec
 		baseline: 'PharoEDAApi'
 		with: [ spec repository: 'github://osoco/pharo-eda-api:main' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includePharoEDAPorts: spec [
+spec
+		baseline: 'PharoEDAPorts'
+		with: [ spec repository: 'github://osoco/pharo-eda-ports:main' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includePharoEDASettings: spec [
+spec
+		baseline: 'PharoEDASettings'
+		with: [ spec repository: 'github://osoco/pharo-eda-settings:main' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includePharoEDATools: spec [
+spec
+		baseline: 'PharoEDATools'
+		with: [ spec repository: 'github://osoco/pharo-eda-tools:main' ].
 	^ spec
 ]
