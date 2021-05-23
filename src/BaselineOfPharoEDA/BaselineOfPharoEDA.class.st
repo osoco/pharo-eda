@@ -15,6 +15,7 @@ BaselineOfPharoEDA >> baseline: spec [
 			self includePharoEDAApi: spec.
 			self includePharoEDAPorts: spec.
 			self includePharoEDASettings: spec.
+			self includePharoEDATools: spec.
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
 			self declareVoyageIn: spec.
