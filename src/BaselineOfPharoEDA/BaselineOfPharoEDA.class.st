@@ -95,7 +95,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec
 				requires:
 					#('EDA-Traits' 'EDA-Settings-Ports' 'EDA-Settings-Adapters-InMemory' 'EDA-Settings-Adapters-EnvVars') ];
-		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
+		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits' 'PharoEDATools') ];
 		package: #'EDA-Tools-Tests'
 			with: [ spec requires: #('EDA-Tools' 'EDA-Traits') ];
 		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
@@ -107,7 +107,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
 		package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Events'
-			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits' 'PharoEDAApi') ];
+			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits' 'PharoEDAApi' 'PharoEDAPorts') ];
 		package: #'EDA-Commands'
 			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
 		package: #'EDA-Logging';
@@ -126,7 +126,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 				requires:
 					#('EDA-Settings-Ports' 'EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'EDA-Traits') ];
 		package: #'EDA-Settings'
-			with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application') ];
+			with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application' 'PharoEDASettings') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec
 				requires:
