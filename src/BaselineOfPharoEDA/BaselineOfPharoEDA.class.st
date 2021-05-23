@@ -10,6 +10,8 @@ BaselineOfPharoEDA >> baseline: spec [
 	spec
 		for: #common
 		do: [ spec blessing: #baseline.
+			self includePharoEDAApi: spec.
+			self includePharoEDAAdapters: spec.
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
 			self declareVoyageIn: spec.
@@ -91,7 +93,8 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 				requires:
 					#('EDA-Traits' 'EDA-Settings-Ports' 'EDA-Settings-Adapters-InMemory' 'EDA-Settings-Adapters-EnvVars') ];
 		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Tools-Tests' with: [ spec requires: #('EDA-Tools' 'EDA-Traits') ];
+		package: #'EDA-Tools-Tests'
+			with: [ spec requires: #('EDA-Tools' 'EDA-Traits') ];
 		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
@@ -101,7 +104,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
 		package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Events'
-			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits') ];
+			with: [ spec requires: #('EDA-Messaging' 'EDA-Traits' 'PharoEDAApi') ];
 		package: #'EDA-Commands'
 			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
 		package: #'EDA-Logging';
@@ -112,7 +115,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Projections-Voyage-Repository'
 			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-StompMessaging'
-			with: [ spec requires: #('Stamp' 'EDA-Traits') ];
+			with: [ spec requires: #('Stamp' 'EDA-Traits' 'PharoEDAAdapters') ];
 		package: #'EDA-Voyage-EventStore'
 			with: [ spec requires: #('Voyage' 'EDA-Traits') ];
 		package: #'EDA-Application'
@@ -144,4 +147,20 @@ BaselineOfPharoEDA >> declareVoyageIn: spec [
 				repository: 'github://pharo-nosql/voyage:1.7/mc' ].
 	^ spec
 
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includePharoEDAAdapters: spec [
+	spec
+		baseline: 'PharoEDAAdapters'
+		with: [ spec repository: 'github://osoco/pharo-eda-adapters:main' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includePharoEDAApi: spec [
+spec
+		baseline: 'PharoEDAApi'
+		with: [ spec repository: 'github://osoco/pharo-eda-api:main' ].
+	^ spec
 ]
