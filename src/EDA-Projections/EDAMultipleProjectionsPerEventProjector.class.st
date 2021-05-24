@@ -58,7 +58,8 @@ EDAMultipleProjectionsPerEventProjector >> projectEvent: anEvent usingEmittingBl
 	projectionHandlers := self retrieveProjectionHandlerMethodsForEvent: anEvent.
 	projectionHandlers
 		ifEmpty:
-			[ self logDebugMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') cannot be projected since projector ' , self class greaseString , ' doesn''t support it.' ].
+			[ self logDebugMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') cannot be projected since projector ' , self class greaseString , ' doesn''t support it.'.
+			^ nil ].
 	projectionHandlers size > 1
 		ifTrue: [ self logErrorMessage: 'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') will be projected twice in projections ' , self class projectionClass greaseString , '.' ].
 	projectionHandlers

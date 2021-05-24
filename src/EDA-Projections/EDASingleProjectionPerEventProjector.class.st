@@ -3,7 +3,7 @@ Class {
 	#superclass : #EDAProjector,
 	#traits : 'EDATErrorHelper',
 	#classTraits : 'EDATErrorHelper classTrait',
-	#category : 'EDA-Projections-Projectors'
+	#category : #'EDA-Projections-Projectors'
 }
 
 { #category : #projecting }
@@ -55,7 +55,8 @@ EDASingleProjectionPerEventProjector >> projectEvent: anEvent usingEmittingBlock
 		ifEmpty: [ self
 				logDebugMessage:
 					'Event ' , anEvent class greaseString , '(' , anEvent id greaseString , ') cannot be projected since projector ' , self class greaseString
-						, ' doesn''t support it.' ].
+						, ' doesn''t support it.'.
+				^ nil ].
 	projectionHandlers size > 1
 		ifTrue: [ self
 				logErrorMessage:
