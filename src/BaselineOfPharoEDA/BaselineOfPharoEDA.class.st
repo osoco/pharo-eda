@@ -18,9 +18,6 @@ BaselineOfPharoEDA >> baseline: spec [
 			self includePharoEDATools: spec.
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
-			self declareVoyageIn: spec.
-			"self declareMongotalkIn: spec."
-			self includeStamp: spec.
 			self declareDeployUtilsIn: spec.
 			self declareObjectDiffIn: spec.
 			self declarePackagesIn: spec.
@@ -86,11 +83,12 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Domain' with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
-		package: #'EDA-EventStore' with: [ spec requires: #('PharoEDACommon') ];
-		package: #'EDA-Messaging' with: [ spec requires: #('PharoEDACommon') ];
+		package: #'EDA-EventStore'
+			with: [ spec requires: #('PharoEDACommon') ];
+		package: #'EDA-Messaging'
+			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Errors'
 			with: [ spec requires: #('PharoEDACommon' 'EDA-Messaging') ];
-		package: #'EDA-SMTP' with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Events'
 			with: [ spec
 				requires: #('EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi' 'PharoEDAPorts') ];
@@ -101,19 +99,13 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Projections-Tests'
 			with: [ spec requires: #('PharoEDACommon') ];
-		package: #'EDA-Projections-Voyage-Repository'
-			with: [ spec requires: #('PharoEDACommon') ];
-		package: #'EDA-StompMessaging'
-			with: [ spec requires: #('Stamp' 'PharoEDACommon' 'PharoEDAAdapters') ];
-		package: #'EDA-Voyage-EventStore'
-			with: [ spec requires: #('Voyage' 'PharoEDACommon') ];
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
-					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'PharoEDACommon' 'PharoEDASettings') ];
+					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Projections' 'PharoEDACommon' 'PharoEDASettings') ];
 		package: #'EDA-Commands-Tests'
-			with: [ spec
-				requires: #('BabyMock2' 'PharoEDACommon' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
+			with:
+				[ spec requires: #('BabyMock2' 'PharoEDACommon' 'EDA-Domain-Tests') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ]
 ]
