@@ -49,7 +49,7 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Traits' #'EDA-Settings-Ports' #'EDA-Settings-Adapters-InMemory' #'EDA-Settings-Adapters-EnvVars' #'EDA-Settings-Adapters-ByPriority' #'EDA-Application' #'EDA-Errors' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
+			#(#'EDA-Traits' #'EDA-Application' #'EDA-Errors' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Logging');
 		group: 'tests'
 			with:
 			#(#'EDA-Traits' #'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
@@ -86,16 +86,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Traits';
 		package: #'EDA-Traits-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Settings-Ports'
-			with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Settings-Adapters-InMemory'
-			with: [ spec requires: #('EDA-Traits' 'EDA-Settings-Ports') ];
-		package: #'EDA-Settings-Adapters-EnvVars'
-			with: [ spec requires: #('EDA-Traits' 'EDA-Settings-Ports') ];
-		package: #'EDA-Settings-Adapters-ByPriority'
-			with: [ spec
-				requires:
-					#('EDA-Traits' 'EDA-Settings-Ports' 'EDA-Settings-Adapters-InMemory' 'EDA-Settings-Adapters-EnvVars') ];
 		package: #'EDA-Tools'
 			with: [ spec requires: #('EDA-Traits' 'PharoEDATools') ];
 		package: #'EDA-Tools-Tests'
@@ -127,11 +117,11 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
-					#('EDA-Settings-Ports' 'EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'EDA-Traits' 'PharoEDASettings') ];
+					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'EDA-Traits' 'PharoEDASettings') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec
 				requires:
-					#('BabyMock2' 'EDA-Settings' 'EDA-Traits' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
+					#('BabyMock2' 'EDA-Traits' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ]
 ]
