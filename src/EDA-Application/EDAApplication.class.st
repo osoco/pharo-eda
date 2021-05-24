@@ -491,7 +491,7 @@ EDAApplication >> retrieveAllTenants [
 
 { #category : #accessing }
 EDAApplication >> settingsAnnouncer [
-	settingsAnnouncer ifNil: [ self settingsAnnouncer: (EDASettingsAnnouncer forApp: self) ].
+	settingsAnnouncer ifNil: [ self settingsAnnouncer: (EDASSettingsAnnouncer forApp: self) ].
 	^ settingsAnnouncer
 ]
 

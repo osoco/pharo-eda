@@ -46,7 +46,7 @@ EDADUEnvironment class >> currentEnvironment: aString [
 	CurrentEnvironment := aString.
 	(previousEnvironment isNil or: [ previousEnvironment = aString ])
 		ifTrue: [ ^ self ].
-	EDASettings resetSettings.
+	EDASSettings resetSettings.
 	self reloadSettingBrowser
 
 
