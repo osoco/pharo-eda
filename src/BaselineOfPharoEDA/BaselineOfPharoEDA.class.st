@@ -84,7 +84,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
 		package: #'EDA-EventStore'
-			with: [ spec requires: #('PharoEDACommon') ];
+			with: [ spec requires: #('PharoEDACommon' 'PharoEDAAdapters' "temporary") ];
 		package: #'EDA-Messaging'
 			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Errors'
