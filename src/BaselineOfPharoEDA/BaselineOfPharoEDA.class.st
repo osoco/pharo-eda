@@ -46,7 +46,7 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Application' #'EDA-Errors' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Logging');
+			#(#'EDA-Application' #'EDA-Errors' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-Projections' #'EDA-Logging');
 		group: 'tests'
 			with:
 			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests');
@@ -108,16 +108,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 				[ spec requires: #('BabyMock2' 'PharoEDACommon' 'EDA-Domain-Tests') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ]
-]
-
-{ #category : #dependencies }
-BaselineOfPharoEDA >> declareVoyageIn: spec [
-	spec
-		baseline: 'Voyage'
-		with: [ spec
-				repository: 'github://pharo-nosql/voyage:1.7/mc' ].
-	^ spec
-
 ]
 
 { #category : #dependencies }
