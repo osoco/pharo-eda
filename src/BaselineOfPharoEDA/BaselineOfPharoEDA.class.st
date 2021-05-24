@@ -20,7 +20,7 @@ BaselineOfPharoEDA >> baseline: spec [
 			self declareBabyMock2In: spec.
 			self declareVoyageIn: spec.
 			"self declareMongotalkIn: spec."
-			self declareStampIn: spec.
+			self includeStamp: spec.
 			self declareDeployUtilsIn: spec.
 			self declareObjectDiffIn: spec.
 			self declarePackagesIn: spec.
@@ -83,53 +83,39 @@ BaselineOfPharoEDA >> declareObjectDiffIn: spec [
 { #category : #meta }
 BaselineOfPharoEDA >> declarePackagesIn: spec [
 	spec
-		package: #'EDA-Traits' with: [ spec requires: #('PharoEDACommon') ];
-		package: #'EDA-Traits-Tests'
-			with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Tools'
-			with: [ spec requires: #('EDA-Traits' 'PharoEDATools') ];
-		package: #'EDA-Tools-Tests'
-			with: [ spec requires: #('EDA-Tools' 'EDA-Traits') ];
-		package: #'EDA-Domain' with: [ spec requires: #('EDA-Traits') ];
+		package: #'EDA-Domain' with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
-		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits') ];
-		package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
+		package: #'EDA-EventStore' with: [ spec requires: #('PharoEDACommon') ];
+		package: #'EDA-Messaging' with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Errors'
-			with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
-		package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
+			with: [ spec requires: #('PharoEDACommon' 'EDA-Messaging') ];
+		package: #'EDA-SMTP' with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Events'
 			with: [ spec
-				requires: #('EDA-Messaging' 'EDA-Traits' 'PharoEDAApi' 'PharoEDAPorts') ];
+				requires: #('EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi' 'PharoEDAPorts') ];
 		package: #'EDA-Commands'
-			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
+			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'PharoEDACommon') ];
 		package: #'EDA-Logging';
 		package: #'EDA-Projections'
-			with: [ spec requires: #('EDA-Traits') ];
+			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Projections-Tests'
-			with: [ spec requires: #('EDA-Traits') ];
+			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Projections-Voyage-Repository'
-			with: [ spec requires: #('EDA-Traits') ];
+			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-StompMessaging'
-			with: [ spec requires: #('Stamp' 'EDA-Traits' 'PharoEDAAdapters') ];
+			with: [ spec requires: #('Stamp' 'PharoEDACommon' 'PharoEDAAdapters') ];
 		package: #'EDA-Voyage-EventStore'
-			with: [ spec requires: #('Voyage' 'EDA-Traits') ];
+			with: [ spec requires: #('Voyage' 'PharoEDACommon') ];
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
-					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'EDA-Traits' 'PharoEDASettings') ];
+					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'PharoEDACommon' 'PharoEDASettings') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec
-				requires: #('BabyMock2' 'EDA-Traits' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
+				requires: #('BabyMock2' 'PharoEDACommon' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ]
-]
-
-{ #category : #dependencies }
-BaselineOfPharoEDA >> declareStampIn: spec [
-	spec baseline: 'Stamp' with: [ spec repository: 'github://svenvc/stamp/repository' ].
-	^ spec
-
 ]
 
 { #category : #dependencies }
@@ -188,4 +174,11 @@ spec
 		baseline: 'PharoEDATools'
 		with: [ spec repository: 'github://osoco/pharo-eda-tools:main' ].
 	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includeStamp: spec [
+	spec baseline: 'Stamp' with: [ spec repository: 'github://svenvc/stamp/repository' ].
+	^ spec
+
 ]
