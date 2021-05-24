@@ -12,7 +12,7 @@ BaselineOfPharoEDA >> baseline: spec [
 		do: [ spec blessing: #baseline.
 			self includePharoEDAApi: spec.
 			self includePharoEDAAdapters: spec.
-			self includePharoEDAApi: spec.
+			self includePharoEDACommon: spec.
 			self includePharoEDAPorts: spec.
 			self includePharoEDASettings: spec.
 			self includePharoEDATools: spec.
@@ -83,7 +83,7 @@ BaselineOfPharoEDA >> declareObjectDiffIn: spec [
 { #category : #meta }
 BaselineOfPharoEDA >> declarePackagesIn: spec [
 	spec
-		package: #'EDA-Traits';
+		package: #'EDA-Traits' with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Traits-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools'
@@ -120,8 +120,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging' 'EDA-Traits' 'PharoEDASettings') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec
-				requires:
-					#('BabyMock2' 'EDA-Traits' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
+				requires: #('BabyMock2' 'EDA-Traits' 'EDA-StompMessaging' 'EDA-Domain-Tests') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ]
 ]
@@ -156,6 +155,14 @@ BaselineOfPharoEDA >> includePharoEDAApi: spec [
 spec
 		baseline: 'PharoEDAApi'
 		with: [ spec repository: 'github://osoco/pharo-eda-api:main' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includePharoEDACommon: spec [
+spec
+		baseline: 'PharoEDACommon'
+		with: [ spec repository: 'github://osoco/pharo-eda-common:main' ].
 	^ spec
 ]
 
