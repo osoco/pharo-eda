@@ -1,9 +1,9 @@
 Class {
 	#name : #EDATopicPublisher,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
-	#category : 'EDA-Messaging-Topic'
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
+	#category : #'EDA-Messaging-Topic'
 }
 
 { #category : #lifecycle }

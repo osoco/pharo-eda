@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommand,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATCollectionHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATCollectionHelper classTrait',
+	#traits : 'EDACPrintOnHelper + EDACTCollectionHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait + EDACTCollectionHelper classTrait',
 	#instVars : [
 		'tenant',
 		'applicationKey',

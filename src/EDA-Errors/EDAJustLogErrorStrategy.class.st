@@ -20,14 +20,64 @@ Public API and Key Messages:
 Class {
 	#name : #EDAJustLogErrorStrategy,
 	#superclass : #EDAErrorHandlingStrategy,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDACTLogging',
+	#classTraits : 'EDACTLogging classTrait',
 	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
 EDAJustLogErrorStrategy class >> description [
 	^ 'Just log error'
+]
+
+{ #category : #logging }
+EDAJustLogErrorStrategy class >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAJustLogErrorStrategy class >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAJustLogErrorStrategy class >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAJustLogErrorStrategy class >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAJustLogErrorStrategy class >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
 ]
 
 { #category : #accessing }

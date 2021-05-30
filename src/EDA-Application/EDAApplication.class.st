@@ -24,8 +24,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #EDAApplication,
 	#superclass : #Object,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDACTLogging',
+	#classTraits : 'EDACTLogging classTrait',
 	#instVars : [
 		'commandConsumer',
 		'commandDispatcher',
@@ -76,6 +76,56 @@ EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore event
 { #category : #accessing }
 EDAApplication class >> defaultEnvironment [
 	^ EDADUEnvironment new
+]
+
+{ #category : #logging }
+EDAApplication class >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAApplication class >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAApplication class >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAApplication class >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAApplication class >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
 ]
 
 { #category : #'instance creation' }
@@ -139,7 +189,7 @@ EDAApplication >> commandListenerSettingsPort [
 
 { #category : #'setup - events' }
 EDAApplication >> configureEventStoreAuthentication [
-		EDAMongoEventStore authenticationMechanism beDefault
+		EDAAMongoEventStore authenticationMechanism beDefault
 ]
 
 { #category : #'setup - projections' }
@@ -510,7 +560,7 @@ EDAApplication >> setup [
 
 { #category : #'setup - commands' }
 EDAApplication >> setupCommandConsumer [
-	^ self setupCommandConsumerWithCommandListener: EDACommandStompTopicListener new
+	^ self setupCommandConsumerWithCommandListener: EDAACommandStompTopicListener new
 ]
 
 { #category : #'setup - commands' }
@@ -540,7 +590,7 @@ EDAApplication >> setupEventAnnouncer [
 { #category : #'setup - events' }
 EDAApplication >> setupEventProducer [
 	| eventPublisher eventSerializer |
-	eventPublisher := EDAEventStompTopicPublisher new.
+	eventPublisher := EDAAEventStompTopicPublisher new.
 	eventSerializer := EDAJsonEventSerializer new.
 	self eventProducer: (EDAEventProducer publisher: eventPublisher serializer: eventSerializer announcer: self eventAnnouncer)
 ]
@@ -548,7 +598,7 @@ EDAApplication >> setupEventProducer [
 { #category : #'setup - events' }
 EDAApplication >> setupEventStore [
 	self flag: #TODO.	"Find out how to customize the authentication of the specific Mongo instance"
-	self eventStore: EDAMongoEventStore new.
+	self eventStore: EDAAMongoEventStore new.
 	self configureEventStoreAuthentication
 ]
 
@@ -567,7 +617,7 @@ EDAApplication >> setupLogging [
 { #category : #'setup - projections' }
 EDAApplication >> setupProjectionRepositoryForProjection: aProjectionClass [
 	| repository |
-	repository := EDAProjectionMongoRepository new.
+	repository := EDAAProjectionMongoRepository new.
 	self configureProjectionBackendAuthentication: repository.
 	aProjectionClass repository: repository
 ]

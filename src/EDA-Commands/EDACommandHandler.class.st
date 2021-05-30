@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandHandler,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATErrorHelper + EDATRepository',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATErrorHelper classTrait + EDATRepository classTrait',
+	#traits : 'EDACPrintOnHelper + EDACTErrorHelper + EDACTRepository',
+	#classTraits : 'EDACPrintOnHelper classTrait + EDACTErrorHelper classTrait + EDACTRepository classTrait',
 	#instVars : [
 		'eventStore',
 		'eventBus',
@@ -109,6 +109,56 @@ EDACommandHandler class >> buildAggregateRootOfTenant: aTenant ofAggregateRootCl
 								greaseString;
 						nextPutAll: ' second(s).' ]).
 	^ aggregate
+]
+
+{ #category : #logging }
+EDACommandHandler class >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandler class >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandler class >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandler class >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandler class >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
 ]
 
 { #category : #handling }

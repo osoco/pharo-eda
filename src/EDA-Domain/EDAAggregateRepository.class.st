@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAAggregateRepository,
 	#superclass : #Object,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDACTLogging',
+	#classTraits : 'EDACTLogging classTrait',
 	#instVars : [
 		'eventStore'
 	],
@@ -21,6 +21,56 @@ EDAAggregateRepository class >> eventStore [
 { #category : #accessing }
 EDAAggregateRepository class >> eventStore: anEventStore [
 	eventStore := anEventStore
+]
+
+{ #category : #logging }
+EDAAggregateRepository class >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRepository class >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRepository class >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRepository class >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRepository class >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
 ]
 
 { #category : #setup }

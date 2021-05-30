@@ -1,13 +1,63 @@
 Class {
 	#name : #EDADefaultCommandBuilder,
 	#superclass : #EDABaseCommandBuilder,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDACTLogging',
+	#classTraits : 'EDACTLogging classTrait',
 	#instVars : [
 		'commandDictionary'
 	],
 	#category : #'EDA-Commands-Builders'
 }
+
+{ #category : #logging }
+EDADefaultCommandBuilder class >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDADefaultCommandBuilder class >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDADefaultCommandBuilder class >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDADefaultCommandBuilder class >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDADefaultCommandBuilder class >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
 
 { #category : #building }
 EDADefaultCommandBuilder >> buildCommandFromCommandName: commandName [

@@ -29,8 +29,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #EDAEventSourcingEvent,
 	#superclass : #Announcement,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
 	#instVars : [
 		'id',
 		'timestamp',
@@ -155,7 +155,7 @@ EDAEventSourcingEvent >> initialize [
 
 { #category : #accessing }
 EDAEventSourcingEvent >> routingKey [
-	^ EDASourceCodeHelperStub new
+	^ EDACSourceCodeHelperStub new
 		camelCaseToDotSeparated: (EDAMessageSerializer nameWithoutPrefixForMessageClass: self class)
 ]
 

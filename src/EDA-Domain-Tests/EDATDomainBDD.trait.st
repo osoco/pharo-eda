@@ -1,9 +1,59 @@
 Trait {
 	#name : #EDATDomainBDD,
-	#traits : 'EDATLogging + EDATRegexHelper',
-	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
+	#traits : 'EDACTLogging + EDACTRegexHelper',
+	#classTraits : 'EDACTLogging classTrait + EDACTRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
+
+{ #category : #logging }
+EDATDomainBDD classSide >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDATDomainBDD classSide >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDATDomainBDD classSide >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDATDomainBDD classSide >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDATDomainBDD classSide >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
 
 { #category : #BDD }
 EDATDomainBDD >> applyEvent: anEvent onAggregateRoot: anAggregateRoot [

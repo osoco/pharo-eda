@@ -1,13 +1,13 @@
 Class {
 	#name : #EDAPragmaCommandHandlerMethodsScanner,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
 	#instVars : [
 		'pragma',
 		'fromClass'
 	],
-	#category : 'EDA-Commands-Handlers'
+	#category : #'EDA-Commands-Handlers'
 }
 
 { #category : #'instance creation' }

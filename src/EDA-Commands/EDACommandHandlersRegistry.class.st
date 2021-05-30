@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandHandlersRegistry,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATLogging',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATLogging classTrait',
+	#traits : 'EDACPrintOnHelper + EDACTLogging',
+	#classTraits : 'EDACPrintOnHelper classTrait + EDACTLogging classTrait',
 	#instVars : [
 		'handlers'
 	],
@@ -12,6 +12,56 @@ Class {
 { #category : #'instance creation' }
 EDACommandHandlersRegistry class >> emptyRegistry [
 	^ self new handlers: Dictionary new.
+]
+
+{ #category : #logging }
+EDACommandHandlersRegistry class >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandlersRegistry class >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandlersRegistry class >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandlersRegistry class >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDACommandHandlersRegistry class >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
 ]
 
 { #category : #'instance creation' }

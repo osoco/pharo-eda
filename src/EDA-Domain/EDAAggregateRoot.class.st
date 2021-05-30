@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAAggregateRoot,
 	#superclass : #Object,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDACTLogging',
+	#classTraits : 'EDACTLogging classTrait',
 	#instVars : [
 		'id',
 		'version',
@@ -54,6 +54,56 @@ EDAAggregateRoot class >> checkTenantOfCommandIsValid: aCommand [
 	(self checkTenantIsValid: aCommand tenant)
 		ifFalse:
 			[ self logErrorMessage: 'tenant is missing' andThrow: InvalidTenant ]
+]
+
+{ #category : #logging }
+EDAAggregateRoot class >> logDebugMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings debugEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'DEBUG'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRoot class >> logErrorMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings errorEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'ERROR'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRoot class >> logInfoMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings infoEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'INFO '
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRoot class >> logTraceMessage: aMessage beautify: aBoolean [
+	EDACLoggingSettings traceEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'TRACE'
+				inStream: self defaultStream
+				beautify: aBoolean ]
+]
+
+{ #category : #logging }
+EDAAggregateRoot class >> logWarningMessage: aMessage beautify: aBoolean [
+	^ EDACLoggingSettings warningEnabled
+		ifTrue: [ self
+				logMessage: aMessage
+				inCategory: 'WARN '
+				inStream: self defaultStream
+				beautify: aBoolean ]
 ]
 
 { #category : #helpers }

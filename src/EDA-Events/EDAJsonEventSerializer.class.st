@@ -1,13 +1,13 @@
 Class {
 	#name : #EDAJsonEventSerializer,
 	#superclass : #EDAMessageSerializer,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
 	#instVars : [
 		'writer',
 		'errorWriter'
 	],
-	#category : 'EDA-Events-Serializers'
+	#category : #'EDA-Events-Serializers'
 }
 
 { #category : #converting }

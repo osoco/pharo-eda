@@ -21,7 +21,7 @@ Class {
 	#classInstVars : [
 		'topicPublisher'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
@@ -51,5 +51,5 @@ EDAPublishMessageErrorStrategy >> handleError: anError withExtraContextInformati
 		withContext: thisContext clone
 		andExtraContextInformation: aDictionary.
 	message := serializer serialize: anError greaseString.
-	EDAEventStompTopicPublisher new publishError: message
+	EDAAEventStompTopicPublisher new publishError: message
 ]

@@ -1,14 +1,14 @@
 Class {
 	#name : #EDAEventProducer,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
 	#instVars : [
 		'serializer',
 		'publisher',
 		'announcer'
 	],
-	#category : 'EDA-Messaging-Event'
+	#category : #'EDA-Messaging-Event'
 }
 
 { #category : #'instance creation' }
