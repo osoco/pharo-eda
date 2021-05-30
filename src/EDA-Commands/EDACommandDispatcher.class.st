@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandDispatcher,
 	#superclass : #Object,
-	#traits : 'EDACPrintOnHelper + EDACTLogging',
-	#classTraits : 'EDACPrintOnHelper classTrait + EDACTLogging classTrait',
+	#traits : 'EDACTPrintOnHelper + EDACTLogging',
+	#classTraits : 'EDACTPrintOnHelper classTrait + EDACTLogging classTrait',
 	#instVars : [
 		'handlersRegistry',
 		'projectorClass',

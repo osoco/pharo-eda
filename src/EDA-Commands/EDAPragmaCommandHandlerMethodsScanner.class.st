@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAPragmaCommandHandlerMethodsScanner,
 	#superclass : #Object,
-	#traits : 'EDACPrintOnHelper',
-	#classTraits : 'EDACPrintOnHelper classTrait',
+	#traits : 'EDACTPrintOnHelper',
+	#classTraits : 'EDACTPrintOnHelper classTrait',
 	#instVars : [
 		'pragma',
 		'fromClass'
