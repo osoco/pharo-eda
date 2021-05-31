@@ -5,7 +5,7 @@ Class {
 		'context',
 		'extraContextInformation'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #'instance creation' }

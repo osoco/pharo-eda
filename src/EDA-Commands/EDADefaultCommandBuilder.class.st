@@ -34,32 +34,25 @@ EDADefaultCommandBuilder >> buildEmptyFromJsonDict: jsonDict [
 { #category : #building }
 EDADefaultCommandBuilder >> buildWith: jsonDict [
 	| command meta body |
-	meta := jsonDict at: #meta ifAbsent: [ nil ].
-	body := jsonDict at: #body ifAbsent: [ nil ].
-	(meta isNil or: [ body isNil ])
-		ifTrue: [ self
-				logErrorMessage: 'Invalid JSON (meta or body missing)'
-				andThrow: EDAInvalidCommandMessage ]
-		ifFalse: [ [ command := (self retrieveCommandClassFromJsonDict: jsonDict) new.
-			command
-				commandId: (meta at: #id);
-				version: (meta at: #version);
-				originalTimestamp: (DateAndTime fromString: (meta at: #timestamp)).
-			(command isKindOf: EDAUserCommand)
-				ifTrue: [ command authorUsername: (jsonDict at: #authorUsername) ].
-				self copyFromDict: body intoCommand: command.
-		.
-			^ command ]
-				on: Exception
-				do: [ :ex |
-					self
-						logErrorMessage:
-							((WriteStream on: String new)
-								nextPutAll: 'Command rejected: ';
-								nextPutAll: ex greaseString;
-								close;
-								contents)
-						andThrow: EDAInvalidCommandMessage ] ]
+	meta := jsonDict at: #meta ifAbsent: [ self logErrorMessage: 'Invalid JSON meta missing)' andThrow: EDAInvalidCommandMessage ].
+	body := jsonDict at: #body ifAbsent: [ self logErrorMessage: 'Invalid JSON body missing)' andThrow: EDAInvalidCommandMessage ].
+	[
+		command := (self retrieveCommandClassFromJsonDict: jsonDict) new.
+		self copyFromMetaDict: meta intoCommand: command.
+		self copyFromBodyDict: body intoCommand: command.
+		(command isKindOf: EDAUserCommand)
+			ifTrue: [ command authorUsername: (jsonDict at: #authorUsername) ].
+		^ command ]
+	on: Exception
+	do: [ :ex |
+		self
+			logErrorMessage:
+				((WriteStream on: String new)
+					nextPutAll: 'Command rejected: ';
+					nextPutAll: ex greaseString;
+					close;
+					contents)
+			andThrow: EDAInvalidCommandMessage ]
 ]
 
 { #category : #accessing }
@@ -73,26 +66,37 @@ EDADefaultCommandBuilder >> commandDictionary: anObject [
 ]
 
 { #category : #building }
+EDADefaultCommandBuilder >> copyFromBodyDict: aBodyDict intoCommand: aCommand [
+	aBodyDict changeKey: #id to: #aggregateRootId.
+	aBodyDict changeKey: #version to: #aggregateRootVersion.
+	self copyFromDict: aBodyDict intoCommand: aCommand.
+]
+
+{ #category : #building }
 EDADefaultCommandBuilder >> copyFromDict: aDictionary intoCommand: aCommand [
 	aDictionary
 		associationsDo: [ :assoc |
 			| key |
 			key := assoc key.
-			key = 'version'
-				ifFalse: [ key = 'id'
-						ifTrue: [ key := 'aggregateRootId' ].
-					[ aCommand
-						instVarAt:
-							(aCommand class
-								instVarIndexFor: key
-								ifAbsent: [ self logWarningMessage: 'No such inst var: ' , key ])
-						put: assoc value ]
-						on: Exception
-						do: [ :ex |
-							self
-								logWarningMessage: key greaseString , ' does not exist in ' , aCommand class greaseString ] ] ].
-	aCommand
-		aggregateRootVersion: (aDictionary at: #aggregateRootVersion ifAbsent: [ 0 ])
+			[	aCommand
+					instVarNamed: key
+					put: assoc value
+					ifAbsent: [ self logWarningMessage: 'No such inst var: ' , key ] ]
+			on: Exception
+			do: [ :ex |
+				self
+					logWarningMessage: key greaseString , ' does not exist in ' , aCommand class greaseString ] ]
+]
+
+{ #category : #building }
+EDADefaultCommandBuilder >> copyFromMetaDict: aMetaDict intoCommand: aCommand [
+	aMetaDict changeKey: #id to: #commandId.
+	aMetaDict changeKey: #timestamp to: #originalTimestamp.
+	aMetaDict
+		at: #originalTimestamp 
+		ifPresent: [ :time |
+			aMetaDict at: #originalTimestamp put: (DateAndTime fromString: time) ].
+	self copyFromDict: aMetaDict intoCommand: aCommand.
 ]
 
 { #category : #initialization }
