@@ -57,8 +57,7 @@ EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrat
 				withBasename: basename.
 			self writeCommand: aCommand withBasename: basename ].
 	errorHandler context: context.
-	dictionary := Dictionary new.
-	dictionary at: #command put: aCommand.
+	dictionary := anException extraContextInformationForCommand: aCommand.
 	result := errorHandler
 		handleError: anException
 		withExtraContextInformation: dictionary.
