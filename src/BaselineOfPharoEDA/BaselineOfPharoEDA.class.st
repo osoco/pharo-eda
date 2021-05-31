@@ -46,7 +46,7 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Application' #'EDA-Errors' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-Logging');
+			#(#'EDA-Application' #'EDA-Errors' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-Messaging');
 		group: 'tests'
 			with:
 			#(#'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests');
