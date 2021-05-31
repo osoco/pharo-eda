@@ -31,13 +31,32 @@ Class {
 }
 
 { #category : #accessing }
+EDAStompTopicPublisher class >> defaultErrorRoutingKey [
+	^ '#'
+]
+
+{ #category : #accessing }
+EDAStompTopicPublisher class >> defaultRoutingKey [
+	^ '#'
+]
+
+{ #category : #accessing }
 EDAStompTopicPublisher class >> destination [
 	^ self destinationWithRoutingKey: self routingKey
 ]
 
 { #category : #accessing }
+EDAStompTopicPublisher class >> destinationForError: isError andRoutingKey: aRoutingKey [
+	^ isError
+		ifTrue: [ 
+			self errorDestinationWithRoutingKey: aRoutingKey ]
+		ifFalse: [ 
+			self destinationWithRoutingKey: aRoutingKey  ]
+]
+
+{ #category : #accessing }
 EDAStompTopicPublisher class >> destinationWithRoutingKey: key [
-	^ '/exchange/', self exchange, '/', key
+	^ '/exchange/', self exchange, '/', (key ifNil: [ self routingKey ])
 ]
 
 { #category : #initialization }
@@ -64,7 +83,12 @@ EDAStompTopicPublisher class >> durable: val [
 
 { #category : #accessing }
 EDAStompTopicPublisher class >> errorDestination [
-	^ '/exchange/' , self errorExchange , '/#'
+	^ self errorDestinationWithRoutingKey: self errorRoutingKey
+]
+
+{ #category : #accessing }
+EDAStompTopicPublisher class >> errorDestinationWithRoutingKey: key [
+	^ '/exchange/' , self errorExchange , '/' , (key ifNil: [ self errorRoutingKey ])
 ]
 
 { #category : #accessing }
@@ -79,7 +103,7 @@ EDAStompTopicPublisher class >> errorExchange: aString [
 
 { #category : #accessing }
 EDAStompTopicPublisher class >> errorRoutingKey [
-	^ errorRoutingKey
+	^ errorRoutingKey ifNil: [ self defaultErrorRoutingKey ]
 ]
 
 { #category : #accessing }
@@ -129,7 +153,7 @@ EDAStompTopicPublisher class >> port: val [
 
 { #category : #accessing }
 EDAStompTopicPublisher class >> routingKey [
-	^ routingKey
+	^ routingKey ifNil: [ self defaultRoutingKey ] 
 ]
 
 { #category : #accessing }
@@ -243,6 +267,39 @@ EDAStompTopicPublisher >> publishError: isError message: aMessage usingClient: a
 		usingClient: aClient
 		on: destination ]
 		ensure: [ aClient close ]
+]
+
+{ #category : #API }
+EDAStompTopicPublisher >> publishError: isError message: aMessage  withRoutingKey: aRoutingKey usingClient: aClient withConfig: config [
+	| sendFrame destination |
+	destination := config destinationForError: isError andRoutingKey: aRoutingKey.
+	self
+		logPublishingMessage: aMessage
+		usingClient: aClient
+		on: destination.
+	aClient isConnected
+		ifFalse: [ aClient open ].
+	[
+	sendFrame := StampSendFrame new.
+	sendFrame destination: destination.
+	sendFrame text: aMessage.
+	sendFrame persistent: config durable.
+	aClient writeWithReceipt: sendFrame.
+	self
+		logMessagePublished: aMessage
+		usingClient: aClient
+		on: destination ]
+		ensure: [ aClient close ]
+]
+
+{ #category : #API }
+EDAStompTopicPublisher >> publishError: aMessage withRoutingKey: aRoutingKey [
+	^ self
+		publishError: true
+		message: aMessage
+		withRoutingKey: aRoutingKey
+		usingClient: self client
+		withConfig: self class
 ]
 
 { #category : #API }
