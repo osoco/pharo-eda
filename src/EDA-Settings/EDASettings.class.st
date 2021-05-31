@@ -20,6 +20,8 @@ Class {
 
 { #category : #settings }
 EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
+	| stompConfig |
+	stompConfig := self retrieveSettingAsDict: 'commandListener'.
 	(aBuilder group: #commandListener)
 		label: 'Command Listener' translated;
 		description: 'Command listener';
@@ -36,10 +38,10 @@ EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
 		description: 'Strategy when dealing with command consuming errors';
 		order: 1;
 		domainValues:
-			(EDAErrorHandlingStrategy subclasses
+			(EDAErrorHandlingStrategy allSubclasses
 				collect:
 					[ :strategy | strategy description translated -> strategy greaseString ]);
-		default: EDAPublishMessageErrorStrategy greaseString.
+		default: (stompConfig at: 'errorStrategy' ifAbsent: [ EDAPublishMessageErrorStrategy greaseString ]).
 	^ self
 ]
 
