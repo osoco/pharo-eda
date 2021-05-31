@@ -83,8 +83,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Domain' with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
-		package: #'EDA-EventStore'
-			with: [ spec requires: #('PharoEDACommon' 'PharoEDAAdapters' "temporary") ];
 		package: #'EDA-Messaging'
 			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Errors'
@@ -93,8 +91,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec
 				requires: #('EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi' 'PharoEDAPorts') ];
 		package: #'EDA-Commands'
-			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'PharoEDACommon') ];
-		package: #'EDA-Logging';
+			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi') ];
 		package: #'EDA-Projections'
 			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Projections-Tests'
@@ -104,8 +101,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 				requires:
 					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Projections' 'PharoEDACommon' 'PharoEDASettings') ];
 		package: #'EDA-Commands-Tests'
-			with:
-				[ spec requires: #('BabyMock2' 'PharoEDACommon' 'EDA-Domain-Tests') ];
+			with: [ spec requires: #('BabyMock2' 'PharoEDACommon' 'EDA-Domain-Tests') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ]
 ]
