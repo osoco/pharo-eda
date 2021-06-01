@@ -92,8 +92,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 				requires: #('EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi' 'PharoEDAPorts') ];
 		package: #'EDA-Commands'
 			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi') ];
-		package: #'EDA-Projections'
-			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Projections-Tests'
 			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Application'
