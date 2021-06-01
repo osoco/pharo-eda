@@ -1,5 +1,5 @@
 Class {
-	#name : #InvalidTenant,
+	#name : #EDAInvalidTenant,
 	#superclass : #Error,
 	#category : 'EDA-Domain-Exceptions'
 }

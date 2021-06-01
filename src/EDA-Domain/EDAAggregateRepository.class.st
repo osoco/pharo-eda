@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAAggregateRepository,
 	#superclass : #Object,
-	#traits : 'EDACTLogging',
-	#classTraits : 'EDACTLogging classTrait',
+	#traits : 'EDACLogging',
+	#classTraits : 'EDACLogging classTrait',
 	#instVars : [
 		'eventStore'
 	],

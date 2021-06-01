@@ -1,5 +1,5 @@
 Class {
-	#name : #TooManyDeleteEventClassesForAggregate,
+	#name : #EDATooManyDeleteEventClassesForAggregate,
 	#superclass : #EDADomainException,
 	#category : 'EDA-Domain-Exceptions'
 }
