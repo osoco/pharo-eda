@@ -37,6 +37,11 @@ EDAErrorHandlingStrategy class >> description [
 ]
 
 { #category : #accessing }
+EDAErrorHandlingStrategy class >> priority [ 
+	^ 100
+]
+
+{ #category : #accessing }
 EDAErrorHandlingStrategy class >> shouldPersistFuel [
 	^ true
 ]

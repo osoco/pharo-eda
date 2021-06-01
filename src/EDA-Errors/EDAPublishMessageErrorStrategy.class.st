@@ -21,12 +21,17 @@ Class {
 	#classInstVars : [
 		'topicPublisher'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
 EDAPublishMessageErrorStrategy class >> description [
 	^ 'Publish an error message'
+]
+
+{ #category : #accessing }
+EDAPublishMessageErrorStrategy class >> priority [ 
+	^ 10
 ]
 
 { #category : #accessing }
