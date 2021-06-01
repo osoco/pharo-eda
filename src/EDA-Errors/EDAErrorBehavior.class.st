@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAErrorBehavior,
 	#superclass : #Object,
-	#traits : 'EDACTPrintOnHelper',
-	#classTraits : 'EDACTPrintOnHelper classTrait',
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
 	#classInstVars : [
 		'strategy'
 	],

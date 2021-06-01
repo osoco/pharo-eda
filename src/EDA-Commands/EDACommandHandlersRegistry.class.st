@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandHandlersRegistry,
 	#superclass : #Object,
-	#traits : 'EDACTPrintOnHelper + EDACTLogging',
-	#classTraits : 'EDACTPrintOnHelper classTrait + EDACTLogging classTrait',
+	#traits : 'EDACPrintOnHelper + EDACLogging',
+	#classTraits : 'EDACPrintOnHelper classTrait + EDACLogging classTrait',
 	#instVars : [
 		'handlers'
 	],

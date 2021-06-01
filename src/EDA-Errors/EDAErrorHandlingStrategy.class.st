@@ -21,8 +21,8 @@ Public API and Key Messages:
 Class {
 	#name : #EDAErrorHandlingStrategy,
 	#superclass : #Object,
-	#traits : 'EDACTPrintOnHelper',
-	#classTraits : 'EDACTPrintOnHelper classTrait',
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
 	#instVars : [
 		'context'
 	],

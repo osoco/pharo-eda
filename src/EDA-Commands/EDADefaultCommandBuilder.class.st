@@ -1,8 +1,8 @@
 Class {
 	#name : #EDADefaultCommandBuilder,
 	#superclass : #EDABaseCommandBuilder,
-	#traits : 'EDACTLogging',
-	#classTraits : 'EDACTLogging classTrait',
+	#traits : 'EDACLogging',
+	#classTraits : 'EDACLogging classTrait',
 	#instVars : [
 		'commandDictionary'
 	],

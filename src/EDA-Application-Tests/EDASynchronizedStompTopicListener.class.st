@@ -1,5 +1,5 @@
 Class {
-	#name : #SynchronizedStompTopicListener,
+	#name : #EDASynchronizedStompTopicListener,
 	#superclass : #GHSimpleForwarderProxyHandler,
 	#instVars : [
 		'eventsReady'
@@ -8,25 +8,25 @@ Class {
 }
 
 { #category : #API }
-SynchronizedStompTopicListener class >> wrap: aListener [
+EDASynchronizedStompTopicListener class >> wrap: aListener [
 	^ GHTargetBasedProxy createProxyFor: aListener handler: SynchronizedStompTopicListener new
 ]
 
 { #category : #accessing }
-SynchronizedStompTopicListener >> eventsReady [
+EDASynchronizedStompTopicListener >> eventsReady [
 	eventsReady == nil
 		ifTrue: [ self eventsReady: false ].
 	^ eventsReady
 ]
 
 { #category : #accessing }
-SynchronizedStompTopicListener >> eventsReady: aFlag [
+EDASynchronizedStompTopicListener >> eventsReady: aFlag [
 	eventsReady := aFlag.
 	^ self
 ]
 
 { #category : #logic }
-SynchronizedStompTopicListener >> handleOnMessageDo: ctx [
+EDASynchronizedStompTopicListener >> handleOnMessageDo: ctx [
 	| proc |
 	proc := [ 
 		[ self eventsReady ]
@@ -44,7 +44,7 @@ SynchronizedStompTopicListener >> handleOnMessageDo: ctx [
 ]
 
 { #category : #lifecycle }
-SynchronizedStompTopicListener >> methodsMessagesToHandle [
+EDASynchronizedStompTopicListener >> methodsMessagesToHandle [
 	| result |
 	result := super methodsMessagesToHandle.
 	result at: #onMessageDo: put: #handleOnMessageDo:.

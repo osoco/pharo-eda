@@ -1,5 +1,5 @@
 "
-A EDACommandHandlerNotFound is an error.
+An EDACommandHandlerNotFound is an error.
 
 "
 Class {

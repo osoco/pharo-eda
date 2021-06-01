@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAThrowError,
 	#superclass : #EDAErrorHandlingStrategy,
-	#traits : 'EDACTLogging',
-	#classTraits : 'EDACTLogging classTrait',
+	#traits : 'EDACLogging',
+	#classTraits : 'EDACLogging classTrait',
 	#category : #'EDA-Errors-Strategies'
 }
 

@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAJsonCommandSerializer,
 	#superclass : #EDAMessageSerializer,
-	#traits : 'EDACTPrintOnHelper',
-	#classTraits : 'EDACTPrintOnHelper classTrait',
+	#traits : 'EDACPrintOnHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait',
 	#instVars : [
 		'writer'
 	],

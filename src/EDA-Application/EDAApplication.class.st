@@ -24,8 +24,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #EDAApplication,
 	#superclass : #Object,
-	#traits : 'EDACTLogging',
-	#classTraits : 'EDACTLogging classTrait',
+	#traits : 'EDACLogging',
+	#classTraits : 'EDACLogging classTrait',
 	#instVars : [
 		'commandConsumer',
 		'commandDispatcher',

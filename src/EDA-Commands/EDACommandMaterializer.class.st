@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandMaterializer,
 	#superclass : #Object,
-	#traits : 'EDACTLogging',
-	#classTraits : 'EDACTLogging classTrait',
+	#traits : 'EDACLogging',
+	#classTraits : 'EDACLogging classTrait',
 	#category : #'EDA-Commands-Materializers'
 }
 

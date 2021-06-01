@@ -1,5 +1,5 @@
 Class {
-	#name : #RegexJsonArray,
+	#name : #EDARegexJsonArray,
 	#superclass : #Array,
 	#type : #variable,
 	#instVars : [
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RegexJsonArray class >> newFrom: anArray andTestCase: aTestCase [
+EDARegexJsonArray class >> newFrom: anArray andTestCase: aTestCase [
 	| result |
 	result := self new.
 	result array: (Array newFrom: anArray).
@@ -19,17 +19,17 @@ RegexJsonArray class >> newFrom: anArray andTestCase: aTestCase [
 ]
 
 { #category : #accessing }
-RegexJsonArray >> array [
+EDARegexJsonArray >> array [
 	^ array
 ]
 
 { #category : #accessing }
-RegexJsonArray >> array: anArray [
+EDARegexJsonArray >> array: anArray [
 	array := anArray
 ]
 
 { #category : #accessing }
-RegexJsonArray >> arrayAt: index [
+EDARegexJsonArray >> arrayAt: index [
 	"Answer the element at given index."
 
 	| value result |
@@ -41,14 +41,14 @@ RegexJsonArray >> arrayAt: index [
 ]
 
 { #category : #accessing }
-RegexJsonArray >> assertItemMatches: anItem at: anIndex [
+EDARegexJsonArray >> assertItemMatches: anItem at: anIndex [
 	| result |
 	result := true.
 	^ result
 ]
 
 { #category : #accessing }
-RegexJsonArray >> assertMatches: anArray [
+EDARegexJsonArray >> assertMatches: anArray [
 	| result |
 	result := true.
 	anArray doWithIndex: [ :item :i | result := result and: [ self assertItemMatches: item at: i ] ].
@@ -56,22 +56,22 @@ RegexJsonArray >> assertMatches: anArray [
 ]
 
 { #category : #accessing }
-RegexJsonArray >> at: index [
+EDARegexJsonArray >> at: index [
 	^ self array at: index
 
 ]
 
 { #category : #copying }
-RegexJsonArray >> copyEmpty [
+EDARegexJsonArray >> copyEmpty [
 	^ self new
 ]
 
 { #category : #accessing }
-RegexJsonArray >> testCase [
+EDARegexJsonArray >> testCase [
 	^ testCase
 ]
 
 { #category : #accessing }
-RegexJsonArray >> testCase: aTestCase [
+EDARegexJsonArray >> testCase: aTestCase [
 	testCase := aTestCase
 ]

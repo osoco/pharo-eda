@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAApplications,
 	#superclass : #Object,
-	#traits : 'EDACTLogging',
-	#classTraits : 'EDACTLogging classTrait',
+	#traits : 'EDACLogging',
+	#classTraits : 'EDACLogging classTrait',
 	#instVars : [
 		'registry',
 		'edaApplicationsAnnouncer',

@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommandConsumer,
 	#superclass : #Object,
-	#traits : 'EDACTPrintOnHelper + EDACTErrorHelper',
-	#classTraits : 'EDACTPrintOnHelper classTrait + EDACTErrorHelper classTrait',
+	#traits : 'EDACPrintOnHelper + EDACErrorHelper',
+	#classTraits : 'EDACPrintOnHelper classTrait + EDACErrorHelper classTrait',
 	#instVars : [
 		'busListener',
 		'commandMaterializer',

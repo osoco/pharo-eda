@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAApplicationsSubscriber,
 	#superclass : #Object,
-	#traits : 'EDACTSettingBrowserHelper',
-	#classTraits : 'EDACTSettingBrowserHelper classTrait',
+	#traits : 'EDACSettingBrowserHelper',
+	#classTraits : 'EDACSettingBrowserHelper classTrait',
 	#category : #'EDA-Application'
 }
 

@@ -1,7 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
-	#traits : 'EDACTLogging + EDACTRegexHelper',
-	#classTraits : 'EDACTLogging classTrait + EDACTRegexHelper classTrait',
+	#traits : 'EDACLogging + EDACRegexHelper',
+	#classTraits : 'EDACLogging classTrait + EDACRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
