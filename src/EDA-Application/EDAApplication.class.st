@@ -75,7 +75,7 @@ EDAApplication class >> buildCommandDispatcherWithEventStore: anEventStore event
 
 { #category : #accessing }
 EDAApplication class >> defaultEnvironment [
-	^ EDADUEnvironment new
+	^ DUEnvironment new
 ]
 
 { #category : #logging }
