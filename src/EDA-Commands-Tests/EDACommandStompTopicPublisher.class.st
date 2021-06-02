@@ -9,6 +9,6 @@ Contains the configuration settings required for tests to be able to publish com
 "
 Class {
 	#name : #EDACommandStompTopicPublisher,
-	#superclass : #EDAStompTopicPublisher,
+	#superclass : #EDAAStompTopicPublisher,
 	#category : 'EDA-Commands-Tests'
 }
