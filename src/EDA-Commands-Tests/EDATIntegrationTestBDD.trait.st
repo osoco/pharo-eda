@@ -213,13 +213,13 @@ EDATIntegrationTestBDD >> condenseString: aString [
 
 { #category : #accessing }
 EDATIntegrationTestBDD >> currentEnvironment [
-	^ EDADUEnvironment currentEnvironment
+	^ DUEnvironment currentEnvironment
 
 ]
 
 { #category : #accessing }
 EDATIntegrationTestBDD >> currentEnvironment: env [
-	EDADUEnvironment currentEnvironment: env
+	DUEnvironment currentEnvironment: env
 ]
 
 { #category : #lifecycle }
@@ -493,7 +493,7 @@ EDATIntegrationTestBDD >> prepareToStopApplication [
 
 { #category : #lifecycle }
 EDATIntegrationTestBDD >> publishCommand: commandString [
-	^ EDACommandStompTopicPublisher new publishMessage: commandString
+	^ EDAACommandStompTopicPublisher new publishMessage: commandString
 ]
 
 { #category : #helper }
@@ -509,7 +509,7 @@ EDATIntegrationTestBDD >> readFile: aFile [
 EDATIntegrationTestBDD >> restoreOriginalEnvironment [
 	(self currentEnvironment = self originalEnvironment)
 		ifFalse:
-			[ self originalEnvironment ifNotNil: [ :environmentValueToRestore | self currentEnvironment: environmentValueToRestore. OSPlatform current environment at: EDADUEnvironment environmentVariableName put: environmentValueToRestore ] ]
+			[ self originalEnvironment ifNotNil: [ :environmentValueToRestore | self currentEnvironment: environmentValueToRestore. OSPlatform current environment at: DUEnvironment environmentVariableName put: environmentValueToRestore ] ]
 ]
 
 { #category : #helper }
@@ -524,7 +524,7 @@ EDATIntegrationTestBDD >> setUp [
 		logInfoMessage:
 			'Running ' , thisContext receiver className greaseString , '>>'
 				, thisContext receiver selector greaseString.
-	self originalEnvironment: EDADUEnvironment currentEnvironment.
+	self originalEnvironment: DUEnvironment currentEnvironment.
 	self setUpCurrentEnvironment.
 	self loadSettings.
 	self prepareToLaunchApplication.
@@ -533,7 +533,7 @@ EDATIntegrationTestBDD >> setUp [
 	self clearPreviousProjections.
 	self clearQueues.
 	self launchApplication.
-	self timeLimit: EDATestEventStompTopicListener timeout seconds
+	self timeLimit: EDAATestEventStompTopicListener timeout seconds
 ]
 
 { #category : #lifecycle }
@@ -546,7 +546,7 @@ EDATIntegrationTestBDD >> setUpApplication [
 { #category : #lifecycle }
 EDATIntegrationTestBDD >> setUpCurrentEnvironment [
 	self isEnvironmentIntegrationTest
-		ifFalse: [ OSPlatform current environment at: EDADUEnvironment environmentVariableName put: 'integration-tests' ]
+		ifFalse: [ OSPlatform current environment at: DUEnvironment environmentVariableName put: 'integration-tests' ]
 ]
 
 { #category : #lifecycle }
@@ -593,7 +593,7 @@ EDATIntegrationTestBDD >> storePreviousEvents: eventsCollection ofTenant: aTenan
 
 { #category : #lifecycle }
 EDATIntegrationTestBDD >> subscribeToEvents [
-	self eventListener: EDATestEventStompTopicListener new.
+	self eventListener: EDAATestEventStompTopicListener new.
 	self subscriptionId: self eventListener subscribe.
 	self eventsSubscribed: true.
 	self logInfoMessage: 'Subscribed to events. subscriptionId is ' , self subscriptionId greaseString , '.'

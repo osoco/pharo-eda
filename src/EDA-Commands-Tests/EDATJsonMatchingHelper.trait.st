@@ -13,6 +13,6 @@ EDATJsonMatchingHelper >> assertJson: jsonText matchesRegex: regex [
 				ifTrue: [ ^ regex isEmpty ]
 				ifFalse: [ | json regexJson |
 					json := NeoJSONReader fromString: jsonText.
-					regexJson := RegexJson fromString: regex andTestCase: self.
+					regexJson := EDARegexJson fromString: regex andTestCase: self.
 					^ regexJson assertMatches: json ] ]
 ]
