@@ -9,6 +9,6 @@ It's a regular EDAStompTopicListener, containing configuration settings used onl
 "
 Class {
 	#name : #EDAEventStompTopicListener,
-	#superclass : #EDAStompTopicListener,
+	#superclass : #EDAAStompTopicListener,
 	#category : 'EDA-Commands-Tests'
 }
