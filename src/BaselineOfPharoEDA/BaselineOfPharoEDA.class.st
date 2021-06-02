@@ -97,7 +97,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
-					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'PharoEDACommon' 'PharoEDASettings') ];
+					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'PharoEDACommon' 'PharoEDASettings' 'PharoEDAAdapters') ];
 		package: #'EDA-Commands-Tests'
 			with: [ spec requires: #('BabyMock2' 'PharoEDACommon' 'EDA-Domain-Tests') ];
 		package: #'EDA-Commands-Tests-Tests'
