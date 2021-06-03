@@ -7,7 +7,7 @@ Class {
 		'writer',
 		'errorWriter'
 	],
-	#category : 'EDA-Events-Serializers'
+	#category : #'EDA-Events-Serializers'
 }
 
 { #category : #converting }

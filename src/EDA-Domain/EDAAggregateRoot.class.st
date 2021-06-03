@@ -228,7 +228,7 @@ EDAAggregateRoot >> checkCreateCommand: aCommand [
 										nextPutAll: aCommand aggregateSelectionCriteria greaseString;
 										nextPutAll: ' already exists in tenant ';
 										nextPutAll: aCommand tenant greaseString ])
-						andThrow: aCommand class invalidCommandMessageException ]
+						andThrow: aCommand class alreadyExistingAggregateExceptionClass ]
 ]
 
 { #category : #'command checking' }

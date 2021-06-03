@@ -27,6 +27,14 @@ EDACommand class >> aggregateRootClass [
 ]
 
 { #category : #override }
+EDACommand class >> alreadyExistingAggregateExceptionClass [
+	^ EDAAlreadyExistingAggregate allSubclasses
+		detect:
+			[ :class | class exceptionForAggregateRootClass: self aggregateRootClass ]
+		ifNone: [ EDAAlreadyExistingAggregate ]
+]
+
+{ #category : #override }
 EDACommand class >> invalidCommandMessageException [
 	^ EDAInvalidCommandMessage
 ]
