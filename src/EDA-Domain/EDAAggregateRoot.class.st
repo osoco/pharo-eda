@@ -15,6 +15,11 @@ Class {
 	#category : #'EDA-Domain-Aggregate'
 }
 
+{ #category : #accessing }
+EDAAggregateRoot class >> aggregateRepository [
+	self subclassResponsibility
+]
+
 { #category : #helpers }
 EDAAggregateRoot class >> buildCommonArgsForCommand: aCommand [
 	| result |
@@ -64,11 +69,6 @@ EDAAggregateRoot class >> newVersionAfter: aVersion [
 { #category : #ui }
 EDAAggregateRoot class >> systemIcon [
 	^ Smalltalk ui icons iconNamed: #objects
-]
-
-{ #category : #accessing }
-EDAAggregateRoot >> aggregateRepository [
-	self subclassResponsibility
 ]
 
 { #category : #'applying events' }
