@@ -35,7 +35,7 @@ EDACommand class >> alreadyExistingAggregateExceptionClass [
 ]
 
 { #category : #override }
-EDACommand class >> invalidCommandMessageException [
+EDACommand class >> invalidCommandExceptionClass [
 	^ EDAInvalidCommandMessage
 ]
 

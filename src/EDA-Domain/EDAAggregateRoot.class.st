@@ -253,7 +253,7 @@ EDAAggregateRoot >> checkNonCreateCommand: aCommand [
 								nextPutAll: aCommand aggregateSelectionCriteria values first greaseString;
 								nextPutAll: ' does not exist in tenant ';
 								nextPutAll: aCommand tenant greaseString ])
-				andThrow: aCommand class invalidCommandMessageException ]
+				andThrow: aCommand class invalidCommandExceptionClass ]
 ]
 
 { #category : #accessing }

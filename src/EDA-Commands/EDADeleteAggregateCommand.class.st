@@ -10,7 +10,7 @@ EDADeleteAggregateCommand class >> aggregateRootClass [
 ]
 
 { #category : #override }
-EDADeleteAggregateCommand class >> invalidCommandMessageException [
+EDADeleteAggregateCommand class >> invalidCommandExceptionClass [
 	^ EDAInvalidDeleteAggregateCommandMessage
 ]
 
