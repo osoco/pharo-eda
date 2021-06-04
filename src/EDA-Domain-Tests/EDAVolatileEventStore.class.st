@@ -8,19 +8,33 @@ Class {
 }
 
 { #category : #filtering }
+EDAVolatileEventStore class >> event: anEvent satisfyCriteria: aCriteriaDictionary [
+	^ aCriteriaDictionary associations allSatisfy: [ :assoc |
+		((self queryBlockFromKey: assoc key) value: anEvent) = assoc value ]
+]
+
+{ #category : #filtering }
 EDAVolatileEventStore class >> filterEvents: anEventCollection byCriteria: aCriteriaDictionary [
+	| selectors |
+	selectors := self selectorsFromCriteriaDictionary: aCriteriaDictionary.
 	^ anEventCollection
 		select: [ :event | 
-			| commonAttrs |
-			commonAttrs := event class allInstVarNames
-				intersection: (aCriteriaDictionary keys collect: [ :k | k asSymbol ]).
-			commonAttrs size = aCriteriaDictionary size
-				ifTrue: [ | attrPassCriteria |
-					attrPassCriteria := commonAttrs
-						select:
-							[ :attr | (event perform: attr) = (aCriteriaDictionary at: attr) "EDATestEventStub new attribute: (event perform: attr) named: attr matches: (aCriteriaDictionary at: attr)" ].
-					attrPassCriteria size = commonAttrs size ]
-				ifFalse: [ false ] ]
+			(event class allInstVarNames includesAll: selectors)
+				and: [ 
+					self event: event satisfyCriteria: aCriteriaDictionary ] ]
+]
+
+{ #category : #filtering }
+EDAVolatileEventStore class >> queryBlockFromKey: aKey [
+	| selectors |
+	selectors := (aKey asString splitOn: '.') collect: [ :string | string asSymbol ].
+	^ [ :event | selectors inject: event into: [ :receiver :selector | selector value: receiver ] ] 
+	
+]
+
+{ #category : #filtering }
+EDAVolatileEventStore class >> selectorsFromCriteriaDictionary: aCriteriaDictionary [ 
+	^ aCriteriaDictionary keys collect: [ :k | (k splitOn: '.') first asSymbol ]
 ]
 
 { #category : #accessing }
