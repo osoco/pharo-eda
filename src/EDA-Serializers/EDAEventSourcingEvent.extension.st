@@ -1,11 +1,11 @@
 Extension { #name : #EDAEventSourcingEvent }
 
-{ #category : #'*EDA-Errors' }
+{ #category : #'*EDA-Serializers' }
 EDAEventSourcingEvent >> asDictionary [
 	^ Dictionary newFromObject: self
 ]
 
-{ #category : #'*EDA-Errors' }
+{ #category : #'*EDA-Serializers' }
 EDAEventSourcingEvent >> neoJsonOn: neoJSONWriter [
 	neoJSONWriter writeMap: self asDictionary
 ]
