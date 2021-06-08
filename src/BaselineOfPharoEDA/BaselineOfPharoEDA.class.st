@@ -46,7 +46,7 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Application' #'EDA-Errors' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-Messaging');
+			#(#'EDA-Application' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-Messaging');
 		group: 'tests'
 			with:
 			#(#'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests');
@@ -85,8 +85,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
 		package: #'EDA-Messaging'
 			with: [ spec requires: #('PharoEDACommon') ];
-		package: #'EDA-Errors'
-			with: [ spec requires: #('PharoEDACommon' 'EDA-Messaging') ];
 		package: #'EDA-Events'
 			with: [ spec
 				requires: #('EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi' 'PharoEDAPorts') ];
