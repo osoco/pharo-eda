@@ -1,6 +1,6 @@
 Class {
 	#name : #EDAJsonEventSerializer,
-	#superclass : #EDAMessageSerializer,
+	#superclass : #EDACMessageSerializer,
 	#traits : 'EDACPrintOnHelper',
 	#classTraits : 'EDACPrintOnHelper classTrait',
 	#instVars : [
@@ -16,10 +16,10 @@ EDAJsonEventSerializer class >> asEventName: event [
 	words :=
 		event delete ifTrue: [
 			| aggregateRootName |
-			aggregateRootName := (EDAMessageSerializer nameWithoutPrefixForMessageClass: event aggregateRootClass) asUppercase.
+			aggregateRootName := (self nameWithoutPrefixForMessageClass: event aggregateRootClass) asUppercase.
 			OrderedCollection with: aggregateRootName with: 'DELETED'
 		] ifFalse: [
-			(EDAMessageSerializer nameWithoutPrefixForMessageClass: event class)
+			(self nameWithoutPrefixForMessageClass: event class)
 				regex: '[A-Z][a-z0-9]+' matchesCollect: [ :word | word greaseString asUppercase ].
 		].
 	^ String streamContents: [ :stream | words asStringOn: stream delimiter: '_' ]
@@ -79,7 +79,7 @@ EDAJsonEventSerializer >> serialize: anEvent [
 EDAJsonEventSerializer >> writeError: error [ 
 	| aux paramsDict |
 	aux := Dictionary new.
-	aux at: #name put: (EDAMessageSerializer nameWithoutPrefixForMessageClass: error).
+	aux at: #name put: (self class nameWithoutPrefixForMessageClass: error).
 	paramsDict := Dictionary
 		newFrom:
 			{('error' -> true).
