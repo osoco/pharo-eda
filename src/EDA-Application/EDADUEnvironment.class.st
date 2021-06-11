@@ -10,8 +10,8 @@ Provide access to additional json files from other images under the same parent 
 Class {
 	#name : #EDADUEnvironment,
 	#superclass : #DUEnvironment,
-	#traits : 'EDATLanguageHelper + EDATLogging',
-	#classTraits : 'EDATLanguageHelper classTrait + EDATLogging classTrait',
+	#traits : 'EDACLanguageHelper + EDACLogging',
+	#classTraits : 'EDACLanguageHelper classTrait + EDACLogging classTrait',
 	#classVars : [
 		'CurrentEnvironment'
 	],
