@@ -3,7 +3,7 @@
 "
 Class {
 	#name : #EDASynchronizedStompTopicListener,
-	#superclass : #GHSimpleForwarderProxyHandler,
+	#superclass : #Object,
 	#instVars : [
 		'eventsReady'
 	],
@@ -12,7 +12,7 @@ Class {
 
 { #category : #API }
 EDASynchronizedStompTopicListener class >> wrap: aListener [
-	^ GHTargetBasedProxy createProxyFor: aListener handler: SynchronizedStompTopicListener new
+	"^ GHTargetBasedProxy createProxyFor: aListener handler: SynchronizedStompTopicListener new"
 ]
 
 { #category : #accessing }
