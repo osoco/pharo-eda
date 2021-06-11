@@ -46,10 +46,10 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Application' #'EDA-Domain' #'EDA-Commands' #'EDA-Events' #'EDA-Messaging');
+			#(#'EDA-Application' #'EDA-Commands' #'EDA-Events');
 		group: 'tests'
 			with:
-			#(#'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests');
+			#(#'EDA-Commands-Tests' #'EDA-Commands-Tests-Tests');
 		group: 'default' with: #('core' 'tests')
 ]
 
@@ -80,24 +80,19 @@ BaselineOfPharoEDA >> declareObjectDiffIn: spec [
 { #category : #meta }
 BaselineOfPharoEDA >> declarePackagesIn: spec [
 	spec
-		package: #'EDA-Domain' with: [ spec requires: #('PharoEDACommon') ];
-		package: #'EDA-Domain-Tests'
-			with: [ spec requires: #('EDA-Domain' 'ObjectDiff') ];
-		package: #'EDA-Messaging'
-			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Events'
 			with: [ spec
-				requires: #('EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi' 'PharoEDAPorts') ];
+				requires: #('PharoEDACommon' 'PharoEDAApi' 'PharoEDAPorts') ];
 		package: #'EDA-Commands'
-			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'PharoEDACommon' 'PharoEDAApi') ];
+			with: [ spec requires: #('NeoJSON' 'PharoEDACommon' 'PharoEDAApi') ];
 		package: #'EDA-Projections-Tests'
 			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
-					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'PharoEDACommon' 'PharoEDASettings' 'PharoEDAAdapters') ];
+					#('EDA-Events' 'EDA-Commands' 'PharoEDACommon' 'PharoEDASettings' 'PharoEDAAdapters') ];
 		package: #'EDA-Commands-Tests'
-			with: [ spec requires: #('BabyMock2' 'PharoEDACommon' 'EDA-Domain-Tests') ];
+			with: [ spec requires: #('BabyMock2' 'PharoEDACommon') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ]
 ]
