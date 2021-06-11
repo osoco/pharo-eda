@@ -10,35 +10,28 @@ BaselineOfPharoEDA >> baseline: spec [
 	spec
 		for: #common
 		do: [ spec blessing: #baseline.
+			self includeBabyMock2: spec.
+			self includeGToolkit: spec.
 			self includePharoEDAApi: spec.
 			self includePharoEDAAdapters: spec.
 			self includePharoEDACommon: spec.
 			self includePharoEDAPorts: spec.
 			self includePharoEDASettings: spec.
 			self includePharoEDATools: spec.
-			self declareBabyMock2In: spec.
 			self declarePackagesIn: spec.
 			self declareGroupsIn: spec ]
-]
-
-{ #category : #dependencies }
-BaselineOfPharoEDA >> declareBabyMock2In: spec [
-	spec
-		project: 'BabyMock2'
-		with: [ spec
-				className: #ConfigurationOfBabyMock2;
-				versionString: #stable;
-				repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock2/main/' ].
-	^ spec
 ]
 
 { #category : #meta }
 BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
-			with: #(#'EDA-Application' #'EDA-Commands' #'EDA-Events' #'EDA-Domain-GT-Extensions');
+			with:
+			#(#'EDA-Application' #'EDA-Commands' #'EDA-Events');
 		group: 'tests'
-			with: #(#'EDA-Commands-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Application-Tests' #'EDA-Domain-Tests' #'EDA-Projections-Tests');
+			with:
+			#(#'EDA-Commands-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Application-Tests' #'EDA-Domain-Tests' #'EDA-Projections-Tests');
+		group: 'gtoolkit' with: #('core' 'tests'  #'EDA-Domain-GT-Extensions');
 		group: 'default' with: #('core' 'tests')
 ]
 
@@ -66,7 +59,26 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Domain-Tests'
 			with: [ spec requires: #('BabyMock2' 'PharoEDACommon' 'EDA-TestSupport') ];
 		package: #'EDA-Domain-GT-Extensions'
-			with: [ spec requires: #('BabyMock2' 'PharoEDACommon') ]
+			with: [ spec requires: #('BabyMock2' 'PharoEDACommon' 'GToolkit') ]
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includeBabyMock2: spec [
+	spec
+		project: 'BabyMock2'
+		with: [ spec
+				className: #ConfigurationOfBabyMock2;
+				versionString: #stable;
+				repository: 'http://smalltalkhub.com/mc/zeroflag/BabyMock2/main/' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includeGToolkit: spec [
+	spec
+		baseline: 'GToolkit'
+		with: [ spec repository: 'github://feenkcom/gtoolkit:master' ].
+	^ spec
 ]
 
 { #category : #dependencies }

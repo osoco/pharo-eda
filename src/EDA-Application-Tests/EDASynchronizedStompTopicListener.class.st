@@ -1,5 +1,5 @@
 "
-	#superclass : #GHSimpleForwarderProxyHandler,
+#superclass : #GHSimpleForwarderProxyHandler,
 "
 Class {
 	#name : #EDASynchronizedStompTopicListener,
@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'eventsReady'
 	],
-	#category : 'EDA-Application-Tests'
+	#category : #'EDA-Application-Tests'
 }
 
 { #category : #API }
