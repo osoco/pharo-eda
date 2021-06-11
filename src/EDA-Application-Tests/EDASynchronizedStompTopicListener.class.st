@@ -1,3 +1,6 @@
+"
+	#superclass : #GHSimpleForwarderProxyHandler,
+"
 Class {
 	#name : #EDASynchronizedStompTopicListener,
 	#superclass : #GHSimpleForwarderProxyHandler,
