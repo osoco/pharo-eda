@@ -7,7 +7,7 @@ Class {
 { #category : #lifecycle }
 EDATestApplication class >> initialize [
 	"Override me if you need a custom EDAApplication"
-	self application: EDATestApplication
+	"self application: EDATestApplication"
 ]
 
 { #category : #lifecycle }
