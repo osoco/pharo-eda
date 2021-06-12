@@ -11,6 +11,7 @@ BaselineOfPharoEDA >> baseline: spec [
 		for: #common
 		do: [ spec blessing: #baseline.
 			self includeBabyMock2: spec.
+			self includeNeoJSON: spec.
 			self includeGToolkit: spec.
 			self includePharoEDAApi: spec.
 			self includePharoEDAAdapters: spec.
@@ -45,7 +46,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Projections-Tests'
 			with: [ spec requires: #('PharoEDACommon') ];
 		package: #'EDA-TestSupport'
-			with: [ spec requires: #('PharoEDAPorts') ];
+			with: [ spec requires: #('PharoEDAPorts' 'NeoJSON') ];
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
@@ -78,6 +79,14 @@ BaselineOfPharoEDA >> includeGToolkit: spec [
 	spec
 		baseline: 'GToolkit'
 		with: [ spec repository: 'github://feenkcom/gtoolkit:master' ].
+	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> includeNeoJSON: spec [
+	spec
+		baseline: 'NeoJSON'
+		with: [ spec repository: 'github://svenvc/NeoJSON/repository' ].
 	^ spec
 ]
 
