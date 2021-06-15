@@ -1,11 +1,8 @@
 Class {
 	#name : #EDAMetaBodyEventBuilder,
-	#superclass : #EDAEventBuilder,
+	#superclass : #EDABuilder,
 	#traits : 'EDATMetaBodyTypeHelper',
 	#classTraits : 'EDATMetaBodyTypeHelper classTrait',
-	#instVars : [
-		'metaBodyParams'
-	],
 	#category : #'EDA-Events-Builders'
 }
 

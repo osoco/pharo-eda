@@ -19,15 +19,9 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 			expected := expectedEvents at: i.
 			self discardDateCreated: expected.
 			self discardAgent: expected.
-			self assert: expected equals: actual 
-			"self
-				assert:
-					(expectedEvents
-						select: [ :expected | 
-							self discardDateCreated: expected.
-							self discardAgent: expected.
-							self discardTimestamp: expected.
-							self is: expected equalTo: actual ]) isNotEmpty" ]
+			self discardTimestamp: expected.
+			self discardId: expected.
+			self assertEvent:  (resultingEvents at: i) equals: expected ]
 ]
 
 { #category : #assertions }
@@ -69,8 +63,7 @@ EDATBDDHelper >> assertProjections: actualProjections matchExpected: expectedPro
 EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 	| mock |
 	mock := EDAAcceptEverything new.
-	^ EDACommandConsumer
-	"EDAMessageConsumer"
+	^ EDAMessageConsumer
 		busListener: mock
 		materializer: EDACommandMaterializer new
 		dispatcher:
@@ -78,6 +71,7 @@ EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 				buildCommandDispatcherWithEventStore: anEventStore
 				eventProducer: mock
 				andProjectorClass: mock)
+		strategy: EDAThrowError greaseString
 ]
 
 { #category : #helpers }
