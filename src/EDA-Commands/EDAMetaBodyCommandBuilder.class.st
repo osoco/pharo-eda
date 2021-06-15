@@ -13,7 +13,7 @@ Class {
 EDAMetaBodyCommandBuilder >> metaBodyParams [
 	^ metaBodyParams
 		ifNil: [ self metaBodyParams: self params copy.
-			self params: (self transfomCommandJsonToParams: self metaBodyParams).
+			self params: (self transformCommandJsonToParams: self metaBodyParams).
 			metaBodyParams ]
 ]
 
@@ -28,7 +28,7 @@ EDAMetaBodyCommandBuilder >> retrieveType [
 ]
 
 { #category : #accessing }
-EDAMetaBodyCommandBuilder >> transfomCommandJsonToParams: unprocessedParams [
+EDAMetaBodyCommandBuilder >> transformCommandJsonToParams: unprocessedParams [
 	| meta body |
 	meta := unprocessedParams at: #meta ifAbsent: [ nil ].
 	body := unprocessedParams at: #body ifAbsent: [ nil ].
