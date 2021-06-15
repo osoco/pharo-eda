@@ -12,3 +12,8 @@ EDACommandConsumer class >> busListener: aBusListener materializer: aMaterialize
 		dispatcher: aDispatcher
 		strategy: EDACommandConsumingErrorBehavior strategy
 ]
+
+{ #category : #reading }
+EDACommandConsumer >> consumeMessage: aMessageString usingStrategyForCommands: aStrategyForCommands andStrategyForEvents: aStrategyForEvents [
+	^ self consumeMessage: aMessageString usingStrategy: aStrategyForCommands
+]

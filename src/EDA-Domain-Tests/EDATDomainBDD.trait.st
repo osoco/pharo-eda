@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -60,20 +61,6 @@ EDATDomainBDD >> buildBodyForCommand: aCommand andAggregateRootVersion: aVersion
 	body at: #version put: aVersion.
 	^ body
 
-]
-
-{ #category : #helpers }
-EDATDomainBDD >> buildCommandConsumerWithEventStore: anEventStore [
-	| mock |
-	mock := EDAAcceptEverything new.
-	^ EDAMessageConsumer
-		busListener: mock
-		materializer: EDACommandMaterializer new
-		dispatcher:
-			(EDAApplication
-				buildCommandDispatcherWithEventStore: anEventStore
-				eventProducer: mock
-				andProjectorClass: mock)
 ]
 
 { #category : #helper }

@@ -25,11 +25,8 @@ EDAMaterializer >> build: aDictionary [
 	"Returns a command or event instance from given dictionary"
 
 	| builderCollection noBuilderFound |
-	builderCollection := (self buildersFor: aDictionary)
-		select: [ :r | r messageSupported ].
-	noBuilderFound := builderCollection isNil
-		or: [ builderCollection isEmpty ].
-	noBuilderFound
+	builderCollection := (self buildersFor: aDictionary).
+	builderCollection isEmptyOrNil
 		ifTrue: [ self
 				logErrorMessage:
 					(String
@@ -61,8 +58,7 @@ EDAMaterializer >> builderFor: aString with: aMap [
 
 { #category : #initialization }
 EDAMaterializer >> buildersFor: aDictionary [
-	^ (self builderClasses collect: [ :c | c with: aDictionary ])
-		select: [ :i | i messageSupported ]
+	^ self builderClasses collect: [ :c | c with: aDictionary ] thenSelect: [ :i | i messageSupported ]
 ]
 
 { #category : #initialization }

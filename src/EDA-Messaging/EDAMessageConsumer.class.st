@@ -73,6 +73,11 @@ EDAMessageConsumer >> consumeMessage: aMessageString usingStrategy: aStrategy [
 	^ self dispatcher dispatch: (self materializer materialize: aMessageString) usingStrategy: aStrategy 
 ]
 
+{ #category : #reading }
+EDAMessageConsumer >> consumeMessage: aMessageString usingStrategyForCommands: aStrategyForCommands andStrategyForEvents: aStrategyForEvents [
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 EDAMessageConsumer >> dispatcher [
 	^ dispatcher
