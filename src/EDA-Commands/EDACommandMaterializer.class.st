@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #meta }
-EDACommandMaterializer class >> parentBuilderClass [
-	^ EDACommandBuilder
+EDACommandMaterializer class >> builderTrait [
+	^ EDATCommandBuilder
 ]

@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATBDDHelper,
 	#traits : 'EDATLogging + EDATRegexHelper',
-	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -22,6 +21,11 @@ EDATBDDHelper >> assertEvents: resultingEvents matchExpected: expectedEvents [
 			self discardTimestamp: expected.
 			self discardId: expected.
 			self assertEvent:  (resultingEvents at: i) equals: expected ]
+]
+
+{ #category : #asserting }
+EDATBDDHelper >> assertMethod: aString existsIn: aClass [
+	self assert: (aClass respondsTo: aString)
 ]
 
 { #category : #assertions }
@@ -75,6 +79,11 @@ EDATBDDHelper >> buildCommandConsumerWithEventStore: anEventStore [
 ]
 
 { #category : #helpers }
+EDATBDDHelper >> buildCommandSerializer [
+	^ EDAJsonCommandSerializer new
+]
+
+{ #category : #helpers }
 EDATBDDHelper >> buildEventConsumerWithEventStore: anEventStore [
 	| mock |
 	mock := EDAAcceptEverything new.
@@ -97,8 +106,7 @@ EDATBDDHelper >> buildEventSerializer [
 EDATBDDHelper >> consumeMessage: aMessage using: aCommandConsumer [
 	^ aCommandConsumer
 		consumeMessage: aMessage
-		usingStrategyForCommands: EDAThrowError greaseString
-		andStrategyForEvents: EDAThrowError greaseString
+		usingStrategy: EDAThrowError greaseString
 ]
 
 { #category : #helpers }
@@ -139,6 +147,14 @@ EDATBDDHelper >> discardDateCreated: anEventOrProjection [
 ]
 
 { #category : #helpers }
+EDATBDDHelper >> discardId: anEventOrProjection [
+	^ self
+		if: anEventOrProjection
+		supports: #id:
+		then: [ anEventOrProjection id: '<ANYTHING>' ]
+]
+
+{ #category : #helpers }
 EDATBDDHelper >> discardLastModified: anEventOrProjection [
 	^ self
 		if: anEventOrProjection
@@ -162,8 +178,8 @@ EDATBDDHelper >> filterPastEvents: events ofAggregate: anAggregateRootSymbol [
 ]
 
 { #category : #BDD }
-EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock thenEvents: expectedResultingEvents processingThem: aProcessingExpectedEventsBlock [
-	| commandConsumer resultingEvents eventStore expectedEvents eventsToSave originalEventStores aMessage |
+EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock then: assertBlock [
+	| commandConsumer resultingEvents eventStore eventsToSave originalEventStores aMessage |
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
 	[ self useEventStore: eventStore.
@@ -173,15 +189,27 @@ EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBl
 	eventStore saveEvents: eventsToSave.
 	commandConsumer := self
 		buildCommandConsumerWithEventStore: eventStore.
-	expectedEvents := aProcessingExpectedEventsBlock
-		value: expectedResultingEvents
-		value: eventStore.
 	aMessage := aMessageBlock value: eventsToSave value: aString.
 	resultingEvents := self
 		consumeMessage: aMessage
 		using: commandConsumer.
-	self assertEvents: resultingEvents matchExpected: expectedEvents ]
+	assertBlock value: resultingEvents value: eventStore ]
 		ensure: [ self restoreEventStores: originalEventStores ]
+]
+
+{ #category : #BDD }
+EDATBDDHelper >> givenEvents: pastEvents processingThem: aProcessingPastEventsBlock whenReceiveMessage: aString processingIt: aMessageBlock thenEvents: expectedResultingEvents processingThem: aProcessingExpectedEventsBlock [
+	^ self
+		givenEvents: pastEvents
+		processingThem: aProcessingPastEventsBlock
+		whenReceiveMessage: aString
+		processingIt: aMessageBlock
+		then: [ :actualEvents :eventStore | 
+			| expected |
+			expected := aProcessingExpectedEventsBlock
+				value: expectedResultingEvents
+				value: eventStore.
+			self assertEvents: actualEvents matchExpected: expected ]
 ]
 
 { #category : #helpers }
@@ -214,6 +242,11 @@ EDATBDDHelper >> retrieveEventStores [
 ]
 
 { #category : #helpers }
+EDATBDDHelper >> serializeCommand: aCommand [
+	^ self buildCommandSerializer serialize: aCommand
+]
+
+{ #category : #helpers }
 EDATBDDHelper >> serializeEvent: anEvent [
 	^ self buildEventSerializer serialize: anEvent
 ]
@@ -222,4 +255,14 @@ EDATBDDHelper >> serializeEvent: anEvent [
 EDATBDDHelper >> useEventStore: anEventStore [
 	EDAAggregateRepository
 		allSubclassesDo: [ :c | c setupEventStore: anEventStore ]
+]
+
+{ #category : #BDD }
+EDATBDDHelper >> whenReceiveCommand: aCommand ofType: aString then: aBlockClosure [
+	^ self
+		givenEvents: OrderedCollection empty
+		processingThem: [ :pastEvents :eventStore | pastEvents ]
+		whenReceiveMessage: aCommand
+		processingIt: [ :events :str | str ]
+		then: [ :resultingEvents :eventStore | aBlockClosure value: resultingEvents value: eventStore ]
 ]

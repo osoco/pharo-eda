@@ -18,6 +18,11 @@ EDAExample class >> given: givenObject when: whenObject then: thenObject [
 		yourself
 ]
 
+{ #category : #'instance creation' }
+EDAExample class >> when: whenPart then: thenPart [
+	^ self given: (OrderedCollection empty) when: whenPart then: thenPart
+]
+
 { #category : #accessing }
 EDAExample >> given [
 	^ given

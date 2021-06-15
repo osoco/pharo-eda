@@ -58,7 +58,7 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 								nextPutAll: aCommand class latestVersion greaseString;
 								nextPutAll: ' is supported' ])
 				andThrow: EDAInvalidCommand ].
-	handler := self handlersRegistry handlerForCommand: aCommand.
+	handler := self retrieveHandlerFor: aCommand.
 	(handler isNil and: [ aCommand isDelete ])
 		ifTrue: [ handler := EDADeleteCommandHandler
 				withEventStore: self eventStore
@@ -92,4 +92,9 @@ EDACommandDispatcher >> projectorClass [
 { #category : #accessing }
 EDACommandDispatcher >> projectorClass: anObject [
 	projectorClass := anObject
+]
+
+{ #category : #helpers }
+EDACommandDispatcher >> retrieveHandlerFor: aCommand [
+	^ self handlersRegistry handlerForCommand: aCommand
 ]

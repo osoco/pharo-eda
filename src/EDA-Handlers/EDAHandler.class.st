@@ -40,6 +40,11 @@ EDAHandler >> eventStore: anObject [
 	eventStore := anObject
 ]
 
+{ #category : #accessing }
+EDAHandler >> handle: arg1 withErrorStrategy: arg2 [ 
+	^ self subclassResponsibility
+]
+
 { #category : #handling }
 EDAHandler >> invokeMethodHandlerWith: anObject on: aReceiver [
 	self
@@ -50,31 +55,6 @@ EDAHandler >> invokeMethodHandlerWith: anObject on: aReceiver [
 						nextPutAll: 'Handling ';
 						nextPutAll: anObject class greaseString ]).
 	^ aReceiver perform: self handlerMethod selector with: anObject
-]
-
-{ #category : #handling }
-EDAHandler >> manageError: anException for: aCommandOrEvent usingErrorStrategy: aStrategy [
-	| errorHandler result context basename dictionary |
-	errorHandler := (self class environment at: aStrategy asSymbol) new.
-	errorHandler class shouldPersistFuel
-		ifTrue: [ self
-				logErrorMessage:
-					'Error processing ' , aCommandOrEvent greaseString , ': '
-						, anException description greaseString.
-			context := thisContext clone.
-			basename := self class basename.
-			self
-				writeFuelContext: context
-				named: anException class greaseString
-				withBasename: basename.
-			self write: aCommandOrEvent withBasename: basename ].
-	errorHandler context: context.
-	dictionary := Dictionary new.
-	dictionary at: #commandOrEvent put: aCommandOrEvent.
-	result := errorHandler
-		handleError: anException
-		withExtraContextInformation: dictionary.
-	^ result
 ]
 
 { #category : #'event processing' }

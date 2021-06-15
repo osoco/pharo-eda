@@ -1,7 +1,6 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper + EDATBDDHelper',
-	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait + EDATBDDHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -43,12 +42,12 @@ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	aBlock value: aggregateRoot
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDATDomainBDD >> buildBodyForCommand: aCommand [
 	^ self buildBodyForCommand: aCommand andAggregateRootVersion: 0
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDATDomainBDD >> buildBodyForCommand: aCommand andAggregateRootVersion: aVersion [
 	| body bodyInstVars |
 	bodyInstVars := aCommand class allInstVarNames difference: #(#commandId #version #originalTimestamp #aggregateRootId #aggregateRootVersion).
@@ -78,7 +77,7 @@ EDATDomainBDD >> buildCommandConsumerWithEventStore: anEventStore [
 		strategy: EDAThrowError greaseString
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDATDomainBDD >> buildMessageForCommand: aCommand ofType: aString [
 	| aux |
 	aux := Dictionary new.
@@ -93,7 +92,7 @@ EDATDomainBDD >> buildMessageForCommand: aCommand ofType: aString [
 				nextPut: aux ]
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDATDomainBDD >> buildMetaForCommand: aCommand ofType: aString [
 	| meta |
 	meta := Dictionary new.
@@ -106,7 +105,7 @@ EDATDomainBDD >> buildMetaForCommand: aCommand ofType: aString [
 	^ meta
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDATDomainBDD >> fixAggregateRootVersionsOfEvents: anEventCollection usingEventStore: anEventStore [
 	^ EDACommandHandler addVersionToEvents: anEventCollection usingEventStore: anEventStore
 ]
@@ -223,7 +222,7 @@ EDATDomainBDD >> provideAggregateRootVersion: aggregateRootVersion to: aString [
 	^ self replaceIn: aString allMatches: '\$\{AGGREGATE_ROOT_VERSION\}' with: aggregateRootVersion
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDATDomainBDD >> readFile: aFile [
 	| fileStream result |
 	fileStream := aFile readStream.
@@ -232,7 +231,7 @@ EDATDomainBDD >> readFile: aFile [
 	^ result
 ]
 
-{ #category : #helper }
+{ #category : #helpers }
 EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 	| result |
 	aCommand isDelete
@@ -253,4 +252,16 @@ EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 				ifEmpty: [ ('handle' , aCommand classNameWithoutPrefix , ':') asSymbol ]
 				ifNotEmpty: [ methods first selector ] ].
 	^ result
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> whenReceiveMessage: aString thenEvents: expectedResultingEvents [
+	self
+		givenEvents: OrderedCollection empty
+		processingThem: [ :evts :eventStore | evts ]
+		whenReceiveMessage: aString
+		processingIt: [ :events :msg | msg ]
+		thenEvents: expectedResultingEvents
+		processingThem: [ :events :eventStore | 
+			events ]
 ]
