@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAAggregateRoot,
 	#superclass : #Object,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDATLogging + EDATHashHelper + EDATEqualsHelper',
+	#classTraits : 'EDATLogging classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
 	#instVars : [
 		'id',
 		'version',

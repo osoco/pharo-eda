@@ -29,8 +29,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #EDAEventSourcingEvent,
 	#superclass : #Announcement,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATHashHelper + EDATEqualsHelper',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
 	#instVars : [
 		'id',
 		'timestamp',
