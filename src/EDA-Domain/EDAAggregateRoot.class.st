@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAAggregateRoot,
 	#superclass : #Object,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDATLogging + EDATHashHelper + EDATEqualsHelper',
+	#classTraits : 'EDATLogging classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
 	#instVars : [
 		'id',
 		'version',
@@ -14,6 +14,11 @@ Class {
 	],
 	#category : #'EDA-Domain-Aggregate'
 }
+
+{ #category : #accessing }
+EDAAggregateRoot class >> aggregateRepository [
+	self subclassResponsibility
+]
 
 { #category : #helpers }
 EDAAggregateRoot class >> buildCommonArgsForCommand: aCommand [
@@ -64,11 +69,6 @@ EDAAggregateRoot class >> newVersionAfter: aVersion [
 { #category : #ui }
 EDAAggregateRoot class >> systemIcon [
 	^ Smalltalk ui icons iconNamed: #objects
-]
-
-{ #category : #accessing }
-EDAAggregateRoot >> aggregateRepository [
-	self subclassResponsibility
 ]
 
 { #category : #'applying events' }
@@ -228,7 +228,7 @@ EDAAggregateRoot >> checkCreateCommand: aCommand [
 										nextPutAll: aCommand aggregateSelectionCriteria greaseString;
 										nextPutAll: ' already exists in tenant ';
 										nextPutAll: aCommand tenant greaseString ])
-						andThrow: aCommand class invalidCommandMessageException ]
+						andThrow: aCommand class alreadyExistingAggregateExceptionClass ]
 ]
 
 { #category : #'command checking' }
@@ -253,7 +253,7 @@ EDAAggregateRoot >> checkNonCreateCommand: aCommand [
 								nextPutAll: aCommand aggregateSelectionCriteria values first greaseString;
 								nextPutAll: ' does not exist in tenant ';
 								nextPutAll: aCommand tenant greaseString ])
-				andThrow: aCommand class invalidCommandMessageException ]
+				andThrow: aCommand class invalidCommandExceptionClass ]
 ]
 
 { #category : #accessing }

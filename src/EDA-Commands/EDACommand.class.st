@@ -1,8 +1,8 @@
 Class {
 	#name : #EDACommand,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper + EDATCollectionHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATCollectionHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATCollectionHelper + EDATHashHelper + EDATEqualsHelper',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATCollectionHelper classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
 	#instVars : [
 		'tenant',
 		'applicationKey',
@@ -26,8 +26,26 @@ EDACommand class >> aggregateRootClass [
 	self subclassResponsibility 
 ]
 
+{ #category : #helpers }
+EDACommand class >> aggregateRootClassNameWithoutPrefix [
+	^ self aggregateRootClass asString allButFirst: self classPrefix size
+]
+
 { #category : #override }
-EDACommand class >> invalidCommandMessageException [
+EDACommand class >> alreadyExistingAggregateExceptionClass [
+	^ EDAAlreadyExistingAggregate allSubclasses
+		detect:
+			[ :class | class exceptionForAggregateRootClass: self aggregateRootClass ]
+		ifNone: [ EDAAlreadyExistingAggregate ]
+]
+
+{ #category : #helpers }
+EDACommand class >> classPrefix [
+	^ (self name regex: '^([A-Z]+)' matchesCollect: [ :each | each asString ]) first allButLast
+]
+
+{ #category : #override }
+EDACommand class >> invalidCommandExceptionClass [
 	^ EDAInvalidCommandMessage
 ]
 
@@ -74,7 +92,7 @@ EDACommand >> aggregateRootClass: aClass [
 
 { #category : #helpers }
 EDACommand >> aggregateRootClassNameWithoutPrefix [
-	^ self class aggregateRootClass asString allButFirst: self classPrefix size
+	^ self class aggregateRootClassNameWithoutPrefix
 ]
 
 { #category : #accessing }
@@ -128,7 +146,7 @@ EDACommand >> classNameWithoutPrefix [
 
 { #category : #helpers }
 EDACommand >> classPrefix [
-	^ (self class name regex: '^([A-Z]+)' matchesCollect: [ :each | each asString ]) first allButLast
+	^ self class classPrefix
 ]
 
 { #category : #accessing }

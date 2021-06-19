@@ -1,11 +1,11 @@
 Extension { #name : #EDAAggregateRoot }
 
-{ #category : #'*EDA-Errors' }
+{ #category : #'*EDA-Serializers' }
 EDAAggregateRoot >> asDictionary [
 	^ Dictionary newFromObject: self
 ]
 
-{ #category : #'*EDA-Errors' }
+{ #category : #'*EDA-Serializers' }
 EDAAggregateRoot >> neoJsonOn: neoJSONWriter [
 	neoJSONWriter writeMap: self asDictionary
 ]

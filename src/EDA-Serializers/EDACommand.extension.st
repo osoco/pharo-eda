@@ -1,11 +1,11 @@
 Extension { #name : #EDACommand }
 
-{ #category : #'*EDA-Errors' }
+{ #category : #'*EDA-Serializers' }
 EDACommand >> asDictionary [
 	^ Dictionary newFromObject: self
 ]
 
-{ #category : #'*EDA-Errors' }
+{ #category : #'*EDA-Serializers' }
 EDACommand >> neoJsonOn: neoJSONWriter [
 	neoJSONWriter writeMap: self asDictionary
 ]

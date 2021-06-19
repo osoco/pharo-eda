@@ -29,8 +29,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #EDAEventSourcingEvent,
 	#superclass : #Announcement,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATHashHelper + EDATEqualsHelper',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
 	#instVars : [
 		'id',
 		'timestamp',
@@ -89,7 +89,6 @@ EDAEventSourcingEvent class >> ofTenant: theTenant withAggregateId: theId comman
 	scopeContext ifNotNil: [ :s | result scopeContext: s ].
 	theAttrs at: 'agent' ifPresent: [ :v | result agent: v ].
 	"theAttrs at: 'dateCreated' ifPresent: [ :v | result dateCreated: v ]."
-	theAttrs at: 'entityId' ifPresent: [ :v | result entityId: v ].
 	^ result
 ]
 

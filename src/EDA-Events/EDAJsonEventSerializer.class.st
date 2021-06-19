@@ -7,7 +7,7 @@ Class {
 		'writer',
 		'errorWriter'
 	],
-	#category : 'EDA-Events-Serializers'
+	#category : #'EDA-Events-Serializers'
 }
 
 { #category : #converting }
@@ -27,32 +27,14 @@ EDAJsonEventSerializer class >> asEventName: event [
 ]
 
 { #category : #initialization }
-EDAJsonEventSerializer >> buildBodySectionForEvent: anEvent [
+EDAJsonEventSerializer class >> buildBodySectionForEvent: anEvent [
 	^ Dictionary newFrom:
-		(anEvent class allInstVarNames \ {#aggregateRootClass . #timestamp . #commandId . #version}
+		(anEvent class allInstVarNames \ (Array with: #aggregateRootClass with: #timestamp with: #commandId with: #version)
 			collect: [ :var | var -> (anEvent instVarNamed: var) ])
 ]
 
-{ #category : #initialization }
-EDAJsonEventSerializer >> buildMetaSectionForEvent: anEvent [
-	^ Dictionary
-		newFrom:
-			{('id' -> UUID new greaseString).
-			('version' -> anEvent version).
-			('timestamp' -> DateAndTime now asUTC rounded).
-			('correlationId' -> anEvent commandId).
-			('type' -> (self class asEventName: anEvent)).
-			('delete' -> (anEvent delete))}
-
-]
-
-{ #category : #accessing }
-EDAJsonEventSerializer >> customJsonMappingsFor: jsonWriter [
-
-]
-
 { #category : #parsing }
-EDAJsonEventSerializer >> serialize: anEvent [
+EDAJsonEventSerializer class >> buildMessageFormatDictForEvent: anEvent [ 
 	| eventDict meta body dateCreated |
 	eventDict := Dictionary new.
 	meta := self buildMetaSectionForEvent: anEvent.
@@ -64,6 +46,29 @@ EDAJsonEventSerializer >> serialize: anEvent [
 		ifFalse: [ dateCreated := dateCreated asUTC rounded ].
 	body at: #dateCreated put: dateCreated.
 	eventDict at: #body put: body.
+	^ eventDict
+]
+
+{ #category : #initialization }
+EDAJsonEventSerializer class >> buildMetaSectionForEvent: anEvent [
+	^ Dictionary
+		with: 'id' -> UUID new greaseString
+		with: 'version' -> anEvent version
+		with: 'timestamp' -> DateAndTime now asUTC rounded
+		with: 'correlationId' -> anEvent commandId
+		with: 'type' -> (self asEventName: anEvent)
+		with: 'delete' -> anEvent delete
+]
+
+{ #category : #accessing }
+EDAJsonEventSerializer >> customJsonMappingsFor: jsonWriter [
+
+]
+
+{ #category : #parsing }
+EDAJsonEventSerializer >> serialize: anEvent [
+	| eventDict |
+	eventDict := self class buildMessageFormatDictForEvent: anEvent.
 	^ String
 		streamContents: [ :stream |
 			| jsonWriter |
