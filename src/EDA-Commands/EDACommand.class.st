@@ -67,6 +67,9 @@ EDACommand class >> ofTenant: theTenant withCommandId: theCommandId aggregateRoo
 	theAttributes
 		at: 'aggregateRootClass'
 		ifPresent: [ :v | result aggregateRootClass: v ].
+	theAttributes
+		at: 'id'
+		ifPresent: [ :v | result aggregateRootId: v ].
 	^ result
 ]
 
