@@ -49,16 +49,29 @@ EDAVolatileEventStore >> events: anObject [
 ]
 
 { #category : #filtering }
-EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCriteria: aDict [
-	| eventsPerTenant aggregateEvents filteredEvents |
-	eventsPerTenant := self events
-		at: aTenant
-		ifAbsent: [ Dictionary new ].
-	aggregateEvents := eventsPerTenant
+EDAVolatileEventStore >> findEventsOfAggregate: aClass whereCriteria: aDict [
+	| aggregateEvents filteredEvents |
+	aggregateEvents := self events
 		at: aClass
 		ifAbsent: [ OrderedCollection new ].
 	filteredEvents := self class filterEvents: aggregateEvents byCriteria:  aDict.
 	^ filteredEvents deepCopy
+]
+
+{ #category : #filtering }
+EDAVolatileEventStore >> findEventsOfAggregate: anAggregateRootClass whereId: aNumber [
+	^ self
+		findEventsOfAggregate: anAggregateRootClass
+		whereCriteria: (Dictionary
+		with: 'id' -> aNumber)
+]
+
+{ #category : #filtering }
+EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: aClass whereCriteria: aCriteriaDictionary [
+	| eventsCriteria |
+	eventsCriteria := Dictionary newFrom: aCriteriaDictionary.
+	eventsCriteria at: 'tenant' put: aTenant.
+	^ self findEventsOfAggregate: aClass whereCriteria: eventsCriteria
 ]
 
 { #category : #filtering }
@@ -74,13 +87,9 @@ EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRoo
 EDAVolatileEventStore >> saveEvents: aCollection [
 	aCollection
 		do: [ :e | 
-			| evts evtCollection |
-			evts := self events at: e tenant ifAbsent: [ Dictionary new ].
-			evts ifEmpty: [ self events at: e tenant put: evts ].
-			evtCollection := evts
+			| evtCollection |
+			evtCollection := self events
 				at: e aggregateRootClass
-				ifAbsent: [ OrderedCollection new ].
-			evtCollection
-				ifEmpty: [ evts at: e aggregateRootClass put: evtCollection ].
+				ifAbsentPut: [ OrderedCollection new ].
 			evtCollection add: e ]
 ]
