@@ -41,6 +41,75 @@ EDACommandHandler class >> addVersionToEvents: producedEvents usingEventStore: a
 ]
 
 { #category : #handling }
+EDACommandHandler class >> buildAggregateRootOfClass: anAggregateRootClass withCriteria: aCriteria andEventStore: anEventStore [
+	| nonDeletedAggregates events startRetrievingEventsTimer startBuildingAggregateTimer eventsById aggregate |
+	"TODO: Compare the version number in the command with the current 
+	version number of the aggregate and, if they are different, it can 
+	raise a concurrency error and reject the change"
+	self
+		logDebugMessage:
+			(String
+				streamContents: [ :s | 
+					s
+						nextPutAll: 'Retrieving events for ';
+						nextPutAll: anAggregateRootClass greaseString;
+						nextPutAll: ' matching ';
+						nextPutAll: aCriteria greaseString;
+						nextPutAll: '.' ]).
+	startRetrievingEventsTimer := DateAndTime now.
+	events := anEventStore
+		findEventsOfAggregate: anAggregateRootClass
+		whereCriteria: aCriteria.
+	startBuildingAggregateTimer := DateAndTime now.
+	self
+		logDebugMessage:
+			(String
+				streamContents: [ :s | 
+					s
+						nextPutAll: events size greaseString;
+						nextPutAll: ' event(s) retrieved in ';
+						nextPutAll:
+							(startBuildingAggregateTimer - startRetrievingEventsTimer)
+								totalSeconds greaseString;
+						nextPutAll: ' second(s).' ]).
+	eventsById := self groupEventsById: events.
+	nonDeletedAggregates := eventsById keys
+		collect: [ :id | 
+			| idEvents |
+			idEvents := anEventStore
+				findEventsOfAggregate: anAggregateRootClass
+				whereId: id.
+			anAggregateRootClass new applyEvents: idEvents ]
+		thenReject: [ :aggr | aggr isDeleted ].
+	nonDeletedAggregates size > 1
+		ifTrue: [ self
+				logErrorMessage:
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: 'Too many non deleted aggregates founds matching ';
+								nextPutAll: aCriteria greaseString;
+								nextPutAll: '.' ])
+				andThrow: EDATooManyAggregatesForCriteria ].
+	aggregate := nonDeletedAggregates
+		ifEmpty: [ anAggregateRootClass new ]
+		ifNotEmpty: [ :ndAggr | ndAggr anyOne ].
+	self
+		logDebugMessage:
+			(String
+				streamContents: [ :s | 
+					s
+						nextPutAll: 'Aggregate ';
+						nextPutAll: aggregate greaseString;
+						nextPutAll: ' successfully built in ';
+						nextPutAll:
+							(DateAndTime now - startBuildingAggregateTimer) totalSeconds
+								greaseString;
+						nextPutAll: ' second(s).' ]).
+	^ aggregate
+]
+
+{ #category : #handling }
 EDACommandHandler class >> buildAggregateRootOfTenant: aTenant ofAggregateRootClass: anAggregateRootClass withCriteria: aCriteria andEventStore: anEventStore [
 	| nonDeletedAggregates events startRetrievingEventsTimer startBuildingAggregateTimer eventsById aggregate |
 	"TODO: Compare the version number in the command with the current 
