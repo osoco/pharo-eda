@@ -139,7 +139,8 @@ EDACommand >> applicationKey: anObject [
 { #category : #'aggregate checking' }
 EDACommand >> checkForAggregateRoot: anAggregateRoot [
 "super checkForAggregateRoot: in the subclasses and add the specific validations necessary for the command"
-	anAggregateRoot checkCreateNonCreateIssuesOnCommand: self
+	anAggregateRoot checkCreateNonCreateIssuesOnCommand: self.
+	anAggregateRoot checkTenantOfCommand: self.
 ]
 
 { #category : #helpers }

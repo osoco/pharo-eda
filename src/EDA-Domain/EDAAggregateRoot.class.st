@@ -36,27 +36,7 @@ EDAAggregateRoot class >> buildCommonArgsForCommand: aCommand [
 
 { #category : #helpers }
 EDAAggregateRoot class >> checkTenantIsValid: tenantOfCommand [
-	^ tenantOfCommand isNotNil
-]
-
-{ #category : #helpers }
-EDAAggregateRoot class >> checkTenantOfCommand: aCommandTenant matches: anAggregateTenant [
-	((self checkTenantIsValid: aCommandTenant) and: [ aCommandTenant = anAggregateTenant ])
-		ifFalse: [  self
-				logErrorMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: 'Invalid tenant (';
-								nextPutAll: aCommandTenant;
-								nextPutAll: '), aggregate''s tenant: ';
-								nextPutAll: anAggregateTenant greaseString ])
-				andThrow: InvalidTenant ]
-]
-
-{ #category : #helpers }
-EDAAggregateRoot class >> checkTenantOfCommandIsValid: aCommand [
-	(self checkTenantIsValid: aCommand tenant)
+	tenantOfCommand isNotNil
 		ifFalse:
 			[ self logErrorMessage: 'tenant is missing' andThrow: InvalidTenant ]
 ]
@@ -254,6 +234,24 @@ EDAAggregateRoot >> checkNonCreateCommand: aCommand [
 								nextPutAll: ' does not exist in tenant ';
 								nextPutAll: aCommand tenant greaseString ])
 				andThrow: aCommand class invalidCommandExceptionClass ]
+]
+
+{ #category : #helpers }
+EDAAggregateRoot >> checkTenantOfCommand: aCommand [
+	self class checkTenantIsValid: aCommand tenant.
+	(aCommand isCreate isNotNil and:
+		[ aCommand isCreate not ]) ifTrue:
+			[ aCommand tenant = self tenant 
+				ifFalse: [  self
+					logErrorMessage:
+						(String
+							streamContents: [ :s | 
+								s
+									nextPutAll: 'Invalid tenant (';
+									nextPutAll: aCommand tenant;
+									nextPutAll: '), aggregate''s tenant: ';
+									nextPutAll: self tenant greaseString ])
+					andThrow: InvalidTenant ] ].
 ]
 
 { #category : #accessing }

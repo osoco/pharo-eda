@@ -42,12 +42,6 @@ EDAMethodWrapperCommandHandler >> aggregateRootClass: aClass [
 
 { #category : #handling }
 EDAMethodWrapperCommandHandler >> delegateHandlingOfCommand: aCommand toAggregate: anAggregateRoot [
-	anAggregateRoot class checkTenantOfCommandIsValid: aCommand.
-	aCommand isCreate ifNotNil: [ :isCreate |
-		isCreate 
-			ifFalse: [ anAggregateRoot class
-				checkTenantOfCommand: aCommand tenant
-				matches: anAggregateRoot tenant ] ].
 	^ self invokeMethodHandlerWith: aCommand on: anAggregateRoot
 ]
 
