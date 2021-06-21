@@ -83,6 +83,7 @@ EDATDomainBDD >> buildMessageForCommand: aCommand ofType: aString [
 				for: DateAndTime
 					customDo:
 						[ :mapping | mapping encoder: [ :dateAndTime | dateAndTime printString ] ];
+				prettyPrint: true;
 				nextPut: aux ]
 ]
 
