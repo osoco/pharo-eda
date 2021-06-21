@@ -1,7 +1,7 @@
 Class {
 	#name : #EDACommand,
 	#superclass : #Object,
-	#traits : 'EDATPrintOnHelper + EDATCollectionHelper + EDATCollectionHelper + EDATHashHelper + EDATEqualsHelper',
+	#traits : 'EDATPrintOnHelper + EDATCollectionHelper + EDATHashHelper + EDATEqualsHelper',
 	#classTraits : 'EDATPrintOnHelper classTrait + EDATCollectionHelper classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
 	#instVars : [
 		'tenant',
