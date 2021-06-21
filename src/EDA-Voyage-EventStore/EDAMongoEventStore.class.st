@@ -236,7 +236,7 @@ EDAMongoEventStore class >> wireProtocolEnabled: aBoolean [
 EDAMongoEventStore >> allEventsOfTenant: aTenant [
 	| eventsCriteria |
 	eventsCriteria := (OrderedCollection
-		with: 'tenant' -> aTenant greaseString)
+		with: 'tenant' -> aTenant)
 		asDictionary.
 	^ EDAEventSourcingEvent
 		selectMany: eventsCriteria
@@ -264,7 +264,7 @@ EDAMongoEventStore >> findEventsOfAggregate: anAggregateRootClass whereId: aNumb
 EDAMongoEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary [
 	| eventsCriteria |
 	eventsCriteria := Dictionary newFrom: aCriteriaDictionary.
-	eventsCriteria at: 'tenant' put: aTenant greaseString.
+	eventsCriteria at: 'tenant' put: aTenant.
 	eventsCriteria at: 'aggregateRootClass' put: anAggregateRootClass greaseString.
 	^ EDAEventSourcingEvent
 		selectMany: eventsCriteria
