@@ -15,6 +15,16 @@ EDAEventStore >> doInitialize [
 ]
 
 { #category : #persistence }
+EDAEventStore >> findEventsOfAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary [
+	self subclassResponsibility
+]
+
+{ #category : #persistence }
+EDAEventStore >> findEventsOfAggregate: anAggregateRootClass whereId: aNumber [
+	self subclassResponsibility
+]
+
+{ #category : #persistence }
 EDAEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRootClass [
 	^ self
 		findEventsOfTenant: aTenant ofAggregate: anAggregateRootClass

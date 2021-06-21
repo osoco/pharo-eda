@@ -244,6 +244,23 @@ EDAMongoEventStore >> allEventsOfTenant: aTenant [
 ]
 
 { #category : #persistence }
+EDAMongoEventStore >> findEventsOfAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary [
+	| eventsCriteria |
+	eventsCriteria := Dictionary newFrom: aCriteriaDictionary.
+	eventsCriteria at: 'aggregateRootClass' put: anAggregateRootClass greaseString.
+	^ EDAEventSourcingEvent
+		selectMany: eventsCriteria
+		sortBy: (OrderedCollection with: #timestamp -> VOOrder ascending) asDictionary
+]
+
+{ #category : #persistence }
+EDAMongoEventStore >> findEventsOfAggregate: anAggregateRootClass whereId: aNumber [
+	^ self
+		findEventsOfAggregate: anAggregateRootClass
+		whereCriteria: (Dictionary with: 'id' -> aNumber)
+]
+
+{ #category : #persistence }
 EDAMongoEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRootClass whereCriteria: aCriteriaDictionary [
 	| eventsCriteria |
 	eventsCriteria := Dictionary newFrom: aCriteriaDictionary.

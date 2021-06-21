@@ -10,6 +10,19 @@ EDAMemoryEventStore >> allEvents [
 ]
 
 { #category : #accessing }
+EDAMemoryEventStore >> findEventsOfAggregate: anAggregate whereCriteria: aDictionary [
+	^ self shouldBeImplemented
+]
+
+{ #category : #persistence }
+EDAMemoryEventStore >> findEventsOfAggregate: anAggregateRootClass whereId: aNumber [
+	^ EDAEventSourcingEvent
+		selectMany: [ :event |
+			event aggregateRootClass = anAggregateRootClass asString
+				and: [ event id = aNumber ] ]
+]
+
+{ #category : #accessing }
 EDAMemoryEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregate whereCriteria: aDictionary [
 	^ self shouldBeImplemented
 ]
