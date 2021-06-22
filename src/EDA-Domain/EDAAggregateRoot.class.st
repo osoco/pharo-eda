@@ -236,9 +236,11 @@ EDAAggregateRoot >> checkNonCreateCommand: aCommand [
 				andThrow: aCommand class invalidCommandExceptionClass ]
 ]
 
-{ #category : #helpers }
+{ #category : #'command checking' }
 EDAAggregateRoot >> checkTenantOfCommand: aCommand [
 	self class checkTenantIsValid: aCommand tenant.
+	self flag: #TODO.
+	"Replace by search in Tenant repository when implemented"
 	(aCommand isCreate isNotNil and:
 		[ aCommand isCreate not ]) ifTrue:
 			[ aCommand tenant = self tenant 
@@ -256,7 +258,7 @@ EDAAggregateRoot >> checkTenantOfCommand: aCommand [
 
 { #category : #accessing }
 EDAAggregateRoot >> events [
-	^ self aggregateRepository findEventsById: self id.
+	^ self class aggregateRepository findEventsOfId: self id.
 ]
 
 { #category : #'command handling' }
