@@ -160,20 +160,6 @@ EDAAggregateRepository >> findEventOfTenant: aTenant byId: anId type: aType andC
 ]
 
 { #category : #api }
-EDAAggregateRepository >> findEventsById: anId [
-	| result criteria |
-	anId ifNil: [ ^ #() ] 
-	ifNotNil: [   
-	criteria := Dictionary new.
-	criteria at: 'id' put: anId.
-	result := self eventStore
-		findEventsOfAggregate: self aggregateClass
-		whereCriteria: criteria.
-	^ result
-	]
-]
-
-{ #category : #api }
 EDAAggregateRepository >> findEventsOf: aCollection matchingClass: aClass [
 	| result |
 	result :=
@@ -187,6 +173,20 @@ EDAAggregateRepository >> findEventsOf: aCollection matchingClass: aClass [
 					]
 			].
 	^ result
+]
+
+{ #category : #api }
+EDAAggregateRepository >> findEventsOfId: anId [
+	| result criteria |
+	anId ifNil: [ ^ #() ] 
+	ifNotNil: [   
+	criteria := Dictionary new.
+	criteria at: 'id' put: anId.
+	result := self eventStore
+		findEventsOfAggregate: self aggregateClass
+		whereCriteria: criteria.
+	^ result
+	]
 ]
 
 { #category : #api }
@@ -224,6 +224,31 @@ EDAAggregateRepository >> findFirstEventOf: aCollection matchingClass: aClass [
 	| result events |
 	events := self findEventsOf: aCollection matchingClass: aClass.
 	result := events ifEmpty: [ nil ] ifNotEmpty: [ :c | c first ].
+	^ result
+]
+
+{ #category : #api }
+EDAAggregateRepository >> findOfId: anId [
+	^ self
+		findOfId: anId
+		withApplyEventsBlock: [ :aggregate :events | aggregate applyEvents: events ]
+]
+
+{ #category : #api }
+EDAAggregateRepository >> findOfId: anId withApplyEventsBlock: aBlock [
+	| result events |
+	events := self findEventsOfId: anId.
+	events
+		ifEmpty: [ self
+				logWarningMessage:
+					'No ' , self aggregateClass greaseString , ' found with '
+						, (anId ifNil: [ 'null id' ] ifNotNil: [ :v | 'id ' , v ]) , '.'.
+			result := nil ]
+		ifNotEmpty: [ :evts |
+			result := self aggregateClass new.
+			aBlock value: result value: evts.
+			result isDeleted
+				ifTrue: [ result := nil ] ].
 	^ result
 ]
 
