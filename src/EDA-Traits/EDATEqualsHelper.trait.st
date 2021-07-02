@@ -7,5 +7,6 @@ Trait {
 EDATEqualsHelper >> = anInstance [
 	^ self class = anInstance class
 		and: [ self class allInstVarNames
-				allSatisfy: [ :varName | (varName value: self) = (varName value: anInstance) ] ]
+				allSatisfy: [ :varName |
+					(self instVarNamed: varName) = (anInstance instVarNamed: varName) ] ]
 ]
