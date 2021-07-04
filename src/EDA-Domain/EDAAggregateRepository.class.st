@@ -70,6 +70,17 @@ EDAAggregateRepository >> eventStore: aStore [
 ]
 
 { #category : #api }
+EDAAggregateRepository >> findAllEventsMatching: aDict [
+	| result aggregateClass |
+	aggregateClass := self aggregateClass.
+	result := self eventStore
+		findEventsOfAggregate: aggregateClass
+		whereCriteria: aDict.
+	result ifNil: [ result := OrderedCollection new ].
+	^ result
+]
+
+{ #category : #api }
 EDAAggregateRepository >> findAllEventsOfTenant: aTenant [
 	^ self findAllEventsOfTenant: aTenant matching: Dictionary new
 ]
@@ -123,6 +134,20 @@ EDAAggregateRepository >> findAllOfTenant: aTenant withCriteria: aDictionary [
 	eventsGroupedById := self groupEventsByAggregateRootId: events.
 	result := eventsGroupedById
 		keys collect: [ :id | self findOfTenant: aTenant byId: id  ] thenReject: [ :aggregate | aggregate isNil ].
+	^ result
+]
+
+{ #category : #api }
+EDAAggregateRepository >> findAllWithCriteria: aDictionary [
+	| result criteria events eventsGroupedById |
+	result := OrderedCollection new.
+	criteria := Dictionary newFrom: aDictionary.
+	events := self findAllEventsMatching: criteria.
+	eventsGroupedById := self groupEventsByAggregateRootId: events.
+	result := 
+		eventsGroupedById keys
+			collect: [ :id | self findOfId: id  ]
+			thenReject: [ :aggregate | aggregate isNil ].
 	^ result
 ]
 
