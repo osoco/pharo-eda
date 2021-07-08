@@ -43,10 +43,10 @@ BaselineOfPharoEDA >> declareGroupsIn: spec [
 	spec
 		group: 'core'
 			with:
-			#(#'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Entities' #'EDA-Serializers' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging');
+			#(#'EDA-Application' #'EDA-Errors' #'EDA-Traits' #'EDA-Tools' #'EDA-Domain' #'EDA-Commands' #'EDA-Entities' #'EDA-Serializers' #'EDA-Events' #'EDA-EventStore' #'EDA-Messaging' #'EDA-SMTP' #'EDA-Projections' #'EDA-Projections-Voyage-Repository' #'EDA-StompMessaging' #'EDA-Voyage-EventStore' #'EDA-Settings' #'EDA-Logging' #'EDA-Multimodule-Migration');
 		group: 'tests'
 			with:
-			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests');
+			#(#'EDA-Projections-Tests' #'EDA-Commands-Tests' #'EDA-Domain-Tests' #'EDA-Commands-Tests-Tests' #'EDA-Tools-Tests' #'EDA-Traits-Tests' #'EDA-Multimodule-Migration-Tests');
 		group: 'default' with: #('core' 'tests')
 ]
 
@@ -96,7 +96,8 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('NeoJSON' 'EDA-Messaging' 'EDA-Traits') ];
 		package: #'EDA-Entities' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Serializers';
-		package: #'EDA-Errors' with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
+		package: #'EDA-Errors'
+			with: [ spec requires: #('EDA-Traits' 'EDA-Messaging') ];
 		package: #'EDA-Logging';
 		package: #'EDA-Projections'
 			with: [ spec requires: #('EDA-Traits') ];
@@ -108,6 +109,8 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('Stamp' 'EDA-Traits') ];
 		package: #'EDA-Voyage-EventStore'
 			with: [ spec requires: #('Voyage') ];
+		package: #'EDA-Multimodule-Migration';
+		package: #'EDA-Multimodule-Migration-Tests' with: [ spec requires: #('EDA-Multimodule-Migration') ];
 		package: #'EDA-Application'
 			with: [ spec
 				requires:
@@ -117,7 +120,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 		package: #'EDA-Commands-Tests'
 			with: [ spec
 				requires: #('BabyMock2' 'EDA-Settings' 'EDA-StompMessaging' 'EDA-Domain-Tests') ]
-
 ]
 
 { #category : #dependencies }
