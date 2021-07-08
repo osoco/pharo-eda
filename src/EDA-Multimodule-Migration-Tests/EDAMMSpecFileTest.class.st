@@ -22,7 +22,7 @@ EDAMMSpecFileTest >> testFileReadWithOneRow [
 				nextPutAll: 'EDAEventSourcingEvent';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	entries := EDAMigrationToolFile new readFile: file.
+	entries := EDAMMSpecFile new readFile: file.
 	self assert: entries isNotNil.
 	self assert: (entries first includesKey: 'input package').
 	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
@@ -66,7 +66,7 @@ EDAMMSpecFileTest >> testFileReadWithTwoRows [
 				nextPutAll: 'EDAAMongoEventStore';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	entries := EDAMigrationToolFile new readFile: file.
+	entries := EDAMMSpecFile new readFile: file.
 	self assert: entries isNotNil.
 	self assert: entries isNotEmpty.
 	self assert: (entries first includesKey: 'input package').
