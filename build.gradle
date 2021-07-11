@@ -4,7 +4,7 @@ version = "${tag}-SNAPSHOT" // do not forget to update the version also in docke
 apply plugin: PharoPlugin
 
 pharo {
-    imageVersion = '61'
+    imageVersion = '80'
 }
 
 def imageName = "${project.name}-${project.version}"
@@ -22,7 +22,7 @@ task downloadFreshImage(type: DownloadPharoImageTask, dependsOn: removePreviousP
 task loadPharoEDA(type: EvalSmalltalkExpressionTask, dependsOn: downloadFreshImage) {
     pharoPath = customPharoPath
     commonPharoArgs = customPharoArgs
-    expression = "Metacello new repository: 'github://osoco/pharo-eda:${branchOrTag}'; baseline: 'PharoEDA; load"
+    expression = "Metacello new repository: 'github://osoco/pharo-eda:${branchOrTag}'; baseline: 'PharoEDA'; load"
 }
 
 task customizeImage(type: RunSmalltalkScriptTask, dependsOn: loadPharoEDA) {
@@ -56,7 +56,7 @@ class PharoPlugin implements Plugin<Project> {
 }
 
 class PharoPluginExtension {
-    String zeroConfUrl = "http://get.pharo.org"
+    String zeroConfUrl = "http://get.pharo.org/64"
     String imageVersion = 'stable'
 }
 
