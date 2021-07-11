@@ -4,7 +4,7 @@ Class {
 	#category : #'EDA-Multimodule-Migration'
 }
 
-{ #category : #helper }
+{ #category : #reading }
 EDAMMSpecFile >> readFile: aFileReference [
 	| result |
 	result := OrderedCollection new.
