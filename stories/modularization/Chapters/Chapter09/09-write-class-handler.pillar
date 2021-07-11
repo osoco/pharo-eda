@@ -1,0 +1,118 @@
+! Write class handler
+
+We'll now proceed to do the same for writing classes to disk.
+
+!! A helper class to write classes in Tonel format
+
+As we did before, let's start with a new test, this time in the same ==EDAMMClassFileTest==.
+
+% ${changes:path=code/010-EDAMMClassFileTest_testWriteEDACommandConsumer.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMClassFileTest >> testWriteEDACommandConsumer
+	| folder file defs |
+	folder := FileSystem workingDirectory / 'tests'.
+	defs := EDAMMClassFile new
+		readClassNamed: 'EDACommandConsumer'
+		inPackage: 'EDA-Messaging'
+		inFolder: FileSystem workingDirectory / 'src'.
+	file := EDAMMClassFile new
+		writeClassNamed: 'EDACommandConsumer'
+		withDefinitions: defs
+		inFolder: folder.
+	self assert: file isNotNil
+]]]
+
+The method just uses ==TonelWriter== to perform the "file-out".
+
+% ${changes:path=code/011-EDAMMClassFile_writeClassNamed_withDefinitions_inFolder_.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : 'writing' }
+EDAMMClassFile >> writeClassNamed: aString withDefinitions: aCollection inFolder: aFileReference
+	^ (aFileReference / aString , 'st')
+		writeStreamDo: [ :stream |
+			| writer classDefinition |
+			writer := TonelWriter new.
+			classDefinition := (aCollection
+				select: [ :def | def isClassDefinition ]) first.
+			writer writeClassDefinition: classDefinition on: stream.
+			(aCollection
+				select: [ :def |
+					def isMethodDefinition
+						and: [ def className = classDefinition className and: [ def classIsMeta ] ] ])
+				collect:
+					[ :def | writer writeMethodDefinition: def parent: classDefinition on: stream ].
+			(aCollection
+				select: [ :def |
+					def isMethodDefinition
+						and: [ def className = classDefinition className
+								and: [ def classIsMeta not ] ] ])
+				collect:
+					[ :def | writer writeMethodDefinition: def parent: classDefinition on: stream ] ];
+		yourself
+]]]
+
+!! A handler for writing a class
+
+Now we're ready to focus now on the handler to serialize a class in Tonel format.
+
+% ${changes:path=code/010-EDAMMClassFileWriterCommandHandlerTest_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMClassFileWriterCommandHandlerTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+% ${changes:path=code/011-EDAMMCommandHandlerTest.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMClassFileWriterCommandHandlerTest >> testClassFileReaderCommandHandler
+	| handler command context targetFolder outputFile |
+	targetFolder := FileSystem workingDirectory / 'tests'.
+	outputFile := targetFolder / 'EDACommandConsumer.st'.
+	outputFile exists
+		ifTrue: [ outputFile delete ].
+	command := Dictionary new
+		add: 'class' -> 'EDACommandConsumer';
+		add:
+			'EDACommandConsumer'
+				->
+					(EDAMMClassFile new
+						readClassNamed: 'EDACommandConsumer'
+						inPackage: 'EDA-Messaging'
+						inFolder: FileSystem workingDirectory / 'src');
+		add: 'target folder' -> targetFolder;
+		yourself.
+	context := Dictionary new.
+	handler := EDAMMClassFileWriterCommandHandler new.
+	handler handleCommand: command within: context.
+	self assert: outputFile exists
+]]]
+
+The test needs the following class to be created.
+
+% ${changes:path=code/012-EDAMMClassFileWriterCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMClassFileWriterCommandHandler
+		instanceVariableNames: ''
+		classVariableNames: ''
+		category: 'EDA-Multimodule-Migration'
+]]]
+
+The implementation of ==handleCommand:within:== is similar to ==EDAMMClassFileReaderCommandHandler=='s.
+
+% ${changes:path=code/013-EDAMMClassFileWriterCommandHandler_handleCommand_within_.ombu}$
+[[[classDefinition=false|lineNumber=true
+EDAMMClassFileWriterCommandHandler >> handleCommand: aCommand within: aContext
+	| result |
+	result := false.
+	(self inputValid: aCommand)
+		ifTrue: [ | className |
+			className := aCommand at: 'class'.
+			EDAMMClassFile new
+				writeClassNamed: className
+				withDefinitions: (aCommand at: className)
+				inFolder: (aCommand at: 'target folder') ].
+	^ result
+]]]

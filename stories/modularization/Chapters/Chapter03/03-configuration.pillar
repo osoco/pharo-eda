@@ -1,0 +1,194 @@
+! Configuration
+
+Let's start our tool by implementing the configuration layer.
+
+As defined in Chapter 2, it needs to read a file such as
+
+[[[
+pharo-eda-adapters,/tmp/pharo-eda-adapters/src
+]]]
+
+Each row contains two fields: the name of a module, and a folder.
+
+!! First test
+
+The first is simple: given a file, interpret its contents.
+
+We'll first create a package for the test: ==EDA-Multimodule-Migration-Test==.
+
+The first test will be defined in ==EDAModuleFileTest==.
+
+% ${changes:path=code/001-EDAModuleFileTest_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAModuleFileTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+We can now define the first test.
+
+% ${changes:path=code/002-EDAMMModuleFileTest_testFileReadWithOneRow.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #tests }
+EDAMMModuleFileTest >> testFileReadWithOneRow
+	| file entries |
+	file := FileSystem workingDirectory / 'tests' / 'modules1.csv'.
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'module1';
+				nextPut: $,;
+				nextPutAll: '/tmp/module1/src';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAMMModuleFile new readFile: file.
+	self assert: entries isNotNil.
+	entries
+		do: [ :entry |
+			self assert: (entry at: 'module') equals: 'module1'.
+			self assert: (entry at: 'path') equals: '/tmp/module1/src' ]
+]]]
+
+We need to define the new class.
+
+% ${changes:path=code/003-EDAMMModuleFile_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+Object subclass: #EDAMMModuleFile
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration'
+]]]
+
+Running the test will force Pharo to suggest creating the missing method ==readFile:== for us.
+Click on "Create" on the debugger, choose "EDAModuleFile", and use "reading" as protocol. Afterwards, click on "Browse" and fill in the following code:
+
+% ${changes:path=code/004-EDAModuleFile_fileRead_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #reading }
+EDAMMModuleFile >> readFile: aFileReference
+	^ OrderedCollection
+		with:
+			(Dictionary new
+				add: 'module' -> 'module1';
+				add: 'path' -> '/tmp/module/src';
+				yourself)
+]]]
+
+Of course, that's the naive implementation. We need to add a new test case.
+
+% ${changes:path=code/005-EDAModuleFileTest_testfileReadWithTwoRows.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #tests }
+EDAMMModuleFileTest >> testFileReadWithTwoRows
+	| file entries |
+	file := FileSystem workingDirectory / 'tests' / 'modules2.csv'.
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'module1';
+				nextPut: $,;
+				nextPutAll: '/tmp/module1/src';
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'module2';
+				nextPut: $,;
+				nextPutAll: '/temp/module2/src';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAModuleFile new readFile: file.
+	self assert: entries isNotNil.
+	self assert: (entries first at: 'module') equals: 'module1'.
+	self assert: (entries first at: 'path') equals: '/tmp/module1/src'.
+	self assert: (entries second at: 'module') equals: 'module2'.
+	self assert: (entries second at: 'path') equals: '/temp/module2/src'
+]]]
+
+This new test fails. It's time to fix our implementation of ==readFile:==.
+
+% ${changes:path=code/006-EDAMMModuleFile_readFile_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #reading }
+EDAMMModuleFile >> readFile: aFileReference
+	| result |
+	result := OrderedCollection new.
+	aFileReference
+		readStreamDo: [ :stream |
+			[ stream atEnd ]
+				whileFalse: [ | row |
+					row := ',' split: stream nextLine.
+					result
+						add:
+							(Dictionary new
+								add: 'module' -> row first;
+								add: 'path' -> row second;
+								yourself) ] ].
+	^ result
+]]]
+
+The tests now work. However, the API we just defined is not particularly useful.
+It'd be better to build a dictionary of module -> path entries instead. Let's change the tests first.
+
+% ${changes:path=code/007-EDAMMModuleFileTest_testFileReadWithOneRow.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #tests }
+EDAMMModuleFileTest >> testFileReadWithOneRow
+	| file entries |
+	file := FileSystem workingDirectory / 'tests' / 'modules1.csv'.
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'module1';
+				nextPut: $,;
+				nextPutAll: '/tmp/module1/src';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAModuleFile new readFile: file.
+	self assert: entries isNotNil.
+	self assert: (entries includesKey: 'module1').
+	self assert: (entries at: 'module1') equals: '/tmp/module1/src'
+]]]
+
+% ${changes:path=code/008-EDAMMModuleFileTest_testFileReadWithTwoRows.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #tests }
+EDAMMModuleFileTest >> testFileReadWithTwoRows
+	| file entries |
+	file := FileSystem workingDirectory / 'tests' / 'modules2.csv'.
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'module1';
+				nextPut: $,;
+				nextPutAll: '/tmp/module1/src';
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'module2';
+				nextPut: $,;
+				nextPutAll: '/temp/module2/src';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAModuleFile new readFile: file.
+	self assert: entries isNotNil.
+	self assert: (entries includesKey: 'module1').
+	self assert: (entries at: 'module1') equals: '/tmp/module1/src'.
+	self assert: (entries includesKey: 'module2').
+	self assert: (entries at: 'module2') equals: '/temp/module2/src'
+]]]
+
+The change in ==readFile:== is straightforward.
+
+% ${changes:path=code/009-EDAMMModuleFile_readFile_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #reading }
+EDAMMModuleFile >> readFile: aFileReference
+	| result |
+	result := Dictionary new.
+	aFileReference
+		readStreamDo: [ :stream |
+			[ stream atEnd ]
+				whileFalse: [ | row |
+					row := ',' split: stream nextLine.
+					result add: row first -> row second ] ].
+	^ result
+]]]

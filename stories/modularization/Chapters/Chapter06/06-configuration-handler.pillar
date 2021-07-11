@@ -1,0 +1,76 @@
+! Configuration handler
+
+This handler would inject the configuration information into the context, when executing the chain of responsibility.
+
+We'll reuse one of our previous tests to:
+- create a file with the configuration;
+- create a command containing the file reference;
+- create a new ==EDAMMConfigurationCommandHandler==;
+- send the command to the handler;
+- check the context contains the configuration settings from the file.
+
+The body of the test is then:
+
+% ${changes:path=code/001-EDAMMCommandHandlerTest.ombu}$
+[[[classDefinition=false|lineNumber=true
+EDAMMCommandHandlerTest >> testConfigurationCommandHandler
+	| handler command context file entries |
+	file := FileSystem workingDirectory / 'tests' / 'modules1.csv'.
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'module1';
+				nextPut: $,;
+				nextPutAll: '/tmp/module1/src';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	context := Dictionary new.
+	command := Dictionary new.
+	command add: 'configuration file' -> file.
+	handler := EDAMMConfigurationCommandHandler new.
+	handler handleCommand: command within: context.
+	self assert: (context includesKey: 'configuration').
+	entries := context at: 'configuration'.
+	self assert: entries isNotNil.
+	self assert: (entries includesKey: 'module1').
+	self assert: (entries at: 'module1') equals: '/tmp/module1/src'
+]]]
+
+The new class can be defined as follows:
+
+% ${changes:path=code/002-EDAMMConfigurationCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMConfigurationCommandHandler
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration'
+]]]
+
+The test fails since we haven't overridden the ==handleCommand:within:== method in our new handler. We'll skip the implementation of the naive version this time.
+
+% ${changes:path=code/003-EDAMMConfigurationCommandHandler_handleCommand_within_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command handling' }
+EDAMMConfigurationCommandHandler >> handleCommand: aCommand within: aContext
+	| result |
+	result := false.
+	(self inputValid: aCommand)
+		ifTrue: [ | fileReference |
+			fileReference := aCommand at: 'configuration file'.
+			aContext
+				at: 'configuration'
+				put: (EDAMMModuleFile new readFile: fileReference) ]
+		ifFalse: [ result := true ].
+	^ result
+]]]
+
+We added a new checker method to ensure the required information is available.
+
+% ${changes:path=code/004-EDAMMConfigurationCommandHandler_inputValid_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command checking' }
+inputValid: aCommand
+	^ aCommand includesKey: 'configuration file'
+]]]
+
+The test passes. Any handler can now access the configuration settings from the context object, as long as the ==EDAMMConfigurationCommandHandler== gets executed before.

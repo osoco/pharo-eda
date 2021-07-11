@@ -1,0 +1,201 @@
+! Reading specifications
+
+Now that we have the basic logic to read the configuration settings, we can build the logic needed to read the specifications, i.e., which class should be copied where.
+
+As a quickly reminder, we need to parse files with the following format:
+
+[[[
+input package,input class,output module,output package,output class
+]]]
+
+For example,
+
+[[[
+EDA-Events,EDAEventSourcingEvent,pharo-eda-api,EDAAPI-Events,EDAEventSourcingEvent
+]]]
+
+!! Initial test
+
+We need an initial test. But first, the test class, in ==EDA-Miltimodule-Migration-Tests==.
+
+% ${changes:path=code/001-EDAMMSpecFileTest_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMSpecFileTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+The initial test would be similar as what we wrote for ==EDAModuleTool==:
+
+% ${changes:path=code/002-EDAMMSpecFileTest_testFileReadWithOneRow.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #tests }
+EDAMMSpecFileTest >> testFileReadWithOneRow
+	| file entries |
+	file := FileSystem workingDirectory / 'tests' / 'spec1.csv'.
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAMMSpecFile new readFile: file.
+	self assert: entries isNotNil.
+	self assert: (entries first includesKey: 'input package').
+	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
+	self assert: (entries first includesKey: 'input class').
+	self
+		assert: (entries first at: 'input class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries first at: 'output module')
+		equals: 'pharo-eda-api'.
+	self assert: (entries first includesKey: 'output package').
+	self
+		assert: (entries first at: 'output package')
+		equals: 'EDAAPI-Events'.
+	self assert: (entries first includesKey: 'output class').
+	self
+		assert: (entries first at: 'output class')
+		equals: 'EDAEventSourcingEvent'
+]]]
+
+Just after saving it, Pharo will ask to create the new ==EDAMMSpecFile== class for us.
+
+% ${changes:path=code/003-EDAMMSpecFile_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+Object subclass: #EDAMMSpecFile
+		instanceVariableNames: ''
+		classVariableNames: ''
+		category: 'EDA-Multimodule-Migration'
+]]]
+
+We'll proceed as usual: running the test, and let Pharo write the initial method (under the "reading" protocol as before).
+
+% ${changes:path=code/004-EDAMMSpecFile_readFile_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #reading }
+EDAMMSpecFile >> readFile: aFileReference
+	^ OrderedCollection
+		with:
+			(Dictionary new
+				add: 'input package' -> 'EDA-Events';
+				add: 'input class' -> 'EDAEventSourcingEvent';
+				add: 'output module' -> 'pharo-eda-api';
+				add: 'output package' -> 'EDAAPI-Events';
+				add: 'output class' -> 'EDAEventSourcingEvent';
+				yourself)
+
+]]]
+
+To get rid of the naive implementation, let's add another test.
+
+% ${changes:path=code/005-EDAMMSpecFileTest_testFileReadWithTwoRows.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #tests }
+EDAMMSpecFileTest >> testFileReadWithTwoRows
+	| file entries |
+	file := FileSystem workingDirectory / 'tests' / 'spec1.csv'.
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'EDA-Voyage-EventStore';
+				nextPut: $,;
+				nextPutAll: 'EDAMongoEventStore';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-adapters';
+				nextPut: $,;
+				nextPutAll: 'EDAA-EventStore-Voyage';
+				nextPut: $,;
+				nextPutAll: 'EDAAMongoEventStore';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAMigrationToolFile new readFile: file.
+	self assert: entries isNotNil.
+	self assert: entries isNotEmpty.
+	self assert: (entries first includesKey: 'input package').
+	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
+	self assert: (entries first includesKey: 'input class').
+	self
+		assert: (entries first at: 'input class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries first at: 'output module')
+		equals: 'pharo-eda-api'.
+	self assert: (entries first includesKey: 'output package').
+	self
+		assert: (entries first at: 'output package')
+		equals: 'EDAAPI-Events'.
+	self assert: (entries first includesKey: 'output class').
+	self
+		assert: (entries first at: 'output class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: entries size > 1.
+	self assert: (entries second includesKey: 'input package').
+	self
+		assert: (entries second at: 'input package')
+		equals: 'EDA-Voyage-EventStore'.
+	self assert: (entries second includesKey: 'input class').
+	self
+		assert: (entries second at: 'input class')
+		equals: 'EDAMongoEventStore'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries second at: 'output module')
+		equals: 'pharo-eda-adapters'.
+	self assert: (entries second includesKey: 'output package').
+	self
+		assert: (entries second at: 'output package')
+		equals: 'EDAA-EventStore-Voyage'.
+	self assert: (entries second includesKey: 'output class').
+	self
+		assert: (entries second at: 'output class')
+		equals: 'EDAAMongoEventStore'
+]]]
+
+Now that we have a failing test, we can replace our implementation so that it actually reads the contents from a file.
+
+% ${changes:path=code/006-EDAMMSpecFile_readFile_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : #reading }
+EDAMMSpecFile >> readFile: aFileReference
+	| result |
+	result := OrderedCollection new.
+	aFileReference
+		readStreamDo: [ :stream |
+			[ stream atEnd ]
+				whileFalse: [ | row |
+					row := ',' split: stream nextLine.
+					result
+						add:
+							(Dictionary new
+								add: 'input package' -> row first;
+								add: 'input class' -> row second;
+								add: 'output module' -> row third;
+								add: 'output package' -> row fourth;
+								add: 'output class' -> row fifth;
+								yourself) ] ].
+	^ result
+]]]

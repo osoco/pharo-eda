@@ -1,0 +1,46 @@
+! Requirements
+
+As described in the introduction, we're trying to implement a tool to allow as make Modularized PharoEDA in sync with PharoEDA-develop.
+
+!! Inputs and outputs
+
+Thanks PharoEDA is already in Tonel format, the inputs to the tool are
+
+- package name
+- class name
+- class contents
+
+The outputs to the tool are the following
+
+- module (repository) name
+- package name
+- class name
+- class contents
+
+Obviously, the package name, class name and contents won't be the same.
+
+!! Requirements format
+
+One of the simplest formats we can define is just a table:
+
+[[[
+| input package | input class name | output module | output package | output class name |
+|               |                  |               |                |                   |
+]]]
+
+We're omitting the class contents since they'll be copied verbatim, after translating class references.
+
+Also, we're free to assume the input is a file in which every row is a comma-separated value with all of the expected columns.
+!! Configuration
+
+For simplicity, the tool won't know anything about git or version control systems. However, it'll need some configuration settings:
+
+[[[
+| module | folder |
+]]]
+
+As before, the input can be a file in which every line corresponds to a module, formatted as a CSV.
+
+!! Checks
+
+In case the tool, when trying to synchronize a class, finds that the contents of the class don't match, i.e., they have evolved independently, it should avoid changing the class, annotate the offending class, and report all problems at the end of the process.

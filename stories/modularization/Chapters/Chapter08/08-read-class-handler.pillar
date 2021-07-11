@@ -1,0 +1,135 @@
+! read class handler
+
+Now it's time to deal with the main purpose of this migration tool: copying classes to another directory. It'll perform a "file-out" on the source class, in Tonel format, to the output directory.
+
+However, later we know we'll need to check if the class already exists in the destination, so it's better to start with the logic in charge or reading files in Tonel format.
+
+!! A helper class to read Tonel files
+
+We can define a simple test for reading a known class.
+
+% ${changes:path=code/001-EDAMMClassFileTest.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMClassFileTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+The test itself uses ==TonelReader== to do the heavy lifting.
+
+% ${changes:path=code/002-EDAMMClassFileTest_testReadEDACommandConsumer.ombu}$
+[[[classDefinition=false|lineNumber=true
+EDAMMClassFileTest >> testReadEDACommandConsumer
+	| folder entry |
+	folder := FileSystem workingDirectory / 'src'.
+	entry := EDAMMClassFile new
+		readClass: 'EDACommandConsumer'
+		inPackage: 'EDA-Messaging'
+		inFolder: folder.
+	self assert: entry isNotNil
+]]]
+
+We need to create the new class.
+
+% ${changes:path=code/003-EDAMMClassFile.ombu}$
+[[[classDefinition=true|lineNumber=true
+Object subclass: #EDAMMClassFile
+		instanceVariableNames: ''
+		classVariableNames: ''
+		category: 'EDA-Multimodule-Migration'
+]]]
+
+The implementation of ==readClass:inPackage:infolder:== is basically calling ==TonelReader==.
+
+% ${changes:path=code/004-EDAMMClassFile_readClass_inPackage_inFolder_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'reading' }
+EDAMMClassFile >> readClass: aClassName inPackage: aPackageName inFolder: aFolder
+	^ (TonelReader on: aFolder asFileReference fileName: aPackageName)
+		definitions
+		select: [ :def | def className = aClassName ]
+]]]
+
+Notice TonelReader returns a list of definitions: one for the class itself, and one for each method.
+
+!! A handler for reading a class
+
+Using the helper class we just implemented, we can now write a handler that reads the class and binds it to the context for other commands to process.
+
+This time we'll use a different test class.
+
+% ${changes:path=code/005-EDAMMClassFileReaderCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMClassFileReaderCommandHandlerTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+The test is as follows:
+
+% ${changes:path=code/006-EDAMMClassFileReaderCommandHandlerTest_testClassFileReaderCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMClassFileReaderCommandHandlerTest >> testClassFileReaderCommandHandler
+	| handler command context definitions |
+	command := Dictionary new
+		add: 'class' -> 'EDACommandConsumer';
+		add: 'package' -> 'EDA-Messaging';
+		add: 'source root' -> (FileSystem workingDirectory / 'src');
+		yourself.
+	context := Dictionary new.
+	handler := EDAMMClassFileReaderCommandHandler new.
+	handler handleCommand: command within: context.
+	self assert: (context includesKey: 'EDACommandConsumer').
+    definitions := (context at: 'EDACommandConsumer').
+	self assert: definitions isNotNil.
+    self assert: definitions isNotEmpty.
+    definitions do: [ :def | self assert: def className equals: 'EDACommandConsumer' ]
+]]]
+
+The new class ==EDAMMClassFileReaderCommandHandler== is a simple stateless class.
+
+% ${changes:path=code/007-EDAMMDummyCommandHandler_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMClassFileReaderCommandHandler
+		instanceVariableNames: ''
+		classVariableNames: ''
+		category: 'EDA-Multimodule-Migration'
+]]]
+
+Its ==handleCommand:within:== makes sure it stops the processing altogether if the class is not found.
+
+% ${changes:path=code/008-EDAMMClassFileReaderCommandHandler_handleCommand_within_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command handling' }
+EDAMMClassFileReaderCommandHandler >> handleCommand: aCommand within: aContext
+	| result |
+	result := false.
+	(self inputValid: aCommand)
+		ifTrue: [ | sourceRoot packageName className entries |
+			sourceRoot := aCommand at: 'source root'.
+			packageName := aCommand at: 'package'.
+			className := aCommand at: 'class'.
+			entries := EDAMMClassFile new
+				readClass: className
+				inPackage: packageName
+				inFolder: sourceRoot.
+			entries
+				ifEmpty: [ result := true ]
+				ifNotEmpty: [ aContext at: className put: entries ] ].
+	^ result
+]]]
+
+The checker method just ensures the command includes the expected information.
+
+% ${changes:path=code/009-EDAMMClassFileReaderCommandHandlerTest_inputValid_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command checking' }
+EDAMMClassFileReaderCommandHandlerTest >> inputValid: aCommand
+	^ (aCommand includesKey: 'source root')
+		and: [ (aCommand includesKey: 'package')
+				and: [ aCommand includesKey: 'class' ] ]
+]]]
+

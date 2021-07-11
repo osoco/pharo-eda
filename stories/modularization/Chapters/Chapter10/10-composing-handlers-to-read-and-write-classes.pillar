@@ -1,0 +1,9 @@
+! Composing handlers to read and write classes
+
+With the components we have right now, we can compose then to build an initial solution to copy classes to their destination folders.
+
+The idea is:
+- Setup a chain with ==EDAMMConfigurationCommandHandler== and ==EDAMMSpecCommandHandler==.
+- For each spec entry, build a new chain with ==EDAMMClassFileReaderCommandHandler== and ==EDAMMClassFileWriterCommandHandler==.
+
+We'll leave for later how to deal with changes in the name of the packages, and checking if the output can be overwritten.

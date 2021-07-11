@@ -1,0 +1,17 @@
+! PharoEDA Modularization
+
+!! Introduction
+
+PharoEDA is already composed of different modules. The purpose of this refactoring is to split those modules into different repositories.
+
+!!! Background
+
+This refactoring consists of:
+- Renaming classes
+- Moving files across repositories.
+
+However, PharoEDA (~develop~ branch) is evolving, and the renamed classes need to evolve as well.
+
+!!! Objectives
+
+- Write a tool that keeps Modularized PharoEDA in sync with PharoEDA-develop.

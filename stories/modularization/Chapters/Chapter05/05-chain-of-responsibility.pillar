@@ -1,0 +1,242 @@
+! Chain of responsibility
+
+Now that we can read the specifications and the configuration files, we can try to process each specification.
+
+One basic thing to do is to copy the file to its final destination. We won't be dealing with changes in the source code just yet.
+
+However, to accomodate all steps confortably, we'll apply the Chain of Responsibility pattern.
+
+!! Basic layout
+
+The pattern suggests to model two base concepts: ==CommandSender== and ==CommandHandler==, and specific handlers as subclasses of the latter.
+
+In our case, we don't need anything special regarding the ==CommandSender==. Actually, we want a Chain of Responsibility to follow the Open/Closed principle: to be open for extension, and closed for modification. In other words, we want to be able to add new steps if necessary, without having to modify the existing code or steps.
+
+We need a test to start with.
+
+% ${changes:path=code/001-EDAMMCommandHandlerTest_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMCommandHandlerTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+% ${changes:path=code/002-EDAMMCommandHandlerTest_testDummyCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : #tests }
+EDAMMCommandHandlerTest >> testDummyCommandHandler
+	| handler |
+	handler := EDAMMDummyCommandHandler new.
+	handler handleCommand: nil within: nil.
+	self assert: handler commandHandled
+]]]
+
+You'll need to create the ==EDAMMDummyCommandHandler== class.
+
+% ${changes:path=code/003-EDAMMDummyCommandHandler_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMDummyCommandHandler
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+Running the test will ask you to implement the ==handleCommand:within:== method. Do it in ==EDAMMCommandHandler==.
+
+% ${changes:path=code/004-EDAMMCommandHandler_handleCommand.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command handling' }
+EDAMMCommandHandler >> handleCommand: aCommand within: aContext
+	self shouldBeImplemented
+]]]
+
+Now, you'll need to override it in ==EDAMMDummyCommandHandler== as well.
+
+% ${changes:path=code/005-EDAMMDummyCommandHandler_handleCommand.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command handling' }
+EDAMMDummyCommandHandler >> handleCommand: aCommand within: aContext
+	self commandHandled: true.
+	^ false
+]]]
+
+The missing piece to make the test pass is the ==commandHandled== method. We'll use an instance variable for that.
+
+% ${changes:path=code/006-EDAMMDummyCommandHandler_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMDummyCommandHandler
+	instanceVariableNames: 'commandHandled'
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+Don't forget to create the accessors.
+
+% ${changes:path=code/007-EDAMMDummyCommandHandler_commandHandled.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMLoggingCommandHandler >> commandHandled
+	^ commandHandled
+]]]
+
+% ${changes:path=code/008-EDAMMDummyCommandHandler_commandHandled_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMLoggingCommandHandler >> commandHandled: aBoolean
+	commandHandled := aBoolean
+]]]
+
+To initialize the variable to ==false==, we'll use the ==initialize== method.
+
+% ${changes:path=code/009-EDAMMDummyCommandHandler_initialize.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'initialization' }
+EDAMMLoggingCommandHandler >> initialize
+	super initialize.
+	self commandHandled: false
+]]]
+
+The test now should pass.
+
+!! Logging handler
+
+Let's add a new test.
+
+% ${changes:path=code/010-EDAMMCommandHandlerTest_testLoggingCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMCommandHandlerTest >> testLoggingCommandHandler
+	| handler |
+	handler := EDAMMLoggingCommandHandler
+		on: (WriteStream on: String new).
+	handler handleCommand: nil within: nil.
+	self assert: (handler stream contents includesSubstring: 'nil')
+]]]
+
+As usual, this test will help us creating the new class ==EDAMMLoggingCommandHandler==:
+
+% ${changes:path=code/011-EDAMMLoggingCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMLoggingCommandHandler
+	instanceVariableNames: 'stream'
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration'
+]]]
+
+Let's not forget to create the accessors.
+
+% ${changes:path=code/012-EDAMMLoggingCommandHandler_stream.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMLoggingCommandHandler >> stream
+	^ stream
+]]]
+
+% ${changes:path=code/013-EDAMMLoggingCommandHandler_stream_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMLoggingCommandHandler >> stream: anObject
+	stream := anObject
+]]]
+
+Now it's time to create the factory method.
+
+% ${changes:path=code/014-EDAMMLoggingCommandHandler_class_on_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMLoggingCommandHandler class >> on: aWriteStream
+	^ self new
+		stream: aWriteStream;
+		yourself
+]]]
+
+The only missing piece is to override ==handleCommand:within:== from ==EDAMMCommandHandler==.
+
+% ${changes:path=code/015-EDAMMLoggingCommandHandler_stream_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMLoggingCommandHandler >> handleCommand: aCommand within: aContext
+	self stream nextPutAll: aCommand printString.
+	^ false
+]]]
+
+The test should be passing now.
+
+!! Chain of Responsibility
+
+To define which handlers we want to get involved in the chain, we'll use a Composite pattern.
+
+The following test defines how the composite would be used.
+
+% ${changes:path=code/016-EDAMMCommandHandlerTest_testCompositeCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMCommandHandlerTest >> testCompositeCommandHandler
+	| handler |
+	handler := EDAMMCompositeCommandHandler
+		with: EDAMMDummyCommandHandler new
+		with: (EDAMMLoggingCommandHandler on: (WriteStream on: String new)).
+	self assert: (handler handleCommand: nil within: nil)
+]]]
+
+Create the new class as descendant of ==EDAMMCommandHandler==, under ==EDA-Multimodule-Migration==.
+
+% ${changes:path=code/017-EDAMMCompositeCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMCompositeCommandHandler
+		instanceVariableNames: 'handlers'
+		classVariableNames: ''
+		category: 'EDA-Multimodule-Migration'
+]]]
+
+The test will suggest us to create the missing factory method ==with:with:==.
+
+% ${changes:path=code/018-EDAMMCompositeCommandHandler_class_with_with_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'instance creation' }
+EDAMMCompositeCommandHandler class >> with: handler1 with: handler2
+	^ self new
+		addHandler: handler1;
+		addHandler: handler2;
+		yourself
+]]]
+
+The accessors are almost trivial.
+
+% ${changes:path=code/019-EDAMMCompositeCommandHandler_handlers.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMCompositeCommandHandler >> handlers
+	^ handlers
+		ifNil: [ self handlers: OrderedCollection new.
+			handlers ]
+]]]
+
+% ${changes:path=code/020-EDAMMCompositeCommandHandler_handlers_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMCompositeCommandHandler >> handlers: aCollection
+	handlers := aCollection
+]]]
+
+The new method ==addHandler:== is straightforward too.
+
+% ${changes:path=code/021-EDAMMCompositeCommandHandler_addHandler_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMCompositeCommandHandler >> addHandler: aHandler
+	self handlers add: aHandler
+]]]
+
+The only task we need to accomplish is overriding ==handleCommand:within:==.
+
+% ${changes:path=code/022-EDAMMCompositeCommandHandler_handleCommand_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command handling' }
+EDAMMCompositeCommandHandler >> handleCommand: aCommand within: aContext
+	^ self handlers
+		ifEmpty: [ false ]
+		ifNotEmpty: [ :c | c anySatisfy: [ :h | h handleCommand: aCommand within: aContext].
+			true ]
+]]]
