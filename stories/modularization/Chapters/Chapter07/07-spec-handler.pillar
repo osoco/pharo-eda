@@ -2,11 +2,18 @@
 
 This handler behaves in a similar way as ==EDAMMConfigurationCommandHandler==. It's responsibility is to read the spec file and make it available in the context for other handlers to use.
 
-% ${changes:path=code/001-EDAMMCommandHandlerTest_testSpecCommandHandler.ombu}$
+% ${changes:path=code/001-EDAMMSpecReaderCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMSpecReaderCommandHandlerTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+% ${changes:path=code/002-EDAMMSpecReaderCommandHandlerTest_testSpecCommandHandler.ombu}$
 [[[classDefinition=true|lineNumber=true
 { #category : 'tests' }
-EDAMMCommandHandlerTest >> testSpecCommandHandler
-testSpecCommandHandler
+EDAMMSpecReaderCommandHandlerTest >> testSpecCommandHandler
 	| handler command context file entries |
 	file := FileSystem workingDirectory / 'tests' / 'spec1.csv'.
 	file asFileReference
@@ -54,7 +61,7 @@ testSpecCommandHandler
 
 Pharo will ask us to create the new class right when we try to save the test itself.
 
-% ${changes:path=code/002-EDAMMSpecCommandHandler_class.ombu}$
+% ${changes:path=code/003-EDAMMSpecCommandHandler.ombu}$
 [[[classDefinition=true|lineNumber=true
 EDAMMCommandHandler subclass: #EDAMMSpecCommandHandler
 		instanceVariableNames: ''
@@ -64,9 +71,8 @@ EDAMMCommandHandler subclass: #EDAMMSpecCommandHandler
 
 The ==handleCommand:within:== implementation is very similar to ==EDAMMConfigurationCommandHandler=='s:
 
-% ${changes:path=code/003-EDAMMSpecCommandHandler_handleCommand_within_.ombu}$
+% ${changes:path=code/004-EDAMMSpecCommandHandler_handleCommand_within_.ombu}$
 [[[classDefinition=false|lineNumber=true
-EDAMMSpecCommandHandler >> handleCommand: aCommand within: aContext
 { #category : 'command handling' }
 EDAMMSpecCommandHandler >> handleCommand: aCommand within: aContext
 	| result |
@@ -83,7 +89,7 @@ EDAMMSpecCommandHandler >> handleCommand: aCommand within: aContext
 
 As well as the ==inputValid:== implementation.
 
-% ${changes:path=code/004-EDAMMSpecCommandHandler_inputValid_.ombu}$
+% ${changes:path=code/005-EDAMMSpecCommandHandler_inputValid_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'command checking' }
 EDAMMSpecCommandHandler >> inputValid: aCommand

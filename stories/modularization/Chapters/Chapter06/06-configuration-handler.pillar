@@ -11,9 +11,13 @@ We'll reuse one of our previous tests to:
 
 The body of the test is then:
 
-% ${changes:path=code/001-EDAMMCommandHandlerTest.ombu}$
+% ${changes:path=code/001-EDAMMConfigurationCommandHandler_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+]]]
+
+% ${changes:path=code/002-EDAMMConfigurationCommandHandlerTest_testConfigurationCommandHandler.ombu}$
 [[[classDefinition=false|lineNumber=true
-EDAMMCommandHandlerTest >> testConfigurationCommandHandler
+EDAMMConfigurationCommandHandlerTest >> testConfigurationCommandHandler
 	| handler command context file entries |
 	file := FileSystem workingDirectory / 'tests' / 'modules1.csv'.
 	file asFileReference
@@ -38,7 +42,7 @@ EDAMMCommandHandlerTest >> testConfigurationCommandHandler
 
 The new class can be defined as follows:
 
-% ${changes:path=code/002-EDAMMConfigurationCommandHandler.ombu}$
+% ${changes:path=code/003-EDAMMConfigurationCommandHandler.ombu}$
 [[[classDefinition=true|lineNumber=true
 EDAMMCommandHandler subclass: #EDAMMConfigurationCommandHandler
 	instanceVariableNames: ''
@@ -48,7 +52,7 @@ EDAMMCommandHandler subclass: #EDAMMConfigurationCommandHandler
 
 The test fails since we haven't overridden the ==handleCommand:within:== method in our new handler. We'll skip the implementation of the naive version this time.
 
-% ${changes:path=code/003-EDAMMConfigurationCommandHandler_handleCommand_within_.ombu}$
+% ${changes:path=code/004-EDAMMConfigurationCommandHandler_handleCommand_within_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'command handling' }
 EDAMMConfigurationCommandHandler >> handleCommand: aCommand within: aContext
@@ -66,7 +70,7 @@ EDAMMConfigurationCommandHandler >> handleCommand: aCommand within: aContext
 
 We added a new checker method to ensure the required information is available.
 
-% ${changes:path=code/004-EDAMMConfigurationCommandHandler_inputValid_.ombu}$
+% ${changes:path=code/005-EDAMMConfigurationCommandHandler_inputValid_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'command checking' }
 inputValid: aCommand

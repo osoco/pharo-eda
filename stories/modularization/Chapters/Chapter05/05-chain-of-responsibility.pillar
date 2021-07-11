@@ -169,10 +169,18 @@ To define which handlers we want to get involved in the chain, we'll use a Compo
 
 The following test defines how the composite would be used.
 
-% ${changes:path=code/016-EDAMMCommandHandlerTest_testCompositeCommandHandler.ombu}$
+% ${changes:path=code/016-EDAMMCompositeCommandHandler_class.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMCompositeCommandHandlerTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+% ${changes:path=code/017-EDAMMCompositeCommandHandlerTest_testCompositeCommandHandler.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
-EDAMMCommandHandlerTest >> testCompositeCommandHandler
+EDAMMCompositeCommandHandlerTest >> testCompositeCommandHandler
 	| handler |
 	handler := EDAMMCompositeCommandHandler
 		with: EDAMMDummyCommandHandler new
@@ -182,7 +190,7 @@ EDAMMCommandHandlerTest >> testCompositeCommandHandler
 
 Create the new class as descendant of ==EDAMMCommandHandler==, under ==EDA-Multimodule-Migration==.
 
-% ${changes:path=code/017-EDAMMCompositeCommandHandler.ombu}$
+% ${changes:path=code/018-EDAMMCompositeCommandHandler.ombu}$
 [[[classDefinition=true|lineNumber=true
 EDAMMCommandHandler subclass: #EDAMMCompositeCommandHandler
 		instanceVariableNames: 'handlers'
@@ -192,7 +200,7 @@ EDAMMCommandHandler subclass: #EDAMMCompositeCommandHandler
 
 The test will suggest us to create the missing factory method ==with:with:==.
 
-% ${changes:path=code/018-EDAMMCompositeCommandHandler_class_with_with_.ombu}$
+% ${changes:path=code/019-EDAMMCompositeCommandHandler_class_with_with_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'instance creation' }
 EDAMMCompositeCommandHandler class >> with: handler1 with: handler2
@@ -204,7 +212,7 @@ EDAMMCompositeCommandHandler class >> with: handler1 with: handler2
 
 The accessors are almost trivial.
 
-% ${changes:path=code/019-EDAMMCompositeCommandHandler_handlers.ombu}$
+% ${changes:path=code/020-EDAMMCompositeCommandHandler_handlers.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 EDAMMCompositeCommandHandler >> handlers
@@ -213,7 +221,7 @@ EDAMMCompositeCommandHandler >> handlers
 			handlers ]
 ]]]
 
-% ${changes:path=code/020-EDAMMCompositeCommandHandler_handlers_.ombu}$
+% ${changes:path=code/021-EDAMMCompositeCommandHandler_handlers_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 EDAMMCompositeCommandHandler >> handlers: aCollection
@@ -222,7 +230,7 @@ EDAMMCompositeCommandHandler >> handlers: aCollection
 
 The new method ==addHandler:== is straightforward too.
 
-% ${changes:path=code/021-EDAMMCompositeCommandHandler_addHandler_.ombu}$
+% ${changes:path=code/022-EDAMMCompositeCommandHandler_addHandler_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 EDAMMCompositeCommandHandler >> addHandler: aHandler
@@ -231,7 +239,7 @@ EDAMMCompositeCommandHandler >> addHandler: aHandler
 
 The only task we need to accomplish is overriding ==handleCommand:within:==.
 
-% ${changes:path=code/022-EDAMMCompositeCommandHandler_handleCommand_.ombu}$
+% ${changes:path=code/023-EDAMMCompositeCommandHandler_handleCommand_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'command handling' }
 EDAMMCompositeCommandHandler >> handleCommand: aCommand within: aContext
