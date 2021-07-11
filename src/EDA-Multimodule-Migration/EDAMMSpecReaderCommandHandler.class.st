@@ -10,9 +10,9 @@ EDAMMSpecReaderCommandHandler >> handleCommand: aCommand within: aContext [
 	result := false.
 	(self inputValid: aCommand)
 		ifTrue: [ | fileReference |
-			fileReference := aCommand at: 'spec file'.
+			fileReference := aCommand at: 'specs file'.
 			aContext
-				at: 'spec'
+				at: 'specs'
 				put: (EDAMMSpecFile new readFile: fileReference) ]
 		ifFalse: [ result := true ].
 	^ result
@@ -20,5 +20,5 @@ EDAMMSpecReaderCommandHandler >> handleCommand: aCommand within: aContext [
 
 { #category : #'command checking' }
 EDAMMSpecReaderCommandHandler >> inputValid: aCommand [
-	^ aCommand includesKey: 'spec file'
+	^ aCommand includesKey: 'specs file'
 ]

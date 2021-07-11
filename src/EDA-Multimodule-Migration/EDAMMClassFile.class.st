@@ -12,6 +12,7 @@ EDAMMClassFile >> readClassNamed: aClassName inPackage: aPackageName inFolder: a
 
 { #category : #writing }
 EDAMMClassFile >> writeClassNamed: aString withDefinitions: aCollection inFolder: aFileReference [
+	aFileReference ensureCreateDirectory.
 	^ (aFileReference / aString , 'st')
 		writeStreamDo: [ :stream | 
 			| writer classDefinition |

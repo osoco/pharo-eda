@@ -16,11 +16,12 @@ EDAMMSpecFile >> readFile: aFileReference [
 					result
 						add:
 							(Dictionary new
-								add: 'input package' -> row first;
-								add: 'input class' -> row second;
-								add: 'output module' -> row third;
-								add: 'output package' -> row fourth;
-								add: 'output class' -> row fifth;
+								add: 'input module' -> row first;
+								add: 'input package' -> row second;
+								add: 'input class' -> row third;
+								add: 'output module' -> row fourth;
+								add: 'output package' -> row fifth;
+								add: 'output class' -> row sixth;
 								yourself) ] ].
 	^ result
 ]
