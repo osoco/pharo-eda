@@ -147,26 +147,26 @@ The test now should pass.
 
 It's time to give shape to the tool itself. We'll name our new test suite after it.
 
-% ${changes:path=code/008-EDAMMMultimoduleMigrationToolTest.ombu}$
+% ${changes:path=code/008-EDAMMMigrationToolTest.ombu}$
 [[[classDefinition=true|lineNumber=true
-TestCase subclass: #EDAMMMultimoduleMigrationToolTest
+TestCase subclass: #EDAMMMigrationToolTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	package: 'EDA-Multimodule-Migration-Tests'
 ]]]
 
 The test takes care of the following:
-- creating a new temporary folder where ==MultimoduleTool== will copy the classes,
+- creating a new temporary folder where ==MigrationTool== will copy the classes,
 - creating a configuration file to associate the temporary folder with the destination module,
 - creating a specs file,
-- running ==MultimoduleTool=,
+- running ==MigrationTool=,
 - checking if the temporary folder contains the copied classes.
 
 We'll create a separate method to create a new empty folder for the test.
-% ${changes:path=code/009-EDAMMMultimoduleToolTest_deleteFolder.ombu}$
+% ${changes:path=code/009-EDAMMMigrationToolTest_deleteFolder.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'helpers' }
-deleteFolder: aFolder
+EDAMMMigrationToolTest >> deleteFolder: aFolder
 	aFolder exists
 		ifFalse: [ ^ self ].
 	aFolder asFileReference entries
@@ -179,16 +179,16 @@ deleteFolder: aFolder
 
 Now, the test itself.
 
-% ${changes:path=code/009-EDAMMMultimoduleToolTest_testMultimoduleTool.ombu}$
+% ${changes:path=code/009-EDAMMMigrationToolTest_testMigrationTool.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
-EDAMMMultimoduleToolTest >> testMultimoduleTool
+EDAMMMigrationToolTest >> testMigrationTool
 	| outputFolder confFile specFile |
 	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	self deleteFolder: outputFolder.
 	outputFolder ensureCreateDirectory.
 	confFile := FileSystem workingDirectory / 'tests'
-		/ 'testMultimoduleTool.config.csv'.
+		/ 'testMigrationTool.config.csv'.
 	confFile asFileReference
 		writeStreamDo: [ :stream |
 			stream
@@ -198,7 +198,7 @@ EDAMMMultimoduleToolTest >> testMultimoduleTool
 				nextPut: Character cr;
 				nextPut: Character lf ].
 	specFile := FileSystem workingDirectory / 'tests'
-		/ 'testMultimoduleTool.spec.csv'.
+		/ 'testMigrationTool.spec.csv'.
 	specFile asFileReference
 		writeStreamDo: [ :stream |
 			stream
@@ -224,7 +224,7 @@ EDAMMMultimoduleToolTest >> testMultimoduleTool
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	EDAMMMultimoduleTool new
+	EDAMMMigrationTool new
 		processSpecsFile: specFile
 		withConfigurationFile: confFile.
 	self assert: (outputFolder / 'EDAAPI-Events') exists.
@@ -236,9 +236,9 @@ EDAMMMultimoduleToolTest >> testMultimoduleTool
 
 As always, we need to create the class just when saving the method.
 
-% ${changes:path=code/010-EDAMMMultimoduleTool.ombu}$
+% ${changes:path=code/010-EDAMMMigrationTool.ombu}$
 [[[classDefinition=true|lineNumber=true
-Object subclass: #EDAMMMultimoduleTool
+Object subclass: #EDAMMMigrationTool
 	instanceVariableNames: ''
 	classVariableNames: ''
 	package: 'EDA-Multimodule-Migration'
@@ -246,7 +246,7 @@ Object subclass: #EDAMMMultimoduleTool
 
 If you run the test now, Pharo will ask you to first to create the method ==processSpecsFile:withConfigurationFile:==.
 
-% ${changes:path=code/011-EDAMMMultimoduleTool_processSpecsFile_withConfigurationFile_.ombu}$
+% ${changes:path=code/011-EDAMMMigrationTool_processSpecsFile_withConfigurationFile_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'api' }
 processSpecsFile: aSpecsFileReference withConfigurationFile: aConfFileReference
@@ -268,7 +268,7 @@ processSpecsFile: aSpecsFileReference withConfigurationFile: aConfFileReference
 
 Then, the test will require us to implement ==copySpec:to:==. That method is just the glue needed to compose the required handlers together.
 
-% ${changes:path=code/012-EDAMMMultimoduleTool.ombu}$
+% ${changes:path=code/012-EDAMMMigrationTool.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'copying' }
 copySpec: aSpecDictionary to: aFolderPathAsString
@@ -302,22 +302,22 @@ Finally, the test passes. We now have a tool able to copy files to the separate 
 
 !! Minor fix
 
-The tool is not necessarily coupled with PharoEDA, but for one detail: in ==EDAMMMultimoduleTool#copySpec:to:== we use ==(FileSystem workingDirectory) / 'src'== as **source root**. That means we cannot copy classes not part of PharoEDA. Also, it means that if we move ==EDAMMMultimoduleTool== to a different repository, it won't be able to read the classes to copy.
+The tool is not necessarily coupled with PharoEDA, but for one detail: in ==EDAMMMigrationTool >> copySpec:to:== we use ==(FileSystem workingDirectory) / 'src'== as **source root**. That means we cannot copy classes not part of PharoEDA. Also, it means that if we move ==EDAMMMigrationTool== to a different repository, it won't be able to read the classes to copy.
 
 One solution is pretty straightforward: we can just add **pharo-eda** as another module in the configuration file.
 
 The test would become:
 
-% ${changes:path=code/013-EDAMMMultimoduleToolTest_testMultimoduleTool.ombu}$
+% ${changes:path=code/013-EDAMMMigrationToolTest_testMigrationTool.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
-EDAMMMultimoduleToolTest >> testMultimoduleTool
+EDAMMMigrationToolTest >> testMigrationTool
 	| outputFolder confFile specFile |
 	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	self deleteFolder: outputFolder.
 	outputFolder ensureCreateDirectory.
 	confFile := FileSystem workingDirectory / 'tests'
-		/ 'testMultimoduleTool.config.csv'.
+		/ 'testMigrationTool.config.csv'.
 	confFile asFileReference
 		writeStreamDo: [ :stream |
 			stream
@@ -332,7 +332,7 @@ EDAMMMultimoduleToolTest >> testMultimoduleTool
 				nextPut: Character cr;
 				nextPut: Character lf ].
 	specFile := FileSystem workingDirectory / 'tests'
-		/ 'testMultimoduleTool.spec.csv'.
+		/ 'testMigrationTool.spec.csv'.
 	specFile asFileReference
 		writeStreamDo: [ :stream |
 			stream
@@ -358,7 +358,7 @@ EDAMMMultimoduleToolTest >> testMultimoduleTool
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	EDAMMMultimoduleTool new
+	EDAMMMigrationTool new
 		processSpecsFile: specFile
 		withConfigurationFile: confFile.
 	self assert: (outputFolder / 'EDAAPI-Events') exists.
@@ -369,12 +369,12 @@ EDAMMMultimoduleToolTest >> testMultimoduleTool
 		assert: (outputFolder / 'EDAAPI-Aggregates' / 'EDAAggregateRoot.st') exists
 ]]]
 
-==processSpecsFile:withConfigurationFile:== in ==EDAMMMultimoduleTool== would use the input folder from the modules (configuration) file.
+==processSpecsFile:withConfigurationFile:== in ==EDAMMMigrationTool== would use the input folder from the modules (configuration) file.
 
-% ${changes:path=code/014-EDAMMMultimoduleTool_processSpecsFile_withConfigurationFile_.ombu}$
+% ${changes:path=code/014-EDAMMMigrationTool_processSpecsFile_withConfigurationFile_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'api' }
-EDAMMMultimoduleTool >> processSpecsFile: aSpecsFileReference withConfigurationFile: aConfFileReference
+EDAMMMigrationTool >> processSpecsFile: aSpecsFileReference withConfigurationFile: aConfFileReference
 	| handler command |
 	command := Dictionary new
 		add: 'specs file' -> aSpecsFileReference;
@@ -394,10 +394,10 @@ EDAMMMultimoduleTool >> processSpecsFile: aSpecsFileReference withConfigurationF
 
 And ==copySpec:to:== becomes ==copySpec:from:to:==:
 
-% ${changes:path=code/015-EDAMMMultimoduleTool_copySpec_from_to_.ombu}$
+% ${changes:path=code/015-EDAMMMigrationTool_copySpec_from_to_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'command checking' }
-EDAMMMultimoduleTool >> copySpec: aSpecDictionary from: theSourceFolderAsString to: aFolderPathAsString
+EDAMMMigrationTool >> copySpec: aSpecDictionary from: theSourceFolderAsString to: aFolderPathAsString
 	| result command context |
 	command := Dictionary new
 		add: 'class' -> (aSpecDictionary at: 'input class');
@@ -424,7 +424,7 @@ EDAMMMultimoduleTool >> copySpec: aSpecDictionary from: theSourceFolderAsString 
 	^ result
 ]]]
 
-That would only fix one of the problems. ==EDAMMMultimoduleTool== still assumes the input classes come from the //pharo-eda// "module".
+That would only fix one of the problems. ==EDAMMMigrationTool== still assumes the input classes come from the //pharo-eda// "module".
 Currently, that's the only option we have, because that assumption comes from the very definition of the specifications file.
 To fix it, we need to add a new field to that format, the source module.
 
@@ -727,18 +727,18 @@ EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler
 				yourself)
 ]]]
 
-The only test pending is ==EDAMMMultimoduleTool >> testMultimoduleTool==.
+The only test pending is ==EDAMMMigrationTool >> testMigrationTool==.
 
-% ${changes:path=code/001-EDAMMCommandHandlerTest.ombu}$
+% ${changes:path=code/020-EDAMMMigrationToolTest.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
-testMultimoduleTool
+EDAMMMigrationToolTest >> testMigrationTool
 	| outputFolder confFile specFile |
 	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	self deleteFolder: outputFolder.
 	outputFolder ensureCreateDirectory.
 	confFile := FileSystem workingDirectory / 'tests'
-		/ 'EDAMMMultimoduleTool_testMultimoduleTool.config.csv'.
+		/ 'EDAMMMigrationTool_testMigrationTool.config.csv'.
 	confFile exists
 		ifTrue: [ confFile delete ].
 	confFile asFileReference
@@ -755,7 +755,7 @@ testMultimoduleTool
 				nextPut: Character cr;
 				nextPut: Character lf ].
 	specFile := FileSystem workingDirectory / 'tests'
-		/ 'testMultimoduleTool.spec.csv'.
+		/ 'testMigrationTool.spec.csv'.
 	specFile asFileReference
 		writeStreamDo: [ :stream |
 			stream
@@ -785,7 +785,7 @@ testMultimoduleTool
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	EDAMMMultimoduleTool new
+	EDAMMMigrationTool new
 		processSpecsFile: specFile
 		withConfigurationFile: confFile.
 	self assert: (outputFolder / 'EDAAPI-Events') exists.
