@@ -7,7 +7,7 @@ Class {
 { #category : #tests }
 EDAMMConfigurationCommandHandlerTest >> testConfigurationCommandHandler [
 	| handler command context file entries |
-	file := FileSystem workingDirectory / 'tests' / 'modules1.csv'.
+	file := FileSystem workingDirectory / 'tests' / 'EDAMMConfigurationCommandHandlerTest_testConfigurationCommandHandler.csv'.
 	file asFileReference
 		writeStreamDo: [ :stream | 
 			stream

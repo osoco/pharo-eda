@@ -7,7 +7,7 @@ Class {
 { #category : #tests }
 EDAMMModuleFileTest >> testFileReadWithOneRow [
 	| file entries |
-	file := FileSystem workingDirectory / 'tests' / 'modules1.csv'.
+	file := FileSystem workingDirectory / 'tests' / 'EDAMMModuleFileTest_testFileReadWithOneRow.csv'.
 	file asFileReference
 		writeStreamDo: [ :stream | 
 			stream
@@ -25,7 +25,7 @@ EDAMMModuleFileTest >> testFileReadWithOneRow [
 { #category : #tests }
 EDAMMModuleFileTest >> testFileReadWithTwoRows [
 	| file entries |
-	file := FileSystem workingDirectory / 'tests' / 'modules2.csv'.
+	file := FileSystem workingDirectory / 'tests' / 'EDAMMModuleFileTest_testFileReadWithTwoRows.csv'.
 	file asFileReference
 		writeStreamDo: [ :stream | 
 			stream

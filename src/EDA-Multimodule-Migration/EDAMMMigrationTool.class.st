@@ -1,11 +1,11 @@
 Class {
-	#name : #EDAMMMultimoduleTool,
+	#name : #EDAMMMigrationTool,
 	#superclass : #Object,
 	#category : #'EDA-Multimodule-Migration'
 }
 
 { #category : #copying }
-EDAMMMultimoduleTool >> copySpec: aSpecDictionary from: theSourceFolderAsString to: aFolderPathAsString [
+EDAMMMigrationTool >> copySpec: aSpecDictionary from: theSourceFolderAsString to: aFolderPathAsString [
 	| result command context |
 	command := Dictionary new
 		add: 'class' -> (aSpecDictionary at: 'input class');
@@ -33,7 +33,7 @@ EDAMMMultimoduleTool >> copySpec: aSpecDictionary from: theSourceFolderAsString 
 ]
 
 { #category : #api }
-EDAMMMultimoduleTool >> processSpecsFile: aSpecsFileReference withConfigurationFile: aConfFileReference [
+EDAMMMigrationTool >> processSpecsFile: aSpecsFileReference withConfigurationFile: aConfFileReference [
 	| handler command |
 	command := Dictionary new
 		add: 'specs file' -> aSpecsFileReference;

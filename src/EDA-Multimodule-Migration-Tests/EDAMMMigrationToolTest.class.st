@@ -1,11 +1,11 @@
 Class {
-	#name : #EDAMMMultimoduleMigrationToolTest,
+	#name : #EDAMMMigrationToolTest,
 	#superclass : #TestCase,
 	#category : #'EDA-Multimodule-Migration-Tests'
 }
 
 { #category : #helpers }
-EDAMMMultimoduleMigrationToolTest >> deleteFolder: aFolder [
+EDAMMMigrationToolTest >> deleteFolder: aFolder [
 	aFolder exists
 		ifFalse: [ ^ self ].
 	aFolder asFileReference entries
@@ -17,13 +17,13 @@ EDAMMMultimoduleMigrationToolTest >> deleteFolder: aFolder [
 ]
 
 { #category : #tests }
-EDAMMMultimoduleMigrationToolTest >> testMultimoduleTool [
+EDAMMMigrationToolTest >> testMigrationTool [
 	| outputFolder confFile specFile |
 	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	self deleteFolder: outputFolder.
 	outputFolder ensureCreateDirectory.
 	confFile := FileSystem workingDirectory / 'tests'
-		/ 'EDAMMMultimoduleTool_testMultimoduleTool.config.csv'.
+		/ 'EDAMMMigrationTool_testMigrationTool.config.csv'.
 	confFile exists
 		ifTrue: [ confFile delete ].
 	confFile asFileReference
@@ -70,7 +70,7 @@ EDAMMMultimoduleMigrationToolTest >> testMultimoduleTool [
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	EDAMMMultimoduleTool new
+	EDAMMMigrationTool new
 		processSpecsFile: specFile
 		withConfigurationFile: confFile.
 	self assert: (outputFolder / 'EDAAPI-Events') exists.
