@@ -32,12 +32,12 @@ EDAMMSpecReaderCommandHandlerTest >> testSpecCommandHandler
 				nextPut: Character lf ].
 	context := Dictionary new.
 	command := Dictionary new
-		add: 'spec file' -> file;
+		add: 'specs file' -> file;
 		yourself.
 	handler := EDAMMSpecCommandHandler new.
 	handler handleCommand: command within: context.
-	self assert: (context includesKey: 'spec').
-	entries := context at: 'spec'.
+	self assert: (context includesKey: 'specs').
+	entries := context at: 'specs'.
 	self assert: entries isNotNil.
 	self assert: (entries first includesKey: 'input package').
 	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
@@ -79,9 +79,9 @@ EDAMMSpecCommandHandler >> handleCommand: aCommand within: aContext
 	result := false.
 	(self inputValid: aCommand)
 		ifTrue: [ | fileReference |
-			fileReference := aCommand at: 'spec file'.
+			fileReference := aCommand at: 'specs file'.
 			aContext
-				at: 'spec'
+				at: 'specs'
 				put: (EDAMMSpecFile new readFile: fileReference) ]
 		ifFalse: [ result := true ].
 	^ result
@@ -93,7 +93,7 @@ As well as the ==inputValid:== implementation.
 [[[classDefinition=false|lineNumber=true
 { #category : 'command checking' }
 EDAMMSpecCommandHandler >> inputValid: aCommand
-	^ aCommand includesKey: 'spec file'
+	^ aCommand includesKey: 'specs file'
 ]]]
 
 The test should pass.
