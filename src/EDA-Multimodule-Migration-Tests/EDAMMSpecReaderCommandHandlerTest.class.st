@@ -24,6 +24,8 @@ EDAMMSpecReaderCommandHandlerTest >> testSpecReaderCommandHandler [
 				nextPut: $,;
 				nextPutAll: 'EDAAPI-Events';
 				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
 				nextPutAll: 'EDAEventSourcingEvent';
 				nextPut: Character cr;
 				nextPut: Character lf ].
@@ -52,6 +54,10 @@ EDAMMSpecReaderCommandHandlerTest >> testSpecReaderCommandHandler [
 	self
 		assert: (entries first at: 'output package')
 		equals: 'EDAAPI-Events'.
+	self assert: (entries first includesKey: 'output category').
+	self
+		assert: (entries first at: 'output category')
+		equals: 'EDAAPI-Events-Events'.
 	self assert: (entries first includesKey: 'output class').
 	self
 		assert: (entries first at: 'output class')

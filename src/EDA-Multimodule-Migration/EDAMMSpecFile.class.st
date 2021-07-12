@@ -21,7 +21,8 @@ EDAMMSpecFile >> readFile: aFileReference [
 								add: 'input class' -> row third;
 								add: 'output module' -> row fourth;
 								add: 'output package' -> row fifth;
-								add: 'output class' -> row sixth;
+								add: 'output category' -> row sixth;
+								add: 'output class' -> row seventh;
 								yourself) ] ].
 	^ result
 ]

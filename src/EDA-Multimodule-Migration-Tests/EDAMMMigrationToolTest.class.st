@@ -18,7 +18,7 @@ EDAMMMigrationToolTest >> deleteFolder: aFolder [
 
 { #category : #tests }
 EDAMMMigrationToolTest >> testMigrationTool [
-	| outputFolder confFile specFile |
+	| outputFolder confFile specFile classReader definitions classDefinition |
 	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	self deleteFolder: outputFolder.
 	outputFolder ensureCreateDirectory.
@@ -54,6 +54,8 @@ EDAMMMigrationToolTest >> testMigrationTool [
 				nextPut: $,;
 				nextPutAll: 'EDAAPI-Events';
 				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
 				nextPutAll: 'EDAEventSourcingEvent';
 				nextPut: Character cr;
 				nextPut: Character lf;
@@ -67,16 +69,39 @@ EDAMMMigrationToolTest >> testMigrationTool [
 				nextPut: $,;
 				nextPutAll: 'EDAAPI-Aggregates';
 				nextPut: $,;
+				nextPutAll: 'EDAAPI-Aggregates';
+				nextPut: $,;
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: Character cr;
 				nextPut: Character lf ].
 	EDAMMMigrationTool new
 		processSpecsFile: specFile
 		withConfigurationFile: confFile.
+	classReader := EDAMMClassFile new.
 	self assert: (outputFolder / 'EDAAPI-Events') exists.
 	self
 		assert: (outputFolder / 'EDAAPI-Events' / 'EDAEventSourcingEvent.st') exists.
+	definitions := classReader
+		readClassNamed: 'EDAEventSourcingEvent'
+		inPackage: 'EDAAPI-Events'
+		inFolder: outputFolder.
+	self
+		assert: (definitions select: [ :def | def isClassDefinition ]) isNotEmpty.
+	classDefinition := (definitions
+		select: [ :def | def isClassDefinition ]) first.
+	self assert: classDefinition isNotNil.
+	self assert: classDefinition category equals: 'EDAAPI-Events-Events'.
 	self assert: (outputFolder / 'EDAAPI-Aggregates') exists.
 	self
-		assert: (outputFolder / 'EDAAPI-Aggregates' / 'EDAAggregateRoot.st') exists
+		assert: (outputFolder / 'EDAAPI-Aggregates' / 'EDAAggregateRoot.st') exists.
+	definitions := classReader
+		readClassNamed: 'EDAAggregateRoot'
+		inPackage: 'EDAAPI-Aggregates'
+		inFolder: outputFolder.
+	self
+		assert: (definitions select: [ :def | def isClassDefinition ]) isNotEmpty.
+	classDefinition := (definitions
+		select: [ :def | def isClassDefinition ]) first.
+	self assert: classDefinition isNotNil.
+	self assert: classDefinition category equals: 'EDAAPI-Aggregates'
 ]

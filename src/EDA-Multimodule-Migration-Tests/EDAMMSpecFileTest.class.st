@@ -24,6 +24,8 @@ EDAMMSpecFileTest >> testFileReadWithOneRow [
 				nextPut: $,;
 				nextPutAll: 'EDAAPI-Events';
 				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
 				nextPutAll: 'EDAEventSourcingEvent';
 				nextPut: Character cr;
 				nextPut: Character lf ].
@@ -71,6 +73,8 @@ EDAMMSpecFileTest >> testFileReadWithTwoRows [
 				nextPut: $,;
 				nextPutAll: 'EDAAPI-Events';
 				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
 				nextPutAll: 'EDAEventSourcingEvent';
 				nextPut: Character cr;
 				nextPut: Character lf;
@@ -81,6 +85,8 @@ EDAMMSpecFileTest >> testFileReadWithTwoRows [
 				nextPutAll: 'EDAMongoEventStore';
 				nextPut: $,;
 				nextPutAll: 'pharo-eda-adapters';
+				nextPut: $,;
+				nextPutAll: 'EDAA-EventStore-Voyage';
 				nextPut: $,;
 				nextPutAll: 'EDAA-EventStore-Voyage';
 				nextPut: $,;

@@ -10,7 +10,8 @@ EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler [
 	file := FileSystem workingDirectory / 'tests'
 		/
 			'EDAMMSpecIteratorCommandHandlerTest_testSpecIteratorCommandHandler.csv'.
-	file exists ifTrue: [ file delete ].
+	file exists
+		ifTrue: [ file delete ].
 	file asFileReference
 		writeStreamDo: [ :stream | 
 			stream
@@ -24,6 +25,8 @@ EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler [
 				nextPut: $,;
 				nextPutAll: 'EDAAPI-Events';
 				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
 				nextPutAll: 'EDAEventSourcingEvent';
 				nextPut: Character cr;
 				nextPut: Character lf;
@@ -34,6 +37,8 @@ EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler [
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: $,;
 				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Aggregates';
 				nextPut: $,;
 				nextPutAll: 'EDAAPI-Aggregates';
 				nextPut: $,;
@@ -58,6 +63,7 @@ EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler [
 				add: 'input class' -> 'EDAEventSourcingEvent';
 				add: 'output module' -> 'pharo-eda-api';
 				add: 'output package' -> 'EDAAPI-Events';
+				add: 'output category' -> 'EDAAPI-Events-Events';
 				add: 'output class' -> 'EDAEventSourcingEvent';
 				yourself).
 	self
@@ -69,6 +75,7 @@ EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler [
 				add: 'input class' -> 'EDAAggregateRoot';
 				add: 'output module' -> 'pharo-eda-api';
 				add: 'output package' -> 'EDAAPI-Aggregates';
+				add: 'output category' -> 'EDAAPI-Aggregates';
 				add: 'output class' -> 'EDAAggregateRoot';
 				yourself)
 ]
