@@ -21,16 +21,13 @@ EDAMMClassFile >> writeClassNamed: aString withDefinitions: aCollection inFolder
 				select: [ :def | def isClassDefinition ]) first.
 			writer writeClassDefinition: classDefinition on: stream.
 			(aCollection
-				select: [ :def | 
-					def isMethodDefinition
-						and: [ def className = classDefinition className and: [ def classIsMeta ] ] ])
+				select:
+					[ :def | def isClassDefinition not and: [ def classIsMeta ] ])
 				collect:
 					[ :def | writer writeMethodDefinition: def parent: classDefinition on: stream ].
 			(aCollection
-				select: [ :def | 
-					def isMethodDefinition
-						and: [ def className = classDefinition className
-								and: [ def classIsMeta not ] ] ])
+				select:
+					[ :def | def isClassDefinition not and: [ def classIsMeta not ] ])
 				collect:
 					[ :def | writer writeMethodDefinition: def parent: classDefinition on: stream ] ];
 		yourself

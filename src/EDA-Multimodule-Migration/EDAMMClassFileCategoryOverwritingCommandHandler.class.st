@@ -34,10 +34,12 @@ EDAMMClassFileCategoryOverwritingCommandHandler >> handleCommand: aCommand withi
 				select: [ :def | def isClassDefinition ]) first.
 			newDefinitions := OrderedCollection
 				with:
-					(EDAMMClassDefinitionWrapper for: classDefinition andCategory: self category).
-								newDefinitions
+					(EDAMMClassDefinitionWrapper
+						for: classDefinition
+						andCategory: self category).
+			newDefinitions
 				addAll: (definitions reject: [ :def | def isClassDefinition ]).
-			aContext at: className put: newDefinitions ].
+			aCommand at: className put: newDefinitions ].
 	^ result
 ]
 

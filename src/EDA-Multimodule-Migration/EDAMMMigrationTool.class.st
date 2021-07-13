@@ -17,7 +17,7 @@ EDAMMMigrationTool >> copySpec: aSpecDictionary from: theSourceFolderAsString to
 		handleCommand: command
 		within: context)
 		ifTrue: [ true ]
-		ifFalse: [ EDAMMClassFileWriterCommandHandler new
+		ifFalse: [ (EDAMMCompositeCommandHandler with: (EDAMMClassFileCategoryOverwritingCommandHandler withCatalog: (aSpecDictionary at: 'output category')) with: EDAMMClassFileWriterCommandHandler new)
 				handleCommand:
 					(Dictionary new
 						add: 'class' -> (aSpecDictionary at: 'input class');

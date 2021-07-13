@@ -4,21 +4,24 @@ Class {
 	#category : #'EDA-Multimodule-Migration-Tests'
 }
 
-{ #category : #helpers }
-EDAMMMigrationToolTest >> deleteFolder: aFolder [
-	aFolder exists
-		ifFalse: [ ^ self ].
-	aFolder asFileReference entries
-		do: [ :f | 
-			f isDirectory
-				ifTrue: [ self deleteFolder: f ]
-				ifFalse: [ f reference delete ] ].
-	aFolder asFileReference delete
+{ #category : #'test support' }
+EDAMMMigrationToolTest >> _testMigrationTool_example [
+	| given when then |
+	given := self _testMigrationTool_given.
+	when := [ :specFile :confFile | self _testMigrationTool_when_specFile: specFile confFile: confFile ].
+	then := [ self _testMigrationTool_then ].
+	^ Dictionary new
+		add: #given -> given;
+		add:
+			#when
+				-> (when value: (given at: #specFile) value: (given at: #confFile));
+		add: #then -> then value;
+		yourself
 ]
 
-{ #category : #tests }
-EDAMMMigrationToolTest >> testMigrationTool [
-	| outputFolder confFile specFile classReader definitions classDefinition |
+{ #category : #'test support' }
+EDAMMMigrationToolTest >> _testMigrationTool_given [
+	| outputFolder confFile specFile |
 	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	self deleteFolder: outputFolder.
 	outputFolder ensureCreateDirectory.
@@ -74,9 +77,16 @@ EDAMMMigrationToolTest >> testMigrationTool [
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	EDAMMMigrationTool new
-		processSpecsFile: specFile
-		withConfigurationFile: confFile.
+	^ Dictionary new
+		add: #specFile -> specFile;
+		add: #confFile -> confFile;
+		yourself
+]
+
+{ #category : #'test support' }
+EDAMMMigrationToolTest >> _testMigrationTool_then [
+	| classReader outputFolder definitions classDefinition |
+	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	classReader := EDAMMClassFile new.
 	self assert: (outputFolder / 'EDAAPI-Events') exists.
 	self
@@ -104,4 +114,29 @@ EDAMMMigrationToolTest >> testMigrationTool [
 		select: [ :def | def isClassDefinition ]) first.
 	self assert: classDefinition isNotNil.
 	self assert: classDefinition category equals: 'EDAAPI-Aggregates'
+]
+
+{ #category : #'test support' }
+EDAMMMigrationToolTest >> _testMigrationTool_when_specFile: specFile confFile: confFile [
+	^ EDAMMMigrationTool new
+		processSpecsFile: specFile
+		withConfigurationFile: confFile.
+
+]
+
+{ #category : #helpers }
+EDAMMMigrationToolTest >> deleteFolder: aFolder [
+	aFolder exists
+		ifFalse: [ ^ self ].
+	aFolder asFileReference entries
+		do: [ :f | 
+			f isDirectory
+				ifTrue: [ self deleteFolder: f ]
+				ifFalse: [ f reference delete ] ].
+	aFolder asFileReference delete
+]
+
+{ #category : #tests }
+EDAMMMigrationToolTest >> testMigrationTool [
+	self _testMigrationTool_example
 ]

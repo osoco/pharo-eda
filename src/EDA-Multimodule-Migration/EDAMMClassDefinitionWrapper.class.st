@@ -23,6 +23,16 @@ EDAMMClassDefinitionWrapper >> category: anObject [
 	category := anObject
 ]
 
+{ #category : #'class membership' }
+EDAMMClassDefinitionWrapper >> class [
+	^ self wrapped class
+]
+
+{ #category : #introspection }
+EDAMMClassDefinitionWrapper >> className [
+	^ self wrapped className
+]
+
 { #category : #'reflective operations' }
 EDAMMClassDefinitionWrapper >> doesNotUnderstand: aMessage [
 	^ aMessage hasArguments ifTrue: [ 

@@ -19,8 +19,8 @@ EDAMMClassFileCatalogOverwritingCommandHandlerTest >> testClassFileCatalogOverwr
 			(EDAMMClassFileCategoryOverwritingCommandHandler
 				withCatalog: 'EDA-Messaging-Command-Overwritten').
 	handler handleCommand: command within: context.
-	self assert: (context includesKey: 'EDACommandConsumer').
-	definitions := context at: 'EDACommandConsumer'.
+	self assert: (command includesKey: 'EDACommandConsumer').
+	definitions := command at: 'EDACommandConsumer'.
 	self assert: definitions isNotNil.
 	self assert: definitions isNotEmpty.
 	definitions
