@@ -1,0 +1,776 @@
+! Changing the package of the class
+
+The specification states how a class should be migrated to its new PharoEDA module, and in which package it should reside.
+So far we've successfully copied classes to their expected submodule, but we leave the package unmodified, regardless of what the specification says.
+
+Our ==testMigrationTool== in ==EDAMMMigrationToolTest== describes the scenario correctly, but it just doesn't verify anything about the copied classes. We should at least check the package is correct.
+
+Fortunately, we can use our ==EDAMMClassFile== class for that.
+
+% ${changes:path=code/001-EDAMMMigrationToolTest_testMigrationTool.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command checking' }
+EDAMMMigrationToolTest >> testMigrationTool
+	| outputFolder confFile specFile classReader definitions classDefinition |
+	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
+	self deleteFolder: outputFolder.
+	outputFolder ensureCreateDirectory.
+	confFile := FileSystem workingDirectory / 'tests'
+		/ 'EDAMMMigrationTool_testMigrationTool.config.csv'.
+	confFile exists
+		ifTrue: [ confFile delete ].
+	confFile asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: (FileSystem workingDirectory / 'src') path pathString;
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: outputFolder path pathString;
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	specFile := FileSystem workingDirectory / 'tests'
+		/ 'testMultimoduleTool.spec.csv'.
+	specFile asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Domain';
+				nextPut: $,;
+				nextPutAll: 'EDAAggregateRoot';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Aggregates';
+				nextPut: $,;
+				nextPutAll: 'EDAAggregateRoot';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	EDAMMMigrationTool new
+		processSpecsFile: specFile
+		withConfigurationFile: confFile.
+	classReader := EDAMMClassFile new.
+	self assert: (outputFolder / 'EDAAPI-Events') exists.
+	self
+		assert: (outputFolder / 'EDAAPI-Events' / 'EDAEventSourcingEvent.st') exists.
+	definitions := classReader
+		readClassNamed: 'EDAEventSourcingEvent'
+		inPackage: 'EDAAPI-Events'
+		inFolder: outputFolder.
+	self
+		assert: (definitions select: [ :def | def isClassDefinition ]) isNotEmpty.
+	classDefinition := (definitions
+		select: [ :def | def isClassDefinition ]) first.
+	self assert: classDefinition isNotNil.
+	self assert: classDefinition category equals: 'EDAAPI-Events'.
+	self assert: (outputFolder / 'EDAAPI-Aggregates') exists.
+	self
+		assert: (outputFolder / 'EDAAPI-Aggregates' / 'EDAAggregateRoot.st') exists.
+	definitions := classReader
+		readClassNamed: 'EDAAggregateRoot'
+		inPackage: 'EDAAPI-Aggregates'
+		inFolder: outputFolder.
+	self
+		assert: (definitions select: [ :def | def isClassDefinition ]) isNotEmpty.
+	classDefinition := (definitions
+		select: [ :def | def isClassDefinition ]) first.
+	self assert: classDefinition isNotNil.
+	self assert: classDefinition category equals: 'EDAAPI-Aggregates'
+]]]
+
+We've just added two checks to verify the packages are correct. The test fails with "TestFailure: Got #'EDA-Events-Events' instead of 'EDAAPI-Events'". We used ==MCClassDefinition >> category== because it's the only information about the package we know.
+
+To clarify this: when using Tonel format, the package of the class is the name of the folder the ".st" is in, but the category of the class needs to be compatible with the name of the package. That is, it either matches the name of the package, or starts with it and appends a suffix (starting with "-").
+
+Strictly speaking, our tool respects the format. However, it doesn't do anything with the category itself, and therefore will lead to inconsistencies if the package differs (because the category won't).
+
+There're two options:
+- we try to be super clever and come up with a category by ourselves.
+- we update the specification to include the category of the copied class.
+
+The second option is better. First of all, it's explicit, and allows us to implement it faster. Second, it can accomodate the first option as well if we need. We could add a new handler that provides the value of the new category, if the specification omits it, based on the source category, the source package, and the destination package.
+
+!! Updating the specification to include the target category
+
+We have ==EDAMMSpecReaderCommandHandlerTest==, so let's use it.
+
+% ${changes:path=code/002-EDAMMSpecReaderCommandHandlerTest_testSpecReaderCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command checking' }
+EDAMMSpecReaderCommandHandlerTest >> testSpecReaderCommandHandler
+	| handler command context file entries |
+	file := FileSystem workingDirectory / 'tests'
+		/ 'EDAMMSpecReaderCommandHandlerTest_testSpecReaderCommandHandler.csv'.
+	file exists
+		ifTrue: [ file delete ].
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	context := Dictionary new.
+	command := Dictionary new
+		add: 'specs file' -> file;
+		yourself.
+	handler := EDAMMSpecReaderCommandHandler new.
+	handler handleCommand: command within: context.
+	self assert: (context includesKey: 'specs').
+	entries := context at: 'specs'.
+	self assert: entries isNotNil.
+	self assert: (entries first includesKey: 'input module').
+	self assert: (entries first at: 'input module') equals: 'pharo-eda'.
+	self assert: (entries first includesKey: 'input package').
+	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
+	self assert: (entries first includesKey: 'input class').
+	self
+		assert: (entries first at: 'input class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries first at: 'output module')
+		equals: 'pharo-eda-api'.
+	self assert: (entries first includesKey: 'output package').
+	self
+		assert: (entries first at: 'output package')
+		equals: 'EDAAPI-Events'.
+	self assert: (entries first includesKey: 'output category').
+	self
+		assert: (entries first at: 'output category')
+		equals: 'EDAAPI-Events-Events'.
+	self assert: (entries first includesKey: 'output class').
+	self
+		assert: (entries first at: 'output class')
+		equals: 'EDAEventSourcingEvent'
+]]]
+
+We just added the new field and the associated asserts.
+
+To make it pass, we have to change ==EDAMMSpecFile==.
+
+% ${changes:path=code/003-EDAMMSpecFile_readFile_.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : 'reading' }
+EDAMMSpecFile >> readFile: aFileReference
+	| result |
+	result := OrderedCollection new.
+	aFileReference
+		readStreamDo: [ :stream |
+			[ stream atEnd ]
+				whileFalse: [ | row |
+					row := ',' split: stream nextLine.
+					result
+						add:
+							(Dictionary new
+								add: 'input module' -> row first;
+								add: 'input package' -> row second;
+								add: 'input class' -> row third;
+								add: 'output module' -> row fourth;
+								add: 'output package' -> row fifth;
+								add: 'output category' -> row sixth;
+								add: 'output class' -> row seventh;
+								yourself) ] ].
+	^ result
+]]]
+
+The test passes again.
+
+We have to modify ==EDAMMMigrationToolTest >> testMigrationTool== to accomodate the new spec format.
+
+% ${changes:path=code/004-EDAMMigrationToolTest_testMigrationTool.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : 'tests' }
+EDAMMigrationToolTest >> testMigrationTool
+	| outputFolder confFile specFile classReader definitions classDefinition |
+	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
+	self deleteFolder: outputFolder.
+	outputFolder ensureCreateDirectory.
+	confFile := FileSystem workingDirectory / 'tests'
+		/ 'EDAMMMigrationTool_testMigrationTool.config.csv'.
+	confFile exists
+		ifTrue: [ confFile delete ].
+	confFile asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: (FileSystem workingDirectory / 'src') path pathString;
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: outputFolder path pathString;
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	specFile := FileSystem workingDirectory / 'tests'
+		/ 'testMultimoduleTool.spec.csv'.
+	specFile asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Domain';
+				nextPut: $,;
+				nextPutAll: 'EDAAggregateRoot';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Aggregates';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Aggregates';
+				nextPut: $,;
+				nextPutAll: 'EDAAggregateRoot';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	EDAMMMigrationTool new
+		processSpecsFile: specFile
+		withConfigurationFile: confFile.
+	classReader := EDAMMClassFile new.
+	self assert: (outputFolder / 'EDAAPI-Events') exists.
+	self
+		assert: (outputFolder / 'EDAAPI-Events' / 'EDAEventSourcingEvent.st') exists.
+	definitions := classReader
+		readClassNamed: 'EDAEventSourcingEvent'
+		inPackage: 'EDAAPI-Events'
+		inFolder: outputFolder.
+	self
+		assert: (definitions select: [ :def | def isClassDefinition ]) isNotEmpty.
+	classDefinition := (definitions
+		select: [ :def | def isClassDefinition ]) first.
+	self assert: classDefinition isNotNil.
+	self assert: classDefinition category equals: 'EDAAPI-Events-Events'.
+	self assert: (outputFolder / 'EDAAPI-Aggregates') exists.
+	self
+		assert: (outputFolder / 'EDAAPI-Aggregates' / 'EDAAggregateRoot.st') exists.
+	definitions := classReader
+		readClassNamed: 'EDAAggregateRoot'
+		inPackage: 'EDAAPI-Aggregates'
+		inFolder: outputFolder.
+	self
+		assert: (definitions select: [ :def | def isClassDefinition ]) isNotEmpty.
+	classDefinition := (definitions
+		select: [ :def | def isClassDefinition ]) first.
+	self assert: classDefinition isNotNil.
+	self assert: classDefinition category equals: 'EDAAPI-Aggregates'
+]]]
+
+Now the test is correct. We don't check the package, because it's derived from the package the ".st" file gets created. But we can perform some checks on the category. And those checks fail, because we are not using the new field in the spec when copying the classes.
+
+There're some other tests we need to update after changing the spec.
+
+First, ==testFileReadWithOneRow== in ==EDAMMSpecFileTest==:
+
+% ${changes:path=code/005-EDAMMSpecFileTest_testFileReadWithOneRow.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMSpecFileTest >> testFileReadWithOneRow
+	| file entries |
+	file := FileSystem workingDirectory / 'tests'
+		/ 'EDAMMSpecFileTest_testFileReadWithOneRow.csv'.
+	file exists
+		ifTrue: [ file delete ].
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAMMSpecFile new readFile: file.
+	self assert: entries isNotNil.
+	self assert: (entries first includesKey: 'input module').
+	self assert: (entries first at: 'input module') equals: 'pharo-eda'.
+	self assert: (entries first includesKey: 'input package').
+	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
+	self assert: (entries first includesKey: 'input class').
+	self
+		assert: (entries first at: 'input class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries first at: 'output module')
+		equals: 'pharo-eda-api'.
+	self assert: (entries first includesKey: 'output package').
+	self
+		assert: (entries first at: 'output package')
+		equals: 'EDAAPI-Events'.
+	self assert: (entries first includesKey: 'output class').
+	self
+		assert: (entries first at: 'output class')
+		equals: 'EDAEventSourcingEvent'
+]]]
+
+Second, ==testFileReadWithTwoRows== in the same test suite.
+
+% ${changes:path=code/006-EDAMMSpecFileTest_testFileReadWithTwoRows.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMSpecFileTest >> testFileReadWithTwoRows
+	| file entries |
+	file := FileSystem workingDirectory / 'tests'
+		/ 'EDAMMSpecFileTest_testFileReadWithTwoRows.csv'.
+	file exists
+		ifTrue: [ file delete ].
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Voyage-EventStore';
+				nextPut: $,;
+				nextPutAll: 'EDAMongoEventStore';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-adapters';
+				nextPut: $,;
+				nextPutAll: 'EDAA-EventStore-Voyage';
+				nextPut: $,;
+				nextPutAll: 'EDAA-EventStore-Voyage';
+				nextPut: $,;
+				nextPutAll: 'EDAAMongoEventStore';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	entries := EDAMMSpecFile new readFile: file.
+	self assert: entries isNotNil.
+	self assert: entries isNotEmpty.
+	self assert: (entries first includesKey: 'input module').
+	self assert: (entries first at: 'input module') equals: 'pharo-eda'.
+	self assert: (entries first includesKey: 'input package').
+	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
+	self assert: (entries first includesKey: 'input class').
+	self
+		assert: (entries first at: 'input class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries first at: 'output module')
+		equals: 'pharo-eda-api'.
+	self assert: (entries first includesKey: 'output package').
+	self
+		assert: (entries first at: 'output package')
+		equals: 'EDAAPI-Events'.
+	self assert: (entries first includesKey: 'output class').
+	self
+		assert: (entries first at: 'output class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: entries size > 1.
+	self assert: (entries second includesKey: 'input module').
+	self assert: (entries second at: 'input module') equals: 'pharo-eda'.
+	self assert: (entries second includesKey: 'input package').
+	self
+		assert: (entries second at: 'input package')
+		equals: 'EDA-Voyage-EventStore'.
+	self assert: (entries second includesKey: 'input class').
+	self
+		assert: (entries second at: 'input class')
+		equals: 'EDAMongoEventStore'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries second at: 'output module')
+		equals: 'pharo-eda-adapters'.
+	self assert: (entries second includesKey: 'output package').
+	self
+		assert: (entries second at: 'output package')
+		equals: 'EDAA-EventStore-Voyage'.
+	self assert: (entries second includesKey: 'output class').
+	self
+		assert: (entries second at: 'output class')
+		equals: 'EDAAMongoEventStore'
+]]]
+
+Third, ==testSpecIteratorCommandHandler== in ==EDAMMSpecIteratorCommandHandlerTest==.
+
+% ${changes:path=code/007-EDAMMSpecIteratorCommandHandlerTest_testSpecIteratorCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler
+"tests"
+testSpecIteratorCommandHandler
+	| handler command file specsFound |
+	file := FileSystem workingDirectory / 'tests'
+		/
+			'EDAMMSpecIteratorCommandHandlerTest_testSpecIteratorCommandHandler.csv'.
+	file exists
+		ifTrue: [ file delete ].
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf;
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Domain';
+				nextPut: $,;
+				nextPutAll: 'EDAAggregateRoot';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Aggregates';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Aggregates';
+				nextPut: $,;
+				nextPutAll: 'EDAAggregateRoot';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	command := Dictionary new
+		add: 'specs file' -> file;
+		yourself.
+	specsFound := OrderedCollection new.
+	handler := EDAMMSpecIteratorCommandHandler
+		for: [ :spec :cmd :ctx | specsFound add: spec ].
+	handler handleCommand: command within: Dictionary new.
+	self assert: specsFound isNotEmpty.
+	self assert: specsFound size equals: 2.
+	self
+		assert: specsFound first
+		equals:
+			(Dictionary new
+				add: 'input module' -> 'pharo-eda';
+				add: 'input package' -> 'EDA-Events';
+				add: 'input class' -> 'EDAEventSourcingEvent';
+				add: 'output module' -> 'pharo-eda-api';
+				add: 'output package' -> 'EDAAPI-Events';
+				add: 'output category' -> 'EDAAPI-Events-Events';
+				add: 'output class' -> 'EDAEventSourcingEvent';
+				yourself).
+	self
+		assert: specsFound second
+		equals:
+			(Dictionary new
+				add: 'input module' -> 'pharo-eda';
+				add: 'input package' -> 'EDA-Domain';
+				add: 'input class' -> 'EDAAggregateRoot';
+				add: 'output module' -> 'pharo-eda-api';
+				add: 'output package' -> 'EDAAPI-Aggregates';
+				add: 'output category' -> 'EDAAPI-Aggregates';
+				add: 'output class' -> 'EDAAggregateRoot';
+				yourself)
+]]]
+
+Finally, ==testSpecReaderCommandHandler== in ==EDAMMSpecReaderCommandHandlerTest==:
+
+% ${changes:path=code/008-EDAMMSpecReaderCommandHandlerTest_testSpecReaderCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMSpecReaderCommandHandlerTest >> testSpecReaderCommandHandler
+"tests"
+testSpecReaderCommandHandler
+	| handler command context file entries |
+	file := FileSystem workingDirectory / 'tests'
+		/ 'EDAMMSpecReaderCommandHandlerTest_testSpecReaderCommandHandler.csv'.
+	file exists
+		ifTrue: [ file delete ].
+	file asFileReference
+		writeStreamDo: [ :stream |
+			stream
+				nextPutAll: 'pharo-eda';
+				nextPut: $,;
+				nextPutAll: 'EDA-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: $,;
+				nextPutAll: 'pharo-eda-api';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAAPI-Events-Events';
+				nextPut: $,;
+				nextPutAll: 'EDAEventSourcingEvent';
+				nextPut: Character cr;
+				nextPut: Character lf ].
+	context := Dictionary new.
+	command := Dictionary new
+		add: 'specs file' -> file;
+		yourself.
+	handler := EDAMMSpecReaderCommandHandler new.
+	handler handleCommand: command within: context.
+	self assert: (context includesKey: 'specs').
+	entries := context at: 'specs'.
+	self assert: entries isNotNil.
+	self assert: (entries first includesKey: 'input module').
+	self assert: (entries first at: 'input module') equals: 'pharo-eda'.
+	self assert: (entries first includesKey: 'input package').
+	self assert: (entries first at: 'input package') equals: 'EDA-Events'.
+	self assert: (entries first includesKey: 'input class').
+	self
+		assert: (entries first at: 'input class')
+		equals: 'EDAEventSourcingEvent'.
+	self assert: (entries first includesKey: 'output module').
+	self
+		assert: (entries first at: 'output module')
+		equals: 'pharo-eda-api'.
+	self assert: (entries first includesKey: 'output package').
+	self
+		assert: (entries first at: 'output package')
+		equals: 'EDAAPI-Events'.
+	self assert: (entries first includesKey: 'output category').
+	self
+		assert: (entries first at: 'output category')
+		equals: 'EDAAPI-Events-Events'.
+	self assert: (entries first includesKey: 'output class').
+	self
+		assert: (entries first at: 'output class')
+		equals: 'EDAEventSourcingEvent'
+]]]
+
+!! New handler for overwriting the category
+
+The classes responsible of reading and writing classes in Tonel format are ==EDAMMClassFileReaderCommandHandler== and ==EDAMMClassFileWriterCommandHandler==. The category information is just data from the class definition. If we changed them to deal with this category issue, we'd be adding a responsibility they don't need. After all, we are using a chain of responsibility, and that pattern is designed precisely to help us adding new responsibilities without needing to modify existing ones. We should add a new command handler in between the two, that replaces the original class definition with another one, that merely changes the category according to the spec.
+
+Let's follow that line of thought, and write an initial test for the new command handler.
+
+% ${changes:path=code/009-EDAMMClassFileCategoryOverwritingCommandHandlerTest.ombu}$
+[[[classDefinition=true|lineNumber=true
+TestCase subclass: #EDAMMClassFileCategoryOverwritingCommandHandlerTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration-Tests'
+]]]
+
+The test is based on ==EDAMMClassFileReaderCommandHandlerTest=='s ==testClassFileReaderCommandHandler==:
+
+% ${changes:path=code/010-EDAMMClassFileCatalogOverwritingCommandHandlerTest_testClassFileCatalogOverwritingCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMClassFileCatalogOverwritingCommandHandlerTest >> testClassFileCatalogOverwritingCommandHandler
+	| handler command context definitions |
+	command := Dictionary new
+		add: 'class' -> 'EDACommandConsumer';
+		add: 'package' -> 'EDA-Messaging';
+		add: 'source root' -> (FileSystem workingDirectory / 'src');
+		yourself.
+	context := Dictionary new.
+	handler := EDAMMCompositeCommandHandler
+		with: EDAMMClassFileReaderCommandHandler new
+		with:
+			(EDAMMClassFileCategoryOverwritingCommandHandler
+				withCatalog: 'EDA-Messaging-Command-Overwritten').
+	handler handleCommand: command within: context.
+	self assert: (context includesKey: 'EDACommandConsumer').
+	definitions := context at: 'EDACommandConsumer'.
+	self assert: definitions isNotNil.
+	self assert: definitions isNotEmpty.
+	definitions
+		select: [ :def | def isClassDefinition ]
+		thenCollect:
+			[ :def | self assert: def category equals: 'EDA-Messaging-Command-Overwritten' ]
+]]]
+
+We need to create the ==EDAMMClassFileCategoryOverwritingCommandHandler== class.
+
+% ${changes:path=code/011-EDAMMClassFileCategoryOverwritingCommandHandler.ombu}$
+[[[classDefinition=true|lineNumber=true
+EDAMMCommandHandler subclass: #EDAMMClassFileCategoryOverwritingCommandHandler
+	instanceVariableNames: 'category'
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration'
+]]]
+
+Let's not forget the accessors for ==category== as well.
+
+% ${changes:path=code/012-EDAMMClassFileCategoryOverwritingCommandHandler_category.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+category
+	^ category
+]]]
+
+% ${changes:path=code/013-EDAMMClassFileCategoryOverwritingCommandHandler_category_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+category: aString
+	category := aString
+]]]
+
+The test expects ==EDAMMClassFileCategoryOverwritingCommandHandler== to provide a factory method.
+
+% ${changes:path=code/014-EDAMMClassFileCategoryOverwritingCommandHandler_class_withCategory_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'instance creation' }
+withCatalog: aString
+	^ self new
+		category: aString;
+		yourself
+]]]
+
+Running the test now reports a ==shouldBeImplemented== signal. It's time to implement ==handleCommand:within:== in ==EDAMMClassFileCategoryOverwritingCommandHandler==.
+
+We'll wrap the original ==MCClassDefinition== instance with a new instance, whose only purpose is to intercept the ==catalog== message and return the overwritten value.
+
+% ${changes:path=code/015-EDAMMClassFileCategoryOverwritingCommandHandler_handleCommand_within_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command handling' }
+EDAMMClassFileCategoryOverwritingCommandHandler >> handleCommand: aCommand within: aContext
+	| result |
+	result := false.
+	(self inputValid: aCommand within: aContext)
+		ifTrue: [ | classDefinition definitions newDefinitions className |
+			className := aCommand at: 'class'.
+			definitions := aContext at: className.
+			classDefinition := (definitions
+				select: [ :def | def isClassDefinition ]) first.
+			newDefinitions := OrderedCollection
+				with:
+					(EDAMMClassDefinitionWrapper
+						for: classDefinition
+						andCategory: self category).
+			newDefinitions
+				addAll: (definitions reject: [ :def | def isClassDefinition ]).
+			aContext at: className put: newDefinitions ].
+	^ result
+]]]
+
+Saving the test code will allow us to create the new class ==EDAMMClassDefinitionWrapper==:
+
+% ${changes:path=code/016-EDAMMClassDefinitionWrapper.ombu}$
+[[[classDefinition=false|lineNumber=true
+Object subclass: #EDAMMClassDefinitionWrapper
+	instanceVariableNames: 'wrapped category'
+	classVariableNames: ''
+	package: 'EDA-Multimodule-Migration'
+]]]
+
+After creating the accessors, we can deal with the important part of this class.
+
+% ${changes:path=code/017-EDAMMClassDefinitionWrapper_category.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMClassDefinitionWrapper >> category
+	^ category
+]]]
+
+% ${changes:path=code/018-EDAMMClassDefinitionWrapper_category_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMClassDefinitionWrapper >> category: aString
+	category := aString
+]]]
+
+% ${changes:path=code/019-EDAMMClassDefinitionWrapper_wrapped.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMClassDefinitionWrapper >> wrapped
+	^ wrapped
+]]]
+
+% ${changes:path=code/020-EDAMMClassDefinitionWrapper_wrapped_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'accessing' }
+EDAMMClassDefinitionWrapper >> wrapped: anMCClassDefinition
+	wrapped := anMCClassDefinition
+]]]
+
+We'll make use of the reflective capabilities of Smalltalk. Instead of letting the ==Object== class handle unimplemented messages, we'll overwrite ==doesNotUnderstand:== to delegate them to the ==wrapped== instance.
+
+% ${changes:path=code/021-EDAMMClassDefinitionWrapper_doesNotUnderstand_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'reflective operations' }
+EDAMMClassDefinitionWrapper >> doesNotUnderstand: aMessage
+	^ aMessage hasArguments
+		ifTrue: [ self wrapped perform: aMessage selector with: aMessage arguments ]
+		ifFalse: [ self wrapped perform: aMessage selector ]
+]]]
+
+The only missing piece is the guard checking we included in ==handleCommand:within:==.
+
+% ${changes:path=code/022-EDAMMClassFileCategoryOverwritingCommandHandlerTest_inputValid_within_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command checking' }
+EDAMMClassFileCategoryOverwritingCommandHandlerTest >> inputValid: aCommand within: aContext
+	| result |
+	result := aCommand includesKey: 'class'.
+	result
+		ifTrue: [ | className |
+			className := aCommand at: 'class'.
+			result := className isNotNil
+				and: [ aContext includesKey: className ].
+			result
+				ifTrue: [ | definitions classDefinitions |
+					definitions := aContext at: className.
+					classDefinitions := definitions
+						select: [ :def | def isClassDefinition ].
+					result := classDefinitions isNotEmpty ] ].
+	^ result
+]]]
