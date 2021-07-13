@@ -8,4 +8,4 @@ ${inputFile:path=Chapters/Chapter07/07-spec-handler.pillar}$
 ${inputFile:path=Chapters/Chapter08/08-read-class-handler.pillar}$
 ${inputFile:path=Chapters/Chapter09/09-write-class-handler.pillar}$
 ${inputFile:path=Chapters/Chapter10/10-composing-handlers-to-read-and-write.pillar}$
-${inputFile:path=Chapters/Chapter11/11-changing-the-package-of-the-class.pillar}$
+${inputFile:path=Chapters/Chapter11/11-changing-the-package-and-category-of-the-copies.pillar}$

@@ -1,4 +1,4 @@
-! Changing the package of the class
+! Changing the package and category of the class
 
 The specification states how a class should be migrated to its new PharoEDA module, and in which package it should reside.
 So far we've successfully copied classes to their expected submodule, but we leave the package unmodified, regardless of what the specification says.
@@ -206,11 +206,41 @@ The test passes again.
 
 We have to modify ==EDAMMMigrationToolTest >> testMigrationTool== to accomodate the new spec format.
 
+We'll split the test into different methods, following the BDD style, to make it cleaner.
+
 % ${changes:path=code/004-EDAMMigrationToolTest_testMigrationTool.ombu}$
 [[[classDefinition=true|lineNumber=true
 { #category : 'tests' }
 EDAMMigrationToolTest >> testMigrationTool
-	| outputFolder confFile specFile classReader definitions classDefinition |
+	self _testMigrationTool_example
+]]]
+
+The example method composes the "given", "when" and "then" parts.
+
+% ${changes:path=code/005-EDAMMigrationToolTest__testMigrationTool_example.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : 'test support' }
+EDAMMigrationToolTest >> _testMigrationTool_example
+	| given when then |
+	given := self _testMigrationTool_given.
+	when := [ :specFile :confFile | self _testMigrationTool_when_specFile: specFile confFile: confFile ].
+	then := [ self _testMigrationTool_then ].
+	^ Dictionary new
+		add: #given -> given;
+		add:
+			#when
+				-> (when value: (given at: #specFile) value: (given at: #confFile));
+		add: #then -> then value;
+		yourself
+]]]
+
+The "given" creates the output folder, the spec and the configuration files.
+
+% ${changes:path=code/006-EDAMMigrationToolTest__testMigrationTool_example.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : 'test support' }
+EDAMMigrationToolTest >> _testMigrationTool_given
+	| outputFolder confFile specFile |
 	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	self deleteFolder: outputFolder.
 	outputFolder ensureCreateDirectory.
@@ -266,9 +296,31 @@ EDAMMigrationToolTest >> testMigrationTool
 				nextPutAll: 'EDAAggregateRoot';
 				nextPut: Character cr;
 				nextPut: Character lf ].
-	EDAMMMigrationTool new
+	^ Dictionary new
+		add: #specFile -> specFile;
+		add: #confFile -> confFile;
+		yourself
+]]]
+
+The "when" method uses the specification and the configuration files to call ==EDAMMMigrationTool==.
+
+% ${changes:path=code/007-EDAMMigrationToolTest__testMigrationTool_when_specFile_confFile_.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : 'test support' }
+EDAMMigrationToolTest >> _testMigrationTool_when_specFile: specFile confFile: confFile
+	^ EDAMMMigrationTool new
 		processSpecsFile: specFile
-		withConfigurationFile: confFile.
+		withConfigurationFile: confFile
+]]]
+
+The "then" contains the assertions.
+
+% ${changes:path=code/008-EDAMMigrationToolTest__testMigrationTool_then.ombu}$
+[[[classDefinition=true|lineNumber=true
+{ #category : 'test support' }
+EDAMMigrationToolTest >> _testMigrationTool_then
+	| classReader outputFolder definitions classDefinition |
+	outputFolder := FileSystem root / 'tmp' / 'pharo-eda-api' / 'src'.
 	classReader := EDAMMClassFile new.
 	self assert: (outputFolder / 'EDAAPI-Events') exists.
 	self
@@ -304,7 +356,7 @@ There're some other tests we need to update after changing the spec.
 
 First, ==testFileReadWithOneRow== in ==EDAMMSpecFileTest==:
 
-% ${changes:path=code/005-EDAMMSpecFileTest_testFileReadWithOneRow.ombu}$
+% ${changes:path=code/009-EDAMMSpecFileTest_testFileReadWithOneRow.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
 EDAMMSpecFileTest >> testFileReadWithOneRow
@@ -357,7 +409,7 @@ EDAMMSpecFileTest >> testFileReadWithOneRow
 
 Second, ==testFileReadWithTwoRows== in the same test suite.
 
-% ${changes:path=code/006-EDAMMSpecFileTest_testFileReadWithTwoRows.ombu}$
+% ${changes:path=code/010-EDAMMSpecFileTest_testFileReadWithTwoRows.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
 EDAMMSpecFileTest >> testFileReadWithTwoRows
@@ -449,7 +501,7 @@ EDAMMSpecFileTest >> testFileReadWithTwoRows
 
 Third, ==testSpecIteratorCommandHandler== in ==EDAMMSpecIteratorCommandHandlerTest==.
 
-% ${changes:path=code/007-EDAMMSpecIteratorCommandHandlerTest_testSpecIteratorCommandHandler.ombu}$
+% ${changes:path=code/011-EDAMMSpecIteratorCommandHandlerTest_testSpecIteratorCommandHandler.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
 EDAMMSpecIteratorCommandHandlerTest >> testSpecIteratorCommandHandler
@@ -531,7 +583,7 @@ testSpecIteratorCommandHandler
 
 Finally, ==testSpecReaderCommandHandler== in ==EDAMMSpecReaderCommandHandlerTest==:
 
-% ${changes:path=code/008-EDAMMSpecReaderCommandHandlerTest_testSpecReaderCommandHandler.ombu}$
+% ${changes:path=code/012-EDAMMSpecReaderCommandHandlerTest_testSpecReaderCommandHandler.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
 EDAMMSpecReaderCommandHandlerTest >> testSpecReaderCommandHandler
@@ -601,7 +653,7 @@ The classes responsible of reading and writing classes in Tonel format are ==EDA
 
 Let's follow that line of thought, and write an initial test for the new command handler.
 
-% ${changes:path=code/009-EDAMMClassFileCategoryOverwritingCommandHandlerTest.ombu}$
+% ${changes:path=code/013-EDAMMClassFileCategoryOverwritingCommandHandlerTest.ombu}$
 [[[classDefinition=true|lineNumber=true
 TestCase subclass: #EDAMMClassFileCategoryOverwritingCommandHandlerTest
 	instanceVariableNames: ''
@@ -611,7 +663,7 @@ TestCase subclass: #EDAMMClassFileCategoryOverwritingCommandHandlerTest
 
 The test is based on ==EDAMMClassFileReaderCommandHandlerTest=='s ==testClassFileReaderCommandHandler==:
 
-% ${changes:path=code/010-EDAMMClassFileCatalogOverwritingCommandHandlerTest_testClassFileCatalogOverwritingCommandHandler.ombu}$
+% ${changes:path=code/014-EDAMMClassFileCatalogOverwritingCommandHandlerTest_testClassFileCatalogOverwritingCommandHandler.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'tests' }
 EDAMMClassFileCatalogOverwritingCommandHandlerTest >> testClassFileCatalogOverwritingCommandHandler
@@ -640,7 +692,7 @@ EDAMMClassFileCatalogOverwritingCommandHandlerTest >> testClassFileCatalogOverwr
 
 We need to create the ==EDAMMClassFileCategoryOverwritingCommandHandler== class.
 
-% ${changes:path=code/011-EDAMMClassFileCategoryOverwritingCommandHandler.ombu}$
+% ${changes:path=code/015-EDAMMClassFileCategoryOverwritingCommandHandler.ombu}$
 [[[classDefinition=true|lineNumber=true
 EDAMMCommandHandler subclass: #EDAMMClassFileCategoryOverwritingCommandHandler
 	instanceVariableNames: 'category'
@@ -650,14 +702,14 @@ EDAMMCommandHandler subclass: #EDAMMClassFileCategoryOverwritingCommandHandler
 
 Let's not forget the accessors for ==category== as well.
 
-% ${changes:path=code/012-EDAMMClassFileCategoryOverwritingCommandHandler_category.ombu}$
+% ${changes:path=code/016-EDAMMClassFileCategoryOverwritingCommandHandler_category.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 category
 	^ category
 ]]]
 
-% ${changes:path=code/013-EDAMMClassFileCategoryOverwritingCommandHandler_category_.ombu}$
+% ${changes:path=code/017-EDAMMClassFileCategoryOverwritingCommandHandler_category_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 category: aString
@@ -666,7 +718,7 @@ category: aString
 
 The test expects ==EDAMMClassFileCategoryOverwritingCommandHandler== to provide a factory method.
 
-% ${changes:path=code/014-EDAMMClassFileCategoryOverwritingCommandHandler_class_withCategory_.ombu}$
+% ${changes:path=code/018-EDAMMClassFileCategoryOverwritingCommandHandler_class_withCategory_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'instance creation' }
 withCatalog: aString
@@ -679,7 +731,7 @@ Running the test now reports a ==shouldBeImplemented== signal. It's time to impl
 
 We'll wrap the original ==MCClassDefinition== instance with a new instance, whose only purpose is to intercept the ==catalog== message and return the overwritten value.
 
-% ${changes:path=code/015-EDAMMClassFileCategoryOverwritingCommandHandler_handleCommand_within_.ombu}$
+% ${changes:path=code/019-EDAMMClassFileCategoryOverwritingCommandHandler_handleCommand_within_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'command handling' }
 EDAMMClassFileCategoryOverwritingCommandHandler >> handleCommand: aCommand within: aContext
@@ -704,7 +756,7 @@ EDAMMClassFileCategoryOverwritingCommandHandler >> handleCommand: aCommand withi
 
 Saving the test code will allow us to create the new class ==EDAMMClassDefinitionWrapper==:
 
-% ${changes:path=code/016-EDAMMClassDefinitionWrapper.ombu}$
+% ${changes:path=code/020-EDAMMClassDefinitionWrapper.ombu}$
 [[[classDefinition=false|lineNumber=true
 Object subclass: #EDAMMClassDefinitionWrapper
 	instanceVariableNames: 'wrapped category'
@@ -714,28 +766,28 @@ Object subclass: #EDAMMClassDefinitionWrapper
 
 After creating the accessors, we can deal with the important part of this class.
 
-% ${changes:path=code/017-EDAMMClassDefinitionWrapper_category.ombu}$
+% ${changes:path=code/021-EDAMMClassDefinitionWrapper_category.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 EDAMMClassDefinitionWrapper >> category
 	^ category
 ]]]
 
-% ${changes:path=code/018-EDAMMClassDefinitionWrapper_category_.ombu}$
+% ${changes:path=code/022-EDAMMClassDefinitionWrapper_category_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 EDAMMClassDefinitionWrapper >> category: aString
 	category := aString
 ]]]
 
-% ${changes:path=code/019-EDAMMClassDefinitionWrapper_wrapped.ombu}$
+% ${changes:path=code/023-EDAMMClassDefinitionWrapper_wrapped.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 EDAMMClassDefinitionWrapper >> wrapped
 	^ wrapped
 ]]]
 
-% ${changes:path=code/020-EDAMMClassDefinitionWrapper_wrapped_.ombu}$
+% ${changes:path=code/024-EDAMMClassDefinitionWrapper_wrapped_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'accessing' }
 EDAMMClassDefinitionWrapper >> wrapped: anMCClassDefinition
@@ -744,7 +796,7 @@ EDAMMClassDefinitionWrapper >> wrapped: anMCClassDefinition
 
 We'll make use of the reflective capabilities of Smalltalk. Instead of letting the ==Object== class handle unimplemented messages, we'll overwrite ==doesNotUnderstand:== to delegate them to the ==wrapped== instance.
 
-% ${changes:path=code/021-EDAMMClassDefinitionWrapper_doesNotUnderstand_.ombu}$
+% ${changes:path=code/025-EDAMMClassDefinitionWrapper_doesNotUnderstand_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'reflective operations' }
 EDAMMClassDefinitionWrapper >> doesNotUnderstand: aMessage
@@ -755,7 +807,7 @@ EDAMMClassDefinitionWrapper >> doesNotUnderstand: aMessage
 
 The only missing piece is the guard checking we included in ==handleCommand:within:==.
 
-% ${changes:path=code/022-EDAMMClassFileCategoryOverwritingCommandHandlerTest_inputValid_within_.ombu}$
+% ${changes:path=code/026-EDAMMClassFileCategoryOverwritingCommandHandlerTest_inputValid_within_.ombu}$
 [[[classDefinition=false|lineNumber=true
 { #category : 'command checking' }
 EDAMMClassFileCategoryOverwritingCommandHandlerTest >> inputValid: aCommand within: aContext
@@ -774,3 +826,145 @@ EDAMMClassFileCategoryOverwritingCommandHandlerTest >> inputValid: aCommand with
 					result := classDefinitions isNotEmpty ] ].
 	^ result
 ]]]
+
+The only thing left to do is to include this handler as part of our ==EDAMMMigrationTool==, which is the same as to say to make ==testMigrationTool== test of ==EDAMMMigrationToolTest== pass.
+
+The change we need to make is in ==EDAMMMigrationTool=='s ==copySpec:from:to:==.
+
+% ${changes:path=code/027-EDAMMMigrationTool_copySpec_from_to_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'copying' }
+EDAMMMigrationTool >> copySpec: aSpecDictionary from: theSourceFolderAsString to: aFolderPathAsString
+	| result command context |
+	command := Dictionary new
+		add: 'class' -> (aSpecDictionary at: 'input class');
+		add: 'package' -> (aSpecDictionary at: 'input package');
+		add: 'source root' -> theSourceFolderAsString asFileReference;
+		yourself.
+	context := Dictionary new.
+	result := (EDAMMClassFileReaderCommandHandler new
+		handleCommand: command
+		within: context)
+		ifTrue: [ true ]
+		ifFalse: [ (EDAMMCompositeCommandHandler
+				with:
+					(EDAMMClassFileCategoryOverwritingCommandHandler
+						withCatalog: (aSpecDictionary at: 'output category'))
+				with: EDAMMClassFileWriterCommandHandler new)
+				handleCommand:
+					(Dictionary new
+						add: 'class' -> (aSpecDictionary at: 'input class');
+						add:
+							'target folder'
+								->
+									(aFolderPathAsString asFileReference
+										/ (aSpecDictionary at: 'output package'));
+						addAll: context;
+						yourself)
+				within: context ].
+	^ result
+]]]
+
+There're two problems. First, we're using handlers in an isolate manner. We're not using a chain of responsibility, and thus we're not leveraging its benefits. Second, it doesn't work. If you run ==EDAMMMigrationToolTest >> testMigrationTool==, you'll see that, even tough our new ==EDAMMClassFileCategoryOverwritingCommandHandler== gets executed, it makes no difference.
+
+The cause is in ==EDAMMClassFileWriterCommandHandler=='s ==handleCommand:within:==:
+
+[[[
+EDAMMClassFileWriterCommandHandler >> handleCommand: aCommand within: aContext
+	| result |
+	result := false.
+	(self inputValid: aCommand)
+		ifTrue: [ | className |
+			className := aCommand at: 'class'.
+			EDAMMClassFile new
+				writeClassNamed: className
+				withDefinitions: (aCommand at: className)
+				inFolder: (aCommand at: 'target folder') ].
+	^ result
+]]]
+
+==EDAMMClassFileWriterCommandHandler== takes the class definitions from the command, whereas ==EDAMMClassFileCategoryOverwritingCommandHandler=='s output is stored in the context instead.
+
+Let's try to make the test pass the easiest way possible from our current situation, and delay the refactoring until then.
+
+There're two things. First, ==EDAMMClassFileCategoryOverwritingCommandHandler== transforms the class definitions and stores them in the context. However, ==EDAMMClassFileWriterCommandHandler== reads its input from the command instead. We'll refactor this later, but meanwhile the simplest fix is to overwrite the contents of the command:
+
+% ${changes:path=code/028-EDAMMClassFileCategoryOverwritingCommandHandler_handleCommand_within_.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'command handling' }
+EDAMMClassFileCategoryOverwritingCommandHandler >> handleCommand: aCommand within: aContext
+	| result |
+	result := false.
+	(self inputValid: aCommand within: aContext)
+		ifTrue: [ | classDefinition definitions newDefinitions className |
+			className := aCommand at: 'class'.
+			definitions := aContext at: className.
+			classDefinition := (definitions
+				select: [ :def | def isClassDefinition ]) first.
+			newDefinitions := OrderedCollection
+				with:
+					(EDAMMClassDefinitionWrapper
+						for: classDefinition
+						andCategory: self category).
+			newDefinitions
+				addAll: (definitions reject: [ :def | def isClassDefinition ]).
+			aCommand at: className put: newDefinitions ].
+	^ result
+]]]
+
+The next problem is that ==TonelWriter== performs a (questionable) type check on the definitions, to check which one defines the class:
+
+[[[classDefinition=false|lineNumber=true
+{ #category : 'private testing' }
+TonelWriter >> isClass: aClassDefinition
+	^ aClassDefinition class = MCClassDefinition
+]]]
+
+We could use an extension method to overwrite that method, but a less intrusive option would be to overload the ==class== method on ==EDAMMClassDefinitionWrapper==.
+
+% ${changes:path=code/029-EDAMMClassDefinitionWrapper_class.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'class membership' }
+EDAMMClassDefinitionWrapper >> class
+	^ self wrapped class
+]]]
+
+The final problem is in ==EDAMMClassFile==. When writing the definitions, it uses ==classDefinition className== to filter definitions actually belonging to the class. However, ==classDefinition== is actually ==EDAMMClassDefinitionWrapper==, so it's actually filtering out all definitions. Again, the simplest fix is to overload ==className== in ==EDAMMClassDefinitionWrapper==:
+
+% ${changes:path=code/030-EDAMMClassDefinitionWrapper_className.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'introspection' }
+className
+	^ self wrapped className
+]]]
+
+Now we should have the test passing. However, we broke ==EDAMMClassFileCatalogOverwritingCommandHandlerTest=='s ==testClassFileCatalogOverwritingCommandHandler== in the process of storing the definitions in the command instead of the context. The fix is simple.
+
+% ${changes:path=code/031-EDAMMClassFileCatalogOverwritingCommandHandlerTest_testClassFileCatalogOverwritingCommandHandler.ombu}$
+[[[classDefinition=false|lineNumber=true
+{ #category : 'tests' }
+EDAMMClassFileCatalogOverwritingCommandHandlerTest >> testClassFileCatalogOverwritingCommandHandler
+	| handler command context definitions |
+	command := Dictionary new
+		add: 'class' -> 'EDACommandConsumer';
+		add: 'package' -> 'EDA-Messaging';
+		add: 'source root' -> (FileSystem workingDirectory / 'src');
+		yourself.
+	context := Dictionary new.
+	handler := EDAMMCompositeCommandHandler
+		with: EDAMMClassFileReaderCommandHandler new
+		with:
+			(EDAMMClassFileCategoryOverwritingCommandHandler
+				withCatalog: 'EDA-Messaging-Command-Overwritten').
+	handler handleCommand: command within: context.
+	self assert: (command includesKey: 'EDACommandConsumer').
+	definitions := command at: 'EDACommandConsumer'.
+	self assert: definitions isNotNil.
+	self assert: definitions isNotEmpty.
+	definitions
+		select: [ :def | def isClassDefinition ]
+		thenCollect:
+			[ :def | self assert: def category equals: 'EDA-Messaging-Command-Overwritten' ]
+]]]
+
+Now all tests are in green, and we're able to overwrite the package and category of the classes we copy.
