@@ -16,7 +16,7 @@ EDACommandGenerator >> createCommandClass [
 	attributes := self retrieveCommandAttributesBut: self class skippedCommandAttributes.
 	(self classExists: cls)
 		ifTrue: [ attributes := (self allAttributesOf: (self class environment at: cls) including: attributes) ].
-	EDACommand
+	self parentCommandClass
 		subclass: self retrieveCommandClassName asSymbol
 		instanceVariableNames: (self concatenateCollection: attributes with: ' ')
 		classVariableNames: ''
@@ -247,4 +247,10 @@ EDACommandGenerator >> generateCommandClassRetrieveAggregateRootClassMethod [
 { #category : #'code generation' }
 EDACommandGenerator >> generateCommandClassRetrieveAggregateRootClassMethodName [
 	^ 'retrieveAggregateRootClass'
+]
+
+{ #category : #protected }
+EDACommandGenerator >> parentCommandClass [
+	^ EDACommand
+
 ]
