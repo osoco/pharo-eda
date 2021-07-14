@@ -86,9 +86,23 @@ EDACommandGenerator >> createCommandClassLatestVersionClassMethod [
 	| cls |
 	cls := self class environment
 		at: self retrieveCommandClassName asSymbol.
-	^ cls class
-		compile: self generateCommandClassLatestVersionMethod
-		classified: self protocol
+	^ self
+		compile: self generateCommandClassLatestVersionMethodName
+		sourceCode: self generateCommandClassLatestVersionMethod
+		inClass: cls
+		classifiedAs: self protocol
+]
+
+{ #category : #'code generation' }
+EDACommandGenerator >> createCommandClassLatestVersionMethod [
+	| cls |
+	cls := self class environment
+		at: self retrieveCommandClassName asSymbol.
+	^ self
+		compile: self generateCommandClassLatestVersionMethodName
+		sourceCode: self generateCommandClassLatestVersionMethod
+		inClass: cls
+		classifiedAs: self protocol
 ]
 
 { #category : #'code generation' }
@@ -118,7 +132,8 @@ EDACommandGenerator >> doGenerate [
 	self createCommandClassHashMethod.
 	self createCommandClassAggregateRootClassMethod.
 	self createCommandClassRetrieveAggregateRootClassMethod.
-	self createCommandClassLatestVersionClassMethod
+	self createCommandClassLatestVersionClassMethod.
+	self createCommandClassLatestVersionMethod
 ]
 
 { #category : #'code generation' }
@@ -209,7 +224,7 @@ EDACommandGenerator >> generateCommandClassBuilderMethodNameWithArgPrefix: prefi
 ]
 
 { #category : #'code generation' }
-EDACommandGenerator >> generateCommandClassLatestVersionMethod [
+EDACommandGenerator >> generateCommandClassLatestVersionClassMethod [
 	| result cr |
 	cr := Character cr.
 	result := WriteStream with: String new.
@@ -219,6 +234,21 @@ EDACommandGenerator >> generateCommandClassLatestVersionMethod [
 	result
 		nextPutAll: '	^ ';
 		nextPutAll: self version greaseString;
+		nextPut: cr.
+	^ result contents
+]
+
+{ #category : #'code generation' }
+EDACommandGenerator >> generateCommandClassLatestVersionMethod [
+	| result cr |
+	cr := Character cr.
+	result := WriteStream with: String new.
+	result nextPutAll: self generateCommandClassLatestVersionMethodName.
+	result nextPut: cr.
+	result nextPutAll: self generateSignature.
+	result
+		nextPutAll: '	^ self class ';
+		nextPutAll: self generateCommandClassLatestVersionMethodName;
 		nextPut: cr.
 	^ result contents
 ]
