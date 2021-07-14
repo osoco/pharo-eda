@@ -88,8 +88,8 @@ EDACommandGenerator >> createCommandClassLatestVersionClassMethod [
 		at: self retrieveCommandClassName asSymbol.
 	^ self
 		compile: self generateCommandClassLatestVersionMethodName
-		sourceCode: self generateCommandClassLatestVersionMethod
-		inClass: cls
+		sourceCode: self generateCommandClassLatestVersionClassMethod
+		inClass: cls class
 		classifiedAs: self protocol
 ]
 
