@@ -220,20 +220,7 @@ EDAAggregateRoot >> checkCreateNonCreateIssuesOnCommand: aCommand [
 
 { #category : #'command checking' }
 EDAAggregateRoot >> checkNonCreateCommand: aCommand [
-	self brandNew
-		ifTrue: [ self
-				logErrorMessage:
-					(String
-						streamContents: [ :s | 
-							s
-								nextPutAll: self class greaseString;
-								nextPutAll: ' with ';
-								nextPutAll: aCommand aggregateSelectionCriteria keys first greaseString;
-								nextPutAll: ' equals to ';
-								nextPutAll: aCommand aggregateSelectionCriteria values first greaseString;
-								nextPutAll: ' does not exist in tenant ';
-								nextPutAll: aCommand tenant greaseString ])
-				andThrow: aCommand class invalidCommandExceptionClass ]
+	^ self defaultCheckNonCreateCommand: aCommand
 ]
 
 { #category : #'command checking' }
@@ -254,6 +241,24 @@ EDAAggregateRoot >> checkTenantOfCommand: aCommand [
 									nextPutAll: '), aggregate''s tenant: ';
 									nextPutAll: self tenant greaseString ])
 					andThrow: InvalidTenant ] ].
+]
+
+{ #category : #'command checking' }
+EDAAggregateRoot >> defaultCheckNonCreateCommand: aCommand [
+	self brandNew
+		ifTrue: [ self
+				logErrorMessage:
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: self class greaseString;
+								nextPutAll: ' with ';
+								nextPutAll: aCommand aggregateSelectionCriteria keys first greaseString;
+								nextPutAll: ' equals to ';
+								nextPutAll: aCommand aggregateSelectionCriteria values first greaseString;
+								nextPutAll: ' does not exist in tenant ';
+								nextPutAll: aCommand tenant greaseString ])
+				andThrow: aCommand class invalidCommandExceptionClass ]
 ]
 
 { #category : #accessing }

@@ -19,6 +19,11 @@ EDADeleteAggregateCommand class >> latestVersion [
 	^ 2
 ]
 
+{ #category : #checking }
+EDADeleteAggregateCommand >> checkAggregate: anAggregate [
+	^ anAggregate defaultCheckNonCreateCommand: self
+]
+
 { #category : #helpers }
 EDADeleteAggregateCommand >> isCreate [
 	^ false
