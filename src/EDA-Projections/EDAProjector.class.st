@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAProjector,
 	#superclass : #Object,
-	#traits : 'EDATCollectionHelper',
-	#classTraits : 'EDATCollectionHelper classTrait',
+	#traits : 'EDATCollectionHelper + EDATLogging',
+	#classTraits : 'EDATCollectionHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'eventStore',
 		'tenant'
@@ -14,7 +14,7 @@ Class {
 		'errorStrategy',
 		'synchronizationInProgressByTenant'
 	],
-	#category : 'EDA-Projections-Projectors'
+	#category : #'EDA-Projections-Projectors'
 }
 
 { #category : #'class initialization' }
@@ -154,6 +154,12 @@ EDAProjector >> logEvent: eventId ofTenant: aTenant ofEventClass: eventClass atP
 				, ' (' , eventId greaseString , ')'
 ]
 
+{ #category : #removing }
+EDAProjector >> minimumEventsToProjectFrom: anEventCollection [
+"Customize on subclasses"
+	^ anEventCollection 
+]
+
 { #category : #projecting }
 EDAProjector >> projectEvent: anEvent [
 	^ self projectEvent: anEvent usingEmittingBlock: [ :eventToEmit |  ]
@@ -176,9 +182,13 @@ EDAProjector >> projectEvent: anEvent usingEmittingBlock: aBlock [
 
 { #category : #'projection retrieval' }
 EDAProjector >> projectEvents: anEventCollection ofTenant: aTenant [
+	self flag: #TODO.
+	"Re-Introducir comprobar si está sincronizada la proyección"
 	anEventCollection
+		ifNotEmpty: [ self synchronizeEvents: anEventCollection ofTenant: aTenant ]
+"	anEventCollection
 		ifNotEmpty: [ (self isSynchronized: anEventCollection ofTenant: aTenant)
-				ifFalse: [ self synchronizeEvents: anEventCollection ofTenant: aTenant] ]
+				ifFalse: [ self synchronizeEvents: anEventCollection ofTenant: aTenant] ]"
 ]
 
 { #category : #'projection retrieval' }
@@ -216,20 +226,21 @@ EDAProjector >> projectFilteredEvents: anEventCollection ofTenant: aTenant using
 
 { #category : #api }
 EDAProjector >> projectOfTenant: aTenant [
-	| projectionSourceEvents |
+	| projectionSourceEvents minimumEventsToProject |
 	(self class synchronizationInProgressOfTenant: aTenant)
 		ifTrue: [ ^ self ].
 	self class synchronizationInProgressOfTenant: aTenant is: true.
 	self
 		logDebugMessage:
 			'Projection request for ' , self class projectionClass greaseString
-				, '.'.
-	projectionSourceEvents := self sourceEvents: self eventStore ofTenant: aTenant.
-	self projectEvents: projectionSourceEvents ofTenant: aTenant.
+				, ' in tenant ' , aTenant , '.'.
+	projectionSourceEvents := self sourceEventsOfTenant: aTenant.
+	minimumEventsToProject := self minimumEventsToProjectFrom: projectionSourceEvents.
+	self projectEvents: minimumEventsToProject ofTenant: aTenant.
 	self
 		logDebugMessage:
 			'End of projection request ' , self class projectionClass greaseString
-				, '.'.
+				, ' in tenant ' , aTenant , '.'.
 	self class synchronizationInProgressOfTenant: aTenant is: false
 ]
 
@@ -271,21 +282,22 @@ EDAProjector >> retrieveProjectionHandlerMethodsForEvent: anEvent [
 
 { #category : #'event retrieval' }
 EDAProjector >> sourceEvents: anEventStore ofTenant: aTenant [
-	| eventTypes aux result |
+	| eventTypes |
 	eventTypes := ((Pragma
 		allNamed: 'projectionForEvents:'
 		in: self class) collect: [ :p | p arguments first ]) flattened.
-	aux := OrderedCollection new.
-	eventTypes
-		do: [ :t |
-			aux
-				addAll: (anEventStore findEventsOfTenant: aTenant ofType: (self class environment at: t)) ].
-	result := self
+	self flag: #TODO.
+	"Rehacer filtrado de innecesarios"
+	"result := self
 		removeDuplicatesIn: aux
-		matching: self removeDuplicatesBlock.
-	result := aux.
-	^ result
-
+		matching: self removeDuplicatesBlock."
+	^ (eventTypes
+		flatCollect: [ :t | 
+			anEventStore
+				findEventsOfTenant: aTenant
+				ofType: (self class environment at: t) ]
+		as: OrderedCollection)
+		sort: [ :event1 :event2 | event1 timestamp < event2 timestamp ]
 ]
 
 { #category : #'event retrieval' }

@@ -46,8 +46,8 @@ Keep in mind that each EDAProjection subclass will include its own design when i
 Class {
 	#name : #EDAProjection,
 	#superclass : #Object,
-	#traits : 'EDATLogging + EDATHashHelper + EDATEqualsHelper',
-	#classTraits : 'EDATLogging classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
+	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#instVars : [
 		'numProjectedEvents',
 		'lastProjectedEvent',
@@ -82,12 +82,20 @@ EDAProjection class >> projectionErrorHandlingStrategy: aStrategy [
 
 { #category : #persistence }
 EDAProjection class >> removeAllProjections [
-	(self subclasses
-		reject:
-			[ :projectionClass | (projectionClass class name beginsWith: 'EDATest') or: [ projectionClass isAbstract ] ])
-		do:
-			[ :aProjectionClass | self repository
-				ifNotNil: [ :r | r removeProjection: aProjectionClass ] ]
+	(self allSubclasses
+		reject: [ :projectionClass | 
+			(projectionClass class name beginsWith: 'EDATest')
+				or: [ projectionClass isAbstract ] ])
+		do: [ :aProjectionClass | 
+			self repository
+				ifNotNil: [ :r | 
+					| log |
+					log := String
+						streamContents: [ :s | 
+							s nextPutAll: 'Removing projections '.
+							s nextPutAll: aProjectionClass name ].
+					self logDebugMessage: log.
+					r removeProjection: aProjectionClass ] ]
 ]
 
 { #category : #persistence }

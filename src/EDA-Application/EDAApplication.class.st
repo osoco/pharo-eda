@@ -39,7 +39,8 @@ Class {
 		'isConfigured',
 		'isStarted',
 		'projectors',
-		'projectorsByTenant'
+		'projectorsByTenant',
+		'tenants'
 	],
 	#category : #'EDA-Application'
 }
@@ -113,7 +114,8 @@ EDAApplication class >> configureProjectionBackendAuthentication: anObject [
 EDAApplication class >> doInitialize [
 	self isStarted: false.
 	self isConfigured: false.
-	self projectorsByTenant: Dictionary new
+	self projectorsByTenant: Dictionary new.
+	tenants := Set empty
 ]
 
 { #category : #setup }
@@ -234,18 +236,26 @@ EDAApplication class >> projectorsByTenant: aDictionary [
 	projectorsByTenant := aDictionary
 ]
 
+{ #category : #'setup - projections' }
+EDAApplication class >> removeAllProjections [
+	self
+		logInfoMessage: 'Removing all projections'.
+	EDAProjection removeAllProjections
+]
+
 { #category : #reset }
 EDAApplication class >> reset [
-	self resetLogging.
-	self resetEventProducer.
-	self resetEventStore.
-	self resetRepositories.
-	self resetProjections.
-	self resetProjectors.
-	self resetCommandDispatcher.
-	self resetCommandConsumer.
 	self resetEventSubscriptions.
+	self resetCommandConsumer.
+	self resetCommandDispatcher.
+	self resetProjectors.
+	self resetProjections.
+	self resetRepositories.
+	self resetEventStore.
+	self resetEventProducer.
 	self resetEventAnnouncer.
+	self resetTenants.
+	self resetLogging.
 	self isConfigured: false
 ]
 
@@ -304,14 +314,18 @@ EDAApplication class >> resetProjectorOfTenant: aTenant [
 
 { #category : #'reset - projections' }
 EDAApplication class >> resetProjectors [
-	self retrieveAllTenants do: [ :t | self resetProjectorOfTenant: t ]
-
-
+	self retrieveAllTenants do: [ :t | self resetProjectorOfTenant: t ].
+	self projectorsByTenant: Dictionary empty
 ]
 
 { #category : #'reset - repositories' }
 EDAApplication class >> resetRepositories [
 	EDAAggregateRepository allSubclassesDo: [ :repo | repo eventStore: nil ]
+]
+
+{ #category : #'reset - commands' }
+EDAApplication class >> resetTenants [
+	tenants := Set empty
 ]
 
 { #category : #'multitenancy support' }
@@ -453,8 +467,9 @@ EDAApplication class >> stop [
 
 { #category : #'setup - projections' }
 EDAApplication class >> synchronizeProjections [
+	self removeAllProjections.
 	self retrieveAllTenants
-		do: [ :tenant |
+		do: [ :tenant | 
 			| projector |
 			projector := self projectorsByTenant at: tenant ifAbsent: [ nil ].
 			projector ifNotNil: [ :p | p projectOfTenant: tenant ] ]

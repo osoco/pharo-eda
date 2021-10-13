@@ -233,6 +233,28 @@ EDAMongoEventStore class >> wireProtocolEnabled: aBoolean [
 ]
 
 { #category : #persistence }
+EDAMongoEventStore >> allEvents [
+	| eventsCriteria |
+	eventsCriteria := Dictionary empty.
+	^ EDAEventSourcingEvent
+		selectMany: eventsCriteria
+		sortBy:
+			(OrderedCollection
+				with: #timestamp -> VOOrder ascending
+				with: #_id -> VOOrder ascending) asDictionary
+]
+
+{ #category : #persistence }
+EDAMongoEventStore >> allEventsOfAggregate: anAggregateRootClass groupedBy: aField [
+	| eventsCriteria |
+	eventsCriteria := Dictionary empty.
+	^ (self
+		findEventsOfAggregate: anAggregateRootClass
+		whereCriteria: eventsCriteria)
+		groupedBy: [ :event | event instVarNamed: aField ]
+]
+
+{ #category : #persistence }
 EDAMongoEventStore >> allEventsOfTenant: aTenant [
 	| eventsCriteria |
 	eventsCriteria := (OrderedCollection
