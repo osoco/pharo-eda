@@ -8,7 +8,7 @@ Class {
 		'password',
 		'queues'
 	],
-	#category : 'EDA-Commands-Tests'
+	#category : #'EDA-Commands-Tests'
 }
 
 { #category : #defaults }
@@ -83,7 +83,11 @@ EDAQueueCleaner >> deleteQueue: aQueue inVirtualHost: vHost [
 		host: self class host;
 		port: self class port;
 		username: self class username password: self class password;
-		url: '/api/queues/' , vHost urlEncoded , '/' , aQueue urlEncoded , '/contents';
+		addPath:  'api';
+		addPath: 'queues';
+		addPath: vHost;
+		addPath: aQueue urlEncoded;
+		addPath: 'contents';
 		delete.
 	response := client response code.
 	^ response = 204
