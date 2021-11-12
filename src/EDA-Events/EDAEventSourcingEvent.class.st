@@ -73,14 +73,15 @@ EDAEventSourcingEvent class >> latestVersion [
 
 { #category : #meta }
 EDAEventSourcingEvent class >> ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs [
-	| result scopeKey scopeContext aggregateRootVersion |
+	| result scopeKey scopeContext previousAggregateRootVersion aggregateRootVersion |
 	result := self new.
 	result tenant: theTenant.
 	result id: theId.
 	result commandId: theCommandId.
 	result
 		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
-	aggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifPresent: [ :arv | arv + 1 ] ifAbsent: [ 1 ].
+	previousAggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifAbsent: [ nil ].
+	aggregateRootVersion := previousAggregateRootVersion ifNil: [ 1 ] ifNotNil: [ :pARV | pARV + 1 ].
 	result aggregateRootVersion: aggregateRootVersion.
 	result version: self latestVersion.
 	scopeKey := theAttrs at: 'scopeKey' ifAbsent: [ nil ].
