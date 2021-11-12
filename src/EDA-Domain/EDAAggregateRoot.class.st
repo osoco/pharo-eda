@@ -280,7 +280,7 @@ EDAAggregateRoot >> handleDeleteCommand: aCommand [
 			r id: self id.
 			r commandId: aCommand commandId.
 			r version: (result class latestVersion).
-			r timestamp: DateAndTime new asUTC ].
+			r timestamp: DateAndTime now asUTC ].
 	^ result
 ]
 
