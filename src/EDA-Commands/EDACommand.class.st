@@ -55,6 +55,15 @@ EDACommand class >> latestVersion [
 	self subclassResponsibility
 ]
 
+{ #category : #checking }
+EDACommand class >> nonNullableAttributes [
+	"Fill in subclasses with non-nullable InstVar as symbols"
+	[ self subclassResponsibility ]
+		on: Error
+		do: [ ^ Set empty ]
+	
+]
+
 { #category : #meta }
 EDACommand class >> ofTenant: theTenant withCommandId: theCommandId aggregateRootVersion: theVersion andAttributes: theAttributes [
 	| result |
@@ -163,6 +172,11 @@ EDACommand >> commandId: anObject [
 	commandId := anObject
 ]
 
+{ #category : #checking }
+EDACommand >> errorLogForInvalidNonNullableAttribute: aInstVarSymbol [
+	^ self invalidNonNullableAttributesErrorLogs at: aInstVarSymbol ifAbsent: [ nil ]
+]
+
 { #category : #helpers }
 EDACommand >> extractScopeKey: aDictionary target: aString accummulator: anOrderedCollection [
 	| result |
@@ -194,6 +208,25 @@ EDACommand >> fillCommonInfoInto: aDict [
 	aDict at: #commandId put: self commandId.
 	aDict at: #id put: self aggregateRootId.
 	aDict at: #version put: self aggregateRootVersion
+]
+
+{ #category : #checking }
+EDACommand >> invalidNonNullableAttributes [
+	"Return not nullable attributes = nil
+	Note that attribute getters are required"
+	^ self class nonNullableAttributes
+		select: [ :att |
+			(att value: self) isNil ]
+]
+
+{ #category : #checking }
+EDACommand >> invalidNonNullableAttributesErrorLogs [
+	"Return a Dictionary with
+	key: invalidNonNullableAttribute InstVar as symbol
+	value: string with error log"
+	[ self subclassResponsibility ]
+		on: Error
+		do: [ ^ Dictionary empty ]
 ]
 
 { #category : #helpers }

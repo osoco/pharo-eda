@@ -34,6 +34,30 @@ EDACommandDispatcher class >> withRegistry: aHandlersRegistry eventStore: anEven
 		yourself
 ]
 
+{ #category : #checking }
+EDACommandDispatcher >> checkNonNullableAttributes: aCommand [
+	aCommand invalidNonNullableAttributes
+		do: [ :invalidNullAttribute |
+			self
+				logErrorMessage: 
+					((aCommand errorLogForInvalidNonNullableAttribute: invalidNullAttribute)
+						ifNil: [ self defaultLogForCommand: aCommand andInvalidNonNullableAttribute: invalidNullAttribute ])
+				andThrow: aCommand class invalidCommandExceptionClass ]
+]
+
+{ #category : #checking }
+EDACommandDispatcher >> defaultLogForCommand: aCommand andInvalidNonNullableAttribute: aInstVarSymbol [
+	^ (String streamContents: [ :stream |
+		stream
+			nextPutAll: 'Invalid ';
+			nextPutAll: aInstVarSymbol;
+			nextPutAll: ' [nil] in command ';
+			nextPutAll: aCommand className;
+			nextPutAll: ' [';
+			nextPutAll: aCommand greaseString;
+			nextPutAll: ']' ])
+]
+
 { #category : #dispatching }
 EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 	| handler |
@@ -61,6 +85,7 @@ EDACommandDispatcher >> dispatch: aCommand usingStrategy: aStrategy [
 								nextPutAll: aCommand class latestVersion greaseString;
 								nextPutAll: ' is supported' ])
 				andThrow: EDAInvalidCommandMessage ].
+	self checkNonNullableAttributes: aCommand.
 	handler := self handlersRegistry handlerForCommand: aCommand.
 	(handler isNil and: [ aCommand isDelete ])
 		ifTrue: [ handler := EDADeleteCommandHandler
