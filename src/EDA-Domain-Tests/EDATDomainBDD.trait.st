@@ -1,8 +1,14 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> anyUnnecessaryCheck: aCollection [
+	^ aCollection anySatisfy: [ :elem | self unnecessaryCheck: elem ]
+]
 
 { #category : #BDD }
 EDATDomainBDD >> applyEvent: anEvent onAggregateRoot: anAggregateRoot [
@@ -42,6 +48,11 @@ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new.
 	aBlock value: aggregateRoot
 ]
 
+{ #category : #'matching helpers' }
+EDATDomainBDD >> areSameEventType: anEvent and: otherEvent [
+	^ (anEvent isKindOf: otherEvent class) or: [ otherEvent isKindOf:  anEvent class ]
+]
+
 { #category : #BDD }
 EDATDomainBDD >> assertEvent: actual equals: expected [
 	| diff |
@@ -49,6 +60,16 @@ EDATDomainBDD >> assertEvent: actual equals: expected [
 	^ self
 		assert: (diff isNil or: [ diff identical ])
 		description: [ diff greaseString ]
+]
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> assertEvent: actual matches: expected [
+	"This method raises an AssertionFailure if actual event is different (using #event:totallyMatchesWith: message) from expected.
+	 Else it does nothing and execution continues.
+	"
+	^ self
+		assert: (self event: actual totallyMatchesWith: expected)
+		description: [ self comparingStringBetween: actual and: expected ]
 ]
 
 { #category : #helper }
@@ -99,6 +120,65 @@ EDATDomainBDD >> buildMetaForCommand: aCommand ofType: aString [
 	^ meta
 ]
 
+{ #category : #'matching helpers' }
+EDATDomainBDD >> collection: aCollection totallyMatchesWith: otherObject [
+	| elemsToCheck size |
+	self flag: #TODO.
+	"At the moment it seems that we only need it for SequenceableCollection. See in the future for Bag, etc."
+	self logDebugMessage: 'Checking match collection ' , aCollection fullPrintString , ' with ' , otherObject fullPrintString.
+	elemsToCheck := (OrderedCollection with: aCollection with: otherObject).
+	(self anyUnnecessaryCheck: elemsToCheck) ifTrue: [ ^ true ].
+	aCollection == otherObject
+		ifTrue: [ 
+			self logDebugMessage: 'Match by identity'.
+			^ true ].
+	"It gives problems with OrderedCollection <> Array
+	aCollection species == otherObject species ifFalse: [ ^ false ]."
+	(otherObject isKindOf: SequenceableCollection)
+		ifFalse: [ 
+			self logDebugMessage: 'No match collection ' , aCollection fullPrintString , ' with ' , otherObject fullPrintString , ' by not SequenceableCollection'.
+			^ false ].
+	(size := aCollection size) = otherObject size
+		ifFalse: [ 
+			self logDebugMessage: 'No match collection ' , aCollection fullPrintString , ' with ' , otherObject fullPrintString , ' by different sizes'.
+			^ false ].
+	"Done like this instead of with allSatisfy: to get all the different values in the future and show them on the visualization"
+	1 to: size do: [ :index |
+		((aCollection at: index) totallyMatches: (otherObject at: index) forTest: self)
+			ifFalse: [ 
+				self logDebugMessage: 'No match collection ' , aCollection fullPrintString , ' with ' , otherObject fullPrintString , ' by elements'.
+				^ false ] ].
+	^ true
+]
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> dictionary: aDictionary totallyMatchesWith: otherObject [
+	| aCollection |
+	self logDebugMessage: 'Checking match dictionary ' , aDictionary fullPrintString , ' with ' , otherObject fullPrintString.
+	aCollection := (OrderedCollection with: aDictionary with: otherObject).
+	(self anyUnnecessaryCheck: aCollection) ifTrue: [ ^ true ].
+	aDictionary == otherObject 
+		ifTrue: [ 
+			self logDebugMessage: 'Match by identity'.
+			^ true ].
+	aDictionary species == otherObject species
+		ifFalse: [
+			self logDebugMessage: 'No match dictionary ' , aDictionary fullPrintString , ' with ' , otherObject fullPrintString , ' by different species'.
+			^ false ].
+	(otherObject isKindOf: Dictionary) ifFalse: [ ^ false ].
+	aDictionary size = otherObject size
+		ifFalse: [ 
+			self logDebugMessage: 'No match dictionary ' , aDictionary fullPrintString , ' with ' , otherObject fullPrintString , ' by different sizes'.
+			^ false ].
+	"Done like this instead of with allSatisfy: to get all the different values in the future and show them on the visualization"
+	aDictionary associationsDo: [ :assoc |
+		(assoc value totallyMatches: (otherObject at: assoc key ifAbsent: [ ^ false ]) forTest: self)
+			ifFalse: [
+				self logDebugMessage: 'No match dictionary ' , aDictionary fullPrintString , ' with ' , otherObject fullPrintString , ' by elements'. 
+				^ false ] ].
+	^ true
+]
+
 { #category : #helper }
 EDATDomainBDD >> discardAgent: anEvent [
 	(anEvent respondsTo: #agent:)
@@ -109,6 +189,33 @@ EDATDomainBDD >> discardAgent: anEvent [
 EDATDomainBDD >> discardDateCreated: anEvent [
 			(anEvent respondsTo: #dateCreated:)
 				ifTrue: [ anEvent dateCreated: '<ANYTHING>' ].
+]
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> event: anEvent totallyMatchesWith: otherEvent [
+	| eventCollection |
+	self logCheckingEvent: anEvent and: otherEvent.
+	eventCollection := OrderedCollection with: anEvent with: anEvent.
+	(self anyUnnecessaryCheck: eventCollection)
+		ifTrue: [ ^ true ].
+	(self areSameEventType: anEvent and: otherEvent)
+		ifFalse: [ self
+				logDebugMessage:
+					'No match event ' , anEvent fullPrintString , ' with '
+						, otherEvent fullPrintString , ' by different event type'.
+			^ false ].
+	^ anEvent class allInstVarNames
+		allSatisfy: [ :varName | 
+			((varName value: anEvent)
+				totallyMatches: (varName value: otherEvent)
+				forTest: self)
+				or: [ | attributeGenerated |
+					attributeGenerated := anEvent class
+						isEventGenerated: varName greaseString.
+					attributeGenerated
+						ifTrue: [ self
+								logDebugMessage: 'Match by ' , varName fullPrintString , ' event generated' ].
+					attributeGenerated ] ]
 ]
 
 { #category : #helper }
@@ -231,8 +338,32 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			expected := expectedEvents at: i.
 			self discardDateCreated: expected.
 			self discardAgent: expected.
-			self assertEvent: expected equals: actual ] ]
+			(self event: expected totallyMatchesWith: actual)
+			 ifFalse: [ 
+				self assert: expected asJsonString equals: actual asJsonString ].
+			"Keep for testing with old system"
+			"self assert: expected asJsonString equals: actual asJsonString."
+			"self assertEvent: expected equals: actual."
+			"self assert: expected equals: actual."
+			"self assertEvent: expected matches: actual" ] ]
 		ensure: [ self restoreEventStores: originalEventStores ]
+]
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> logCheckingEvent: anEvent and: otherEvent [
+	self logDebugMessage: 'Checking match event ' , anEvent fullPrintString , ' with ' , otherEvent fullPrintString.
+]
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> object: anObject totallyMatchesWith: otherObject [
+	| aCollection objectsEquality |
+	self logDebugMessage: 'Checking match object ' , anObject fullPrintString , ' with ' , otherObject fullPrintString.
+	aCollection := (OrderedCollection with: anObject with: otherObject).
+	(self anyUnnecessaryCheck: aCollection) ifTrue: [ ^ true ].
+	objectsEquality := anObject = otherObject.
+	self logDebugMessage: (objectsEquality ifTrue: [ 'Match ' ] ifFalse: [ 'Dismatch ' ]) , ' by identity'.
+	^ objectsEquality
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -299,8 +430,23 @@ EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 	^ result
 ]
 
+{ #category : #'matching helpers' }
+EDATDomainBDD >> unnecessaryCheck: anObject [
+	| isUnnecessary |
+	isUnnecessary := self wildCards includes: anObject.
+	isUnnecessary ifTrue: [ self logDebugMessage: 'Match by unnecessary check' ].
+	^ isUnnecessary
+]
+
 { #category : #'test support' }
 EDATDomainBDD >> useEventStore: anEventStore [
 	EDAAggregateRepository
 		allSubclassesDo: [ :c | c setupEventStore: anEventStore ]
+]
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> wildCards [
+	^ Set
+		with: '<ANYTHING>'
+		with: '1970-01-01T00:00:00'.
 ]

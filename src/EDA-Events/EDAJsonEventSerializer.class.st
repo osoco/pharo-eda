@@ -77,6 +77,7 @@ EDAJsonEventSerializer >> serialize: anEvent [
 				for: DateAndTime
 				customDo: [ :mapping | mapping encoder: [ :tmst | tmst printString ] ].
 			self customJsonMappingsFor: jsonWriter.
+			jsonWriter prettyPrint: true.
 			jsonWriter nextPut: eventDict ]
 ]
 

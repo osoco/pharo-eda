@@ -135,6 +135,15 @@ EDAEventSourcingEvent >> delete: aFlag [
 	delete := aFlag
 ]
 
+{ #category : #'inspector extensions' }
+EDAEventSourcingEvent >> gtDebuggerSUnitPrint [
+	"I return a textual representation of the object that is used by the SUnit debugger to compare objects using a textual diff."
+	| eventDict |
+	eventDict := self asDictionary.
+	eventDict at: '.Class' put: self className.
+	^ eventDict gtDebuggerSUnitPrint
+]
+
 { #category : #accessing }
 EDAEventSourcingEvent >> id [
 	^ id

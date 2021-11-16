@@ -1,6 +1,6 @@
 Trait {
 	#name : #EDATTestEvent,
-	#category : 'EDA-Domain-Tests'
+	#category : #'EDA-Domain-Tests'
 }
 
 { #category : #helper }
@@ -20,10 +20,15 @@ EDATTestEvent >> attribute: myAttr named: attrName matches: otherAttr [
 
 { #category : #helper }
 EDATTestEvent >> bothAreCollections: myAttr andTheirContentsMatch: otherAttr [
-	| result |
-	result := myAttr isCollection and: [ otherAttr isCollection ].
-	result ifTrue: [ result := myAttr asOrderedCollection = otherAttr asOrderedCollection  ].
-	^ result
+	| anOrderedCollection otherOrderedCollection |
+	(myAttr isCollection and: [ otherAttr isCollection ]) ifFalse: [ ^ false ].
+	anOrderedCollection := myAttr asOrderedCollection.
+	otherOrderedCollection :=  otherAttr asOrderedCollection.
+	(anOrderedCollection size) = otherOrderedCollection size ifFalse: [ ^ false ].
+	anOrderedCollection withIndexDo:
+		[ :each :index |
+		(self object: each matches: (otherOrderedCollection at: index)) ifFalse: [ ^ false ] ].
+	^ true
 ]
 
 { #category : #helper }
@@ -44,4 +49,15 @@ EDATTestEvent >> isAnyTimestamp: attr [
 { #category : #helper }
 EDATTestEvent >> isAnything: attr [
 	^ attr = '<ANYTHING>'
+]
+
+{ #category : #helper }
+EDATTestEvent >> object: anObject matches: otherObject [
+	^ (self isAnything: anObject)
+	or: [ (self isAnything: otherObject)
+	or: [ (self isAnyTimestamp: anObject)
+	or: [ (self isAnyTimestamp: otherObject)
+	or: [ (anObject = otherObject)
+	or: [ (self bothAreCollections: anObject andTheirContentsMatch: otherObject) 
+	or: [ self bothAreDictionaries: anObject andTheirContentsMatch: otherObject ] ] ] ] ] ]
 ]
