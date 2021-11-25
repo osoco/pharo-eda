@@ -76,16 +76,19 @@ EDADefaultCommandBuilder >> copyFromBodyDict: aBodyDict intoCommand: aCommand [
 EDADefaultCommandBuilder >> copyFromDict: aDictionary intoCommand: aCommand [
 	aDictionary
 		associationsDo: [ :assoc |
-			| key |
-			key := assoc key.
-			[	aCommand
-					instVarNamed: key
-					put: assoc value
-					ifAbsent: [ self logWarningMessage: 'No such inst var: ' , key ] ]
-			on: Exception
-			do: [ :ex |
-				self
-					logWarningMessage: key greaseString , ' does not exist in ' , aCommand class greaseString ] ]
+			| key value |
+			value := assoc value.
+			"do not set the new value if it is nil to avoid removing the initialized values"
+			value ifNotNil: [
+				key := assoc key.
+				[	aCommand
+						instVarNamed: key
+						put: assoc value
+						ifAbsent: [ self logWarningMessage: 'No such inst var: ' , key ] ]
+				on: Exception
+				do: [ :ex |
+					self
+						logWarningMessage: key greaseString , ' does not exist in ' , aCommand class greaseString ] ] ]
 ]
 
 { #category : #building }

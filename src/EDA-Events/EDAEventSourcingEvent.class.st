@@ -29,8 +29,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #EDAEventSourcingEvent,
 	#superclass : #Announcement,
-	#traits : 'EDAPrintOnHelper + EDATHashHelper + EDATEqualsHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATHashHelper + EDATEqualsHelper + EDATLogging',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATHashHelper classTrait + EDATEqualsHelper classTrait + EDATLogging classTrait',
 	#instVars : [
 		'id',
 		'timestamp',
@@ -60,6 +60,11 @@ EDAEventSourcingEvent class >> attributesWhoseValuesGetGenerated [
 	^ #('id' 'timestamp') asSet
 ]
 
+{ #category : #helpers }
+EDAEventSourcingEvent class >> classPrefix [
+	^ (self name regex: '^([A-Z]+)' matchesCollect: [ :each | each asString ]) first allButLast
+]
+
 { #category : #meta }
 EDAEventSourcingEvent class >> isEventGenerated: attr [
 	^ self attributesWhoseValuesGetGenerated anySatisfy: [ :v | v = attr ]
@@ -73,6 +78,39 @@ EDAEventSourcingEvent class >> latestVersion [
 
 { #category : #meta }
 EDAEventSourcingEvent class >> ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs [
+	| event previousAggregateRootVersion aggregateRootVersion |
+	event := self new.
+	event tenant: theTenant.
+	event id: theId.
+	event commandId: theCommandId.
+	event
+		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
+	previousAggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifAbsent: [ nil ].
+	aggregateRootVersion := previousAggregateRootVersion ifNil: [ 1 ] ifNotNil: [ :pARV | pARV + 1 ].
+	event aggregateRootVersion: aggregateRootVersion.
+	event version: self latestVersion.
+	(self allInstVarNames reject: [ :var | #(#aggregateRootClass #aggregateRootVersion #commandId #delete #id #tenant #timestamp #version) includes: var ])
+		do: [ :instVarName |
+			| value |
+			value := theAttrs at: instVarName ifAbsent: [ nil ].
+			"do not set the new value if it is nil to avoid removing the initialized values"
+			value ifNotNil: [ 
+				event
+					instVarNamed: instVarName asString
+					put: value
+					ifAbsent: [ 
+						self logWarningMessage: 
+							(String streamContents: [ :stream |
+								stream nextPutAll:  'No such inst var ['.
+								stream nextPutAll: instVarName greaseString.
+								stream nextPutAll: '] to set in ['.
+								stream nextPutAll: self name.
+								stream nextPutAll: ']' ]) ]	] ].
+	^ event
+]
+
+{ #category : #meta }
+EDAEventSourcingEvent class >> old_ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs [
 	| result scopeKey scopeContext previousAggregateRootVersion aggregateRootVersion |
 	result := self new.
 	result tenant: theTenant.
@@ -126,8 +164,9 @@ EDAEventSourcingEvent >> aggregateRootVersion: anObject [
 { #category : #accessing }
 EDAEventSourcingEvent >> delete [
 	self flag: #TODO. "Find out why initialize doesn't get called for EDAEventSourcingEvents"
-	delete ifNil: [ self initialize ].
-	^ delete
+	^ delete ifNil: [ delete := false ]
+"	delete ifNil: [ self initialize ].
+	^ delete"
 ]
 
 { #category : #accessing }

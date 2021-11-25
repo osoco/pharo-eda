@@ -16,6 +16,37 @@ EDAEventSourcingEvent >> asJsonString [
 ]
 
 { #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> attributesReceivedNotRequired [
+	"Not need for events"
+	^ Set empty
+]
+
+{ #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> instVarsNeededExceptionFor: aTest [
+	^ aTest eventInstVarsNeededException
+]
+
+{ #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> instVarsNeededMessageFor: aTest [
+	^ aTest eventInstVarsNeededMessage
+]
+
+{ #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> sampleFileNameForTest: aTest [
+	"overwrite if the sample file name does not follow the default criteria
+	e.g. <classPrefix>EventNameUpperCamelCase -> event.name.upper.camel.case.example.json
+	"
+	[ self subclassResponsibility ]
+		on: Error
+		do: [ ^ aTest defaultSampleFileNameFor: self ]
+]
+
+{ #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> sampleFilesPathForTest: aTest [
+	^ aTest eventSampleFilesPath
+]
+
+{ #category : #'*EDA-Domain-Tests' }
 EDAEventSourcingEvent >> totallyMatches: anObject forTest: aTest [
 	^ aTest event: self totallyMatchesWith: anObject
 ]
