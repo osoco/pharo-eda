@@ -42,6 +42,11 @@ EDAAggregateRoot class >> checkTenantIsValid: tenantOfCommand [
 ]
 
 { #category : #helpers }
+EDAAggregateRoot class >> classPrefix [
+	^ (self name regex: '^([A-Z]+)' matchesCollect: [ :each | each asString ]) first allButLast
+]
+
+{ #category : #helpers }
 EDAAggregateRoot class >> newVersionAfter: aVersion [
 	^ aVersion + 1
 ]

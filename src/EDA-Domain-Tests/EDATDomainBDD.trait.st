@@ -198,6 +198,16 @@ EDATDomainBDD >> buildSampleCommandFor: aCommandClass [
 	^ ATSJsonCommandMaterializer new materialize: commandMessage.
 ]
 
+{ #category : #'helper - command building' }
+EDATDomainBDD >> buildSampleDeleteCommandFor: anAggregateClass [
+	| commandMessage deleteCmd |
+	commandMessage := self readSampleDeleteAggregateCommandFileFor: anAggregateClass.
+	self checkInstVarsFor: EDADeleteAggregateCommand withAttributes: (self buildCommandAttributesDictFromMessage: commandMessage).
+	deleteCmd :=  ATSJsonCommandMaterializer new materialize: commandMessage.
+	deleteCmd aggregateRootClass: nil.
+	^ deleteCmd
+]
+
 { #category : #'helper - event building' }
 EDATDomainBDD >> buildSampleEventFor: anEventClass [
 	| attributes |
@@ -784,6 +794,12 @@ EDATDomainBDD >> readFile: aFile [
 	result := fileStream contents.
 	fileStream close.
 	^ result
+]
+
+{ #category : #'helper - file readers' }
+EDATDomainBDD >> readSampleDeleteAggregateCommandFileFor: anAggregateClass [
+	^ self readFile: ((EDADeleteAggregateCommand sampleFilesPathForTest: self) / ('v' , EDADeleteAggregateCommand latestVersion asString) / 'delete' , (self defaultSampleFileNameFor: anAggregateClass))
+
 ]
 
 { #category : #'helper - file readers' }
