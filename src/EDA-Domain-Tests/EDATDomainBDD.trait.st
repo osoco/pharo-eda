@@ -66,7 +66,7 @@ EDATDomainBDD >> assertEvent: actual deepMatches: expected [
 	"
 	[ self event: expected totallyMatchesWith: actual ]
 		on: EDAMismatchError
-		do: [ self assert: expected asJsonString equals: actual asJsonString ]
+		do: [ :ex | self assert: expected asJsonString equals: actual asJsonString ]
 ]
 
 { #category : #BDD }
