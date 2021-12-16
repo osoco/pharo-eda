@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -527,8 +528,8 @@ EDATDomainBDD >> event: anEvent totallyMatchesWith: otherEvent [
 		ifFalse: [ | mismatchTypeLogMessage |
 			mismatchTypeLogMessage := self mismatchCheckLogForType: checkingType element: anEvent and: otherEvent andReason: 'by different types'.
 			self logDebugMessage: mismatchTypeLogMessage.
-			eventDiffMessage add: anEvent -> otherEvent.
-			EDAMismatchError signal: mismatchTypeLogMessage withDiff: eventDiffMessage ].
+			eventDiffDict add: anEvent -> otherEvent.
+			EDAMismatchError signal: mismatchTypeLogMessage withDiff: eventDiffDict ].
 	anEvent class allInstVarNames
 		do: [ :varName | 
 			| checkingInstVarMessage anEventVar otherEventVar |
