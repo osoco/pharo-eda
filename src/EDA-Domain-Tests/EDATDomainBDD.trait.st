@@ -614,6 +614,11 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: expectedResultingEvents [
+	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
 	| msg |
 	msg := self
 		buildMessageForCommand: aCommand
@@ -623,6 +628,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 		withEvents: historicalEvents
 		whenReceiveMessage: msg
 		thenEvents: expectedResultingEvents
+		andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock
 ]
 
 { #category : #BDD }
@@ -657,17 +663,23 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents [
-	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: (EDAMessageSerializer nameForMessageClass: aCommand class) thenEvents: expectedResultingEvents 
+	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
 
 ]
 
 { #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvent: expectedResultingEvent [
-	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: (OrderedCollection with: expectedResultingEvent)
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
+	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: (EDAMessageSerializer nameForMessageClass: aCommand class) thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock
+
 ]
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents [
+	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
 	| commandConsumer resultingEvents mock eventStore expectedEvents eventsToSave aggregateRootVersion msg eventsOfAggregate originalEventStores |
 	mock := EDAAcceptEverything new.
 	eventStore := EDAVolatileEventStore new.
@@ -717,7 +729,8 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			"self assert: expected asJsonString equals: actual asJsonString."
 			"self assertEvent: expected equals: actual."
 			"self assert: expected equals: actual."
-			"self assertEvent: expected matches: actual" ] ]
+			"self assertEvent: expected matches: actual" ].
+	anExcepctedAndResultingEventsAssertionBlock value: expectedEvents value: resultingEvents ]
 		ensure: [ self restoreEventStores: originalEventStores ]
 ]
 
