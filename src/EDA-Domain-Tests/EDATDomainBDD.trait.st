@@ -215,45 +215,10 @@ EDATDomainBDD >> buildSampleEventFor: anEventClass [
 		buildEventAttributesDictFromFile: (self readSampleFileFor: anEventClass).
 	self checkInstVarsFor: anEventClass withAttributes: attributes.
 	^ anEventClass
-		ofTenant: (attributes at: #tenant)
+		ofTenant: (attributes at: #tenant ifAbsent: [ nil ])
 		withAggregateId: (attributes at: #id)
 		commandId: (attributes at: #commandId)
 		andAttributes: attributes
-	"	| eventMessage eventJson eventMeta eventBody evtAttributes evtCommandId evtTenant evtId evtTimestamp |
-	eventMessage := self readFile: aFile.
-	eventJson := NeoJSONReader fromString: eventMessage.
-	eventMeta := eventJson at: #meta.
-	eventBody := eventJson at: #body.
-	evtAttributes := Dictionary new.
-	evtAttributes at: 'version' put: (eventMeta at: 'version').
-	evtAttributes at: 'aggregateRootVersion' put: (eventBody at: 'version').
-	evtTenant := eventBody at: 'tenant'.
-	evtId := eventBody at: 'id'.
-	evtCommandId := eventMeta at: 'correlationId' ifAbsent: [ 'missing' ].
-	evtTimestamp := eventBody at: 'timestamp' ifAbsent: [ nil ].
-	evtTimestamp ifNil: [ evtTimestamp := eventMeta at: 'timestamp' ifAbsent: [ nil ] ].
-	evtTimestamp ifNotNil: [ :t | evtAttributes at: 'timestamp' put: evtTimestamp ].
-	eventBody at: #scopeContext ifPresent: [ :v | evtAttributes at: #scopeContext put: v ].
-	eventBody at: #scopeKey ifPresent: [ :v | evtAttributes at: #scopeKey put: v ].
-	eventBody at: 'canSaveDraft' ifPresent: [ :v | evtAttributes at: 'canSaveDraft' put: v ].
-	eventBody at: 'confirmationMessage' ifPresent: [ :v | evtAttributes at: 'confirmationMessage' put: v ].
-	eventBody at: 'contestId' ifPresent: [ :v | evtAttributes at: 'contestId' put: v ].
-	eventBody at: 'contestKey' ifPresent: [ :v | evtAttributes at: 'contestKey' put: v ].
-	eventBody at: 'contestName' ifPresent: [ :v | evtAttributes at: 'contestName' put: v ].
-	eventBody at: 'defaultLanguage' ifPresent: [ :v | evtAttributes at: 'defaultLanguage' put: v ].
-	eventBody at: 'formKey' ifPresent: [ :v | evtAttributes at: 'formKey' put: v ].
-	eventBody at: 'gdpr' ifPresent: [ :v | evtAttributes at: 'gdpr' put: v ].
-	eventBody at: 'languages' ifPresent: [ :v | evtAttributes at: 'languages' put: v ].
-	eventBody at: 'legalConditions' ifPresent: [ :v | evtAttributes at: 'legalConditions' put: v ].
-	eventBody at: 'public' ifPresent: [ :v | evtAttributes at: 'public' put: v ].
-	eventBody at: 'recoveryZone' ifPresent: [ :v | evtAttributes at: 'recoveryZone' put: v ].
-	eventBody at: 'sections' ifPresent: [ :v | evtAttributes at: 'sections' put: v ].
-	eventBody at: 'sendingDataMessage' ifPresent: [ :v | evtAttributes at: 'sendingDataMessage' put: v ].
-	eventBody at: 'showAllowShareDataCheck' ifPresent: [ :v | evtAttributes at: 'showAllowShareDataCheck' put: v ].
-	eventBody at: 'summarySentence' ifPresent: [ :v | evtAttributes at: 'summarySentence' put: v ].
-	eventBody at: 'timeoutErrorMessage' ifPresent: [ :v | evtAttributes at: 'timeoutErrorMessage' put: v ].
-	eventBody at: 'widgetCustomizations' ifPresent: [ :v | evtAttributes at: 'widgetCustomizations' put: v ].
-"
 ]
 
 { #category : #'helper - event building' }
@@ -264,13 +229,6 @@ EDATDomainBDD >> buildSampleEventFor: anEventClass withId: evtId andCommandId: i
 	aTestEvt id: evtId.
 	aTestEvt commandId: inputCommandId.
 	^ aTestEvt
-"
-	| result |
-	result := ATSTestFormCreated fromEvent: (self buildFormCreatedEventFromFile: self readFormCreatedFromFile).
-	result id: evtId.
-	result commandId: inputCommandId.
-	^ result
-"
 ]
 
 { #category : #'helper - inst var checking' }
