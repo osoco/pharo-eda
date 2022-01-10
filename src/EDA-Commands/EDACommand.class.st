@@ -58,6 +58,7 @@ EDACommand class >> latestVersion [
 { #category : #checking }
 EDACommand class >> nonNullableAttributes [
 	"Fill in subclasses with non-nullable InstVar as symbols"
+	"Override invalidNonNullableAttributesErrorLogs instance side to customize error logs"
 	[ self subclassResponsibility ]
 		on: Error
 		do: [ ^ Set empty ]
