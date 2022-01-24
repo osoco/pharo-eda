@@ -286,13 +286,7 @@ EDACommandHandler >> processGeneratedEvents: producedEvents forCommand: aCommand
 	versionedEvents := self class
 		addVersionToEvents: producedEvents
 		usingEventStore: eventStore.
-	eventStore saveEvents: versionedEvents.
-	self logInfoMessage: 'Projecting events...'.
-	(self projectorClass
-		ofTenant: aCommand tenant
-		withAllProjectorsAndEventStore: eventStore)
-		projectFilteredEvents: versionedEvents
-		ofTenant: aCommand tenant.
+	self saveAndProjectEvents: versionedEvents.
 	self logInfoMessage: 'Done'.
 	^ producedEvents
 ]
@@ -310,4 +304,29 @@ EDACommandHandler >> projectorClass: anObject [
 { #category : #handling }
 EDACommandHandler >> retrieveAggregateRootClass: aCommand [
 	^ aCommand aggregateRootClass
+]
+
+{ #category : #handling }
+EDACommandHandler >> saveAndProjectEvents: versionedEvents [
+	"save and project one event at a time"
+	versionedEvents
+		withIndexDo: [ :versionedEvt :index | 
+			| totalEvts oneEvtCollection |
+			totalEvts := versionedEvents size.
+			"a collection with every event to reuse code"
+			oneEvtCollection := OrderedCollection with: versionedEvt.
+			self
+				logInfoMessage:
+					'Saving ' , index greaseString , '/' , totalEvts greaseString
+						, ' event ...'.
+			eventStore saveEvents: oneEvtCollection.
+			self
+				logInfoMessage:
+					'Projecting ' , index greaseString , '/' , totalEvts greaseString
+						, ' events...'.
+			(self projectorClass
+				ofTenant: versionedEvt tenant
+				withAllProjectorsAndEventStore: eventStore)
+				projectFilteredEvents: oneEvtCollection
+				ofTenant: versionedEvt tenant ]
 ]
