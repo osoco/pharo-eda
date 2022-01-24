@@ -83,6 +83,14 @@ EDAVolatileEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRoo
 		with: 'id' -> aNumber)
 ]
 
+{ #category : #filtering }
+EDAVolatileEventStore >> findEventsOfTenant: aTenant ofType: anEventClass whereCriteria: aCriteria [
+	^ (self
+		findEventsOfTenant: aTenant
+		ofAggregate: anEventClass aggregateRootClass
+		whereCriteria: aCriteria) select: [ :evt | evt className = anEventClass greaseString ]
+]
+
 { #category : #save }
 EDAVolatileEventStore >> saveEvents: aCollection [
 	aCollection
