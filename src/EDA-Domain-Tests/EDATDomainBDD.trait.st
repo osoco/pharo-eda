@@ -638,15 +638,30 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
-	| commandConsumer resultingEvents mock eventStore expectedEvents eventsToSave aggregateRootVersion msg eventsOfAggregate originalEventStores |
+	| commandConsumer resultingEvents mock eventStore expectedEvents eventsToSave tenant aggregateRootVersion msg eventsOfAggregate originalEventStores projectorClass |
 	mock := EDAAcceptEverything new.
+	projectorClass := mock.
 	eventStore := EDAVolatileEventStore new.
 	originalEventStores := self retrieveEventStores.
 	[ self useEventStore: eventStore.
+	self setupTestProjections.
 	eventsToSave := self
 		fixAggregateRootVersionsOfEvents: historicalEvents
 		usingEventStore: eventStore.
-	eventStore saveEvents: eventsToSave.
+	eventsToSave
+		ifNotEmpty: [ :evts | 
+			tenant := evts anyOne tenant.
+			projectorClass := EDACompositeProjector.
+			evts
+				withIndexDo: [ :evt :index | 
+					| oneEvtCollection |
+					oneEvtCollection := OrderedCollection with: evt.
+					eventStore saveEvents: oneEvtCollection.
+					(projectorClass
+						ofTenant: tenant
+						withAllProjectorsAndEventStore: eventStore)
+						projectFilteredEvents: oneEvtCollection
+						ofTenant: tenant ] ].
 	commandConsumer := EDACommandConsumer
 		busListener: mock
 		commandMaterializer: EDAJsonCommandMaterializer new
@@ -654,7 +669,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			(EDAApplication
 				buildCommandDispatcherWithEventStore: eventStore
 				eventProducer: mock
-				andProjectorClass: mock).
+				andProjectorClass: projectorClass).
 	eventsOfAggregate := eventsToSave
 		select:
 			[ :e | e aggregateRootClass greaseString asSymbol = anAggregateRootSymbol ].
@@ -678,7 +693,7 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			expected := expectedEvents at: i.
 			self discardDateCreated: expected.
 			self discardAgent: expected.
-			self assertEvent: expected deepMatches: actual.
+			self assertEvent: expected deepMatches: actual
 			"matchResult := self event: expected totallyMatchesWith: actual.
 			(matchResult at: #match)
 			 ifFalse: [ 
@@ -688,8 +703,11 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 			"self assertEvent: expected equals: actual."
 			"self assert: expected equals: actual."
 			"self assertEvent: expected matches: actual" ].
-	anExcepctedAndResultingEventsAssertionBlock value: expectedEvents value: resultingEvents ]
-		ensure: [ self restoreEventStores: originalEventStores ]
+	anExcepctedAndResultingEventsAssertionBlock
+		value: expectedEvents
+		value: resultingEvents ]
+		ensure: [ self restoreEventStores: originalEventStores.
+			self restoreProjections ]
 ]
 
 { #category : #'matching helpers - logs' }
@@ -785,6 +803,20 @@ EDATDomainBDD >> restoreEventStores: aDictionary [
 		allSubclassesDo: [ :c | c setupEventStore: (aDictionary at: c greaseString asSymbol) ]
 ]
 
+{ #category : #'as yet unclassified' }
+EDATDomainBDD >> restoreProjections [
+	| projectionClasses |
+	projectionClasses := EDAProjection allSubclasses
+		reject: [ :projectionClass | 
+			(projectionClass name beginsWithSubCollection: 'EDATest')
+				or: [ projectionClass isAbstract ] ].
+	projectionClasses add: EDAProjection.
+	projectionClasses
+		do:
+			[ :projectionClass | 
+			self tearDownProjectionRepositoryForTestProjection: projectionClass ]
+]
+
 { #category : #'test support' }
 EDATDomainBDD >> retrieveEventStores [
 	| result |
@@ -815,6 +847,30 @@ EDATDomainBDD >> retrieveHandlerSelectorSymbol: aCommand [
 				ifEmpty: [ ('handle' , aCommand classNameWithoutPrefix , ':') asSymbol ]
 				ifNotEmpty: [ methods first selector ] ].
 	^ result
+]
+
+{ #category : #'as yet unclassified' }
+EDATDomainBDD >> setupProjectionRepositoryForTestProjection: aProjectionClass [
+	aProjectionClass repository: EDAProjectionMemoryRepository new
+]
+
+{ #category : #'as yet unclassified' }
+EDATDomainBDD >> setupTestProjections [
+	| projectionClasses |
+	projectionClasses := EDAProjection allSubclasses
+		reject: [ :projectionClass | 
+			(projectionClass name beginsWithSubCollection: 'EDATest')
+				or: [ projectionClass isAbstract ] ].
+	projectionClasses add: EDAProjection.
+	projectionClasses
+		do:
+			[ :projectionClass | 
+			self setupProjectionRepositoryForTestProjection: projectionClass ]
+]
+
+{ #category : #'as yet unclassified' }
+EDATDomainBDD >> tearDownProjectionRepositoryForTestProjection: aProjectionClass [
+	aProjectionClass repository: nil
 ]
 
 { #category : #'matching helpers - logs' }
