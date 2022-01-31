@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -616,6 +617,16 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 		withEvents: historicalEvents
 		whenReceiveCommand: aCommand
 		thenEvents: (OrderedCollection with: expectedEvent)
+]
+
+{ #category : #BDD }
+EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvent: expectedEvent andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
+	^ self
+		givenAggregate: anAggregateRootSymbol
+		withEvents: historicalEvents
+		whenReceiveCommand: aCommand
+		thenEvents: (OrderedCollection with: expectedEvent)
+		andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock
 ]
 
 { #category : #BDD }
