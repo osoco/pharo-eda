@@ -29,7 +29,7 @@ EDAProjector class >> errorHandlingBehavior [
 
 { #category : #accessing }
 EDAProjector class >> headlessMode [
-	^ HeadlessMode 
+	^ HeadlessMode ifNil: [ true ]
 ]
 
 { #category : #accessing }
