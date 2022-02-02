@@ -311,8 +311,7 @@ EDAMongoEventStore >> initBackendRepository [
 	"result cache: EDAMongoNoCache new."
 	result debug: self class debug.
 	self class enableReplication
-		ifTrue: [ result enableReplication ]
-		ifFalse: [ result disableReplication ].
+		ifTrue: [ result enableReplication ].
 	self class enableSingleton
 		ifTrue: [ result enableSingleton ]
 		ifFalse: [ result disableSingleton ].

@@ -194,12 +194,12 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 		description: 'AuthenticationMechanism';
 		domainValues:
 			((MongoAuthMechanism allSubclasses reject: [ :item | item isAbstract ])
-				collect: [ :item | item textDescription -> item ]);
+				collect: [ :item | item description -> item ]);
 		default:
 			(MongoAuthMechanism allSubclasses
 				select: [ :item | 
 					item isAbstract not
-						and: [ item textDescription = (mongoConfig at: 'authenticationMechanism' ifAbsent: 'SCRAM-SHA-1') ] ])
+						and: [ item description = (mongoConfig at: 'authenticationMechanism' ifAbsent: 'SCRAM-SHA-1') ] ])
 				first.
 	(aBuilder setting: #debug)
 		parent: parent;
