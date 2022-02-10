@@ -12,19 +12,12 @@ BaselineOfPharoEDA >> baseline: spec [
 		do: [ spec blessing: #baseline.
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
+			self declareVoyageIn: spec.
 			self declareStampIn: spec.
 			self declareDeployUtilsIn: spec.
 			self declareObjectDiffIn: spec.
 			self declarePackagesIn: spec.
-			self declareGroupsIn: spec ].
-	spec
-		for: #'pharo8.x'
-		do: [ 
-			self declareVoyagePharo8In: spec ].
-	spec
-		for: #'pharo9.x'
-		do: [ 
-			self declareVoyagePharo9In: spec ].	
+			self declareGroupsIn: spec ]
 ]
 
 { #category : #dependencies }
@@ -136,21 +129,22 @@ BaselineOfPharoEDA >> declareStampIn: spec [
 ]
 
 { #category : #dependencies }
-BaselineOfPharoEDA >> declareVoyagePharo8In: spec [
+BaselineOfPharoEDA >> declareVoyageIn: spec [
 	spec
 		baseline: 'Voyage'
 		with: [ spec
-				repository: 'github://pharo-nosql/voyage:1.7/mc' ].
+				repository:
+					'github://pharo-nosql/voyage:' , self voyageReleaseForPharoVersion
+						, '/mc' ].
 	^ spec
-
 ]
 
 { #category : #dependencies }
-BaselineOfPharoEDA >> declareVoyagePharo9In: spec [
-	spec
-		baseline: 'Voyage'
-		with: [ spec
-				repository: 'github://pharo-nosql/voyage:1.7.1/mc' ].
-	^ spec
-
+BaselineOfPharoEDA >> voyageReleaseForPharoVersion [
+	| release |
+	SystemVersion current major = 8
+		ifTrue: [ release := '1.7' ].
+	SystemVersion current major = 9
+		ifTrue: [ release := '1.7.1' ].
+	^ release
 ]
