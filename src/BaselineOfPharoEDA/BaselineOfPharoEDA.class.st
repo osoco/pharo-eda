@@ -12,13 +12,19 @@ BaselineOfPharoEDA >> baseline: spec [
 		do: [ spec blessing: #baseline.
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
-			self declareVoyageIn: spec.
-			"self declareMongotalkIn: spec."
 			self declareStampIn: spec.
 			self declareDeployUtilsIn: spec.
 			self declareObjectDiffIn: spec.
 			self declarePackagesIn: spec.
-			self declareGroupsIn: spec ]
+			self declareGroupsIn: spec ].
+	spec
+		for: #'pharo8.x'
+		do: [ 
+			self declareVoyagePharo8In: spec ].
+	spec
+		for: #'pharo9.x'
+		do: [ 
+			self declareVoyagePharo9In: spec ].	
 ]
 
 { #category : #dependencies }
@@ -130,14 +136,21 @@ BaselineOfPharoEDA >> declareStampIn: spec [
 ]
 
 { #category : #dependencies }
-BaselineOfPharoEDA >> declareVoyageIn: spec [
-	| release |
-	spec for: #common do: [ release := '1.7' ].
-	spec for: #'pharo9.x' do: [ release := '1.7.1' ].
+BaselineOfPharoEDA >> declareVoyagePharo8In: spec [
 	spec
 		baseline: 'Voyage'
 		with: [ spec
-				repository: 'github://pharo-nosql/voyage:' , release , '/mc' ].
+				repository: 'github://pharo-nosql/voyage:1.7/mc' ].
+	^ spec
+
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> declareVoyagePharo9In: spec [
+	spec
+		baseline: 'Voyage'
+		with: [ spec
+				repository: 'github://pharo-nosql/voyage:1.7.1/mc' ].
 	^ spec
 
 ]
