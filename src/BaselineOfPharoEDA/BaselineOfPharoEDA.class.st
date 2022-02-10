@@ -131,10 +131,13 @@ BaselineOfPharoEDA >> declareStampIn: spec [
 
 { #category : #dependencies }
 BaselineOfPharoEDA >> declareVoyageIn: spec [
+	| release |
+	spec for: #common do: [ release := '1.7' ].
+	spec for: #'pharo9.x' do: [ release := '1.7.1' ].
 	spec
 		baseline: 'Voyage'
 		with: [ spec
-				repository: 'github://pharo-nosql/voyage:1.7/mc' ].
+				repository: 'github://pharo-nosql/voyage:' , release , '/mc' ].
 	^ spec
 
 ]
