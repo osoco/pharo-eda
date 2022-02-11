@@ -18,6 +18,11 @@ Class {
 	#category : #'EDA-Settings'
 }
 
+{ #category : #'settings helpers - mongo' }
+EDASettings class >> authMethodDescription: aMongoAuthMechanism [
+	^ [ aMongoAuthMechanism textDescription ] on: MessageNotUnderstood , SubclassResponsibility do: [ aMongoAuthMechanism description ]
+]
+
 { #category : #settings }
 EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
 	| stompConfig values |
@@ -154,6 +159,11 @@ EDASettings class >> loggingSettingsOn: aBuilder under: parent [
 		default: (extSettings at: 'level')
 ]
 
+{ #category : #'settings helpers - mongo' }
+EDASettings class >> mongoAuthMechanismClasses [
+	^ (MongoAuthMechanism allSubclasses reject: [ :item | item isAbstract ])
+]
+
 { #category : #settings }
 EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: parent populatedWithValuesFrom: mongoConfig [
 	(aBuilder setting: #urls)
@@ -193,14 +203,13 @@ EDASettings class >> mongoSettingsOn: aBuilder withConfig: container under: pare
 		label: 'AuthenticationMechanism' translated;
 		description: 'AuthenticationMechanism';
 		domainValues:
-			((MongoAuthMechanism allSubclasses reject: [ :item | item isAbstract ])
-				collect: [ :item | item textDescription -> item ]);
+			(self mongoAuthMechanismClasses
+				collect: [ :mongoAuthMechanismClass | (self authMethodDescription: mongoAuthMechanismClass) -> mongoAuthMechanismClass ]);
 		default:
-			(MongoAuthMechanism allSubclasses
-				select: [ :item | 
-					item isAbstract not
-						and: [ item textDescription = (mongoConfig at: 'authenticationMechanism' ifAbsent: 'SCRAM-SHA-1') ] ])
-				first.
+			(self mongoAuthMechanismClasses
+				detect: [ :mongoAuthMechanismClass | 
+					(self authMethodDescription: mongoAuthMechanismClass) = (mongoConfig at: 'authenticationMechanism' ifAbsent: 'SCRAM-SHA-1') ]
+				ifNone: [ self mongoAuthMechanismClasses anyOne ]).
 	(aBuilder setting: #debug)
 		parent: parent;
 		target: container;
