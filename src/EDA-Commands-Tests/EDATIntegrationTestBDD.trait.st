@@ -24,6 +24,7 @@ Internal Representation and Key Implementation Points.
 Trait {
 	#name : #EDATIntegrationTestBDD,
 	#traits : 'EDATJsonMatchingHelper + EDATLogging',
+	#classTraits : 'EDATJsonMatchingHelper classTrait + EDATLogging classTrait',
 	#category : #'EDA-Commands-Tests'
 }
 
@@ -443,15 +444,6 @@ EDATIntegrationTestBDD >> prepareToStopApplication [
 { #category : #lifecycle }
 EDATIntegrationTestBDD >> publishCommand: commandString [
 	^ EDACommandStompTopicPublisher new publishMessage: commandString
-]
-
-{ #category : #helper }
-EDATIntegrationTestBDD >> readFile: aFile [
-	| result stream |
-	stream := aFile readStream.
-	result := stream contents.
-	stream close.
-	^ result
 ]
 
 { #category : #lifecycle }
