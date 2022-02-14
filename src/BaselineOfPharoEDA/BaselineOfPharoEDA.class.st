@@ -13,7 +13,6 @@ BaselineOfPharoEDA >> baseline: spec [
 			self declareNeoJSONIn: spec.
 			self declareBabyMock2In: spec.
 			self declareVoyageIn: spec.
-			"self declareMongotalkIn: spec."
 			self declareStampIn: spec.
 			self declareDeployUtilsIn: spec.
 			self declareObjectDiffIn: spec.
@@ -134,7 +133,18 @@ BaselineOfPharoEDA >> declareVoyageIn: spec [
 	spec
 		baseline: 'Voyage'
 		with: [ spec
-				repository: 'github://pharo-nosql/voyage:1.7/mc' ].
+				repository:
+					'github://pharo-nosql/voyage:' , self voyageReleaseForPharoVersion
+						, '/mc' ].
 	^ spec
+]
 
+{ #category : #dependencies }
+BaselineOfPharoEDA >> voyageReleaseForPharoVersion [
+	| release |
+	SystemVersion current major = 8
+		ifTrue: [ release := '1.7' ].
+	SystemVersion current major = 9
+		ifTrue: [ release := '1.7.1' ].
+	^ release
 ]
