@@ -574,7 +574,8 @@ EDATIntegrationTestBDD >> unsubscribe: id usingListener: aListener [
 	| frame client |
 	client := aListener client.
 	[ (frame := StampUnsubscribeFrame new) id: id.
-	client writeWithReceipt: frame ]
+	[ client writeWithReceipt: frame ]
+		on: Error do: [ :ex | self logErrorMessage: 'Unsubscribe error ' ,  ex messageText greaseString ]  ]
 		ensure: [ client
 				ifNotNil: [ [ client close ]
 						on: ConnectionTimedOut
