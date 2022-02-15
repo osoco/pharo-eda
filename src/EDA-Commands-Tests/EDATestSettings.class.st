@@ -103,3 +103,15 @@ EDATestSettings class >> queueCleaningSettingsOn: aBuilder [
 		under: #testQueueCleaning
 		populatedWithValuesFrom: extSettings
 ]
+
+{ #category : #settings }
+EDATestSettings class >> resetSettings [
+	| classesToInitialize |
+	super resetSettings.
+	classesToInitialize := OrderedCollection new
+		add: EDACommandStompTopicPublisher;
+		add: EDATestEventStompTopicListener;
+		add: EDAQueueCleaner;
+		yourself.
+	classesToInitialize do: [ :cls | cls initialize ]
+]

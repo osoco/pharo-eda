@@ -16,6 +16,14 @@ EDAQueueCleaner class >> defaultVirtualHost [
 	^ '/'
 ]
 
+{ #category : #'class initialization' }
+EDAQueueCleaner class >> doInitialize [
+	self host: nil.
+	self port: nil.
+	self username: nil.
+	self password: nil
+]
+
 { #category : #accessing }
 EDAQueueCleaner class >> host [
 	^ host
@@ -24,6 +32,11 @@ EDAQueueCleaner class >> host [
 { #category : #accessing }
 EDAQueueCleaner class >> host: aString [
 	host := aString
+]
+
+{ #category : #'class initialization' }
+EDAQueueCleaner class >> initialize [
+	self doInitialize
 ]
 
 { #category : #accessing }
