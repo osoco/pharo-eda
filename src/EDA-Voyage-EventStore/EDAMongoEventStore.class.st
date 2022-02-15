@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAMongoEventStore,
 	#superclass : #EDAEventStore,
-	#traits : 'EDAPrintOnHelper + EDATMongoHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait + EDATMongoHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATMongoHelper + EDATLogging',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATMongoHelper classTrait + EDATLogging classTrait',
 	#classInstVars : [
 		'username',
 		'password',
@@ -32,6 +32,31 @@ EDAMongoEventStore class >> authenticationMechanism [
 { #category : #accessing }
 EDAMongoEventStore class >> authenticationMechanism: anObject [
 	authenticationMechanism := anObject
+]
+
+{ #category : #'repository configuration' }
+EDAMongoEventStore class >> configReplicationOnRepository: mongoRepository [
+	self enableReplication
+		ifNotNil: [ :replication | 
+			| replicationDebugMessage |
+			replicationDebugMessage := 'Non-configurable replication.'.
+			replication
+				ifTrue: [ [ mongoRepository enableReplication ]
+						on: MessageNotUnderstood
+						do: [ :ex |
+							self logDebugMessage: replicationDebugMessage ] ]
+				ifFalse: [ [ mongoRepository disableReplication ]
+						on: MessageNotUnderstood
+						do: [ :ex |
+							self logDebugMessage: replicationDebugMessage ] ] ]
+]
+
+{ #category : #'repository configuration' }
+EDAMongoEventStore class >> configSingletonOnRepository: mongoRepository [.
+	self enableSingleton ifNotNil: [ :singleton |
+		singleton
+			ifTrue: [ mongoRepository enableSingleton ]
+			ifFalse: [ mongoRepository disableSingleton ] ].
 ]
 
 { #category : #accessing }
@@ -177,15 +202,11 @@ EDAMongoEventStore class >> refreshVoyageSettingsOn: aRepository [
 	aRepository username: self username.
 	aRepository password: self password.
 	aRepository debug: self debug.
-	self enableReplication
-		ifTrue: [ aRepository enableReplication ]
-		ifFalse: [ aRepository disableReplication ].
+	self configReplicationOnRepository: aRepository.
 	aRepository ensuringCurrentOnSave: self ensuringCurrentOnSave.
 	aRepository ensuringCurrentReferencesOnQueries: self ensuringCurrentReferencesOnQueries.
 	aRepository lazySynchronize: self lazySynchronize.
-	self enableSingleton
-		ifTrue: [ aRepository enableSingleton ]
-		ifFalse: [ aRepository disableSingleton ].
+	self configSingletonOnRepository: aRepository.
 	aRepository wireProtocolEnabled: self wireProtocolEnabled
 ]
 
@@ -302,28 +323,22 @@ EDAMongoEventStore >> findEventsOfTenant: aTenant ofAggregate: anAggregateRootCl
 
 { #category : #persistence }
 EDAMongoEventStore >> initBackendRepository [
-	| result |
-	result := self mongoRepositoryClass
+	| mongoRepository |
+	mongoRepository := self mongoRepositoryClass
 		mongoUrls: (self csvToCollection: self class urls)
 		database: self class databaseName
 		username: self class username
 		password: self class password.
 	"result cache: EDAMongoNoCache new."
-	result debug: self class debug.
-	self class enableReplication
-		ifTrue: [ [ result enableReplication ] on: MessageNotUnderstood do: [  ] ]
-		ifFalse: [ [ result disableReplication ] on: MessageNotUnderstood do: [  ] ].
-	self class enableSingleton
-		ifTrue: [ result enableSingleton ]
-		ifFalse: [ result disableSingleton ].
-	result ensuringCurrentOnSave: self class ensuringCurrentOnSave.
-	result
+	mongoRepository debug: self class debug.
+	self class configReplicationOnRepository: mongoRepository.
+	self class configSingletonOnRepository: mongoRepository.
+	mongoRepository ensuringCurrentOnSave: self class ensuringCurrentOnSave.
+	mongoRepository
 		ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
-	result
-		ensuringCurrentReferencesOnQueries: self class ensuringCurrentReferencesOnQueries.
-	result lazySynchronize: self class lazySynchronize.
+	mongoRepository lazySynchronize: self class lazySynchronize.
 "	result wireProtocolEnabled: self class wireProtocolEnabled."
-	^ result
+	^ mongoRepository
 ]
 
 { #category : #persistence }
