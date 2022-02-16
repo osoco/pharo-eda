@@ -68,7 +68,7 @@ EDASettings class >> customProjectionErrorBehaviorsOn: aBuilder under: parent po
 
 { #category : #accessing }
 EDASettings class >> duEnvironmentClass [
-	^ duEnvironmentClass
+	^ duEnvironmentClass ifNil: [ duEnvironmentClass := EDADUEnvironment ]
 ]
 
 { #category : #accessing }
