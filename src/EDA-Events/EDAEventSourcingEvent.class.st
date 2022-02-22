@@ -254,12 +254,7 @@ EDAEventSourcingEvent >> uniqueId [
 
 { #category : #accessing }
 EDAEventSourcingEvent >> version [
-	| result |
-	result := version.
-	result
-		ifNil: [ result := 1.
-			self version: result ].
-	^ result
+	^ version
 ]
 
 { #category : #accessing }
