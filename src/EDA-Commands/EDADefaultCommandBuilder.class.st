@@ -9,6 +9,39 @@ Class {
 	#category : #'EDA-Commands-Builders'
 }
 
+{ #category : #helper }
+EDADefaultCommandBuilder class >> domainCustomizationOfBodyDict: aBodyJsonDict [
+	(self domainToMessageAttributesMap at: #body)
+		keysAndValuesDo: [ :domainAttributeName :messageAttributeName |
+			aBodyJsonDict changeKey: messageAttributeName to: domainAttributeName
+			 ]
+]
+
+{ #category : #helper }
+EDADefaultCommandBuilder class >> domainCustomizationOfMetaDict: aMetaJsonDict [
+	(self domainToMessageAttributesMap at: #meta)
+		keysAndValuesDo: [ :domainAttributeName :messageAttributeName |
+			aMetaJsonDict changeKey: messageAttributeName to: domainAttributeName
+			 ].
+	aMetaJsonDict
+		at: #originalTimestamp 
+		ifPresent: [ :time |
+			aMetaJsonDict at: #originalTimestamp put: (DateAndTime fromString: time) ]
+]
+
+{ #category : #helper }
+EDADefaultCommandBuilder class >> domainToMessageAttributesMap [
+	^ Dictionary
+		with:
+			#meta -> (Dictionary
+				with: #commandId -> #id 
+				with: #originalTimestamp -> #timestamp)
+		with:
+			#body -> (Dictionary 
+				with: #aggregateRootVersion -> #version
+				with: #aggregateRootId -> #id)
+]
+
 { #category : #building }
 EDADefaultCommandBuilder >> buildCommandFromCommandName: commandName [
 	| result |
@@ -67,8 +100,7 @@ EDADefaultCommandBuilder >> commandDictionary: anObject [
 
 { #category : #building }
 EDADefaultCommandBuilder >> copyFromBodyDict: aBodyDict intoCommand: aCommand [
-	aBodyDict changeKey: #id to: #aggregateRootId.
-	aBodyDict changeKey: #version to: #aggregateRootVersion.
+	self class domainCustomizationOfBodyDict: aBodyDict.
 	self copyFromDict: aBodyDict intoCommand: aCommand.
 ]
 
@@ -93,12 +125,7 @@ EDADefaultCommandBuilder >> copyFromDict: aDictionary intoCommand: aCommand [
 
 { #category : #building }
 EDADefaultCommandBuilder >> copyFromMetaDict: aMetaDict intoCommand: aCommand [
-	aMetaDict changeKey: #id to: #commandId.
-	aMetaDict changeKey: #timestamp to: #originalTimestamp.
-	aMetaDict
-		at: #originalTimestamp 
-		ifPresent: [ :time |
-			aMetaDict at: #originalTimestamp put: (DateAndTime fromString: time) ].
+	self class domainCustomizationOfMetaDict: aMetaDict.
 	self copyFromDict: aMetaDict intoCommand: aCommand.
 ]
 

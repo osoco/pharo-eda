@@ -57,7 +57,7 @@ EDAEventSourcingEvent class >> aggregateRootClass [
 
 { #category : #meta }
 EDAEventSourcingEvent class >> attributesWhoseValuesGetGenerated [
-	^ #('id' 'timestamp') asSet
+	^ Set with: #timestamp
 ]
 
 { #category : #helpers }
@@ -74,6 +74,17 @@ EDAEventSourcingEvent class >> isEventGenerated: attr [
 EDAEventSourcingEvent class >> latestVersion [
 	<doc: 'Retrieves the latest version of the event class'>
 	self subclassResponsibility
+]
+
+{ #category : #meta }
+EDAEventSourcingEvent class >> nonPublishableAttributes [
+	^ Set
+		with: #aggregateRootClass
+		with: #timestamp
+		with: #commandId
+		with: #version
+		with: #delete 
+		with: #agent
 ]
 
 { #category : #meta }
