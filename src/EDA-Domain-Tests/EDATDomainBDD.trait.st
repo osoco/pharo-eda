@@ -88,137 +88,68 @@ EDATDomainBDD >> assertEvent: actual matches: expected [
 		description: [ self comparingStringBetween: actual and: expected ]
 ]
 
-{ #category : #helper }
-EDATDomainBDD >> buildBodyForCommand: aCommand [
-	^ self buildBodyForCommand: aCommand andAggregateRootVersion: 0
-]
-
-{ #category : #helper }
-EDATDomainBDD >> buildBodyForCommand: aCommand andAggregateRootVersion: aVersion [
-	| body |
-	body := Dictionary
-		newFrom:
-			(aCommand class allInstVarNames
-				collect: [ :instVar | instVar -> (aCommand instVarNamed: instVar) ]).
-	aCommand fillCommonInfoInto: body.
-
-	body at: #version put: aVersion.
-	^ body
-
-]
-
-{ #category : #'helper - command building' }
-EDATDomainBDD >> buildCommandAttributesDictFromMessage: aCommandMessage [
-
-	| commandJson commandMeta commandBody |
-	commandJson := NeoJSONReader fromString: aCommandMessage.
-	commandMeta := commandJson at: #meta.
-	commandBody := commandJson at: #body.
-	"It is the aggregateRootClass. Known by ATS<Command> class >> aggregateRootClass"
-	commandMeta removeKey: #aggregate ifAbsent: [ ].
-	commandMeta removeKey: #type ifAbsent: [ ].
-	commandMeta removeKey: #correlationId ifAbsent: [ ].
-	"It is the command message id."
-	commandMeta changeKey: #id to: #commandId.
-	commandMeta changeKey: #timestamp to: #originalTimestamp.
-	"Transform to DateAndTime"
-	commandMeta
-		at: #originalTimestamp 
-		ifPresent: [ :time |
-			commandMeta at: #originalTimestamp put: (DateAndTime fromString: time) ].
-	commandBody changeKey: #id to: #aggregateRootId.
-	commandBody changeKey: #version to: #aggregateRootVersion.
-	^ commandMeta | commandBody
+{ #category : #'matching helpers' }
+EDATDomainBDD >> assertEventJsonMsg: actual deepMatches: expected forEventClass: anEventClass [
+	"This method raises an AssertionFailure if actual event json msg is different (using #eventJsonMsg:totallyMatchesWith: message) from expected.
+	 Else it does nothing and execution continues.
+	"
+	[ self eventJsonMsg: expected totallyMatchesWith: actual forEventClass: anEventClass ]
+		on: EDAMismatchError
+		do: [ :ex | self assert: expected equals: actual ]
 ]
 
 { #category : #'helper - event building' }
-EDATDomainBDD >> buildEventAttributesDictFromFile: aFile [
-
-	| eventMessage eventJson eventMeta eventBody |
-	eventMessage := self readFile: aFile.
-	eventJson := NeoJSONReader fromString: eventMessage.
-	eventMeta := eventJson at: #meta.
-	eventBody := eventJson at: #body.
-	"It is the event message id. Not necessary to materialize event objet"
-	eventMeta removeKey: #id ifAbsent: [ ].
-	"It is the aggregateRootClass. Known by ATS<Event> class >> aggregateRootClass"
-	eventMeta removeKey: #aggregate ifAbsent: [ ].
-	"It is the class. Not necessary to materialize event objet. Already known"
-	eventMeta removeKey: #type ifAbsent: [ ].
-	eventMeta changeKey: #correlationId to: #commandId.
-	eventBody changeKey: #version to: #aggregateRootVersion.
-	eventBody
+EDATDomainBDD >> buildFlattenedEventJsonDictOfMessage: anEventJsonMsg [
+	| eventJson eventMetaDict eventBodyDict |
+	eventJson := NeoJSONReader fromString: anEventJsonMsg.
+	eventMetaDict := eventJson at: #meta.
+	self changeMetaToDomainAttributeNames: eventMetaDict.
+	eventBodyDict := eventJson at: #body.
+	self changeBodyToDomainAttributeNames: eventBodyDict.
+	eventBodyDict
 		at: #timestamp
 		ifPresent: [ :bodyTimestamp |
 			bodyTimestamp
 				ifNil: [ 
-					eventMeta at: #timestamp ifAbsentPut: [ nil ].
-					eventBody removeKey: #timestamp ]
+					eventMetaDict at: #timestamp ifAbsentPut: [ nil ].
+					eventBodyDict removeKey: #timestamp ]
 				ifNotNil: [
-					eventMeta removeKey: #timestamp ifAbsent: [  ] ] ].
-
+					eventMetaDict removeKey: #timestamp ifAbsent: [  ] ] ].
+	
+	self checkDuplicatedFieldsInMeta: eventMetaDict andBody: eventBodyDict.
 		
-	^ eventMeta | eventBody
-]
-
-{ #category : #helper }
-EDATDomainBDD >> buildMessageForCommand: aCommand ofType: aString [
-	| aux |
-	aux := Dictionary new.
-	aux at: #meta put: (self buildMetaForCommand: aCommand ofType: aString).
-	aux at: #body put: (self buildBodyForCommand: aCommand).
-	^ String
-		streamContents: [ :stream | 
-			(NeoJSONWriter on: stream)
-				for: DateAndTime
-					customDo:
-						[ :mapping | mapping encoder: [ :dateAndTime | dateAndTime printString ] ];
-				prettyPrint: true;
-				nextPut: aux ]
-]
-
-{ #category : #helper }
-EDATDomainBDD >> buildMetaForCommand: aCommand ofType: aString [
-	| meta |
-	meta := Dictionary new.
-	meta
-		at: #type
-		put: aString.
-	meta at: #id put: aCommand commandId greaseString.
-	meta at: #version put: aCommand version.
-	meta at: #timestamp put: DateAndTime now asString.
-	^ meta
+	^ eventMetaDict | eventBodyDict
 ]
 
 { #category : #'helper - command building' }
 EDATDomainBDD >> buildSampleCommandFor: aCommandClass [
-	| commandMessage |
-	commandMessage := self readSampleFileFor: aCommandClass.
-	self checkInstVarsFor: aCommandClass withAttributes: (self buildCommandAttributesDictFromMessage: commandMessage).
-	^ ATSJsonCommandMaterializer new materialize: commandMessage.
+	| commandMessage commandJsonMessage |
+	commandMessage := (EDATestCommandMessage forClass: aCommandClass).
+	commandMessage checkInstVars.
+	commandJsonMessage := commandMessage asJsonMessage.
+	^ ATSJsonCommandMaterializer new materialize: commandJsonMessage.
 ]
 
 { #category : #'helper - command building' }
 EDATDomainBDD >> buildSampleDeleteCommandFor: anAggregateClass [
-	| commandMessage deleteCmd |
-	commandMessage := self readSampleDeleteAggregateCommandFileFor: anAggregateClass.
-	self checkInstVarsFor: EDADeleteAggregateCommand withAttributes: (self buildCommandAttributesDictFromMessage: commandMessage).
-	deleteCmd :=  ATSJsonCommandMaterializer new materialize: commandMessage.
-	deleteCmd aggregateRootClass: nil.
-	^ deleteCmd
+	| deleteCommandMessage deleteCommandJsonMessage |
+	deleteCommandMessage := (EDATestDeleteCommandMessage forClass: anAggregateClass).
+	deleteCommandMessage checkInstVars.
+	deleteCommandJsonMessage := deleteCommandMessage asJsonMessage.
+	^ ATSJsonCommandMaterializer new materialize: deleteCommandJsonMessage
 ]
 
 { #category : #'helper - event building' }
 EDATDomainBDD >> buildSampleEventFor: anEventClass [
-	| attributes |
-	attributes := self
-		buildEventAttributesDictFromFile: (self readSampleFileFor: anEventClass).
-	self checkInstVarsFor: anEventClass withAttributes: attributes.
+	| eventMessage domainAttributes |
+	eventMessage := (EDATestEventMessage forClass: anEventClass).
+	eventMessage checkInstVars.
+	domainAttributes := eventMessage domainAttributes.
 	^ anEventClass
-		ofTenant: (attributes at: #tenant ifAbsent: [ nil ])
-		withAggregateId: (attributes at: #id)
-		commandId: (attributes at: #commandId)
-		andAttributes: attributes
+		ofTenant: (domainAttributes at: #tenant ifAbsent: [ nil ])
+		withAggregateId: (domainAttributes at: #id)
+		commandId: (domainAttributes at: #commandId)
+		andAttributes: domainAttributes
 ]
 
 { #category : #'helper - event building' }
@@ -231,30 +162,48 @@ EDATDomainBDD >> buildSampleEventFor: anEventClass withId: evtId andCommandId: i
 	^ aTestEvt
 ]
 
-{ #category : #'helper - inst var checking' }
-EDATDomainBDD >> checkInstVarsFor: aCommandOrEventClass withAttributes: attributes [
-	| newInstVarsNeeded |
-	newInstVarsNeeded := self
-		newInstVarNeededFor: aCommandOrEventClass
-		withAttributes: attributes.
-	newInstVarsNeeded
-		ifNotEmpty: [ :instvars | 
-			self
-				logErrorMessage: ((aCommandOrEventClass instVarsNeededMessageFor: self) value: instvars greaseString value: aCommandOrEventClass name)
-				andThrow: (aCommandOrEventClass instVarsNeededExceptionFor: self) ]
-	"	Automatic creation
-	newInstVarsNeeded 
-		do: [ :instVarName | 
-			self addInstVarNamed: instVarName greaseString.
-			formCreatedTestEvt
-				instVarNamed: instVarName greaseString
-				put: (theAttrs at: instVarName)
-				ifAbsent: [ self logDebugMessage: 'No instVar created' ] ]."
+{ #category : #'helper - event building' }
+EDATDomainBDD >> changeBodyToDomainAttributeNames: eventBodyDict [
+	eventBodyDict changeKey: #version to: #aggregateRootVersion
+]
+
+{ #category : #'helper - event building' }
+EDATDomainBDD >> changeMetaToDomainAttributeNames: eventMetaDict [
+	eventMetaDict changeKey: #id to: #messageId.
+	eventMetaDict changeKey: #correlationId to: #commandId.
+
+]
+
+{ #category : #helper }
+EDATDomainBDD >> checkDuplicatedFieldsInMeta: eventMetaDict andBody: eventBodyDict [
+	| metaKeys bodyKeys |
+	metaKeys := eventMetaDict keys.
+	bodyKeys := eventBodyDict keys.
+	(metaKeys intersection: bodyKeys) ifNotEmpty: [ :repeatedKeys | 
+		self logErrorMessage: 'There are fields repeated in meta and body' andThrow: EDARepeatedFieldsInMetaAndBody ]
+	
+]
+
+{ #category : #'matching helpers' }
+EDATDomainBDD >> checkSizeOf: anElement and: otherElement [
+	| mismatchTypeLogMessage |
+	"Both elements must understand size message"
+	anElement size = otherElement size
+		ifTrue: [ ^ self ].
+	mismatchTypeLogMessage := self
+		mismatchCheckLogForType: anElement className
+		element: anElement
+		and: otherElement
+		andReason: 'different sizes'.
+	self logDebugMessage: mismatchTypeLogMessage.
+	EDAMismatchError
+		signal: mismatchTypeLogMessage
+		withDiff: (Dictionary with: ('size:' , anElement size greaseString) -> ('size:' , otherElement size greaseString))
 ]
 
 { #category : #'matching helpers - logs' }
-EDATDomainBDD >> checkingLogForType: typeToCheckAsString element: aElement and: otherElement [
-	^ 'Checking match ' , typeToCheckAsString , ' [' , aElement fullPrintString , '] with [' , otherElement fullPrintString , ']'
+EDATDomainBDD >> checkingLogForType: typeToCheckAsString element: anElement and: otherElement [
+	^ 'Checking match ' , typeToCheckAsString , ' [' , anElement fullPrintString , '] with [' , otherElement fullPrintString , ']'
 ]
 
 { #category : #'matching helpers' }
@@ -289,20 +238,9 @@ EDATDomainBDD >> collection: aCollection totallyMatchesWith: otherObject [
 			EDAMismatchError
 				signal: mismatchTypeLogMessage
 				withDiff: collectionDiffDict ].
-	(size := aCollection size) = otherObject size
-		ifFalse: [ | mismatchTypeLogMessage |
-			mismatchTypeLogMessage := self
-				mismatchCheckLogForType: checkingType
-				element: aCollection
-				and: otherObject
-				andReason: 'different sizes'.
-			self logDebugMessage: mismatchTypeLogMessage.
-			collectionDiffDict add: aCollection -> otherObject.
-			EDAMismatchError
-				signal: mismatchTypeLogMessage
-				withDiff: collectionDiffDict ].
+	self checkSizeOf: aCollection and: otherObject.
 	"Done like this instead of with allSatisfy: to get all the different values in the future and show them on the visualization"
-	1 to: size do: [ :index | 
+	1 to: aCollection size do: [ :index | 
 		| aCollectionElement otherCollectionElement |
 		aCollectionElement := aCollection at: index.
 		otherCollectionElement := otherObject at: index.
@@ -349,50 +287,30 @@ EDATDomainBDD >> collection: aCollection totallyMatchesWith: otherObject [
 				withDiff: collectionDiffDict ]
 ]
 
-{ #category : #'helper - inst var checking' }
-EDATDomainBDD >> commandInstVarsNeededException [
-	^ EDACommandInstVarsNeeded
-]
-
-{ #category : #'helper - inst var checking' }
-EDATDomainBDD >> commandInstVarsNeededMessage [
-	^ [ :instvars :className | 'Check creation of instance variables: ' , instvars 
-						, ' and accessors for class ' , className , ' or add them to its attributesReceivedNotRequired' ]
-]
-
-{ #category : #'helper - file readers' }
-EDATDomainBDD >> commandSampleFilesPath [
-	^ FileSystem disk workingDirectory / 'contracts' / 'Core' / 'commands'
-]
-
-{ #category : #'helper - file readers' }
-EDATDomainBDD >> defaultSampleFileNameFor: aCommandOrEventClass [
-	| classNamePrefixRemoved |
-	
-	"e.g. <classPrefix>CommandoreventNameUpperCamelCase -> commandorevent.name.upper.camel.case.example.json"
-	"EDATLanguageHelper class >> removePrefix:from:
-	EDASourceCodeHelperStub >> separateCamelCase:with:"
-	classNamePrefixRemoved :=  ('^' , aCommandOrEventClass classPrefix copyReplaceAll: ':' with: '\:') asRegexIgnoringCase copy: aCommandOrEventClass name replacingMatchesWith: ''.
-	^ ((classNamePrefixRemoved copyWithRegex: '[A-Z]' matchesTranslatedUsing: [ :each | '.' , each asLowercase  ]) allButFirst) , '.example.json'.
-]
-
 { #category : #'matching helpers' }
 EDATDomainBDD >> dictionary: aDictionary totallyMatchesWith: otherObject [
 	| checkingType dictionaryDiffMessage dictionaryDiffDict aCollection |
 	checkingType := aDictionary className.
 	dictionaryDiffMessage := String empty.
 	dictionaryDiffDict := Dictionary empty.
-	self logDebugMessage: (self checkingLogForType: checkingType element: aDictionary and: otherObject).
-	aCollection := (OrderedCollection with: aDictionary with: otherObject).
+	self
+		logDebugMessage:
+			(self
+				checkingLogForType: checkingType
+				element: aDictionary
+				and: otherObject).
+	aCollection := OrderedCollection with: aDictionary with: otherObject.
 	(self anyUnnecessaryCheck: aCollection)
-		ifTrue: [
-			self unnecesaryCheckLogForType: checkingType element: aDictionary and: otherObject.
+		ifTrue: [ self
+				unnecesaryCheckLogForType: checkingType
+				element: aDictionary
+				and: otherObject.
 			^ self ].
-	aDictionary == otherObject 
-		ifTrue: [ 
-			self logDebugMessage: 'Match by identity'.
+	aDictionary == otherObject
+		ifTrue: [ self logDebugMessage: 'Match by identity'.
 			^ self ].
-	((aDictionary species ~~ otherObject species) or: [ (otherObject isKindOf: Dictionary) not ])
+	(aDictionary species ~~ otherObject species
+		or: [ (otherObject isKindOf: Dictionary) not ])
 		ifTrue: [ | mismatchTypeLogMessage |
 			mismatchTypeLogMessage := self
 				mismatchCheckLogForType: checkingType
@@ -401,61 +319,76 @@ EDATDomainBDD >> dictionary: aDictionary totallyMatchesWith: otherObject [
 				andReason: 'different types'.
 			self logDebugMessage: mismatchTypeLogMessage.
 			dictionaryDiffDict add: aDictionary -> otherObject.
-			EDAMismatchError signal: mismatchTypeLogMessage withDiff: dictionaryDiffDict ].
-	aDictionary size = otherObject size
-		ifFalse: [ | mismatchTypeLogMessage |
-			mismatchTypeLogMessage := self mismatchCheckLogForType: checkingType element: aCollection and: otherObject andReason: 'different sizes'.
-			self logDebugMessage: mismatchTypeLogMessage.
-			dictionaryDiffDict add: aDictionary -> otherObject.
 			EDAMismatchError
 				signal: mismatchTypeLogMessage
-				withDiff:dictionaryDiffDict ].
+				withDiff: dictionaryDiffDict ].
+	self checkSizeOf: aDictionary and: otherObject.
 	"Done like this instead of with allSatisfy: to get all the different values in the future and show them on the visualization"
-	aDictionary associationsDo: [ :assoc |
-		| assocType aValue |
-		assocType := String streamContents: [ :s | s nextPutAll: '#'; nextPutAll: assoc key greaseString; nextPutAll: ' dictionary association' ].
-		aValue := assoc value.
-		otherObject at: assoc key
-			ifPresent: [ :otherValue |
-				| mismatchValueMessage |
-				[ aValue totallyMatches: otherValue forTest: self ]
-					on: EDAMismatchError
-					do: [ :ex |
-						mismatchValueMessage := self mismatchCheckLogForType: assocType element: aValue and: otherValue andReason: ''.
-						self logDebugMessage: mismatchValueMessage.
-						dictionaryDiffDict at: assoc key put: ex diff.
-						dictionaryDiffMessage := String
-							streamContents: [ :s | 
+	aDictionary
+		associationsDo: [ :assoc | 
+			| assocType aValue |
+			assocType := String
+				streamContents: [ :s | 
+					s
+						nextPutAll: '#';
+						nextPutAll: assoc key greaseString;
+						nextPutAll: ' dictionary association' ].
+			aValue := assoc value.
+			otherObject
+				at: assoc key
+				ifPresent: [ :otherValue | 
+					| mismatchValueMessage |
+					[ aValue totallyMatches: otherValue forTest: self ]
+						on: EDAMismatchError
+						do: [ :ex | 
+							mismatchValueMessage := self
+								mismatchCheckLogForType: assocType
+								element: aValue
+								and: otherValue
+								andReason: ''.
+							self logDebugMessage: mismatchValueMessage.
+							dictionaryDiffDict at: assoc key put: ex diff.
+							dictionaryDiffMessage := String
+								streamContents: [ :s | 
+									s
+										nextPutAll: dictionaryDiffMessage;
+										nextPutAll: (String with: Character cr with: Character lf);
+										nextPutAll: mismatchValueMessage;
+										nextPutAll: (String with: Character cr with: Character lf);
+										nextPutAll: ex messageText;
+										nextPutAll: (String with: Character cr with: Character lf) ] ] ]
+				ifAbsent: [ | mismatchKeyMessage |
+					mismatchKeyMessage := self
+						mismatchCheckLogForType: assocType
+						element: assoc
+						and: 'absent'
+						andReason: 'missing key'.
+					self logDebugMessage: mismatchKeyMessage.
+					dictionaryDiffDict at: assoc key put: 'Absent'.
+					dictionaryDiffMessage := String
+						streamContents: [ :s | 
 							s
 								nextPutAll: dictionaryDiffMessage;
 								nextPutAll: (String with: Character cr with: Character lf);
-								nextPutAll: mismatchValueMessage;
-								nextPutAll: (String with: Character cr with: Character lf);
-								nextPutAll: ex messageText;
-								nextPutAll: (String with: Character cr with: Character lf) ] ] ]
-			ifAbsent: [ | mismatchKeyMessage |
-				mismatchKeyMessage := self mismatchCheckLogForType: assocType element: assoc and: 'absent' andReason: 'missing key'.
-				self logDebugMessage: mismatchKeyMessage.
-				dictionaryDiffDict at: assoc key put: 'Absent'.
-				dictionaryDiffMessage := String
-					streamContents: [ :s | 
-						s
-							nextPutAll: dictionaryDiffMessage;
-							nextPutAll: (String with: Character cr with: Character lf);
-							nextPutAll: mismatchKeyMessage;
-							nextPutAll: (String with: Character cr with: Character lf) ] ] ].
+								nextPutAll: mismatchKeyMessage;
+								nextPutAll: (String with: Character cr with: Character lf) ] ] ].
 	dictionaryDiffDict
 		ifNotEmpty: [ | mismatchDictionaryMessage |
-			mismatchDictionaryMessage := self mismatchCheckLogForType: checkingType element: aDictionary and: otherObject andReason: 'associations mismatch'.
+			mismatchDictionaryMessage := self
+				mismatchCheckLogForType: checkingType
+				element: aDictionary
+				and: otherObject
+				andReason: 'associations mismatch'.
 			self logDebugMessage: mismatchDictionaryMessage.
 			dictionaryDiffMessage := String
 				streamContents: [ :s | 
 					s
 						nextPutAll: mismatchDictionaryMessage;
 						nextPutAll: (String with: Character cr with: Character lf with: Character tab);
-						nextPutAll: dictionaryDiffMessage  ].
-			EDAMismatchError signal: dictionaryDiffMessage withDiff: dictionaryDiffDict ].
-
+						nextPutAll: dictionaryDiffMessage ].
+			EDAMismatchError
+				signal: dictionaryDiffMessage
+				withDiff: dictionaryDiffDict ]
 ]
 
 { #category : #helper }
@@ -476,8 +409,8 @@ EDATDomainBDD >> event: anEvent totallyMatchesWith: otherEvent [
 	checkingType := anEvent className.
 	eventDiffDict := Dictionary empty.
 	eventDiffMessage := String empty.
-	self checkingLogForType: 'event' element: anEvent and: otherEvent.
-	eventCollection := OrderedCollection with: anEvent with: anEvent.
+	self logDebugMessage: (self checkingLogForType: 'event' element: anEvent and: otherEvent).
+	eventCollection := OrderedCollection with: anEvent with: otherEvent.
 	(self anyUnnecessaryCheck: eventCollection)
 		ifTrue: [
 			self logDebugMessage: (self unnecesaryCheckLogForType: 'event' element: anEvent and: otherEvent).
@@ -493,7 +426,7 @@ EDATDomainBDD >> event: anEvent totallyMatchesWith: otherEvent [
 			| checkingInstVarMessage anEventVar otherEventVar |
 			anEventVar := varName value: anEvent.
 			otherEventVar := varName value: otherEvent.
-			checkingInstVarMessage := self checkingLogForType: 'instance variable' element: anEventVar and: otherEventVar.
+			checkingInstVarMessage := self checkingLogForType: varName greaseString element: anEventVar and: otherEventVar.
 			self logDebugMessage: checkingInstVarMessage.
 			[ anEventVar totallyMatches: otherEventVar forTest: self ]
 				on: EDAMismatchError
@@ -541,9 +474,105 @@ EDATDomainBDD >> eventInstVarsNeededMessage [
 						, ' and accessors for class ' , className ]
 ]
 
-{ #category : #'helper - file readers' }
-EDATDomainBDD >> eventSampleFilesPath [
-	^ FileSystem disk workingDirectory / 'contracts' / 'Core' / 'events'
+{ #category : #'matching helpers' }
+EDATDomainBDD >> eventJsonMsg: anEventJsonMsg totallyMatchesWith: otherEventJsonMsg forEventClass: anEventClass [
+	| checkingType eventDiffDict eventDiffMessage eventCollection anEventJsonFlattenedDict otherEventJsonFlattenedDict |
+	checkingType := anEventJsonMsg className , ' Json Message'.
+	eventDiffDict := Dictionary empty.
+	eventDiffMessage := String empty.
+	self logDebugMessage: (self checkingLogForType: 'eventJsonMsg:' element: anEventJsonMsg and: otherEventJsonMsg).
+	eventCollection := OrderedCollection
+		with: anEventJsonMsg
+		with: otherEventJsonMsg.
+	(self anyUnnecessaryCheck: eventCollection)
+		ifTrue: [ self
+				logDebugMessage:
+					(self
+						unnecesaryCheckLogForType: checkingType
+						element: anEventJsonMsg
+						and: otherEventJsonMsg).
+			^ self ].
+	(self areSameEventType: anEventJsonMsg and: otherEventJsonMsg)
+		ifFalse: [ | mismatchTypeLogMessage |
+			mismatchTypeLogMessage := self
+				mismatchCheckLogForType: checkingType
+				element: anEventJsonMsg
+				and: otherEventJsonMsg
+				andReason: 'by different types'.
+			self logDebugMessage: mismatchTypeLogMessage.
+			eventDiffDict add: anEventJsonMsg -> otherEventJsonMsg.
+			EDAMismatchError
+				signal: mismatchTypeLogMessage
+				withDiff: eventDiffDict ].
+	anEventJsonFlattenedDict := self buildFlattenedEventJsonDictOfMessage: anEventJsonMsg.
+	otherEventJsonFlattenedDict := self buildFlattenedEventJsonDictOfMessage: otherEventJsonMsg.
+	self
+		checkSizeOf: anEventJsonFlattenedDict
+		and: otherEventJsonFlattenedDict.
+	anEventJsonFlattenedDict
+		keysAndValuesDo: [ :anEventBodyKey :anEventBodyValue | 
+			| checkingInstVarMessage otherEventBodyValue |
+			otherEventBodyValue := otherEventJsonFlattenedDict
+				at: anEventBodyKey.
+			checkingInstVarMessage := self
+				checkingLogForType: anEventBodyKey greaseString
+				element: anEventBodyValue
+				and: otherEventBodyValue.
+			self logDebugMessage: checkingInstVarMessage.
+			[ anEventBodyValue
+				totallyMatches: otherEventBodyValue
+				forTest: self ]
+				on: EDAMismatchError
+				do: [ :ex | 
+					(anEventClass isEventGenerated: anEventBodyKey greaseString)
+						ifTrue: [ self
+								logDebugMessage:
+									(String
+										streamContents: [ :stream | 
+											stream
+												nextPutAll: 'Match by ';
+												nextPutAll: anEventBodyKey fullPrintString;
+												nextPutAll: ' event generated' ]) ]
+						ifFalse: [ | mismatchInstVarMessage |
+							mismatchInstVarMessage := self
+								mismatchCheckLogForType: anEventBodyKey
+								element: anEventBodyValue
+								and: otherEventBodyValue
+								andReason: ''.
+							self logDebugMessage: mismatchInstVarMessage.
+							eventDiffDict at: anEventBodyKey put: ex diff.
+							eventDiffMessage := String
+								streamContents: [ :s | 
+									s
+										nextPutAll: eventDiffMessage;
+										nextPutAll: String crlf;
+										nextPutAll: String tab;
+										nextPutAll: mismatchInstVarMessage;
+										nextPutAll: String crlf;
+										nextPutAll: String tab;
+										nextPutAll: ex messageText;
+										nextPutAll: String crlf ] ] ].
+			self
+				logDebugMessage:
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: 'Match ';
+								nextPutAll: anEventBodyKey greaseString ]) ].
+	eventDiffDict
+		ifNotEmpty: [ eventDiffMessage := String
+				streamContents: [ :s | 
+					s
+						nextPutAll:
+							(self
+								mismatchCheckLogForType: checkingType
+								element: anEventJsonMsg
+								and: otherEventJsonMsg
+								andReason: 'instance variables mismatch');
+						nextPutAll: String crlf;
+						nextPutAll: String tab;
+						nextPutAll: eventDiffMessage ].
+			EDAMismatchError signal: eventDiffMessage withDiff: eventDiffDict ]
 ]
 
 { #category : #helper }
@@ -558,35 +587,6 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol whenApplyingEvents: histo
 	self applyEvents: historicalEvents onAggregateRoot: aggregateRoot.
 	aggregateRoot isDeleted ifTrue: [ aggregateRoot := (Smalltalk at: anAggregateRootSymbol) new ].
 	aBlock value: aggregateRoot.
-]
-
-{ #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString shouldRaise: anException [
-	^ self should: [ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: OrderedCollection empty ] raise: anException
-]
-
-{ #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvent: expectedResultingEvent [
-	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: (OrderedCollection with: expectedResultingEvent)
-]
-
-{ #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: expectedResultingEvents [
-	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
-]
-
-{ #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: aString thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
-	| msg |
-	msg := self
-		buildMessageForCommand: aCommand
-		ofType: aString.
-	^ self
-		givenAggregate: anAggregateRootSymbol
-		withEvents: historicalEvents
-		whenReceiveMessage: msg
-		thenEvents: expectedResultingEvents
-		andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock
 ]
 
 { #category : #BDD }
@@ -637,8 +637,13 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 
 { #category : #BDD }
 EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
-	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand ofType: (EDAMessageSerializer nameForMessageClass: aCommand class) thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock
-
+	^ self
+		givenAggregate: anAggregateRootSymbol
+		withEvents: historicalEvents
+		whenReceiveMessage:
+			aCommand asJsonMessage
+		thenEvents: expectedResultingEvents
+		andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock
 ]
 
 { #category : #BDD }
@@ -721,8 +726,8 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 ]
 
 { #category : #'matching helpers - logs' }
-EDATDomainBDD >> mismatchCheckLogForType: typeToCheckAsString element: anEvent and: otherEvent andReason: aReasonAsString [
-	^ 'No match ' , typeToCheckAsString , ' [' , anEvent fullPrintString , '] with [' , otherEvent fullPrintString , '] by reason: ' , aReasonAsString
+EDATDomainBDD >> mismatchCheckLogForType: typeToCheckAsString element: anElement and: otherElement andReason: aReasonAsString [
+	^ 'No match ' , typeToCheckAsString , ' [' , anElement fullPrintString , '] with [' , otherElement fullPrintString , '] by reason: ' , aReasonAsString
 ]
 
 { #category : #'matching helpers' }
@@ -784,27 +789,6 @@ EDATDomainBDD >> old_givenAggregate: anAggregateRootSymbol withEvents: historica
 { #category : #BDD }
 EDATDomainBDD >> provideAggregateRootVersion: aggregateRootVersion to: aString [
 	^ self replaceIn: aString allMatches: '\$\{AGGREGATE_ROOT_VERSION\}' with: aggregateRootVersion
-]
-
-{ #category : #'helper - file readers' }
-EDATDomainBDD >> readFile: aFile [
-	| fileStream result |
-	fileStream := aFile readStream.
-	result := fileStream contents.
-	fileStream close.
-	^ result
-]
-
-{ #category : #'helper - file readers' }
-EDATDomainBDD >> readSampleDeleteAggregateCommandFileFor: anAggregateClass [
-	^ self readFile: ((EDADeleteAggregateCommand sampleFilesPathForTest: self) / ('v' , EDADeleteAggregateCommand latestVersion asString) / 'delete' , (self defaultSampleFileNameFor: anAggregateClass))
-
-]
-
-{ #category : #'helper - file readers' }
-EDATDomainBDD >> readSampleFileFor: aCommandOrEventClass [
-	^ self readFile: ((aCommandOrEventClass sampleFilesPathForTest: self) / ('v' , aCommandOrEventClass latestVersion asString) / (aCommandOrEventClass sampleFileNameForTest: self))
-
 ]
 
 { #category : #'test support' }
