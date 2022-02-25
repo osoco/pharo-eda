@@ -24,6 +24,7 @@ Internal Representation and Key Implementation Points.
 Trait {
 	#name : #EDATIntegrationTestBDD,
 	#traits : 'EDATJsonMatchingHelper + EDATLogging',
+	#classTraits : 'EDATJsonMatchingHelper classTrait + EDATLogging classTrait',
 	#category : #'EDA-Commands-Tests'
 }
 
@@ -457,6 +458,11 @@ EDATIntegrationTestBDD >> routingKeyFromDestination: aDestinationString [
 	^ (aDestinationString findTokens: '/') last.
 ]
 
+{ #category : #helper }
+EDATIntegrationTestBDD >> setTimeStampToEvent: anEvent [
+	anEvent timestamp: DateAndTime now
+]
+
 { #category : #initialization }
 EDATIntegrationTestBDD >> setUp [
 	super setUp.
@@ -504,7 +510,8 @@ EDATIntegrationTestBDD >> stopApplication [
 EDATIntegrationTestBDD >> storePreviousEvents: eventsCollection [
 	self logDebugMessage: 'Storing ' , eventsCollection size greaseString , ' event(s)...'.
 	eventsCollection
-		do: [ :event | 
+		do: [ :event |
+			self setTimeStampToEvent: event.
 			event save.
 			self logDebugMessage: event className greaseString , ' stored.'.
 			self logDebugMessage: event greaseString ].
