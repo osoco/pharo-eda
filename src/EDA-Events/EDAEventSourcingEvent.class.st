@@ -57,7 +57,10 @@ EDAEventSourcingEvent class >> aggregateRootClass [
 
 { #category : #meta }
 EDAEventSourcingEvent class >> attributesWhoseValuesGetGenerated [
-	^ Set with: #timestamp
+	^ Set
+		with: #timestamp
+		"It is the id on meta message. Generated when publishing the event"
+		with: #messageId
 ]
 
 { #category : #helpers }
