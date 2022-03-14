@@ -93,7 +93,7 @@ EDATDomainBDD >> assertEventJsonMsg: actual deepMatches: expected forEventClass:
 	"This method raises an AssertionFailure if actual event json msg is different (using #eventJsonMsg:totallyMatchesWith: message) from expected.
 	 Else it does nothing and execution continues.
 	"
-	[ self eventJsonMsg: expected totallyMatchesWith: actual forEventClass: anEventClass ]
+	[ self eventJsonMsg: actual totallyMatchesWith: expected forEventClass: anEventClass ]
 		on: EDAMismatchError
 		do: [ :ex | self assert: expected equals: actual ]
 ]
@@ -186,7 +186,7 @@ EDATDomainBDD >> checkDuplicatedFieldsInMeta: eventMetaDict andBody: eventBodyDi
 
 { #category : #'matching helpers' }
 EDATDomainBDD >> checkSizeOf: anElement and: otherElement [
-	| mismatchTypeLogMessage |
+	| mismatchTypeLogMessage diffDict |
 	"Both elements must understand size message"
 	anElement size = otherElement size
 		ifTrue: [ ^ self ].
@@ -196,9 +196,12 @@ EDATDomainBDD >> checkSizeOf: anElement and: otherElement [
 		and: otherElement
 		andReason: 'different sizes'.
 	self logDebugMessage: mismatchTypeLogMessage.
+	diffDict := anElement isDictionary
+		ifTrue: [ Dictionary with: (anElement keys \ otherElement keys) greaseString -> (otherElement keys \ anElement keys) greaseString ]
+		ifFalse: [ Dictionary with: ('size:' , anElement size greaseString) -> ('size:' , otherElement size greaseString) ].
 	EDAMismatchError
 		signal: mismatchTypeLogMessage
-		withDiff: (Dictionary with: ('size:' , anElement size greaseString) -> ('size:' , otherElement size greaseString))
+		withDiff: diffDict
 ]
 
 { #category : #'matching helpers - logs' }
@@ -510,37 +513,37 @@ EDATDomainBDD >> eventJsonMsg: anEventJsonMsg totallyMatchesWith: otherEventJson
 		checkSizeOf: anEventJsonFlattenedDict
 		and: otherEventJsonFlattenedDict.
 	anEventJsonFlattenedDict
-		keysAndValuesDo: [ :anEventBodyKey :anEventBodyValue | 
+		keysAndValuesDo: [ :anEventDomainDictKey :anEventDomainDictValue | 
 			| checkingInstVarMessage otherEventBodyValue |
 			otherEventBodyValue := otherEventJsonFlattenedDict
-				at: anEventBodyKey.
+				at: anEventDomainDictKey.
 			checkingInstVarMessage := self
-				checkingLogForType: anEventBodyKey greaseString
-				element: anEventBodyValue
+				checkingLogForType: anEventDomainDictKey greaseString
+				element: anEventDomainDictValue
 				and: otherEventBodyValue.
 			self logDebugMessage: checkingInstVarMessage.
-			[ anEventBodyValue
+			[ anEventDomainDictValue
 				totallyMatches: otherEventBodyValue
 				forTest: self ]
 				on: EDAMismatchError
 				do: [ :ex | 
-					(anEventClass isEventGenerated: anEventBodyKey greaseString)
+					(anEventClass isEventGenerated: anEventDomainDictKey greaseString)
 						ifTrue: [ self
 								logDebugMessage:
 									(String
 										streamContents: [ :stream | 
 											stream
 												nextPutAll: 'Match by ';
-												nextPutAll: anEventBodyKey fullPrintString;
+												nextPutAll: anEventDomainDictKey fullPrintString;
 												nextPutAll: ' event generated' ]) ]
 						ifFalse: [ | mismatchInstVarMessage |
 							mismatchInstVarMessage := self
-								mismatchCheckLogForType: anEventBodyKey
-								element: anEventBodyValue
+								mismatchCheckLogForType: anEventDomainDictKey
+								element: anEventDomainDictValue
 								and: otherEventBodyValue
 								andReason: ''.
 							self logDebugMessage: mismatchInstVarMessage.
-							eventDiffDict at: anEventBodyKey put: ex diff.
+							eventDiffDict at: anEventDomainDictKey put: ex diff.
 							eventDiffMessage := String
 								streamContents: [ :s | 
 									s
@@ -558,7 +561,7 @@ EDATDomainBDD >> eventJsonMsg: anEventJsonMsg totallyMatchesWith: otherEventJson
 						streamContents: [ :s | 
 							s
 								nextPutAll: 'Match ';
-								nextPutAll: anEventBodyKey greaseString ]) ].
+								nextPutAll: anEventDomainDictKey greaseString ]) ].
 	eventDiffDict
 		ifNotEmpty: [ eventDiffMessage := String
 				streamContents: [ :s | 
@@ -731,14 +734,6 @@ EDATDomainBDD >> mismatchInstVarMessage [
 			nextPut: Character cr;
 			nextPut: Character lf;
 			nextPutAll: otherEventVar greaseString ] ]
-]
-
-{ #category : #'helper - inst var checking' }
-EDATDomainBDD >> newInstVarNeededFor: aCommandOrEventClass withAttributes: theAttrs [
-	| receivedAttributes newInstVars |
-	receivedAttributes := (theAttrs keys collect: [ :each | each asSymbol ]).
-	newInstVars := (receivedAttributes \ aCommandOrEventClass attributesReceivedNotRequired) \ (aCommandOrEventClass allInstVarNames collect: [ :each | each asSymbol ]).
-	^ newInstVars
 ]
 
 { #category : #'matching helpers' }
