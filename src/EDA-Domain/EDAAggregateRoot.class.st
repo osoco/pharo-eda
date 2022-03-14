@@ -163,37 +163,6 @@ EDAAggregateRoot >> buildCommonArgsForCommand: aCommand [
 	^ result
 ]
 
-{ #category : #helpers }
-EDAAggregateRoot >> buildDeleteCommandResultEvent [
-	| result eventClass candidates |
-	eventClass := nil.
-	candidates := EDADeleteCommandResultEvent allSubclasses
-		select: [ :cls | 
-			cls aggregateRootClass = self class
-				and: [ (cls greaseString indexOfSubCollection: 'Test' startingAt: 0) = 0 ] ].
-	candidates
-		ifEmpty: [ self
-				logErrorMessage:
-					(String
-						streamContents: [ :s |
-							s
-								nextPutAll: 'Cannot find delete event for aggregate ';
-								nextPutAll: self class greaseString ])
-				andThrow: MissingDeleteEventClassForAggregate ]
-		ifNotEmpty: [ :c | 
-			c size > 1
-				ifTrue: [ self
-						logErrorMessage:
-							(String
-								streamContents: [ :s |
-									s
-										nextPutAll: 'Too many delete events for aggregate: ';
-										nextPutAll: self class greaseString ]) andThrow: TooManyDeleteEventClassesForAggregate ].
-			eventClass := c first ].
-	result := eventClass ifNotNil: [ :cls | cls new ].
-	^ result
-]
-
 { #category : #'command checking' }
 EDAAggregateRoot >> checkCreateCommand: aCommand [
 	aCommand aggregateRootVersion = 0
@@ -266,6 +235,34 @@ EDAAggregateRoot >> defaultCheckNonCreateCommand: aCommand [
 				andThrow: aCommand class invalidCommandExceptionClass ]
 ]
 
+{ #category : #helpers }
+EDAAggregateRoot >> deleteCommandResultEventClass [
+	| candidates |
+	candidates := EDADeleteCommandResultEvent allSubclasses
+		select: [ :cls | 
+			cls aggregateRootClass = self class
+				and: [ (cls greaseString indexOfSubCollection: 'Test' startingAt: 0) = 0 ] ].
+	candidates
+		ifEmpty: [ self
+				logErrorMessage:
+					(String
+						streamContents: [ :s |
+							s
+								nextPutAll: 'Cannot find delete event for aggregate ';
+								nextPutAll: self class greaseString ])
+				andThrow: MissingDeleteEventClassForAggregate ]
+		ifNotEmpty: [ :c | 
+			c size > 1
+				ifTrue: [ self
+						logErrorMessage:
+							(String
+								streamContents: [ :s |
+									s
+										nextPutAll: 'Too many delete events for aggregate: ';
+										nextPutAll: self class greaseString ]) andThrow: TooManyDeleteEventClassesForAggregate ].
+			^ c first ].
+]
+
 { #category : #accessing }
 EDAAggregateRoot >> events [
 	^ self class aggregateRepository findEventsOfId: self id.
@@ -273,20 +270,17 @@ EDAAggregateRoot >> events [
 
 { #category : #'command handling' }
 EDAAggregateRoot >> handleDeleteCommand: aCommand [
-	| result |
 	self id
 		ifNil: [ self
 				logErrorMessage: 'id is missing'
 				andThrow: (EDAAggregateRootDoesNotExist forClass: self class) ].
-	result := self buildDeleteCommandResultEvent.
-	result
-		ifNotNil: [ :r | 
-			r tenant: self tenant.
-			r id: self id.
-			r commandId: aCommand commandId.
-			r version: (result class latestVersion).
-			r timestamp: DateAndTime now asUTC ].
-	^ result
+	^ self deleteCommandResultEventClass
+		ifNotNil: [ :eventClass | 
+			eventClass
+				ofTenant: self tenant
+				withAggregateId: self id
+				commandId: aCommand commandId
+				andAttributes: aCommand asDictionary ]
 ]
 
 { #category : #accessing }
