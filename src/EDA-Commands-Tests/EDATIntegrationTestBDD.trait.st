@@ -45,14 +45,37 @@ EDATIntegrationTestBDD >> assertEvent: eventMessage matchesEventRegex: eventMess
 	^ self assertJson: eventMessage matchesRegex: eventMessageRegex
 ]
 
+{ #category : #asserting }
+EDATIntegrationTestBDD >> assertNextReceivedEventFromListener: stompListener matches: anEvent [
+	| frame ack nack |
+	self logInfoMessage: 'Waiting for incoming messages...'.
+	[ frame := stompListener client readMessage.
+	ack := frame ackFrame.
+	nack := frame nackFrame.
+	stompListener client write: ack.
+	self logDebugMessage: 'Received event: ' , frame body greaseString.
+	self assertReadedFrame: frame matchesEvent: anEvent.
+	^ frame ]
+		on: Error
+		do: [ :ex |
+			self logErrorMessage: 'Error consuming message: ' , ex description greaseString.
+			self fail: 'Error consuming message: ', ex description greaseString.
+			"nack ifNotNil: [ :arg |
+			arg headers at: 'requeue' put: 'False'.
+			stompListener client writeWithReceipt: arg.
+			self unsubscribeToEvents
+		]."
+			^ frame ]
+]
+
 { #category : #bdd }
-EDATIntegrationTestBDD >> assertEventMessagesMatch: expectedEventMessages withRoutingKeys: expectedRoutingKeys [
+EDATIntegrationTestBDD >> assertPublishedEvents: expectedEvents withRoutingKeys: expectedRoutingKeys [
 	| anyEventGenerated |
 	[
 		anyEventGenerated := false.
-		expectedEventMessages	doWithIndex: [ :eventMessageRegex :index |
+		expectedEvents	doWithIndex: [ :event :index |
 			| frame |
-			frame := self assertNextReceivedEventMessage: self eventListener matches: eventMessageRegex.
+			frame := self assertNextReceivedEventFromListener: self eventListener matches: event.
 			frame ifNotNil: [
 				anyEventGenerated := true.
 				expectedRoutingKeys size >= index
@@ -69,35 +92,12 @@ EDATIntegrationTestBDD >> assertEventMessagesMatch: expectedEventMessages withRo
 ]
 
 { #category : #bdd }
-EDATIntegrationTestBDD >> assertGeneratedEvent: frame matchesRegex: eventMessageRegex [
+EDATIntegrationTestBDD >> assertReadedFrame: frame matchesEvent: anEvent [
 	| command body |
 	command := frame command.
 	body := frame body.
 	self assert: command equals: #MESSAGE.
-	self assertEvent: body matchesEventRegex: eventMessageRegex
-]
-
-{ #category : #asserting }
-EDATIntegrationTestBDD >> assertNextReceivedEventMessage: stompListener matches: eventMessageRegex [
-	| frame ack nack |
-	self logInfoMessage: 'Waiting for incoming messages...'.
-	[ frame := stompListener client readMessage.
-	ack := frame ackFrame.
-	nack := frame nackFrame.
-	stompListener client write: ack.
-	self logDebugMessage: 'Received event: ' , frame body greaseString.
-	self assertGeneratedEvent: frame matchesRegex: eventMessageRegex.
-	^ frame ]
-		on: Error
-		do: [ :ex |
-			self logErrorMessage: 'Error consuming message: ' , ex description greaseString.
-			self fail: 'Error consuming message: ', ex description greaseString.
-			"nack ifNotNil: [ :arg |
-			arg headers at: 'requeue' put: 'False'.
-			stompListener client writeWithReceipt: arg.
-			self unsubscribeToEvents
-		]."
-			^ frame ]
+	self assertEventJsonMsg: body deepMatches: anEvent asJsonMessage forEventClass: anEvent class
 ]
 
 { #category : #helper }
@@ -106,27 +106,16 @@ EDATIntegrationTestBDD >> buildEventSerializer [
 ]
 
 { #category : #bdd }
-EDATIntegrationTestBDD >> checkNewStoredEvents: expectedNewStoredEvents ofTenant: aTenant givenPreviousEvents: previousEventsCollection [
-	| storedEvents allEvents expectedStoredEvents |
-	expectedNewStoredEvents
-		ifNotNil: [ :events |
-			storedEvents := self application eventStore allEventsOfTenant: aTenant.
-			expectedStoredEvents := OrderedCollection
-				newFrom: previousEventsCollection.
-			expectedStoredEvents addAll: events.
-			self assert: storedEvents isNotEmpty.
-			self assert: storedEvents size equals: expectedStoredEvents size.
-			expectedStoredEvents
-				keysAndValuesDo: [ :index :eventMessageRegex |
-					| serializer |
-					serializer := self buildEventSerializer.
-					self
-						assertEvent: (serializer serialize: (storedEvents at: index))
-						matchesEventRegex: (serializer serialize: eventMessageRegex) ] ]
-		ifNil: [ allEvents := self application eventStore allEventsOfTenant: aTenant.
-			self
-				assert: allEvents
-				equals: (OrderedCollection newFrom: previousEventsCollection) ]
+EDATIntegrationTestBDD >> checkNewStoredEvents: expectedNewStoredEvents givenPreviousEvents: previousEventsCollection [
+	| newExpectedEvents storedEvents expectedStoredEvents |
+	storedEvents := (self application eventStore allEvents).
+	newExpectedEvents := expectedNewStoredEvents ifNil: [ OrderedCollection empty ].
+	expectedStoredEvents := OrderedCollection newFrom: previousEventsCollection.
+	expectedStoredEvents addAll: newExpectedEvents.
+	self assert: storedEvents size equals: expectedStoredEvents size.
+	expectedStoredEvents
+		withIndexDo: [ :expectedEvent :index |
+			self assertEvent: expectedEvent deepMatches: (storedEvents at: index) ]
 ]
 
 { #category : #lifecycle }
@@ -224,163 +213,33 @@ EDATIntegrationTestBDD >> generatedEvent: frame matchesRegex: eventMessageRegex 
 ]
 
 { #category : #bdd }
-EDATIntegrationTestBDD >> givenPreviousEvents: previousEventsCollection ofTenant: aTenant whenReceiveCommandMessage: aCommandMessage thenStoreEvent: expectedStoredEvent andPublishEventMessage: expectedEventMessage [
-	| expectedStoredEvents aCommandMessageCollection |
-	expectedStoredEvents := expectedStoredEvent
-		ifNil: [ OrderedCollection new ]
-		ifNotNil: [ :event | OrderedCollection with: event ].
-	aCommandMessageCollection := aCommandMessage
-		ifNil: [ OrderedCollection new ]
-		ifNotNil: [ :message | OrderedCollection with: message ].
+EDATIntegrationTestBDD >> givenEvents: previousEvents whenReceiveCommand: aCommand thenStoreAndPublishEvent: expectedEvent withRoutingKey: expectedRoutingKey [
+	| expectedEvents receivedCommands excepctedRoutingKeys |
+	expectedEvents := self transformToCollection: expectedEvent.
+	receivedCommands := self transformToCollection: aCommand.
+	excepctedRoutingKeys := self transformToCollection: expectedRoutingKey.
 	self
-		givenPreviousEvents: previousEventsCollection
-		ofTenant: aTenant
-		whenReceiveCommandMessages: aCommandMessageCollection
-		thenStoreEvents: expectedStoredEvents
-		andPublishEventMessages:
-			(expectedEventMessage
-				ifNil: [ OrderedCollection new ]
-				ifNotNil: [ :message | OrderedCollection with: message ])
+		givenEvents: previousEvents
+		whenReceiveCommands: receivedCommands
+		thenStoreAndPublishEvents: expectedEvents
+		withRoutingKeys: excepctedRoutingKeys
 ]
 
 { #category : #bdd }
-EDATIntegrationTestBDD >> givenPreviousEvents: previousEventsCollection ofTenant: aTenant whenReceiveCommandMessage: aCommandMessage thenStoreEvent: expectedStoredEvent andPublishEventMessage: expectedEventMessage withRoutingKey: expectedRoutingKey [
-	| expectedStoredEvents aCommandMessageCollection |
-	expectedStoredEvents := expectedStoredEvent
-		ifNil: [ OrderedCollection new ]
-		ifNotNil: [ :event | OrderedCollection with: event ].
-	aCommandMessageCollection := aCommandMessage
-		ifNil: [ OrderedCollection new ]
-		ifNotNil: [ :message | OrderedCollection with: message ].
-	self
-		givenPreviousEvents: previousEventsCollection
-		ofTenant: aTenant
-		whenReceiveCommandMessages: aCommandMessageCollection
-		thenStoreEvents: expectedStoredEvents
-		andPublishEventMessages:
-			(expectedEventMessage
-				ifNil: [ OrderedCollection new ]
-				ifNotNil: [ :message | OrderedCollection with: message ])
-		withRoutingKeys:
-			(expectedRoutingKey
-				ifNil: [ nil ]
-				ifNotNil: [ :routingKey | OrderedCollection with: routingKey ])
-]
-
-{ #category : #bdd }
-EDATIntegrationTestBDD >> givenPreviousEvents: previousEventsCollection ofTenant: aTenant whenReceiveCommandMessages: aCommandMessageCollection thenStoreEvent: expectedStoredEvent andPublishEventMessage: expectedEventMessage [
-	| expectedStoredEvents |
-	expectedStoredEvents := expectedStoredEvent
-		ifNil: [ OrderedCollection new ]
-		ifNotNil: [ :event | OrderedCollection with: event ].
-	self
-		givenPreviousEvents: previousEventsCollection
-		ofTenant: aTenant
-		whenReceiveCommandMessages: aCommandMessageCollection
-		thenStoreEvents: expectedStoredEvents
-		andPublishEventMessages:
-			(expectedEventMessage
-				ifNil: [ OrderedCollection new ]
-				ifNotNil: [ :message | OrderedCollection with: message ])
-]
-
-{ #category : #bdd }
-EDATIntegrationTestBDD >> givenPreviousEvents: previousEventsCollection ofTenant: aTenant whenReceiveCommandMessages: aCommandMessageCollection thenStoreEvents: expectedNewStoredEvents andLastPublishedEventMessage: expectedLastEventMessage [
-	| frame lastFrame event appId rootClass |
-	event := previousEventsCollection first.
-	appId := event id.
-	rootClass := event aggregateRootClass.
-	self
-		storePreviousEvents: previousEventsCollection
-		ofTenant: aTenant
-		forApplicationId: appId
-		andAggregateRootClass: rootClass.
-	aCommandMessageCollection
-		do: [ :aCommandMessage | self publishCommand: aCommandMessage ].
+EDATIntegrationTestBDD >> givenEvents: previousEvents whenReceiveCommands: receivedCommands thenStoreAndPublishEvents: expectedEvents withRoutingKeys: expectedRoutingKeys [
+	| versionFixedPreviousEvents versionFixedExpectedEvents |
+	versionFixedPreviousEvents := self fixAggregateRootVersionsOfEvents: previousEvents usingEventStore: self application eventStore.
+	self storePreviousEvents: versionFixedPreviousEvents.
+	versionFixedExpectedEvents :=  self fixAggregateRootVersionsOfEvents: expectedEvents usingEventStore: self application eventStore.
+	receivedCommands
+		do: [ :aCommand | self publishCommand: aCommand asJsonMessage ].
 	self subscribeToEvents.
 	self
-		checkNewStoredEvents: expectedNewStoredEvents
-		ofTenant: aTenant
-		givenPreviousEvents: previousEventsCollection.
-	[ [ frame := self eventListener client readMessage ]
-		on: Error
-		do: [ :err |
-			self
-				logErrorMessage: 'Error reading event from queue: ' , err greaseString.
-			frame := nil ].
-	frame notNil ] whileTrue: [ lastFrame := frame ].
-	self generatedEvent: lastFrame matchesRegex: expectedLastEventMessage
-]
-
-{ #category : #bdd }
-EDATIntegrationTestBDD >> givenPreviousEvents: previousEventsCollection ofTenant: aTenant whenReceiveCommandMessages: aCommandMessageCollection thenStoreEvents: expectedNewStoredEvents andLastPublishedEventMessage: expectedLastEventMessage withRoutingKey: expectedRoutingKey [
-	| frame lastFrame appId rootClass event |
-	event := previousEventsCollection first.
-	appId := event id.
-	rootClass := event aggregateRootClass.
-	self
-		storePreviousEvents: previousEventsCollection
-		ofTenant: aTenant
-		forApplicationId: appId
-		andAggregateRootClass: rootClass.
-	aCommandMessageCollection
-		do: [ :aCommandMessage | self publishCommand: aCommandMessage ].
-	self subscribeToEvents.
-	self
-		checkNewStoredEvents: expectedNewStoredEvents
-		ofTenant: aTenant
-		givenPreviousEvents: previousEventsCollection.
-	[ [ frame := self client readMessage ]
-		on: Error
-		do: [ :err |
-			self
-				logErrorMessage: 'Error reading event from queue: ' , err greaseString.
-			frame := nil ].
-	frame notNil ] whileTrue: [ lastFrame := frame ].
-	self generatedEvent: lastFrame matchesRegex: expectedLastEventMessage.
-	self
-		assert: (self routingKeyFromDestination: lastFrame destination)
-		equals: expectedRoutingKey
-]
-
-{ #category : #bdd }
-EDATIntegrationTestBDD >> givenPreviousEvents: previousEventsCollection ofTenant: aTenant whenReceiveCommandMessages: aCommandMessageCollection thenStoreEvents: expectedNewStoredEvents andPublishEventMessages: expectedEventMessages [
-	| event appId rootClass |
-	event := previousEventsCollection first.
-	appId := event id.
-	rootClass := event aggregateRootClass.
-	self
-		storePreviousEvents: previousEventsCollection
-		ofTenant: aTenant
-		forApplicationId: appId
-		andAggregateRootClass: rootClass.
-	aCommandMessageCollection
-		do: [ :aCommandMessage | self publishCommand: aCommandMessage ].
-	self subscribeToEvents.
-	self
-		checkNewStoredEvents: expectedNewStoredEvents
-		ofTenant: aTenant
-		givenPreviousEvents: previousEventsCollection.
-	expectedEventMessages
-		do: [ :eventMessageRegex |
-			| frame |
-			frame := self eventListener client readMessage.
-			self generatedEvent: frame matchesRegex: eventMessageRegex ]
-]
-
-{ #category : #bdd }
-EDATIntegrationTestBDD >> givenPreviousEvents: previousEventsCollection ofTenant: aTenant whenReceiveCommandMessages: aCommandMessageCollection thenStoreEvents: expectedNewStoredEvents andPublishEventMessages: expectedEventMessages withRoutingKeys: expectedRoutingKeys [
-	self storePreviousEvents: previousEventsCollection.
-	aCommandMessageCollection
-		do: [ :aCommandMessage | self publishCommand: aCommandMessage ].
-	self subscribeToEvents.
-	self
-		assertEventMessagesMatch: expectedEventMessages
+		assertPublishedEvents: versionFixedExpectedEvents
 		withRoutingKeys: expectedRoutingKeys.
 	self
-		checkNewStoredEvents: expectedNewStoredEvents
-		ofTenant: aTenant
-		givenPreviousEvents: previousEventsCollection
+		checkNewStoredEvents: versionFixedExpectedEvents
+		givenPreviousEvents: versionFixedPreviousEvents
 ]
 
 { #category : #testing }
@@ -460,7 +319,7 @@ EDATIntegrationTestBDD >> routingKeyFromDestination: aDestinationString [
 
 { #category : #helper }
 EDATIntegrationTestBDD >> setTimeStampToEvent: anEvent [
-	anEvent timestamp: DateAndTime now
+	anEvent timestamp: DateAndTime now asUTC
 ]
 
 { #category : #initialization }
@@ -575,6 +434,13 @@ EDATIntegrationTestBDD >> tearDown [
 				, thisContext receiver selector greaseString
 ]
 
+{ #category : #'as yet unclassified' }
+EDATIntegrationTestBDD >> transformToCollection: anObject [
+	^ anObject
+		ifNil: [ OrderedCollection empty ]
+		ifNotNil: [ :object | OrderedCollection with: object ].
+]
+
 { #category : #lifecycle }
 EDATIntegrationTestBDD >> unsubscribe: id usingListener: aListener [
 	| frame client |
@@ -595,10 +461,10 @@ EDATIntegrationTestBDD >> unsubscribe: id usingListener: aListener [
 EDATIntegrationTestBDD >> unsubscribeToEvents [
 	self eventsSubscribed
 		ifTrue: [
-			self unsubscribe: self subscriptionId usingListener: self eventListener.
+			self eventListener unsubscribe.
 			self eventsSubscribed: false ]
 		ifFalse: [
-			self logDebugMessage: 'Already unsubscribed to events.']
+			self logDebugMessage: 'Already unsubscribed to events.' ]
 
 ]
 

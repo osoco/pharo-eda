@@ -1,9 +1,9 @@
 Class {
 	#name : #EDATJsonMatchingHelperTest,
 	#superclass : #TestCase,
-	#traits : 'EDATJsonMatchingHelper',
-	#classTraits : 'EDATJsonMatchingHelper classTrait',
-	#category : 'EDA-Commands-Tests-Tests'
+	#traits : 'EDATJsonMatchingHelper + EDATDomainBDD',
+	#classTraits : 'EDATJsonMatchingHelper classTrait + EDATDomainBDD classTrait',
+	#category : #'EDA-Commands-Tests-Tests'
 }
 
 { #category : #testing }
@@ -13,9 +13,9 @@ EDATJsonMatchingHelperTest >> test_deep_nested_jsons_match [
 	| json1 jsonRegex |
 	json1 := '{ "a": { "b": { "c": "whatever" }, "d": [ 1, 2, 3 ], "e": { "f": { "g": "end" } } }}'.
 	jsonRegex := '{ "a": { "b": { "c": "(.*)" }, "d": "(.*)", "e": { "f": { "g": "(.*)" } } }}'.
-	self assert: (self assertJson: json1 matchesRegex: jsonRegex).
+	self assertJson: json1 matchesRegex: jsonRegex.
 	jsonRegex := '{ "a": { "b": { "c": "(.*)" }, "e": { "f": { "g": "(.*)" } }, "d": [ 1, 2, 3 ] }}'.
-	self assert: (self assertJson: json1 matchesRegex: jsonRegex)
+	self assertJson: json1 matchesRegex: jsonRegex
 ]
 
 { #category : #testing }
@@ -25,7 +25,85 @@ EDATJsonMatchingHelperTest >> test_empty_jsons_match [
 	| json1 json2 |
 	json1 := ''.
 	json2 := ''.
-	self assert: (self assertJson: json1 matchesRegex: json2).
+	self assertJson: json1 matchesRegex: json2.
+]
+
+{ #category : #testing }
+EDATJsonMatchingHelperTest >> test_event_jsons_do_not_match [
+	"Tests whether two simple JSON are considered different"
+
+	| json1 json2 |
+	json1 := '
+    {
+        "body" : {
+            "scopeKey" : [
+                "group-1"
+            ],
+            "aggregateRootVersion" : 1,
+            "delete" : false,
+            "id" : "07c51401-9694-0d00-ac36-fde80f3899a1",
+            "applicantKey" : "algo",
+            "agent" : null,
+            "tenant" : "tenant-1",
+            "version" : 1,
+            "dateCreated" : "2022-02-17T10:31:21+00:00",
+            "scopeContext" : {
+                "scope" : "group",
+                "scopes" : {
+                    "group" : {
+                        "id" : "group-1",
+                        "subgroup" : {
+                            "id" : "subgroup-1"
+                        }
+                    }
+                }
+            }
+        },
+        "meta" : {
+            "delete" : false,
+            "version" : 2,
+            "timestamp" : "2022-02-17T10:31:23+00:00",
+            "id" : "13ce2a01-9694-0d00-ac37-c41d0f3899a1",
+            "correlationId" : "c03785c0-3be9-4847-9242-2917ec77d60b",
+            "type" : "APPLICANT_CREATED"
+        }
+    }
+	'.
+	json2 := '
+    {
+    "meta": {
+        "id": "<ANYTHING>",
+        "version": 2,
+        "timestamp": "1970-01-01T00:00:00",
+        "correlationId": "c03785c0-3be9-4847-9242-2917ec77d60b",
+        "type": "APPLICANT_CREATED",
+        "aggregate": "APPLICANT"
+    },
+    "body": {
+        "tenant": "tenant-1",
+        "scopeContext": {
+        "scopes": {
+            "group": {
+            "id": "group-1",
+            "subgroup": {
+                "id": "subgroup-1"
+            }
+            }
+        },
+        "scope": "group"
+        },
+        "scopeKey": [ "group-1" ],
+        "id": "applicant-1",
+        "version": 1,
+        "dateCreated": "1970-01-01T00:00:00",
+        "applicantKey": "startup@applicants.com"
+    }
+    }
+
+	'.
+	[ self eventJsonMsg: json1 totallyMatchesWith: json2 forEventClass: ATSApplicantCreated ]
+		on: EDAMismatchError
+		do: [ :ex | self assert: json1 equals: json2 ]
 ]
 
 { #category : #testing }
