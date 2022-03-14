@@ -15,7 +15,7 @@ Class {
 	#classVars : [
 		'CurrentEnvironment'
 	],
-	#category : 'EDA-Settings'
+	#category : #'EDA-Settings'
 }
 
 { #category : #accessing }
@@ -46,10 +46,8 @@ EDADUEnvironment class >> currentEnvironment: aString [
 	CurrentEnvironment := aString.
 	(previousEnvironment isNil or: [ previousEnvironment = aString ])
 		ifTrue: [ ^ self ].
-	EDASettings resetSettings.
+	EDASettings withAllSubclassesDo: [ :settingsClass | settingsClass resetSettings ].
 	self reloadSettingBrowser
-
-
 ]
 
 { #category : #'class initialization' }
@@ -114,5 +112,5 @@ EDADUEnvironment class >> isSettingBrowserOpen [
 { #category : #helper }
 EDADUEnvironment class >> reloadSettingBrowser [
 	((World submorphs select: [ :w | (w model printString = 'a SettingBrowser') ])) do: [ :w | w delete ].
-	SettingBrowser open.
+	SettingBrowser open close.
 ]

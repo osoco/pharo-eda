@@ -131,6 +131,11 @@ EDAStompTopicPublisher class >> host: val [
 	host := val
 ]
 
+{ #category : #initialization }
+EDAStompTopicPublisher class >> initialize [
+	self doInitialize
+]
+
 { #category : #accessing }
 EDAStompTopicPublisher class >> password [
 	^ password

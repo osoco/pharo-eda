@@ -286,12 +286,7 @@ EDACommand >> tenant: aTenant [
 
 { #category : #accessing }
 EDACommand >> version [
-	| result |
-	result := version.
-	result
-		ifNil: [ result := 1.
-			self version: result ].
-	^ result
+	^ version
 ]
 
 { #category : #accessing }

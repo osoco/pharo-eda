@@ -68,7 +68,7 @@ EDASettings class >> customProjectionErrorBehaviorsOn: aBuilder under: parent po
 
 { #category : #accessing }
 EDASettings class >> duEnvironmentClass [
-	^ duEnvironmentClass
+	^ duEnvironmentClass ifNil: [ duEnvironmentClass := EDADUEnvironment ]
 ]
 
 { #category : #accessing }
@@ -327,8 +327,18 @@ EDASettings class >> projectionsRepositorySettingsOn: aBuilder under: parent pop
 
 { #category : #settings }
 EDASettings class >> resetSettings [
-	#(EDACommandStompTopicListener EDAEventStompTopicPublisher EDAMongoEventStore EDALoggingSettings EDAApplication  EDAProjector 	 EDACompositeProjector  EDAProjectionMongoRepository)
-		do: [ :cls | cls initialize ]
+	| classesToInitialize |
+	classesToInitialize := OrderedCollection new
+		add: EDACommandStompTopicListener;
+		add: EDAEventStompTopicPublisher;
+		add: EDAMongoEventStore;
+		add: EDALoggingSettings;
+		add: EDAApplication;
+		add: EDAProjector;
+		add: EDACompositeProjector;
+		add:EDAProjectionMongoRepository;
+		yourself.
+	classesToInitialize do: [ :cls | cls initialize ]
 ]
 
 { #category : #settings }

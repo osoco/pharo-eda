@@ -231,6 +231,7 @@ EDAStompTopicListener >> config: aConfig [
 
 { #category : #lifecycle }
 EDAStompTopicListener >> forceUnsubscribe [
+	self unsubscribe.
 	self subscriptionId: nil
 ]
 

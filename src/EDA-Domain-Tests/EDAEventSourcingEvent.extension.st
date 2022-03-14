@@ -1,6 +1,11 @@
 Extension { #name : #EDAEventSourcingEvent }
 
 { #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent >> asJsonMessage [
+	^ (self class testMessageClass fromInstance: self) asJsonMessage
+]
+
+{ #category : #'*EDA-Domain-Tests' }
 EDAEventSourcingEvent >> asJsonString [	
 	| evtDict |
 	evtDict := self asDictionary.
@@ -16,34 +21,30 @@ EDAEventSourcingEvent >> asJsonString [
 ]
 
 { #category : #'*EDA-Domain-Tests' }
-EDAEventSourcingEvent class >> attributesReceivedNotRequired [
+EDAEventSourcingEvent class >> sampleFileNameForTestMessage: aTestMessage [
+	"overwrite if the sample file name does not follow the default criteria
+	e.g. <classPrefix>EventNameUpperCamelCase -> event.name.upper.camel.case.example.json
+	Take care set your domain test package as method category extension
+	"
+	[ self subclassResponsibility ]
+		on: Error
+		do: [ ^ aTestMessage defaultSampleFileNameFor: self ]
+]
+
+{ #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> sampleFilesPathForTestMessage: aTestMessage [
+	^ aTestMessage eventSampleFilesPath
+]
+
+{ #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> templateAttributesNotRequired [
 	"Not need for events"
 	^ Set empty
 ]
 
 { #category : #'*EDA-Domain-Tests' }
-EDAEventSourcingEvent class >> instVarsNeededExceptionFor: aTest [
-	^ aTest eventInstVarsNeededException
-]
-
-{ #category : #'*EDA-Domain-Tests' }
-EDAEventSourcingEvent class >> instVarsNeededMessageFor: aTest [
-	^ aTest eventInstVarsNeededMessage
-]
-
-{ #category : #'*EDA-Domain-Tests' }
-EDAEventSourcingEvent class >> sampleFileNameForTest: aTest [
-	"overwrite if the sample file name does not follow the default criteria
-	e.g. <classPrefix>EventNameUpperCamelCase -> event.name.upper.camel.case.example.json
-	"
-	[ self subclassResponsibility ]
-		on: Error
-		do: [ ^ aTest defaultSampleFileNameFor: self ]
-]
-
-{ #category : #'*EDA-Domain-Tests' }
-EDAEventSourcingEvent class >> sampleFilesPathForTest: aTest [
-	^ aTest eventSampleFilesPath
+EDAEventSourcingEvent class >> testMessageClass [
+	^ EDATestEventMessage
 ]
 
 { #category : #'*EDA-Domain-Tests' }

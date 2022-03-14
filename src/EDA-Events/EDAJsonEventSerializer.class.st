@@ -12,52 +12,76 @@ Class {
 
 { #category : #converting }
 EDAJsonEventSerializer class >> asEventName: event [
-	| words |
-	words :=
-		event delete ifTrue: [
-			| aggregateRootName |
-			aggregateRootName := (EDAMessageSerializer nameWithoutPrefixForMessageClass: event aggregateRootClass) asUppercase.
-			OrderedCollection with: aggregateRootName with: 'DELETED'
-		] ifFalse: [
-			(EDAMessageSerializer nameWithoutPrefixForMessageClass: event class)
-				regex: '[A-Z][a-z0-9]+' matchesCollect: [ :word | word greaseString asUppercase ].
-		].
+	| type words |
+	type :=
+		event delete
+			ifTrue: [
+				| aggregateRootName |
+				aggregateRootName := (EDAMessageSerializer nameWithoutPrefixForMessageClass: event aggregateRootClass) , 'Deleted' ]
+			ifFalse: [
+				(EDAMessageSerializer nameWithoutPrefixForMessageClass: event class) ].
+	words := type regex: '[A-Z][a-z0-9]+' matchesCollect: [ :word | word greaseString asUppercase ].
 	^ String streamContents: [ :stream | words asStringOn: stream delimiter: '_' ]
 
 ]
 
 { #category : #initialization }
 EDAJsonEventSerializer class >> buildBodySectionForEvent: anEvent [
-	^ Dictionary newFrom:
-		(anEvent class allInstVarNames \ (Array with: #aggregateRootClass with: #timestamp with: #commandId with: #version)
-			collect: [ :var | var -> (anEvent instVarNamed: var) ])
+	| bodyDict |
+	bodyDict := Dictionary newFrom:
+		(anEvent class allInstVarNames \ anEvent class publishableMetaAttributes \anEvent class nonPublishableBodyAttributes
+			collect: [ :var | var -> (anEvent instVarNamed: var) ]).
+	bodyDict at: #dateCreated ifPresent: [ :dc |
+		| formattedDateCreated |
+		(dc isKindOf: DateAndTime)
+			ifTrue: [ 
+				formattedDateCreated := dc asUTC rounded.
+				bodyDict at: #dateCreated put: formattedDateCreated ] ].
+	(self domainToMessageAttributesMap at: #body)
+		keysAndValuesDo: [ :domainAttributeName :messageAttributeName |
+			bodyDict changeKey: domainAttributeName to: messageAttributeName
+			 ].
+	^ bodyDict
 ]
 
 { #category : #parsing }
 EDAJsonEventSerializer class >> buildMessageFormatDictForEvent: anEvent [ 
-	| eventDict meta body dateCreated |
+	| eventDict meta body |
 	eventDict := Dictionary new.
 	meta := self buildMetaSectionForEvent: anEvent.
 	eventDict at: #meta put: meta.
 	body := self buildBodySectionForEvent: anEvent.
-	body at: #version put: anEvent aggregateRootVersion.
-	dateCreated := anEvent timestamp.
-	dateCreated isString
-		ifFalse: [ dateCreated := dateCreated asUTC rounded ].
-	body at: #dateCreated put: dateCreated.
 	eventDict at: #body put: body.
 	^ eventDict
 ]
 
 { #category : #initialization }
 EDAJsonEventSerializer class >> buildMetaSectionForEvent: anEvent [
-	^ Dictionary
-		with: 'id' -> UUID new greaseString
+	| metaJsonDict |
+	metaJsonDict := Dictionary
+		with: 'messageId' -> UUID new greaseString
 		with: 'version' -> anEvent version
 		with: 'timestamp' -> DateAndTime now asUTC rounded
-		with: 'correlationId' -> anEvent commandId
-		with: 'type' -> (self asEventName: anEvent)
-		with: 'delete' -> anEvent delete
+		with: 'commandId' -> anEvent commandId
+		with: 'type' -> (self asEventName: anEvent).
+	(self domainToMessageAttributesMap at: #meta)
+		keysAndValuesDo: [ :domainAttributeName :messageAttributeName |
+			metaJsonDict changeKey: domainAttributeName to: messageAttributeName
+			 ].
+	^ metaJsonDict
+]
+
+{ #category : #converting }
+EDAJsonEventSerializer class >> domainToMessageAttributesMap [
+	^ Dictionary
+		with:
+			#meta -> (Dictionary
+				with: #messageId -> #id 
+				with: #commandId -> #correlationId)
+		with:
+			#body -> (Dictionary 
+				with: #aggregateRootVersion -> #version)
+	
 ]
 
 { #category : #accessing }

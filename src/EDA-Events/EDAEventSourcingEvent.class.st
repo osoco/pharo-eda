@@ -57,12 +57,34 @@ EDAEventSourcingEvent class >> aggregateRootClass [
 
 { #category : #meta }
 EDAEventSourcingEvent class >> attributesWhoseValuesGetGenerated [
-	^ #('id' 'timestamp') asSet
+	^ Set
+		with: #timestamp
+		"It is the id on meta message. Generated when publishing the event"
+		with: #messageId
 ]
 
 { #category : #helpers }
 EDAEventSourcingEvent class >> classPrefix [
 	^ (self name regex: '^([A-Z]+)' matchesCollect: [ :each | each asString ]) first allButLast
+]
+
+{ #category : #helpers }
+EDAEventSourcingEvent class >> formattedDate: aDateCreated [
+	| currentFormattedDateAndTime |
+	currentFormattedDateAndTime := DateAndTime now asUTC rounded.
+	aDateCreated
+		ifNil: [ ^ currentFormattedDateAndTime ]
+		ifNotNil: [ :dc |
+			dc isString
+				ifTrue: [
+					^ [ dc asDateAndTime asUTC rounded ]
+						on: Error
+						do: [ 
+							self logErrorMessage: 'Current date used as dateCreated. Invalid dateCreated ' , dc greaseString.
+							currentFormattedDateAndTime ] ].
+			(dc isKindOf: DateAndTime) 
+				ifTrue: [ ^ dc asUTC rounded ]
+		]
 ]
 
 { #category : #meta }
@@ -77,14 +99,36 @@ EDAEventSourcingEvent class >> latestVersion [
 ]
 
 { #category : #meta }
+EDAEventSourcingEvent class >> nonPublishableBodyAttributes [
+	"Override adding or removing attributes non publishable if its needed
+	e.g.
+	| nonPublishableBodyAttributes |
+	nonPublishableBodyAttributes := super nonPublishableBodyAttributes.
+	nonPublishableBodyAttributes
+		addAll:
+			(Set 
+				with: #attributeNonpublishable1
+				with: #attributeNonpublishable2
+				with: #attributeNonpublishable3).
+	nonPublishableBodyAttributes remove: #attributePublishable ifAbsent: [  ].
+	^ nonPublishableBodyAttributes"
+	^ Set
+		with: #aggregateRootClass
+		with: #delete 
+		with: #agent
+]
+
+{ #category : #meta }
 EDAEventSourcingEvent class >> ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs [
-	| event previousAggregateRootVersion aggregateRootVersion |
+	| event timestamp previousAggregateRootVersion aggregateRootVersion |
 	event := self new.
 	event tenant: theTenant.
 	event id: theId.
 	event commandId: theCommandId.
-	event
-		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
+	timestamp := theAttrs at: 'timestamp' 
+		ifPresent: [ :ts | (DateAndTime fromString: ts) asUTC ]
+		ifAbsent: [ DateAndTime now asUTC ].
+	event timestamp: timestamp.
 	previousAggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifAbsent: [ nil ].
 	aggregateRootVersion := previousAggregateRootVersion ifNil: [ 1 ] ifNotNil: [ :pARV | pARV + 1 ].
 	event aggregateRootVersion: aggregateRootVersion.
@@ -129,6 +173,14 @@ EDAEventSourcingEvent class >> old_ofTenant: theTenant withAggregateId: theId co
 	theAttrs at: 'agent' ifPresent: [ :v | result agent: v ].
 	"theAttrs at: 'dateCreated' ifPresent: [ :v | result dateCreated: v ]."
 	^ result
+]
+
+{ #category : #meta }
+EDAEventSourcingEvent class >> publishableMetaAttributes [
+	^ Set
+		with: #version
+		with: #timestamp
+		with: #commandId
 ]
 
 { #category : #accessing }
@@ -254,12 +306,7 @@ EDAEventSourcingEvent >> uniqueId [
 
 { #category : #accessing }
 EDAEventSourcingEvent >> version [
-	| result |
-	result := version.
-	result
-		ifNil: [ result := 1.
-			self version: result ].
-	^ result
+	^ version
 ]
 
 { #category : #accessing }
