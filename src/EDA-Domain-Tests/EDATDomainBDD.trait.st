@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -601,44 +602,41 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 ]
 
 { #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand shouldRaise: anException [
+EDATDomainBDD >> givenEvents: historicalEvents whenReceiveCommand: aCommand shouldRaise: anException [
 	self
 		should: [ 
-			self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: OrderedCollection empty ]
+			self givenEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: OrderedCollection empty ]
 		raise: anException
 		
 ]
 
 { #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvent: expectedEvent [
+EDATDomainBDD >> givenEvents: historicalEvents whenReceiveCommand: aCommand thenEvent: expectedEvent [
 	^ self
-		givenAggregate: anAggregateRootSymbol
-		withEvents: historicalEvents
+		givenEvents: historicalEvents
 		whenReceiveCommand: aCommand
 		thenEvents: (OrderedCollection with: expectedEvent)
 ]
 
 { #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvent: expectedEvent andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
+EDATDomainBDD >> givenEvents: historicalEvents whenReceiveCommand: aCommand thenEvent: expectedEvent andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
 	^ self
-		givenAggregate: anAggregateRootSymbol
-		withEvents: historicalEvents
+		givenEvents: historicalEvents
 		whenReceiveCommand: aCommand
 		thenEvents: (OrderedCollection with: expectedEvent)
 		andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock
 ]
 
 { #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents [
-	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
+EDATDomainBDD >> givenEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents [
+	^ self givenEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
 
 ]
 
 { #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
+EDATDomainBDD >> givenEvents: historicalEvents whenReceiveCommand: aCommand thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
 	^ self
-		givenAggregate: anAggregateRootSymbol
-		withEvents: historicalEvents
+		givenEvents: historicalEvents
 		whenReceiveMessage:
 			aCommand asJsonMessage
 		thenEvents: expectedResultingEvents
@@ -646,82 +644,8 @@ EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEve
 ]
 
 { #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents [
-	^ self givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
-]
-
-{ #category : #BDD }
-EDATDomainBDD >> givenAggregate: anAggregateRootSymbol withEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents andAdditionallyAssert: anExcepctedAndResultingEventsAssertionBlock [
-	| commandConsumer resultingEvents mock eventStore expectedEvents eventsToSave tenant aggregateRootVersion msg eventsOfAggregate originalEventStores projectorClass |
-	mock := EDAAcceptEverything new.
-	projectorClass := mock.
-	eventStore := EDAVolatileEventStore new.
-	originalEventStores := self retrieveEventStores.
-	[ self useEventStore: eventStore.
-	self setupTestProjections.
-	eventsToSave := self
-		fixAggregateRootVersionsOfEvents: historicalEvents
-		usingEventStore: eventStore.
-	eventsToSave
-		ifNotEmpty: [ :evts | 
-			tenant := evts anyOne tenant.
-			projectorClass := EDACompositeProjector.
-			evts
-				withIndexDo: [ :evt :index | 
-					| oneEvtCollection |
-					oneEvtCollection := OrderedCollection with: evt.
-					eventStore saveEvents: oneEvtCollection.
-					(projectorClass
-						ofTenant: tenant
-						withAllProjectorsAndEventStore: eventStore)
-						projectFilteredEvents: oneEvtCollection
-						ofTenant: tenant ] ].
-	commandConsumer := EDACommandConsumer
-		busListener: mock
-		commandMaterializer: EDAJsonCommandMaterializer new
-		commandDispatcher:
-			(EDAApplication
-				buildCommandDispatcherWithEventStore: eventStore
-				eventProducer: mock
-				andProjectorClass: projectorClass).
-	eventsOfAggregate := eventsToSave
-		select:
-			[ :e | e aggregateRootClass greaseString asSymbol = anAggregateRootSymbol ].
-	aggregateRootVersion := eventsOfAggregate
-		ifEmpty: [ 0 ]
-		ifNotEmpty: [ eventsOfAggregate last aggregateRootVersion ].
-	expectedEvents := self
-		fixAggregateRootVersionsOfEvents: expectedResultingEvents
-		usingEventStore: eventStore.
-	msg := self
-		provideAggregateRootVersion: aggregateRootVersion
-		to: aString.
-	resultingEvents := commandConsumer
-		consumeMessage: aString
-		usingStrategy: EDAThrowError greaseString.
-	self assert: resultingEvents isNotNil.
-	self assert: resultingEvents size equals: expectedEvents size.
-	resultingEvents
-		keysAndValuesDo: [ :i :actual | 
-			| expected matchResult |
-			expected := expectedEvents at: i.
-			self discardDateCreated: expected.
-			self discardAgent: expected.
-			self assertEvent: expected deepMatches: actual
-			"matchResult := self event: expected totallyMatchesWith: actual.
-			(matchResult at: #match)
-			 ifFalse: [ 
-				self assert: expected asJsonString = actual asJsonString description: [ matchResult at: #diff ] ]."
-			"Keep for testing with old system"
-			"self assert: expected asJsonString equals: actual asJsonString."
-			"self assertEvent: expected equals: actual."
-			"self assert: expected equals: actual."
-			"self assertEvent: expected matches: actual" ].
-	anExcepctedAndResultingEventsAssertionBlock
-		value: expectedEvents
-		value: resultingEvents ]
-		ensure: [ self restoreEventStores: originalEventStores.
-			self restoreProjections ]
+EDATDomainBDD >> givenEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents [
+	^ self givenEvents: historicalEvents whenReceiveMessage: aString thenEvents: expectedResultingEvents andAdditionallyAssert: [ :expectedEvents :resultingEvents | true ]
 ]
 
 { #category : #'matching helpers - logs' }
