@@ -47,15 +47,11 @@ EDAJsonEventSerializer class >> buildBodySectionForEvent: anEvent [
 
 { #category : #parsing }
 EDAJsonEventSerializer class >> buildMessageFormatDictForEvent: anEvent [ 
-	| eventDict meta body dateCreated |
+	| eventDict meta body |
 	eventDict := Dictionary new.
 	meta := self buildMetaSectionForEvent: anEvent.
 	eventDict at: #meta put: meta.
 	body := self buildBodySectionForEvent: anEvent.
-	dateCreated := anEvent timestamp.
-	dateCreated isString
-		ifFalse: [ dateCreated := dateCreated asUTC rounded ].
-	body at: #dateCreated put: dateCreated.
 	eventDict at: #body put: body.
 	^ eventDict
 ]

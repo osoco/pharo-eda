@@ -65,6 +65,25 @@ EDAEventSourcingEvent class >> classPrefix [
 	^ (self name regex: '^([A-Z]+)' matchesCollect: [ :each | each asString ]) first allButLast
 ]
 
+{ #category : #helpers }
+EDAEventSourcingEvent class >> formattedDate: aDateCreated [
+	| currentFormattedDateAndTime |
+	currentFormattedDateAndTime := DateAndTime now asUTC rounded.
+	aDateCreated
+		ifNil: [ ^ currentFormattedDateAndTime ]
+		ifNotNil: [ :dc |
+			dc isString
+				ifTrue: [
+					^ [ dc asDateAndTime asUTC rounded ]
+						on: Error
+						do: [ 
+							self logErrorMessage: 'Current date used as dateCreated. Invalid dateCreated ' , dc greaseString.
+							currentFormattedDateAndTime ] ].
+			(dc isKindOf: DateAndTime) 
+				ifTrue: [ ^ dc asUTC rounded ]
+		]
+]
+
 { #category : #meta }
 EDAEventSourcingEvent class >> isEventGenerated: attr [
 	^ self attributesWhoseValuesGetGenerated anySatisfy: [ :v | v = attr ]
