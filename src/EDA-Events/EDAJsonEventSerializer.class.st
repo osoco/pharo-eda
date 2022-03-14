@@ -12,16 +12,15 @@ Class {
 
 { #category : #converting }
 EDAJsonEventSerializer class >> asEventName: event [
-	| words |
-	words :=
-		event delete ifTrue: [
-			| aggregateRootName |
-			aggregateRootName := (EDAMessageSerializer nameWithoutPrefixForMessageClass: event aggregateRootClass) asUppercase.
-			OrderedCollection with: aggregateRootName with: 'DELETED'
-		] ifFalse: [
-			(EDAMessageSerializer nameWithoutPrefixForMessageClass: event class)
-				regex: '[A-Z][a-z0-9]+' matchesCollect: [ :word | word greaseString asUppercase ].
-		].
+	| type words |
+	type :=
+		event delete
+			ifTrue: [
+				| aggregateRootName |
+				aggregateRootName := (EDAMessageSerializer nameWithoutPrefixForMessageClass: event aggregateRootClass) , 'Deleted' ]
+			ifFalse: [
+				(EDAMessageSerializer nameWithoutPrefixForMessageClass: event class) ].
+	words := type regex: '[A-Z][a-z0-9]+' matchesCollect: [ :word | word greaseString asUppercase ].
 	^ String streamContents: [ :stream | words asStringOn: stream delimiter: '_' ]
 
 ]
