@@ -31,6 +31,27 @@ EDATestEventMessage class >> nonDomainAttributesFor: aCommandOrEvent [
 	^ nonDomainAttributes
 ]
 
+{ #category : #preconditions }
+EDATestEventMessage >> checkInstVars [
+	super checkInstVars.
+	self instVarsPublishedUnnecessarily
+		ifNotEmpty: [ :instvars | 
+			self
+				logErrorMessage:
+					(self instVarsPublishedUnnecessarilyMessage
+						value: instvars greaseString
+						value: commandOrEventClass name)
+				andThrow: EDAEventInstVarsPublishedUnnecessarily ].
+	self instVarsNeededToPublishButNot
+		ifNotEmpty: [ :instvars | 
+			self
+				logErrorMessage:
+					(self instVarsNeededToPublishButNotMessage
+						value: instvars greaseString
+						value: commandOrEventClass name)
+				andThrow: EDAEventInstVarsNeededToPublishButNot ]
+]
+
 { #category : #accessing }
 EDATestEventMessage >> domainAttributes [
 	| domainAttributes |
@@ -51,4 +72,29 @@ EDATestEventMessage >> instVarsNeededException [
 EDATestEventMessage >> instVarsNeededMessage [
 	^ [ :instvars :className | 'Check creation of instance variables: ' , instvars 
 						, ' and accessors for class ' , className ]
+]
+
+{ #category : #'helper - inst var checking' }
+EDATestEventMessage >> instVarsNeededToPublishButNot [
+	^ self templateAttributes \ (self comandOrEventInstVars \ commandOrEventClass nonPublishableBodyAttributes)
+]
+
+{ #category : #'helper - inst var checking' }
+EDATestEventMessage >> instVarsNeededToPublishButNotMessage [
+	^ [ :instvars :className | className , ' instance variables: ' , instvars 
+						, ' are not published and should be. Review #nonPublishableBodyAttributes methods and remove from them' ]
+]
+
+{ #category : #'helper - inst var checking' }
+EDATestEventMessage >> instVarsPublishedUnnecessarily [
+	| templateAttributes publishedAttributes |
+	templateAttributes := self templateAttributes.
+	publishedAttributes := self comandOrEventInstVars \ commandOrEventClass nonPublishableBodyAttributes.
+	^ publishedAttributes \ templateAttributes.
+]
+
+{ #category : #'helper - inst var checking' }
+EDATestEventMessage >> instVarsPublishedUnnecessarilyMessage [
+	^ [ :instvars :className | className , ' instance variables: ' , instvars 
+						, ' are published and are not in the example template. Review the template or add to #nonPublishableBodyAttributes' ]
 ]

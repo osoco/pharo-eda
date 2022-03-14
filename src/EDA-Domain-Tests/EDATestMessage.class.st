@@ -145,7 +145,7 @@ EDATestMessage class >> fromInstance: aCommandOrEvent [
 { #category : #helper }
 EDATestMessage class >> nonDomainAttributesFor: aCommandOrEvent [
 "these attributes do not correspond to the domain"
-	^ aCommandOrEvent class attributesReceivedNotRequired
+	^ aCommandOrEvent class templateAttributesNotRequired
 ]
 
 { #category : #'helper - file readers' }
@@ -210,7 +210,7 @@ EDATestMessage >> asJsonMessageFilledWith: aCommandOrEvent [
 		jsonWriter nextPut: domainJsonDictionary ]
 ]
 
-{ #category : #preconditions }
+{ #category : #'helper - inst var checking' }
 EDATestMessage >> checkInstVars [
 	self newInstVarNeeded
 		ifNotEmpty: [ :instvars | 
@@ -225,6 +225,11 @@ EDATestMessage >> checkInstVars [
 				instVarNamed: instVarName greaseString
 				put: (theAttrs at: instVarName)
 				ifAbsent: [ self logDebugMessage: 'No instVar created' ] ]."
+]
+
+{ #category : #'helper - inst var checking' }
+EDATestMessage >> comandOrEventInstVars [
+	^ commandOrEventClass allInstVarNames collect: [ :each | each asSymbol ]
 ]
 
 { #category : #accessing }
@@ -253,7 +258,7 @@ EDATestMessage >> domainJsonTemplate [
 	^ domainTemplateJson
 ]
 
-{ #category : #preconditions }
+{ #category : #'helper - inst var checking' }
 EDATestMessage >> instVarsNeededException [
 	self subclassResponsibility
 ]
@@ -270,8 +275,10 @@ EDATestMessage >> message: aJsonMessage [
 
 { #category : #'instance creation' }
 EDATestMessage >> newInstVarNeeded [
-	| receivedAttributes newInstVars |
-	receivedAttributes := (self domainAttributes keys collect: [ :each | each asSymbol ]).
-	newInstVars := (receivedAttributes \ commandOrEventClass attributesReceivedNotRequired) \ (commandOrEventClass allInstVarNames collect: [ :each | each asSymbol ]).
-	^ newInstVars
+	^ self templateAttributes \ commandOrEventClass templateAttributesNotRequired \ self comandOrEventInstVars.
+]
+
+{ #category : #'instance creation' }
+EDATestMessage >> templateAttributes [
+	^ self domainAttributes keys collect: [ :each | each asSymbol ]
 ]
