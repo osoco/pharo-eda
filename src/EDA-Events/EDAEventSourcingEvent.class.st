@@ -117,13 +117,15 @@ EDAEventSourcingEvent class >> nonPublishableBodyAttributes [
 
 { #category : #meta }
 EDAEventSourcingEvent class >> ofTenant: theTenant withAggregateId: theId commandId: theCommandId andAttributes: theAttrs [
-	| event previousAggregateRootVersion aggregateRootVersion |
+	| event timestamp previousAggregateRootVersion aggregateRootVersion |
 	event := self new.
 	event tenant: theTenant.
 	event id: theId.
 	event commandId: theCommandId.
-	event
-		timestamp: (theAttrs at: 'timestamp' ifAbsent: [ DateAndTime now asUTC ]).
+	timestamp := theAttrs at: 'timestamp' 
+		ifPresent: [ :ts | (DateAndTime fromString: ts) asUTC ]
+		ifAbsent: [ DateAndTime now asUTC ].
+	event timestamp: timestamp.
 	previousAggregateRootVersion :=  theAttrs at: 'aggregateRootVersion' ifAbsent: [ nil ].
 	aggregateRootVersion := previousAggregateRootVersion ifNil: [ 1 ] ifNotNil: [ :pARV | pARV + 1 ].
 	event aggregateRootVersion: aggregateRootVersion.
