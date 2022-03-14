@@ -1,9 +1,9 @@
 Extension { #name : #EDADeleteAggregateCommand }
 
 { #category : #'*EDA-Domain-Tests' }
-EDADeleteAggregateCommand class >> attributesReceivedNotRequired [
+EDADeleteAggregateCommand class >> templateAttributesNotRequired [
 	| attributesReceivedNotRequired |
-	attributesReceivedNotRequired := super attributesReceivedNotRequired.
+	attributesReceivedNotRequired := super templateAttributesNotRequired.
 	attributesReceivedNotRequired addAll: (Set with: #delete).
 	^ attributesReceivedNotRequired
 ]
