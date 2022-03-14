@@ -30,7 +30,7 @@ EDAJsonEventSerializer class >> asEventName: event [
 EDAJsonEventSerializer class >> buildBodySectionForEvent: anEvent [
 	| bodyDict |
 	bodyDict := Dictionary newFrom:
-		(anEvent class allInstVarNames \ anEvent class nonPublishableAttributes
+		(anEvent class allInstVarNames \ anEvent class publishableMetaAttributes \anEvent class nonPublishableBodyAttributes
 			collect: [ :var | var -> (anEvent instVarNamed: var) ]).
 	bodyDict at: #dateCreated ifPresent: [ :dc |
 		| formattedDateCreated |

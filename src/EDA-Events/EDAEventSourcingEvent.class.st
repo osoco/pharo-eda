@@ -77,12 +77,21 @@ EDAEventSourcingEvent class >> latestVersion [
 ]
 
 { #category : #meta }
-EDAEventSourcingEvent class >> nonPublishableAttributes [
+EDAEventSourcingEvent class >> nonPublishableBodyAttributes [
+	"Override adding or removing attributes non publishable if its needed
+	e.g.
+	| nonPublishableBodyAttributes |
+	nonPublishableBodyAttributes := super nonPublishableBodyAttributes.
+	nonPublishableBodyAttributes
+		addAll:
+			(Set 
+				with: #attributeNonpublishable1
+				with: #attributeNonpublishable2
+				with: #attributeNonpublishable3).
+	nonPublishableBodyAttributes remove: #attributePublishable ifAbsent: [  ].
+	^ nonPublishableBodyAttributes"
 	^ Set
 		with: #aggregateRootClass
-		with: #timestamp
-		with: #commandId
-		with: #version
 		with: #delete 
 		with: #agent
 ]
@@ -140,6 +149,14 @@ EDAEventSourcingEvent class >> old_ofTenant: theTenant withAggregateId: theId co
 	theAttrs at: 'agent' ifPresent: [ :v | result agent: v ].
 	"theAttrs at: 'dateCreated' ifPresent: [ :v | result dateCreated: v ]."
 	^ result
+]
+
+{ #category : #meta }
+EDAEventSourcingEvent class >> publishableMetaAttributes [
+	^ Set
+		with: #version
+		with: #timestamp
+		with: #commandId
 ]
 
 { #category : #accessing }
