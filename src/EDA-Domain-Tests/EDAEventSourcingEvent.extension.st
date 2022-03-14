@@ -21,12 +21,6 @@ EDAEventSourcingEvent >> asJsonString [
 ]
 
 { #category : #'*EDA-Domain-Tests' }
-EDAEventSourcingEvent class >> attributesReceivedNotRequired [
-	"Not need for events"
-	^ Set empty
-]
-
-{ #category : #'*EDA-Domain-Tests' }
 EDAEventSourcingEvent class >> sampleFileNameForTestMessage: aTestMessage [
 	"overwrite if the sample file name does not follow the default criteria
 	e.g. <classPrefix>EventNameUpperCamelCase -> event.name.upper.camel.case.example.json
@@ -40,6 +34,12 @@ EDAEventSourcingEvent class >> sampleFileNameForTestMessage: aTestMessage [
 { #category : #'*EDA-Domain-Tests' }
 EDAEventSourcingEvent class >> sampleFilesPathForTestMessage: aTestMessage [
 	^ aTestMessage eventSampleFilesPath
+]
+
+{ #category : #'*EDA-Domain-Tests' }
+EDAEventSourcingEvent class >> templateAttributesNotRequired [
+	"Not need for events"
+	^ Set empty
 ]
 
 { #category : #'*EDA-Domain-Tests' }
