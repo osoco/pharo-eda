@@ -144,6 +144,7 @@ EDATDomainBDD >> buildSampleEventFor: anEventClass [
 	| eventMessage domainAttributes |
 	eventMessage := (EDATestEventMessage forClass: anEventClass).
 	eventMessage checkInstVars.
+	eventMessage checkVersion.
 	domainAttributes := eventMessage domainAttributes.
 	^ anEventClass
 		ofTenant: (domainAttributes at: #tenant ifAbsent: [ nil ])

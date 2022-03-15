@@ -22,5 +22,5 @@ EDATestCommandMessage >> instVarsNeededException [
 { #category : #'helper - inst var checking' }
 EDATestCommandMessage >> instVarsNeededMessage [
 	^ [ :instvars :className | 'Check creation of instance variables: ' , instvars 
-						, ' and accessors for class ' , className , ' or add them to its attributesReceivedNotRequired' ]
+						, ' and accessors for class ' , className , ' or add them to its templateAttributesNotRequired' ]
 ]

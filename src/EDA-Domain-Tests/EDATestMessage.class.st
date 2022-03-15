@@ -228,6 +228,16 @@ EDATestMessage >> checkInstVars [
 ]
 
 { #category : #'helper - inst var checking' }
+EDATestMessage >> checkVersion [
+	| templateLatestVersion instanceLatestVersion |
+	templateLatestVersion := self asDomainJsonDictionary at: #meta at: #version.
+	instanceLatestVersion := commandOrEventClass latestVersion.
+	(templateLatestVersion = instanceLatestVersion)
+		ifFalse: [ self logErrorMessage: 'Different latest version of template example [' , templateLatestVersion greaseString , ']  and instance [' , instanceLatestVersion greaseString , '] of ' , commandOrEventClass className , '. Check template and #latestVersion.' andThrow: EDADifferentLatestVersion ]
+		
+]
+
+{ #category : #'helper - inst var checking' }
 EDATestMessage >> comandOrEventInstVars [
 	^ commandOrEventClass allInstVarNames collect: [ :each | each asSymbol ]
 ]
