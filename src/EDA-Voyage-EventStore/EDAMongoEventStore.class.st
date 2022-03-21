@@ -34,31 +34,6 @@ EDAMongoEventStore class >> authenticationMechanism: anObject [
 	authenticationMechanism := anObject
 ]
 
-{ #category : #'repository configuration' }
-EDAMongoEventStore class >> configReplicationOnRepository: mongoRepository [
-	self enableReplication
-		ifNotNil: [ :replication | 
-			| replicationDebugMessage |
-			replicationDebugMessage := 'Non-configurable replication.'.
-			replication
-				ifTrue: [ [ mongoRepository enableReplication ]
-						on: MessageNotUnderstood
-						do: [ :ex |
-							self logDebugMessage: replicationDebugMessage ] ]
-				ifFalse: [ [ mongoRepository disableReplication ]
-						on: MessageNotUnderstood
-						do: [ :ex |
-							self logDebugMessage: replicationDebugMessage ] ] ]
-]
-
-{ #category : #'repository configuration' }
-EDAMongoEventStore class >> configSingletonOnRepository: mongoRepository [.
-	self enableSingleton ifNotNil: [ :singleton |
-		singleton
-			ifTrue: [ mongoRepository enableSingleton ]
-			ifFalse: [ mongoRepository disableSingleton ] ].
-]
-
 { #category : #accessing }
 EDAMongoEventStore class >> databaseName [
 	^ databaseName
@@ -195,19 +170,6 @@ EDAMongoEventStore class >> password: anObject [
 { #category : #'refresh settings' }
 EDAMongoEventStore class >> refreshVoyageSettings [
 	EDAVOMongoRepository allInstancesDo: [ :repo | self refreshVoyageSettingsOn: repo ]
-]
-
-{ #category : #'refresh settings' }
-EDAMongoEventStore class >> refreshVoyageSettingsOn: aRepository [
-	aRepository username: self username.
-	aRepository password: self password.
-	aRepository debug: self debug.
-	self configReplicationOnRepository: aRepository.
-	aRepository ensuringCurrentOnSave: self ensuringCurrentOnSave.
-	aRepository ensuringCurrentReferencesOnQueries: self ensuringCurrentReferencesOnQueries.
-	aRepository lazySynchronize: self lazySynchronize.
-	self configSingletonOnRepository: aRepository.
-	aRepository wireProtocolEnabled: self wireProtocolEnabled
 ]
 
 { #category : #accessing }

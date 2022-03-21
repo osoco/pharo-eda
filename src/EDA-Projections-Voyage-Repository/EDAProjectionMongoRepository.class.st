@@ -21,7 +21,7 @@ Class {
 		'urls',
 		'tls'
 	],
-	#category : 'EDA-Projections-Voyage-Repository'
+	#category : #'EDA-Projections-Voyage-Repository'
 }
 
 { #category : #accessing }
@@ -170,23 +170,6 @@ EDAProjectionMongoRepository class >> password: val [
 { #category : #'refresh settings' }
 EDAProjectionMongoRepository class >> refreshVoyageSettings [
 	EDAVOProjectionMongoRepository allInstancesDo: [ :repo | self refreshVoyageSettingsOn: repo ]
-]
-
-{ #category : #'refresh settings' }
-EDAProjectionMongoRepository class >> refreshVoyageSettingsOn: aRepository [
-	aRepository username: self username.
-	aRepository password: self password.
-	aRepository debug: self debug.
-	self enableReplication
-		ifTrue: [ aRepository enableReplication ]
-		ifFalse: [ aRepository disableReplication ].
-	aRepository ensuringCurrentOnSave: self ensuringCurrentOnSave.
-	aRepository ensuringCurrentReferencesOnQueries: self ensuringCurrentReferencesOnQueries.
-	aRepository lazySynchronize: self lazySynchronize.
-	self enableSingleton
-		ifTrue: [ aRepository enableSingleton ]
-		ifFalse: [ aRepository disableSingleton ].
-	aRepository wireProtocolEnabled: self wireProtocolEnabled
 ]
 
 { #category : #accessing }
