@@ -14,6 +14,14 @@ Class {
 }
 
 { #category : #settings }
+EDATestSettings class >> classesToInitialize [
+	^ OrderedCollection
+		with: EDACommandStompTopicPublisher
+		with: EDATestEventStompTopicListener
+		with: EDAQueueCleaner
+]
+
+{ #category : #settings }
 EDATestSettings class >> commandPublisherSettingsOn: aBuilder [
 	(aBuilder group: #testCommandPublisher)
 		label: 'Command Publisher' translated;
@@ -102,16 +110,4 @@ EDATestSettings class >> queueCleaningSettingsOn: aBuilder [
 		withConfig: EDAQueueCleaner
 		under: #testQueueCleaning
 		populatedWithValuesFrom: extSettings
-]
-
-{ #category : #settings }
-EDATestSettings class >> resetSettings [
-	| classesToInitialize |
-	super resetSettings.
-	classesToInitialize := OrderedCollection new
-		add: EDACommandStompTopicPublisher;
-		add: EDATestEventStompTopicListener;
-		add: EDAQueueCleaner;
-		yourself.
-	classesToInitialize do: [ :cls | cls initialize ]
 ]

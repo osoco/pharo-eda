@@ -24,6 +24,20 @@ EDASettings class >> authMethodDescription: aMongoAuthMechanism [
 ]
 
 { #category : #settings }
+EDASettings class >> classesToInitialize [
+	^ OrderedCollection new
+		add: EDACommandStompTopicListener;
+		add: EDAEventStompTopicPublisher;
+		add: EDAMongoEventStore;
+		add: EDALoggingSettings;
+		add: EDAApplication;
+		add: EDAProjector;
+		add: EDACompositeProjector;
+		add: EDAProjectionMongoRepository;
+		yourself
+]
+
+{ #category : #settings }
 EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
 	| stompConfig values |
 	stompConfig := self retrieveSettingAsDict: 'commandListener'.
@@ -327,18 +341,7 @@ EDASettings class >> projectionsRepositorySettingsOn: aBuilder under: parent pop
 
 { #category : #settings }
 EDASettings class >> resetSettings [
-	| classesToInitialize |
-	classesToInitialize := OrderedCollection new
-		add: EDACommandStompTopicListener;
-		add: EDAEventStompTopicPublisher;
-		add: EDAMongoEventStore;
-		add: EDALoggingSettings;
-		add: EDAApplication;
-		add: EDAProjector;
-		add: EDACompositeProjector;
-		add:EDAProjectionMongoRepository;
-		yourself.
-	classesToInitialize do: [ :cls | cls initialize ]
+	self classesToInitialize do: [ :cls | cls initialize ]
 ]
 
 { #category : #settings }
