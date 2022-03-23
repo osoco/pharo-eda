@@ -8,7 +8,7 @@ Class {
 		'publisher',
 		'announcer'
 	],
-	#category : 'EDA-Messaging-Event'
+	#category : #'EDA-Messaging-Event'
 }
 
 { #category : #'instance creation' }
@@ -38,6 +38,11 @@ EDAEventProducer >> announcer: anObject [
 { #category : #lifecycle }
 EDAEventProducer >> close [
 	self publisher close
+]
+
+{ #category : #testing }
+EDAEventProducer >> isConnected [
+	^ self publisher isConnected
 ]
 
 { #category : #helpers }

@@ -221,6 +221,11 @@ EDAStompTopicPublisher >> initialize [
 
 ]
 
+{ #category : #testing }
+EDAStompTopicPublisher >> isConnected [
+	^ self client isConnected
+]
+
 { #category : #logging }
 EDAStompTopicPublisher >> logMessagePublished: message usingClient: aClient on: aDestination [
 	self

@@ -241,6 +241,11 @@ EDAStompTopicListener >> initialize [
 	self client: (self buildClientWith: self config)
 ]
 
+{ #category : #testing }
+EDAStompTopicListener >> isConnected [
+	^ self client isConnected
+]
+
 { #category : #accessing }
 EDAStompTopicListener >> listenerProcess [
 	^ listenerProcess

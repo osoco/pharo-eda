@@ -81,6 +81,11 @@ EDACommandConsumer >> consumeMessage: aCommandMessageString usingStrategy: aStra
 	^ self commandDispatcher dispatch: aCommand usingStrategy: aStrategy
 ]
 
+{ #category : #testing }
+EDACommandConsumer >> isConnected [
+	^ self busListener isConnected
+]
+
 { #category : #helpers }
 EDACommandConsumer >> printOn: t1 [
 	| t2 |
