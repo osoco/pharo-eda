@@ -41,8 +41,8 @@ EDAEventProducer >> close [
 ]
 
 { #category : #testing }
-EDAEventProducer >> isConnected [
-	^ self publisher isConnected
+EDAEventProducer >> isHealthy [
+	^ self publisher isHealthy
 ]
 
 { #category : #helpers }
