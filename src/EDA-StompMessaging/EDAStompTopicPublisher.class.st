@@ -223,7 +223,8 @@ EDAStompTopicPublisher >> initialize [
 
 { #category : #testing }
 EDAStompTopicPublisher >> isHealthy [
-	^ self publishMessage: '{"type":"HealthCheck"}'
+	self client open.
+	self client close
 ]
 
 { #category : #logging }
