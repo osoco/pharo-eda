@@ -52,6 +52,7 @@ EDAJsonEventSerializer class >> buildMessageFormatDictForEvent: anEvent [
 	eventDict at: #meta put: meta.
 	body := self buildBodySectionForEvent: anEvent.
 	eventDict at: #body put: body.
+	self publishingCustomizationForEventDict: eventDict.
 	^ eventDict
 ]
 
@@ -82,6 +83,11 @@ EDAJsonEventSerializer class >> domainToMessageAttributesMap [
 			#body -> (Dictionary 
 				with: #aggregateRootVersion -> #version)
 	
+]
+
+{ #category : #'publishing customization' }
+EDAJsonEventSerializer class >> publishingCustomizationForEventDict: eventDict [
+	"Override as extension if necessary to add attributes to the posted message that do not appear in the event"
 ]
 
 { #category : #accessing }

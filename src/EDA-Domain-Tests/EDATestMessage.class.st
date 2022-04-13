@@ -148,6 +148,12 @@ EDATestMessage class >> nonDomainAttributesFor: aCommandOrEvent [
 	^ aCommandOrEvent class templateAttributesNotRequired
 ]
 
+{ #category : #helper }
+EDATestMessage class >> publishingCustomizationForJsonDict: domainJsonDictionary [
+	"Only used in EDATestEventMessage.
+	Overwrite there as extension if necessary to set it to EDAJsonEventSerializer class >> #publishingCustomizationForEventDict:"
+]
+
 { #category : #'helper - file readers' }
 EDATestMessage class >> readFile: aFile [
 	| fileStream result |
@@ -199,6 +205,7 @@ EDATestMessage >> asJsonMessageFilledWith: aCommandOrEvent [
 	self class fillMetaDict: metaDomainJsonDict with: aCommandOrEvent.
 	bodyDomainJsonDict := domainJsonDictionary at: #body.
 	self class fillBodyDict: bodyDomainJsonDict with: aCommandOrEvent.
+	self class publishingCustomizationForJsonDict: domainJsonDictionary.
 	^ String streamContents: [ :s |
 		| jsonWriter |
 		jsonWriter := NeoJSONWriter on: s.
