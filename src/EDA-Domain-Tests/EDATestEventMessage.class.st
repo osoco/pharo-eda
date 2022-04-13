@@ -44,6 +44,12 @@ EDATestEventMessage class >> publishingCustomizationBlock [
 	^ publishingCustomizationBlock
 ]
 
+{ #category : #accessing }
+EDATestEventMessage class >> publishingCustomizationBlock: aOneArgumentBlock [
+	"Set if necessary when overriding EDAJsonEventSerializer class >> #publishingCustomizationForEventDict:"
+	publishingCustomizationBlock := aOneArgumentBlock
+]
+
 { #category : #helper }
 EDATestEventMessage class >> publishingCustomizationForJsonDict: domainJsonDictionary [
 	self publishingCustomizationBlock value: domainJsonDictionary
