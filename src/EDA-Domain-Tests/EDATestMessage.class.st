@@ -150,8 +150,7 @@ EDATestMessage class >> nonDomainAttributesFor: aCommandOrEvent [
 
 { #category : #helper }
 EDATestMessage class >> publishingCustomizationForJsonDict: domainJsonDictionary [
-	"Only used in EDATestEventMessage.
-	Overwrite there as extension if necessary to set it to EDAJsonEventSerializer class >> #publishingCustomizationForEventDict:"
+	"Only used in EDATestEventMessage"
 ]
 
 { #category : #'helper - file readers' }
