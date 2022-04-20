@@ -134,8 +134,7 @@ BaselineOfPharoEDA >> declareVoyageIn: spec [
 		baseline: 'Voyage'
 		with: [ spec
 				repository:
-					'github://pharo-nosql/voyage:' , self voyageReleaseForPharoVersion
-						, '/mc' ].
+					'github://pharo-nosql/voyage:master/mc' ].
 	^ spec
 ]
 
