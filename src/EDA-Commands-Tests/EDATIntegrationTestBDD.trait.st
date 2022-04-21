@@ -24,6 +24,7 @@ Internal Representation and Key Implementation Points.
 Trait {
 	#name : #EDATIntegrationTestBDD,
 	#traits : 'EDATJsonMatchingHelper + EDATLogging',
+	#classTraits : 'EDATJsonMatchingHelper classTrait + EDATLogging classTrait',
 	#category : #'EDA-Commands-Tests'
 }
 
@@ -304,6 +305,15 @@ EDATIntegrationTestBDD >> publishCommand: commandString [
 	^ EDACommandStompTopicPublisher new publishMessage: commandString
 ]
 
+{ #category : #initialization }
+EDATIntegrationTestBDD >> publishingCustomizationBlockForEvents [
+	"Override if necessary to set EDATestEventMessage publishingCustomizationBlock class variable when override EDAJsonSerialize class >> #publishingCustomizationForEventDict:
+	e.g.
+	EDATestEventMessage publishingCustomizationBlock: [ :domainJsonDictionary | code_to_customize_domainJsonDictionary ]
+	"
+
+]
+
 { #category : #lifecycle }
 EDATIntegrationTestBDD >> restoreOriginalEnvironment [
 	(self currentEnvironment = self originalEnvironment)
@@ -328,6 +338,7 @@ EDATIntegrationTestBDD >> setUp [
 		logInfoMessage:
 			'Running ' , thisContext receiver className greaseString , '>>'
 				, thisContext receiver selector greaseString.
+	self publishingCustomizationBlockForEvents.
 	self originalEnvironment: EDADUEnvironment currentEnvironment.
 	self setUpCurrentEnvironment.
 	self loadSettings.

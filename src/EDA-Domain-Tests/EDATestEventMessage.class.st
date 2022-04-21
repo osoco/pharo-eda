@@ -1,6 +1,9 @@
 Class {
 	#name : #EDATestEventMessage,
 	#superclass : #EDATestMessage,
+	#classVars : [
+		'publishingCustomizationBlock'
+	],
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -22,6 +25,11 @@ EDATestEventMessage class >> generatedAttributesWhenPublishing [
 		with: #type
 ]
 
+{ #category : #'class initialization' }
+EDATestEventMessage class >> initialize [
+	publishingCustomizationBlock := [ :domainJsonDictionary | EDAJsonEventSerializer publishingCustomizationForEventDict: domainJsonDictionary ]
+]
+
 { #category : #helper }
 EDATestEventMessage class >> nonDomainAttributesFor: aCommandOrEvent [
 "these attributes do not correspond to the domain"
@@ -29,6 +37,22 @@ EDATestEventMessage class >> nonDomainAttributesFor: aCommandOrEvent [
 	nonDomainAttributes := super nonDomainAttributesFor: aCommandOrEvent.
 	nonDomainAttributes addAll: self generatedAttributesWhenPublishing. 
 	^ nonDomainAttributes
+]
+
+{ #category : #accessing }
+EDATestEventMessage class >> publishingCustomizationBlock [
+	^ publishingCustomizationBlock
+]
+
+{ #category : #accessing }
+EDATestEventMessage class >> publishingCustomizationBlock: aOneArgumentBlock [
+	"Set if necessary when overriding EDAJsonEventSerializer class >> #publishingCustomizationForEventDict:"
+	publishingCustomizationBlock := aOneArgumentBlock
+]
+
+{ #category : #helper }
+EDATestEventMessage class >> publishingCustomizationForJsonDict: domainJsonDictionary [
+	self publishingCustomizationBlock value: domainJsonDictionary
 ]
 
 { #category : #preconditions }
