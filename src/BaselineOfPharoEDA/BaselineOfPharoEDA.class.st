@@ -16,6 +16,7 @@ BaselineOfPharoEDA >> baseline: spec [
 			self declareStampIn: spec.
 			self declareDeployUtilsIn: spec.
 			self declareObjectDiffIn: spec.
+			self declareDiscordStIn: spec.
 			self declarePackagesIn: spec.
 			self declareGroupsIn: spec ]
 ]
@@ -35,6 +36,13 @@ BaselineOfPharoEDA >> declareBabyMock2In: spec [
 BaselineOfPharoEDA >> declareDeployUtilsIn: spec [
 	spec baseline: 'DeployUtils' with: [ spec repository: 'github://fstephany/DeployUtils/repository' ].
 	^ spec
+]
+
+{ #category : #dependencies }
+BaselineOfPharoEDA >> declareDiscordStIn: spec [
+	spec baseline: 'DiscordSt' with: [ spec repository: 'github://JurajKubelka/DiscordSt/src' ].
+	^ spec
+
 ]
 
 { #category : #meta }
