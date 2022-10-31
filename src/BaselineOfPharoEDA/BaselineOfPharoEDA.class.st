@@ -40,7 +40,7 @@ BaselineOfPharoEDA >> declareDeployUtilsIn: spec [
 
 { #category : #dependencies }
 BaselineOfPharoEDA >> declareDiscordStIn: spec [
-	spec baseline: 'DiscordSt' with: [ spec repository: 'github://JurajKubelka/DiscordSt/src' ].
+	spec baseline: 'DiscordSt' with: [ spec repository: 'github://osoco/DiscordSt/src' ].
 	^ spec
 
 ]
