@@ -165,7 +165,7 @@ EDATErrorHelper >> notifyError: anException withTitle: errorTitle andDescription
 		embedColor: Color red;
 		embedTitle: errorTitle;
 		embedDescription: errorDescription;
-		fileName: fileName fileReference: fuelContextFileReference;
+		fileName: fileName bytes: (fuelContextFileReference binaryReadStreamDo: [ :in | in contents]);
 		send
 ]
 
