@@ -21,6 +21,7 @@ Public API and Key Messages:
 Trait {
 	#name : #EDATErrorHelper,
 	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Traits'
 }
 
@@ -41,20 +42,24 @@ EDATErrorHelper classSide >> errorFolderFor: basename [
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy [
-	| errorHandler result context basename dictionary |
+	| errorHandler result context basename dictionary errorDescription fuelContextFileReference |
 	errorHandler := (self class environment at: aStrategy asSymbol) new.
 	errorHandler class shouldPersistFuel
-		ifTrue: [ self
-				logErrorMessage:
-					'Error processing ' , aCommand greaseString , ': '
-						, anException description greaseString.
+		ifTrue: [ errorDescription := 'Error processing ' , aCommand greaseString
+				, ': ' , anException description greaseString.
+			self logErrorMessage: errorDescription.
 			context := thisContext clone.
 			basename := self class basename.
-			self
+			fuelContextFileReference := self
 				writeFuelContext: context
 				named: anException class greaseString
 				withBasename: basename.
-			self writeCommand: aCommand withBasename: basename ].
+			self writeCommand: aCommand withBasename: basename.
+			self
+				notifyError: anException
+				withTitle: 'Error processing command'
+				andDescription: errorDescription
+				andFuelContext: fuelContextFileReference ].
 	errorHandler context: context.
 	dictionary := anException extraContextInformationForCommand: aCommand.
 	result := errorHandler
@@ -65,19 +70,25 @@ EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrat
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException forMessage: aString usingErrorStrategy: aStrategy [
-	| errorHandler result context basename dictionary |
-	self
-		logErrorMessage:
-			'Error processing ' , aString greaseString , ': '
+	| errorHandler result context basename dictionary errorDescription fuelContextFileReference |
+	errorDescription := 'Error processing ' , aString greaseString , ': '
 				, anException description greaseString.
+	self
+		logErrorMessage: errorDescription.
 	dictionary := Dictionary new.
 	dictionary at: #message put: aString.
 	context := thisContext clone.
 	basename := self class basename.
-	self
+	fuelContextFileReference := self
 		writeFuelContext: context
-		named: anException class greaseString withBasename: basename.
+		named: anException class greaseString
+		withBasename: basename.
 	self writeMessage: aString withBasename: basename.
+	self
+				notifyError: anException
+				withTitle: 'Error processing message'
+				andDescription: errorDescription
+				andFuelContext: fuelContextFileReference.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
 	result := errorHandler
@@ -88,15 +99,21 @@ EDATErrorHelper >> manageError: anException forMessage: aString usingErrorStrate
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException usingErrorStrategy: aStrategy [
-	| errorHandler result context basename |
-	self
-		logErrorMessage: 'Error detected: ' , anException description greaseString.
+	| errorHandler result context basename errorDescription fuelContextFileReference |
+	errorDescription := 'Error detected: '
+		, anException description greaseString.
+	self logErrorMessage: errorDescription.
 	basename := DateAndTime now asYYYYmmddHMS.
 	context := thisContext clone.
-	self
+	fuelContextFileReference := self
 		writeFuelContext: context
 		named: anException class greaseString
 		withBasename: basename.
+	self
+		notifyError: anException
+		withTitle: 'Error detected'
+		andDescription: errorDescription
+		andFuelContext: fuelContextFileReference.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
 	result := errorHandler
@@ -107,20 +124,24 @@ EDATErrorHelper >> manageError: anException usingErrorStrategy: aStrategy [
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingErrorStrategy: aStrategy [
-	| errorHandler result context basename dictionary |
-	self
-		logErrorMessage:
-			'Error projecting ' , anEvent greaseString , ': '
-				, anException description greaseString.
+	| errorHandler result context basename dictionary errorDescription fuelContextFileReference |
+	errorDescription := 'Error projecting ' , anEvent greaseString , ': '
+		, anException description greaseString.
+	self logErrorMessage: errorDescription.
 	context := thisContext clone.
 	basename := self class basename.
-	self
+	fuelContextFileReference := self
 		writeFuelContext: context
 		named:
 			anException class greaseString , '-' , anEvent class greaseString
 				, '.txt'
 		withBasename: basename.
 	self writeEvent: anEvent greaseString withBasename: basename.
+	self
+		notifyError: anException
+		withTitle: 'Error projecting an event'
+		andDescription: errorDescription
+		andFuelContext: fuelContextFileReference.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
 	dictionary := Dictionary new.
@@ -129,6 +150,23 @@ EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingEr
 		handleError: anException
 		withExtraContextInformation: dictionary.
 	^ result
+]
+
+{ #category : #handling }
+EDATErrorHelper >> notifyError: anException withTitle: errorTitle andDescription: errorDescription andFuelContext: fuelContextFileReference [
+	| fileName webhookUrl |
+	webhookUrl := 'https://discord.com/api/webhooks/1036896602603917342/AfhnYTQFgEy7d3Ll9r4wpptN4W9L9zRalo9Zxj2-6_pn7hFJlHCFirgT9GofA4_pO6z4'.
+	fileName := 'contestia-core-context-' , DateAndTime now asYYYYmmddHMS
+		, '.fuel'.
+	DSWebhookClient new
+		url: webhookUrl;
+		username: 'Contestia Core';
+		avatarUrl: 'https://contestia.es/assets/img/logo-negativo.svg';
+		embedColor: Color red;
+		embedTitle: errorTitle;
+		embedDescription: errorDescription;
+		fileName: fileName fileReference: fuelContextFileReference;
+		send
 ]
 
 { #category : #handling }
@@ -154,12 +192,13 @@ EDATErrorHelper >> writeEvent: aString withBasename: aBasename [
 
 { #category : #handling }
 EDATErrorHelper >> writeFuelContext: aContext named: aString withBasename: aBasename [
-	| parentFolder |
+	| parentFolder contextFileReference |
 	parentFolder := self class errorFolderFor: aBasename.
-	^ EDAFuelHelper new
+	contextFileReference := EDAFuelHelper new
 		writeFuelContext: aContext
 		named: 'session.fuel'
-		inFolder: parentFolder
+		inFolder: parentFolder.
+	^ contextFileReference
 ]
 
 { #category : #handling }
