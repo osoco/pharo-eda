@@ -58,7 +58,7 @@ EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrat
 			self
 				notifyError: anException
 				withTitle: 'Error processing command'
-				andDescription: errorDescription
+				andProcessingMessage: aCommand
 				andFuelContext: fuelContextFileReference ].
 	errorHandler context: context.
 	dictionary := anException extraContextInformationForCommand: aCommand.
@@ -72,9 +72,8 @@ EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrat
 EDATErrorHelper >> manageError: anException forMessage: aString usingErrorStrategy: aStrategy [
 	| errorHandler result context basename dictionary errorDescription fuelContextFileReference |
 	errorDescription := 'Error processing ' , aString greaseString , ': '
-				, anException description greaseString.
-	self
-		logErrorMessage: errorDescription.
+		, anException description greaseString.
+	self logErrorMessage: errorDescription.
 	dictionary := Dictionary new.
 	dictionary at: #message put: aString.
 	context := thisContext clone.
@@ -85,10 +84,10 @@ EDATErrorHelper >> manageError: anException forMessage: aString usingErrorStrate
 		withBasename: basename.
 	self writeMessage: aString withBasename: basename.
 	self
-				notifyError: anException
-				withTitle: 'Error processing message'
-				andDescription: errorDescription
-				andFuelContext: fuelContextFileReference.
+		notifyError: anException
+		withTitle: 'Error processing message'
+		andProcessingMessage: aString
+		andFuelContext: fuelContextFileReference.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
 	result := errorHandler
@@ -112,7 +111,6 @@ EDATErrorHelper >> manageError: anException usingErrorStrategy: aStrategy [
 	self
 		notifyError: anException
 		withTitle: 'Error detected'
-		andDescription: errorDescription
 		andFuelContext: fuelContextFileReference.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
@@ -140,7 +138,7 @@ EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingEr
 	self
 		notifyError: anException
 		withTitle: 'Error projecting an event'
-		andDescription: errorDescription
+		andProcessingMessage: anEvent
 		andFuelContext: fuelContextFileReference.
 	errorHandler := (self class environment at: aStrategy asSymbol) new
 		context: context.
@@ -153,19 +151,46 @@ EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingEr
 ]
 
 { #category : #handling }
-EDATErrorHelper >> notifyError: anException withTitle: errorTitle andDescription: errorDescription andFuelContext: fuelContextFileReference [
-	| fileName webhookUrl |
+EDATErrorHelper >> notifyError: anException withTitle: errorTitle andFuelContext: fuelContextFileReference [
+	self notifyError: anException withTitle: errorTitle andProcessingMessage: nil andFuelContext: fuelContextFileReference 
+]
+
+{ #category : #handling }
+EDATErrorHelper >> notifyError: anException withTitle: errorTitle andProcessingMessage: aMessage andFuelContext: fuelContextFileReference [
+	| fileName webhookUrl materializationScript |
+
 	webhookUrl := 'https://discord.com/api/webhooks/1036896602603917342/AfhnYTQFgEy7d3Ll9r4wpptN4W9L9zRalo9Zxj2-6_pn7hFJlHCFirgT9GofA4_pO6z4'.
-	fileName := 'contestia-core-context-' , DateAndTime now asYYYYmmddHMS
-		, '.fuel'.
+	fileName := 'contestia-core-context-2022-11-01-14-34-47' , '.fuel'.
+	materializationScript := '(EDAFuelHelper new 
+    readFuelFromFileNamed: ''' , fileName
+		,
+			''' asFileReference) 
+        debug'.
 	DSWebhookClient new
 		url: webhookUrl;
 		username: 'Contestia Core';
 		avatarUrl: 'https://contestia.es/assets/img/logo-negativo.svg';
 		embedColor: Color red;
 		embedTitle: errorTitle;
-		embedDescription: errorDescription;
-		fileName: fileName bytes: (fuelContextFileReference binaryReadStreamDo: [ :in | in contents]);
+		embedDescriptionMarkdown: [ :markdown | 
+			markdown
+				text: 'An exception';
+				space;
+				bold: anException class greaseString;
+				space;
+				text: 'detected'.
+			aMessage
+				ifNotNil: [ markdown space;
+					text: 'processing the message:'; cr;
+						script: aMessage language: 'json';
+						cr ].
+			markdown
+				text:
+					'Download the attached file and debug it evaluating the following expression in a Pharo image:';
+				cr;
+				script: materializationScript language: 'Smalltalk' ];
+		fileName: fileName
+			bytes: (fuelContextFileReference binaryReadStreamDo: [ :in | in contents ]);
 		send
 ]
 
