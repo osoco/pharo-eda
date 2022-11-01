@@ -84,7 +84,8 @@ BaselineOfPharoEDA >> declareObjectDiffIn: spec [
 { #category : #meta }
 BaselineOfPharoEDA >> declarePackagesIn: spec [
 	spec
-		package: #'EDA-Traits';
+		package: #'EDA-Traits'
+			with: [  spec requires: #('DiscordSt') ];
 		package: #'EDA-Traits-Tests'
 			with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Tools' with: [ spec requires: #('EDA-Traits') ];
