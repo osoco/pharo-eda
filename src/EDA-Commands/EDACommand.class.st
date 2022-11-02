@@ -149,7 +149,7 @@ EDACommand >> applicationKey: anObject [
 { #category : #'aggregate checking' }
 EDACommand >> checkForAggregateRoot: anAggregateRoot [
 "super checkForAggregateRoot: in the subclasses and add the specific validations necessary for the command"
-	anAggregateRoot checkCreateNonCreateIssuesOnCommand: self.
+	anAggregateRoot checkAggregateExistenceIssuesOnCommand: self.
 	anAggregateRoot checkTenantOfCommand: self.
 ]
 
@@ -231,14 +231,14 @@ EDACommand >> invalidNonNullableAttributesErrorLogs [
 ]
 
 { #category : #helpers }
-EDACommand >> isCreate [
-	^ self classNameWithoutPrefix
-	= ('Create' , self aggregateRootClassNameWithoutPrefix)
+EDACommand >> isDelete [
+	^ false
 ]
 
 { #category : #helpers }
-EDACommand >> isDelete [
-	^ false
+EDACommand >> isForNonExistentAggregate [
+	^ self classNameWithoutPrefix
+	= ('Create' , self aggregateRootClassNameWithoutPrefix)
 ]
 
 { #category : #accessing }

@@ -164,7 +164,19 @@ EDAAggregateRoot >> buildCommonArgsForCommand: aCommand [
 ]
 
 { #category : #'command checking' }
-EDAAggregateRoot >> checkCreateCommand: aCommand [
+EDAAggregateRoot >> checkAggregateExistenceIssuesOnCommand: aCommand [
+	aCommand isForNonExistentAggregate
+		ifTrue: [ self checkCommandForNonExistentAggregate: aCommand ]
+		ifFalse: [ self checkCommandForExistentAggregate: aCommand ]
+]
+
+{ #category : #'command checking' }
+EDAAggregateRoot >> checkCommandForExistentAggregate: aCommand [
+	^ self defaultCheckNonCreateCommand: aCommand
+]
+
+{ #category : #'command checking' }
+EDAAggregateRoot >> checkCommandForNonExistentAggregate: aCommand [
 	aCommand aggregateRootVersion = 0
 		ifFalse: [ self
 			logWarningMessage:
@@ -186,24 +198,12 @@ EDAAggregateRoot >> checkCreateCommand: aCommand [
 ]
 
 { #category : #'command checking' }
-EDAAggregateRoot >> checkCreateNonCreateIssuesOnCommand: aCommand [
-	aCommand isCreate
-		ifTrue: [ self checkCreateCommand: aCommand ]
-		ifFalse: [ self checkNonCreateCommand: aCommand ]
-]
-
-{ #category : #'command checking' }
-EDAAggregateRoot >> checkNonCreateCommand: aCommand [
-	^ self defaultCheckNonCreateCommand: aCommand
-]
-
-{ #category : #'command checking' }
 EDAAggregateRoot >> checkTenantOfCommand: aCommand [
 	self class checkTenantIsValid: aCommand tenant.
 	self flag: #TODO.
 	"Replace by search in Tenant repository when implemented"
-	(aCommand isCreate isNotNil and:
-		[ aCommand isCreate not ]) ifTrue:
+	(aCommand isForNonExistentAggregate isNotNil and:
+		[ aCommand isForNonExistentAggregate not ]) ifTrue:
 			[ aCommand tenant = self tenant 
 				ifFalse: [  self
 					logErrorMessage:

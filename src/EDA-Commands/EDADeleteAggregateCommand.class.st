@@ -24,12 +24,12 @@ EDADeleteAggregateCommand >> checkAggregate: anAggregate [
 	^ anAggregate defaultCheckNonCreateCommand: self
 ]
 
-{ #category : #helpers }
-EDADeleteAggregateCommand >> isCreate [
-	^ false
-]
-
 { #category : #testing }
 EDADeleteAggregateCommand >> isDelete [
 	^ true
+]
+
+{ #category : #helpers }
+EDADeleteAggregateCommand >> isForNonExistentAggregate [
+	^ false
 ]
