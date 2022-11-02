@@ -21,6 +21,7 @@ Public API and Key Messages:
 Trait {
 	#name : #EDATErrorHelper,
 	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Traits'
 }
 
@@ -159,7 +160,7 @@ EDATErrorHelper >> notifyError: anException withTitle: errorTitle andProcessingM
 	| fileName webhookUrl materializationScript |
 
 	webhookUrl := 'https://discord.com/api/webhooks/1036896602603917342/AfhnYTQFgEy7d3Ll9r4wpptN4W9L9zRalo9Zxj2-6_pn7hFJlHCFirgT9GofA4_pO6z4'.
-	fileName := 'contestia-core-context-2022-11-01-14-34-47' , '.fuel'.
+	fileName := 'contestia-core-context-' , DateAndTime now asYYYYmmddHMS , '.fuel'.
 	materializationScript := '(EDAFuelHelper new 
     readFuelFromFileNamed: ''' , fileName
 		,
