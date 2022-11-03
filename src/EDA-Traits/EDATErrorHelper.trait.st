@@ -182,7 +182,7 @@ EDATErrorHelper >> notifyError: anException withTitle: errorTitle andProcessingM
 			aMessage
 				ifNotNil: [ markdown space;
 					text: 'processing the message:'; cr;
-						script: aMessage language: 'json';
+						script: (aMessage asString truncateWithElipsisTo: (DSConstants maxMessageLenght - 400)) language: 'json';
 						cr ].
 			markdown
 				text:
