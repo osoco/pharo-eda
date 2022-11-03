@@ -132,8 +132,12 @@ EDAAggregateRepository >> findAllOfTenant: aTenant withCriteria: aDictionary [
 	criteria := Dictionary newFrom: aDictionary.
 	events := self findAllEventsOfTenant: aTenant matching: criteria.
 	eventsGroupedById := self groupEventsByAggregateRootId: events.
-	result := eventsGroupedById
-		keys collect: [ :id | self findOfTenant: aTenant byId: id  ] thenReject: [ :aggregate | aggregate isNil ].
+	result := eventsGroupedById keys
+		collect: [ :id | self findOfTenant: aTenant byId: id ]
+		thenReject:
+			[ :aggregate | 
+				"Reject deleted or non created(issue with ATSNewTokenForNonexistentApplicantNotified)"
+				aggregate isNil or: [ aggregate brandNew ] ].
 	^ result
 ]
 
