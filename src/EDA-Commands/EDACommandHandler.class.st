@@ -151,7 +151,9 @@ EDACommandHandler class >> buildAggregateRootOfTenant: aTenant ofAggregateRootCl
 				ofAggregate: anAggregateRootClass
 				whereId: id.
 			anAggregateRootClass new applyEvents: idEvents ]
-		thenReject: [ :aggr | aggr isDeleted ].
+		thenReject: [ :aggr |
+			"Reject deleted or non created(issue with ATSNewTokenForNonexistentApplicantNotified)"
+			aggr isDeleted or: [ aggr brandNew ] ].
 	nonDeletedAggregates size > 1
 		ifTrue: [ self
 				logErrorMessage:
