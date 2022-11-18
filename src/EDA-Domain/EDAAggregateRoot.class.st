@@ -123,7 +123,7 @@ EDAAggregateRoot >> applyEvent: anEvent [
 										nextPutAll: anEvent aggregateRootClass greaseString;
 										close;
 										contents) ].
-					self retrieveApplyEventMethod: anEvent withLogging: true ] ]
+					self logDebugMessage: 'No apply method for ' , anEvent class greaseString , ' version ' , anEvent class latestVersion greaseString ] ]
 ]
 
 { #category : #'applying events' }
