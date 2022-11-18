@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATDomainBDD,
 	#traits : 'EDATLogging + EDATRegexHelper',
+	#classTraits : 'EDATLogging classTrait + EDATRegexHelper classTrait',
 	#category : #'EDA-Domain-Tests'
 }
 
@@ -265,7 +266,7 @@ EDATDomainBDD >> collection: aCollection totallyMatchesWith: otherObject [
 					and: otherCollectionElement
 					andReason: ''.
 				self logDebugMessage: mismatchElementMessage.
-				collectionDiffDict at: #index put: ex diff.
+				collectionDiffDict at: index greaseString put: ex diff.
 				collectionDiffMessage := String
 					streamContents: [ :s | 
 						s
@@ -751,6 +752,7 @@ EDATDomainBDD >> object: anObject totallyMatchesWith: otherObject [
 		ifTrue: [ logs ifTrue: (self logDebugMessage: 'Match by identity') ]
 		ifFalse: [ | mismatchObjectMessage |
 			mismatchObjectMessage := self mismatchCheckLogForType: checkingType element: anObject and: otherObject andReason: 'not identity'.
+			self logDebugMessage: mismatchObjectMessage.
 			EDAMismatchError signal: mismatchObjectMessage withDiff: (Dictionary with: anObject -> otherObject) ]
 
 ]
