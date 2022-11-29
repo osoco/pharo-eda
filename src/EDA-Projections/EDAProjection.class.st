@@ -194,6 +194,11 @@ EDAProjection >> numProjectedEvents [
 	^ numProjectedEvents
 ]
 
+{ #category : #accessing }
+EDAProjection >> numProjectedEvents: anObject [
+	numProjectedEvents := anObject
+]
+
 { #category : #persistence }
 EDAProjection >> removeProjectionOfTenant: aTenant [
 	self class removeProjection: aTenant
