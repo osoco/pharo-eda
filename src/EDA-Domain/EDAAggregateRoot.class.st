@@ -35,6 +35,11 @@ EDAAggregateRoot class >> buildCommonArgsForCommand: aCommand [
 ]
 
 { #category : #helpers }
+EDAAggregateRoot class >> changeCommonArgsForCommandAttributes: aCommandAttributes [
+	aCommandAttributes at: 'aggregateRootClass' put: self greaseString
+]
+
+{ #category : #helpers }
 EDAAggregateRoot class >> checkTenantIsValid: tenantOfCommand [
 	tenantOfCommand isNotNil
 		ifFalse:
@@ -153,6 +158,15 @@ EDAAggregateRoot >> brandNew: aBoolean [
 { #category : #helpers }
 EDAAggregateRoot >> buildApplyEventMethodNameForEvent: eventName andVersion: eventVersion [
 	^ String streamContents: [ :s | s nextPutAll: 'apply'; nextPutAll: eventName greaseString; nextPut: $v; nextPutAll: eventVersion greaseString; nextPut: $: ]
+]
+
+{ #category : #helpers }
+EDAAggregateRoot >> buildArgsForCommand: aCommand [
+	| attributes |
+	attributes := aCommand asDictionary.
+	self class changeCommonArgsForCommandAttributes: aCommand asDictionary.
+	attributes at: 'aggregateRootVersion' put: self version.
+	^ attributes
 ]
 
 { #category : #helpers }
