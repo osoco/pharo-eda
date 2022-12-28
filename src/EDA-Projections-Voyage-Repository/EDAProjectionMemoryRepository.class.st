@@ -34,7 +34,7 @@ EDAProjectionMemoryRepository >> selectOfTenant: aTenant many: aProjectionClass 
 	| criteria |
 	criteria := Dictionary newFrom: aDictionary.
 	criteria at: 'tenant' put: aTenant.
-	^ self selectMany: aProjectionClass where: aDictionary
+	^ self selectMany: aProjectionClass where: criteria
 ]
 
 { #category : #persistence }
