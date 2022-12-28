@@ -92,7 +92,8 @@ EDAMultipleProjectionsPerEventProjector >> projectFilteredEvents: anEventCollect
 		projectEvent: event
 		atIndex: index
 		ofTotalCount: anEventCollection size.
-	aBlock value: aProjectionCollection value: event value: index ].
+	aBlock value: aProjectionCollection value: event value: index.
+	self throttling ].
 	self class headlessMode
 		ifTrue: [ anEventCollection keysAndValuesDo: projectionLogic ]
 		ifFalse: [ anEventCollection
@@ -107,4 +108,9 @@ EDAMultipleProjectionsPerEventProjector >> projectFilteredEvents: anEventCollect
 { #category : #'projection retrieval' }
 EDAMultipleProjectionsPerEventProjector >> retrieveProjectionsForEvent: anEvent [
 	self subclassResponsibility
+]
+
+{ #category : #'project logic' }
+EDAMultipleProjectionsPerEventProjector >> throttling [
+	^ nil
 ]
