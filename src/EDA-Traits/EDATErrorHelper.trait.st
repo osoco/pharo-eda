@@ -159,7 +159,7 @@ EDATErrorHelper >> notifyError: anException withTitle: errorTitle andFuelContext
 EDATErrorHelper >> notifyError: anException withTitle: errorTitle andProcessingMessage: aMessage andFuelContext: fuelContextFileReference [
 	| fileName webhookUrl materializationScript |
 
-	webhookUrl := 'https://discord.com/api/webhooks/1036896602603917342/AfhnYTQFgEy7d3Ll9r4wpptN4W9L9zRalo9Zxj2-6_pn7hFJlHCFirgT9GofA4_pO6z4'.
+	webhookUrl := 'https://discord.com/api/webhooks/1057998279947849789/rx7QI93eU0vrU_ofaDoLwUsnhVpBYoYJ9X3lWapZ3rh-6gRPRSuf1dhx1uVqSDayHc50'.
 	fileName := 'contestia-core-context-' , DateAndTime now asYYYYmmddHMS , '.fuel'.
 	materializationScript := '(EDAFuelHelper new 
     readFuelFromFileNamed: ''' , fileName
