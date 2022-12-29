@@ -21,6 +21,7 @@ Public API and Key Messages:
 Trait {
 	#name : #EDATErrorHelper,
 	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Traits'
 }
 
@@ -56,7 +57,7 @@ EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrat
 			self writeCommand: aCommand withBasename: basename.
 			self
 				notifyError: anException
-				withTitle: 'Error processing command'
+				withTitle: 'Error processing command ' , aCommand class name , ' for tenant ' , aCommand tenant
 				andProcessingMessage: aCommand
 				andFuelContext: fuelContextFileReference ].
 	errorHandler context: context.
