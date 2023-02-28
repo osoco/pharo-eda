@@ -1,28 +1,28 @@
 Class {
 	#name : #EDAEventProducer,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
 	#instVars : [
-		'serializer',
-		'publisher',
 		'announcer'
 	],
 	#category : #'EDA-Messaging-Event'
 }
 
 { #category : #'instance creation' }
-EDAEventProducer class >> publisher: publisher serializer: serializer announcer: anAnnouncer [
+EDAEventProducer class >> forEDAApplication: anEDAApplication [
+	^ anEDAApplication createEventProducer: self
+]
+
+{ #category : #'instance creation' }
+EDAEventProducer class >> withEventAnnouncer: anAnnouncer [
 	^ self new
-		publisher: publisher;
-		serializer: serializer;
 		announcer: anAnnouncer;
 		yourself
 ]
 
-{ #category : #helpers }
-EDAEventProducer class >> routingKey: anEvent [
-	^ anEvent routingKey
+{ #category : #accessing }
+EDAEventProducer >> announce: anEvent [
+	(anEvent class inheritsFrom: Announcement)
+		ifTrue: [ announcer announce: anEvent ]
 ]
 
 { #category : #accessing }
@@ -37,12 +37,13 @@ EDAEventProducer >> announcer: anObject [
 
 { #category : #lifecycle }
 EDAEventProducer >> close [
-	self publisher close
+	announcer := nil
+	
 ]
 
 { #category : #testing }
 EDAEventProducer >> isHealthy [
-	^ self publisher isHealthy
+	^ true
 ]
 
 { #category : #helpers }
@@ -62,37 +63,10 @@ EDAEventProducer >> printOn: t1 [
 
 { #category : #accessing }
 EDAEventProducer >> produceEvent: anEvent [
-	| message routingKey |
-	message := self serializer serialize: anEvent.
-	routingKey := self class routingKey: anEvent.
-	routingKey
-		ifNotNil: [ :arg | self publisher publishMessage: message withRoutingKey: routingKey ]
-		ifNil: [ self publisher publishMessage: message ].
-	(anEvent class inheritsFrom: Announcement)
-		ifTrue: [ self announcer announce: anEvent ]
+	self announce: anEvent
 ]
 
 { #category : #accessing }
 EDAEventProducer >> produceEvents: anEventCollection [
-	anEventCollection ifNotNil: [ anEventCollection do: [ :event | self produceEvent: event ]]
-]
-
-{ #category : #accessing }
-EDAEventProducer >> publisher [
-	^ publisher
-]
-
-{ #category : #accessing }
-EDAEventProducer >> publisher: anObject [
-	publisher := anObject
-]
-
-{ #category : #accessing }
-EDAEventProducer >> serializer [
-	^ serializer
-]
-
-{ #category : #accessing }
-EDAEventProducer >> serializer: anObject [
-	serializer := anObject
+	anEventCollection ifNotNil: [ anEventCollection do: [ :event | self produceEvent: event ] ]
 ]
