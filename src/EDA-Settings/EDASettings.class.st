@@ -140,7 +140,7 @@ EDASettings class >> eventProducerSettingsOn: aBuilder under: parent [
 		description: 'Strategy for Event Producer';
 		order: 1;
 		domainValues: values;
-		default: (config at: 'errorStrategy' ifAbsent: [ values first value ])
+		default: (config at: 'strategy' ifAbsent: [ values first value ])
 ]
 
 { #category : #settings }
