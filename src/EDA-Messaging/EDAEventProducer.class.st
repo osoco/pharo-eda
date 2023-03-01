@@ -4,8 +4,13 @@ Class {
 	#instVars : [
 		'announcer'
 	],
-	#category : #'EDA-Messaging-Event'
+	#category : #'EDA-Messaging-EventProducer-Strategies'
 }
+
+{ #category : #helpers }
+EDAEventProducer class >> description [
+	^ 'Announce Event'
+]
 
 { #category : #'instance creation' }
 EDAEventProducer class >> forEDAApplication: anEDAApplication [

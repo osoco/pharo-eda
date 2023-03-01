@@ -35,7 +35,6 @@ Class {
 		'commandConsumer',
 		'commandDispatcher',
 		'eventProducer',
-		'eventProducerClass',
 		'commandListenerClientDebug',
 		'isConfigured',
 		'isStarted',
@@ -384,7 +383,7 @@ EDAApplication class >> setupEventAnnouncer [
 
 { #category : #'setup - events' }
 EDAApplication class >> setupEventProducer [
-	eventProducer := eventProducerClass forEDAApplication: self
+	eventProducer := EDAEventProducerBehavior eventProducerForEDAApplication: self
 ]
 
 { #category : #'setup - events' }

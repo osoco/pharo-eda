@@ -112,6 +112,7 @@ EDASettings class >> edaSettingsOn: aBuilder [
 			(EDADUEnvironment environments
 				collect: [ :level | level translated -> level greaseString ]).
 	self commandListenerSettingsOn: aBuilder under: #eda.
+	self eventProducerSettingsOn: aBuilder under: #eda.
 	self eventPublisherSettingsOn: aBuilder under: #eda.
 	self eventStoreSettingsOn: aBuilder under: #eda.
 	self
@@ -119,6 +120,27 @@ EDASettings class >> edaSettingsOn: aBuilder [
 		under: #eda
 		populatedWithValuesFrom: 'projections'.
 	self loggingSettingsOn: aBuilder under: #eda
+]
+
+{ #category : #settings }
+EDASettings class >> eventProducerSettingsOn: aBuilder under: parent [
+	| config values |
+	config := self retrieveSettingAsDict: 'eventProducer'.
+	values := EDAEventProducer withAllSubclasses
+		collect:
+			[ :producer | producer description translated -> producer greaseString ].
+	(aBuilder group: #eventProducer)
+		label: 'Event Producer' translated;
+		description: 'Event Producer';
+		parent: parent.
+	(aBuilder pickOne: #strategy)
+		parent: #eventProducer;
+		target: EDAEventProducerBehavior;
+		label: 'Event Producer Behavior' translated;
+		description: 'Strategy for Event Producer';
+		order: 1;
+		domainValues: values;
+		default: (config at: 'errorStrategy' ifAbsent: [ values first value ])
 ]
 
 { #category : #settings }

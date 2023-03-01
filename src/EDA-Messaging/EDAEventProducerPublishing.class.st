@@ -5,8 +5,13 @@ Class {
 		'serializer',
 		'publisher'
 	],
-	#category : #'EDA-Messaging-Event'
+	#category : #'EDA-Messaging-EventProducer-Strategies'
 }
+
+{ #category : #helpers }
+EDAEventProducerPublishing class >> description [
+	^ 'Announce and Publish Event'
+]
 
 { #category : #'instance creation' }
 EDAEventProducerPublishing class >> forEDAApplication: anEDAApplication [
