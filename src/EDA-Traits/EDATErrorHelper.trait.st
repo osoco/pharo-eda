@@ -157,23 +157,15 @@ EDATErrorHelper >> notifyError: anException withTitle: errorTitle andFuelContext
 
 { #category : #handling }
 EDATErrorHelper >> notifyError: anException withTitle: errorTitle andProcessingMessage: aMessage andFuelContext: fuelContextFileReference [
-	| fileName webhookUrl1 webhookUrl2 webhookUrl3 webhookUrl4 webhookUrl materializationScript |
+	| fileName materializationScript |
 
-	webhookUrl1 := 'https://discord.com/'.
-	webhookUrl2 := 'api/webhooks/'.
-	webhookUrl3 := '1058006738550390825/'.
-	webhookUrl4 := 'iggQlr29Oo7z8EcS40bWRETr1fv8yXrgj2oHSBWL_PqAnnDRzVQVrT1hP798yUdgBfEi'.
-	webhookUrl := webhookUrl1 , webhookUrl2 , webhookUrl3 , webhookUrl4.
 	fileName := 'contestia-core-context-' , DateAndTime now asYYYYmmddHMS , '.fuel'.
 	materializationScript := '(EDAFuelHelper new 
     readFuelFromFileNamed: ''' , fileName
 		,
 			''' asFileReference) 
         debug'.
-	DSWebhookClient new
-		url: webhookUrl;
-		username: 'Contestia Core';
-		avatarUrl: 'https://contestia.es/assets/img/logo-negativo.svg';
+	EDAErrorNotificationsDiscordConfig createClient
 		embedColor: Color red;
 		embedTitle: errorTitle;
 		embedDescriptionMarkdown: [ :markdown | 

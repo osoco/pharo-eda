@@ -48,6 +48,7 @@ EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
 		label: 'Command Listener' translated;
 		description: 'Command listener';
 		parent: parent.
+	self discordErrorNotificationSettingsOn: aBuilder under: #commandListener populatedWithValuesFrom: (stompConfig at: #discordErrorNotification ifAbsent: Dictionary empty).
 	self
 		stompListenerSettingsOn: aBuilder
 		withConfig: EDACommandStompTopicListener
@@ -78,6 +79,35 @@ EDASettings class >> customProjectionErrorBehaviorsOn: aBuilder under: parent po
 					(EDAErrorHandlingStrategy subclasses
 						collect: [ :strategy | strategy description -> strategy greaseString ]);
 				default: EDAPublishMessageErrorStrategy greaseString ]
+]
+
+{ #category : #settings }
+EDASettings class >> discordErrorNotificationSettingsOn: aBuilder under: parent populatedWithValuesFrom: configEntry [
+	(aBuilder group: #discordErrorNotification)
+		label: 'Discord Error Notifications Config' translated;
+		description: 'Discord Error Notifications Config';
+		parent: parent.
+	(aBuilder setting: #webhookUrl)
+		parent: #discordErrorNotification;
+		target: EDAErrorNotificationsDiscordConfig;
+		label: 'Webhook' translated;
+		description: 'Discord weebhook';
+		order: 1;
+		default: (configEntry at: #webhookUrl ifAbsent: [ '' ]).
+	(aBuilder setting: #username)
+		parent: #discordErrorNotification;
+		target: EDAErrorNotificationsDiscordConfig;
+		label: 'Username' translated;
+		description: 'Discord user name';
+		order: 2;
+		default: (configEntry at: #username ifAbsent: [ '' ]).
+	(aBuilder setting: #avatarUrl)
+		parent: #discordErrorNotification;
+		target: EDAErrorNotificationsDiscordConfig;
+		label: 'Avatar Url' translated;
+		description: 'Discord Avatar URL';
+		order: 3;
+		default: (configEntry at: #avatarUrl ifAbsent: [ '' ]).
 ]
 
 { #category : #accessing }

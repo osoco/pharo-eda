@@ -86,6 +86,41 @@ EDACommandConsumer >> isConnected [
 	^ self busListener isConnected
 ]
 
+{ #category : #handling }
+EDACommandConsumer >> notifyError: anException withTitle: errorTitle andProcessingMessage: aMessage andFuelContext: fuelContextFileReference [
+	| fileName materializationScript |
+
+	fileName := 'contestia-core-context-' , DateAndTime now asYYYYmmddHMS , '.fuel'.
+	materializationScript := '(EDAFuelHelper new 
+    readFuelFromFileNamed: ''' , fileName
+		,
+			''' asFileReference) 
+        debug'.
+	EDAErrorNotificationsDiscordConfig createClient
+		embedColor: Color red;
+		embedTitle: errorTitle;
+		embedDescriptionMarkdown: [ :markdown | 
+			markdown
+				text: 'An exception';
+				space;
+				bold: anException class greaseString;
+				space;
+				text: 'detected'.
+			aMessage
+				ifNotNil: [ markdown space;
+					text: 'processing the message:'; cr;
+						script: (aMessage asString truncateWithElipsisTo: (DSConstants maxMessageLenght - 400)) language: 'json';
+						cr ].
+			markdown
+				text:
+					'Download the attached file and debug it evaluating the following expression in a Pharo image:';
+				cr;
+				script: materializationScript language: 'Smalltalk' ];
+		fileName: fileName
+			bytes: (fuelContextFileReference binaryReadStreamDo: [ :in | in contents ]);
+		send
+]
+
 { #category : #helpers }
 EDACommandConsumer >> printOn: t1 [
 	| t2 |
