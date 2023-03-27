@@ -48,7 +48,6 @@ EDASettings class >> commandListenerSettingsOn: aBuilder under: parent [
 		label: 'Command Listener' translated;
 		description: 'Command listener';
 		parent: parent.
-	self discordErrorNotificationSettingsOn: aBuilder under: #commandListener populatedWithValuesFrom: (stompConfig at: #discordErrorNotification ifAbsent: Dictionary empty).
 	self
 		stompListenerSettingsOn: aBuilder
 		withConfig: EDACommandStompTopicListener
@@ -82,11 +81,10 @@ EDASettings class >> customProjectionErrorBehaviorsOn: aBuilder under: parent po
 ]
 
 { #category : #settings }
-EDASettings class >> discordErrorNotificationSettingsOn: aBuilder under: parent populatedWithValuesFrom: configEntry [
+EDASettings class >> discordErrorNotificationSettingsOn: aBuilder populatedWithValuesFrom: configEntry [
 	(aBuilder group: #discordErrorNotification)
 		label: 'Discord Error Notifications Config' translated;
-		description: 'Discord Error Notifications Config';
-		parent: parent.
+		description: 'Discord Error Notifications Config'.
 	(aBuilder setting: #webhookUrl)
 		parent: #discordErrorNotification;
 		target: EDAErrorNotificationsDiscordConfig;
@@ -141,6 +139,7 @@ EDASettings class >> edaSettingsOn: aBuilder [
 		domainValues:
 			(EDADUEnvironment environments
 				collect: [ :level | level translated -> level greaseString ]).
+	self errorHandlingSettingsOn: aBuilder under: #eda.
 	self commandListenerSettingsOn: aBuilder under: #eda.
 	self eventProducerSettingsOn: aBuilder under: #eda.
 	self eventPublisherSettingsOn: aBuilder under: #eda.
@@ -150,6 +149,38 @@ EDASettings class >> edaSettingsOn: aBuilder [
 		under: #eda
 		populatedWithValuesFrom: 'projections'.
 	self loggingSettingsOn: aBuilder under: #eda
+]
+
+{ #category : #setting }
+EDASettings class >> errorHandlingSettingsOn: aBuilder under: parent [
+	| group errorHandlingConfig |
+	group := #errorHandling.
+	(aBuilder group: group)
+		label: 'Error Handling' translated;
+		description: 'Config to persist and notify errors';
+		parent: parent.
+	errorHandlingConfig := self retrieveSettingAsDict: group.
+	(aBuilder setting: #shouldPersistFuel)
+		parent: group;
+		target: EDAErrorHandlingStrategy;
+		label: 'Should persist error fuel' translated;
+		description: 'Persist error context to fuel';
+		order: 1;
+		default: (errorHandlingConfig at: #shouldPersistFuel ifAbsent: true);
+		with: [ (aBuilder setting: #shouldNotifyByDiscordPersistedFuel)
+				target: EDAErrorHandlingStrategy;
+				label: 'Should notify by Discord persisted error fuel' translated;
+				description: 'Notify by Discord persisted error context fuel';
+				default:
+					(errorHandlingConfig
+						at: #shouldNotifyByDiscordPersistedFuel
+						ifAbsent: true);
+				with: [ self
+						discordErrorNotificationSettingsOn: aBuilder
+						populatedWithValuesFrom:
+							(errorHandlingConfig
+								at: #discordErrorNotification
+								ifAbsent: Dictionary empty) ] ]
 ]
 
 { #category : #settings }

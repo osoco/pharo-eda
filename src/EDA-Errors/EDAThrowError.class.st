@@ -11,11 +11,6 @@ EDAThrowError class >> description [
 	^ 'Throw error'
 ]
 
-{ #category : #logging }
-EDAThrowError class >> shouldPersistFuel [
-	^ false
-]
-
 { #category : #accessing }
 EDAThrowError >> description [
 	^ self class description

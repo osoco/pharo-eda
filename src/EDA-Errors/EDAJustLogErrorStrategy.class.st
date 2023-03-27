@@ -31,11 +31,6 @@ EDAJustLogErrorStrategy class >> description [
 ]
 
 { #category : #accessing }
-EDAJustLogErrorStrategy class >> shouldPersistFuel [
-	^ false
-]
-
-{ #category : #accessing }
 EDAJustLogErrorStrategy >> description [
 	^ 'Just log error'
 ]

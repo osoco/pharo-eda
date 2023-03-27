@@ -26,6 +26,10 @@ Class {
 	#instVars : [
 		'context'
 	],
+	#classVars : [
+		'shouldNotifyByDiscordPersistedFuel',
+		'shouldPersistFuel'
+	],
 	#category : #'EDA-Errors-Strategies'
 }
 
@@ -42,8 +46,23 @@ EDAErrorHandlingStrategy class >> priority [
 ]
 
 { #category : #accessing }
+EDAErrorHandlingStrategy class >> shouldNotifyByDiscordPersistedFuel [
+	^ shouldNotifyByDiscordPersistedFuel
+]
+
+{ #category : #accessing }
+EDAErrorHandlingStrategy class >> shouldNotifyByDiscordPersistedFuel: anObject [
+	shouldNotifyByDiscordPersistedFuel := anObject
+]
+
+{ #category : #accessing }
 EDAErrorHandlingStrategy class >> shouldPersistFuel [
-	^ true
+	^ shouldPersistFuel
+]
+
+{ #category : #accessing }
+EDAErrorHandlingStrategy class >> shouldPersistFuel: aBoolean [
+	shouldPersistFuel := aBoolean
 ]
 
 { #category : #accessing }
