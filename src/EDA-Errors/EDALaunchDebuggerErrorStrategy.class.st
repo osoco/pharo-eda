@@ -21,7 +21,7 @@ Class {
 	#classInstVars : [
 		'errors'
 	],
-	#category : 'EDA-Errors-Strategies'
+	#category : #'EDA-Errors-Strategies'
 }
 
 { #category : #accessing }
@@ -55,7 +55,7 @@ EDALaunchDebuggerErrorStrategy >> description [
 ]
 
 { #category : #'error handling' }
-EDALaunchDebuggerErrorStrategy >> handleError: anException withExtraContextInformation: aDictionary [
+EDALaunchDebuggerErrorStrategy >> doHandleError: anException withExtraContextInformation: anExtraContextInformationDict [
 	anException freeze.
 	self class annotateError: anException.
 	anException signal.

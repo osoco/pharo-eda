@@ -17,7 +17,8 @@ EDAThrowError >> description [
 ]
 
 { #category : #'error handling' }
-EDAThrowError >> handleError: error withExtraContextInformation: aDictionary [
+EDAThrowError >> doHandleError: anException withExtraContextInformation: anExtraContextInformationDict [
 	"Handles the error"
-	error signal
+
+	anException signal
 ]

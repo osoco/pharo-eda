@@ -27,7 +27,7 @@ Trait {
 
 { #category : #helpers }
 EDATErrorHelper classSide >> basename [
-	^ Time now yyyyMMddhhmmss24
+	^ DateAndTime now asYYYYmmddHMS
 ]
 
 { #category : #helpers }
@@ -42,12 +42,14 @@ EDATErrorHelper classSide >> errorFolderFor: basename [
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrategy: aStrategy [
-	| errorHandler result context basename dictionary errorDescription fuelContextFileReference |
-	errorHandler := (self class environment at: aStrategy asSymbol) new.
-	errorHandler class shouldPersistFuel
-		ifTrue: [ errorDescription := 'Error processing ' , aCommand greaseString
-				, ': ' , anException description greaseString.
-			self logErrorMessage: errorDescription.
+	| errorHandler result basename extraContextInformationDict errorDescription fuelContextFileReference |
+	errorDescription := 'Error processing ' , aCommand greaseString
+		, ': ' , anException description greaseString.
+	self logErrorMessage: errorDescription.
+	errorHandler := (self class environment at: aStrategy asSymbol) new
+		context: thisContext clone.
+	"	errorHandler class shouldPersistFuel
+		ifTrue: [ 
 			context := thisContext clone.
 			basename := self class basename.
 			fuelContextFileReference := self
@@ -59,24 +61,25 @@ EDATErrorHelper >> manageError: anException forCommand: aCommand usingErrorStrat
 				notifyError: anException
 				withTitle: 'Error processing command ' , aCommand class name , ' for tenant ' , aCommand tenant
 				andProcessingMessage: aCommand
-				andFuelContext: fuelContextFileReference ].
-	errorHandler context: context.
-	dictionary := anException extraContextInformationForCommand: aCommand.
+				andFuelContext: fuelContextFileReference ]."
+	extraContextInformationDict := anException
+		extraContextInformationForCommand: aCommand.
 	result := errorHandler
 		handleError: anException
-		withExtraContextInformation: dictionary.
+		withExtraContextInformation: extraContextInformationDict.
 	^ result
 ]
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException forMessage: aString usingErrorStrategy: aStrategy [
-	| errorHandler result context basename dictionary errorDescription fuelContextFileReference |
+	| errorHandler result context basename extraContextInformationDict errorDescription fuelContextFileReference |
 	errorDescription := 'Error processing ' , aString greaseString , ': '
 		, anException description greaseString.
 	self logErrorMessage: errorDescription.
-	dictionary := Dictionary new.
-	dictionary at: #message put: aString.
-	context := thisContext clone.
+	errorHandler := (self class environment at: aStrategy asSymbol) new
+		context: thisContext clone.
+	extraContextInformationDict := Dictionary with: #message -> aString.
+	"context := thisContext clone.
 	basename := self class basename.
 	fuelContextFileReference := self
 		writeFuelContext: context
@@ -87,22 +90,23 @@ EDATErrorHelper >> manageError: anException forMessage: aString usingErrorStrate
 		notifyError: anException
 		withTitle: 'Error processing message'
 		andProcessingMessage: aString
-		andFuelContext: fuelContextFileReference.
-	errorHandler := (self class environment at: aStrategy asSymbol) new
-		context: context.
+		andFuelContext: fuelContextFileReference."
 	result := errorHandler
 		handleError: anException
-		withExtraContextInformation: dictionary.
+		withExtraContextInformation: extraContextInformationDict.
 	^ result
 ]
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException usingErrorStrategy: aStrategy [
-	| errorHandler result context basename errorDescription fuelContextFileReference |
+	| errorHandler result context basename errorDescription extraContextInformationDict fuelContextFileReference |
 	errorDescription := 'Error detected: '
 		, anException description greaseString.
 	self logErrorMessage: errorDescription.
-	basename := DateAndTime now asYYYYmmddHMS.
+	errorHandler := (self class environment at: aStrategy asSymbol) new
+		context: thisContext clone.
+	extraContextInformationDict := Dictionary empty.
+"	basename := DateAndTime now asYYYYmmddHMS.
 	context := thisContext clone.
 	fuelContextFileReference := self
 		writeFuelContext: context
@@ -111,22 +115,23 @@ EDATErrorHelper >> manageError: anException usingErrorStrategy: aStrategy [
 	self
 		notifyError: anException
 		withTitle: 'Error detected'
-		andFuelContext: fuelContextFileReference.
-	errorHandler := (self class environment at: aStrategy asSymbol) new
-		context: context.
+		andFuelContext: fuelContextFileReference."
 	result := errorHandler
 		handleError: anException
-		withExtraContextInformation: Dictionary new.
+		withExtraContextInformation: extraContextInformationDict.
 	^ result
 ]
 
 { #category : #handling }
 EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingErrorStrategy: aStrategy [
-	| errorHandler result context basename dictionary errorDescription fuelContextFileReference |
+	| errorHandler result context basename extraContextInformationDict errorDescription fuelContextFileReference |
 	errorDescription := 'Error projecting ' , anEvent greaseString , ': '
 		, anException description greaseString.
 	self logErrorMessage: errorDescription.
-	context := thisContext clone.
+	errorHandler := (self class environment at: aStrategy asSymbol) new
+		context: thisContext clone.
+	extraContextInformationDict := Dictionary with: #event -> anEvent.
+"	context := thisContext clone.
 	basename := self class basename.
 	fuelContextFileReference := self
 		writeFuelContext: context
@@ -139,14 +144,10 @@ EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingEr
 		notifyError: anException
 		withTitle: 'Error projecting an event'
 		andProcessingMessage: anEvent
-		andFuelContext: fuelContextFileReference.
-	errorHandler := (self class environment at: aStrategy asSymbol) new
-		context: context.
-	dictionary := Dictionary new.
-	dictionary at: #event put: anEvent.
+		andFuelContext: fuelContextFileReference."
 	result := errorHandler
 		handleError: anException
-		withExtraContextInformation: dictionary.
+		withExtraContextInformation: extraContextInformationDict.
 	^ result
 ]
 

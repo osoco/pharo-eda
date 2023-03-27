@@ -36,25 +36,37 @@ EDAJustLogErrorStrategy >> description [
 ]
 
 { #category : #'error handling' }
-EDAJustLogErrorStrategy >> handleError: anException withExtraContextInformation: aDictionary [
+EDAJustLogErrorStrategy >> doHandleError: anException withExtraContextInformation: anExtraContextInformationDict [
 	| event projection |
-	event := aDictionary at: #event ifAbsent: nil.
-	projection := aDictionary at: #projection ifAbsent: nil.
+	event := anExtraContextInformationDict at: #event ifAbsent: nil.
+	projection := anExtraContextInformationDict at: #projection ifAbsent: nil.
 	projection
 		ifNil: [ | projections |
-			projections := aDictionary
+			projections := anExtraContextInformationDict
 				at: #projections
 				ifAbsent: OrderedCollection new.
 			self
 				logWarningMessage:
-					(String streamContents: [ :s | s nextPutAll: 'Projection of event '; nextPutAll: event greaseString; nextPutAll: ' in projections '
-						; nextPutAll: projections greaseString; nextPutAll: ' failed with error '
-						; nextPutAll: anException description ])]
-		ifNotNil: [ :arg |
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: 'Projection of event ';
+								nextPutAll: event greaseString;
+								nextPutAll: ' in projections ';
+								nextPutAll: projections greaseString;
+								nextPutAll: ' failed with error ';
+								nextPutAll: anException description ]) ]
+		ifNotNil: [ :arg | 
 			self
-				logWarningMessage: (String streamContents: [ :s | s nextPutAll:
-					'Projection of event '; nextPutAll: event greaseString; nextPutAll: ' in projection '
-						; nextPutAll: projection greaseString; nextPutAll: ' failed with error '
-						; nextPutAll: anException description ] )].
+				logWarningMessage:
+					(String
+						streamContents: [ :s | 
+							s
+								nextPutAll: 'Projection of event ';
+								nextPutAll: event greaseString;
+								nextPutAll: ' in projection ';
+								nextPutAll: projection greaseString;
+								nextPutAll: ' failed with error ';
+								nextPutAll: anException description ]) ].
 	^ false
 ]
