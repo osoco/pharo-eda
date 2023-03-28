@@ -152,11 +152,6 @@ EDATErrorHelper >> manageError: anException whenProjectingEvent: anEvent usingEr
 ]
 
 { #category : #handling }
-EDATErrorHelper >> notifyError: anException withTitle: errorTitle andFuelContext: fuelContextFileReference [
-	self notifyError: anException withTitle: errorTitle andProcessingMessage: nil andFuelContext: fuelContextFileReference 
-]
-
-{ #category : #handling }
 EDATErrorHelper >> notifyError: anException withTitle: errorTitle andProcessingMessage: aMessage andFuelContext: fuelContextFileReference [
 	| fileName materializationScript |
 
