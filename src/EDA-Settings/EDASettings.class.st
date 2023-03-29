@@ -80,6 +80,34 @@ EDASettings class >> customProjectionErrorBehaviorsOn: aBuilder under: parent po
 				default: EDAPublishMessageErrorStrategy greaseString ]
 ]
 
+{ #category : #settings }
+EDASettings class >> discordErrorNotificationSettingsOn: aBuilder populatedWithValuesFrom: configEntry [
+	(aBuilder group: #discordErrorNotification)
+		label: 'Discord Error Notifications Config' translated;
+		description: 'Discord Error Notifications Config'.
+	(aBuilder setting: #webhookUrl)
+		parent: #discordErrorNotification;
+		target: EDAErrorNotificationsDiscordConfig;
+		label: 'Webhook' translated;
+		description: 'Discord weebhook';
+		order: 1;
+		default: (configEntry at: #webhookUrl ifAbsent: [ '' ]).
+	(aBuilder setting: #username)
+		parent: #discordErrorNotification;
+		target: EDAErrorNotificationsDiscordConfig;
+		label: 'Username' translated;
+		description: 'Discord user name';
+		order: 2;
+		default: (configEntry at: #username ifAbsent: [ '' ]).
+	(aBuilder setting: #avatarUrl)
+		parent: #discordErrorNotification;
+		target: EDAErrorNotificationsDiscordConfig;
+		label: 'Avatar Url' translated;
+		description: 'Discord Avatar URL';
+		order: 3;
+		default: (configEntry at: #avatarUrl ifAbsent: [ '' ]).
+]
+
 { #category : #accessing }
 EDASettings class >> duEnvironmentClass [
 	^ duEnvironmentClass ifNil: [ duEnvironmentClass := EDADUEnvironment ]
@@ -111,7 +139,9 @@ EDASettings class >> edaSettingsOn: aBuilder [
 		domainValues:
 			(EDADUEnvironment environments
 				collect: [ :level | level translated -> level greaseString ]).
+	self errorHandlingSettingsOn: aBuilder under: #eda.
 	self commandListenerSettingsOn: aBuilder under: #eda.
+	self eventProducerSettingsOn: aBuilder under: #eda.
 	self eventPublisherSettingsOn: aBuilder under: #eda.
 	self eventStoreSettingsOn: aBuilder under: #eda.
 	self
@@ -119,6 +149,59 @@ EDASettings class >> edaSettingsOn: aBuilder [
 		under: #eda
 		populatedWithValuesFrom: 'projections'.
 	self loggingSettingsOn: aBuilder under: #eda
+]
+
+{ #category : #setting }
+EDASettings class >> errorHandlingSettingsOn: aBuilder under: parent [
+	| group errorHandlingConfig |
+	group := #errorHandling.
+	(aBuilder group: group)
+		label: 'Error Handling' translated;
+		description: 'Config to persist and notify errors';
+		parent: parent.
+	errorHandlingConfig := self retrieveSettingAsDict: group.
+	(aBuilder setting: #shouldPersistFuel)
+		parent: group;
+		target: EDAErrorHandlingStrategy;
+		label: 'Should persist error fuel' translated;
+		description: 'Persist error context to fuel';
+		order: 1;
+		default: (errorHandlingConfig at: #shouldPersistFuel ifAbsent: true);
+		with: [ (aBuilder setting: #shouldNotifyByDiscordPersistedFuel)
+				target: EDAErrorHandlingStrategy;
+				label: 'Should notify by Discord persisted error fuel' translated;
+				description: 'Notify by Discord persisted error context fuel';
+				default:
+					(errorHandlingConfig
+						at: #shouldNotifyByDiscordPersistedFuel
+						ifAbsent: true);
+				with: [ self
+						discordErrorNotificationSettingsOn: aBuilder
+						populatedWithValuesFrom:
+							(errorHandlingConfig
+								at: #discordErrorNotification
+								ifAbsent: Dictionary empty) ] ]
+]
+
+{ #category : #settings }
+EDASettings class >> eventProducerSettingsOn: aBuilder under: parent [
+	| config values |
+	config := self retrieveSettingAsDict: 'eventProducer'.
+	values := EDAEventProducer withAllSubclasses
+		collect:
+			[ :producer | producer description translated -> producer greaseString ].
+	(aBuilder group: #eventProducer)
+		label: 'Event Producer' translated;
+		description: 'Event Producer';
+		parent: parent.
+	(aBuilder pickOne: #strategy)
+		parent: #eventProducer;
+		target: EDAEventProducerBehavior;
+		label: 'Event Producer Behavior' translated;
+		description: 'Strategy for Event Producer';
+		order: 1;
+		domainValues: values;
+		default: (config at: 'strategy' ifAbsent: [ values first value ])
 ]
 
 { #category : #settings }

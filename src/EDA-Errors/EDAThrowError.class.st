@@ -11,18 +11,14 @@ EDAThrowError class >> description [
 	^ 'Throw error'
 ]
 
-{ #category : #logging }
-EDAThrowError class >> shouldPersistFuel [
-	^ false
-]
-
 { #category : #accessing }
 EDAThrowError >> description [
 	^ self class description
 ]
 
 { #category : #'error handling' }
-EDAThrowError >> handleError: error withExtraContextInformation: aDictionary [
+EDAThrowError >> doHandleError: anException withExtraContextInformation: anExtraContextInformationDict [
 	"Handles the error"
-	error signal
+
+	anException signal
 ]

@@ -110,6 +110,17 @@ EDAApplication class >> configureProjectionBackendAuthentication: anObject [
 	anObject configureAuthentication
 ]
 
+{ #category : #'setup - events' }
+EDAApplication class >> createEventProducer: anEventProducerClass [
+	^ anEventProducerClass withEventAnnouncer: eventAnnouncer
+	
+]
+
+{ #category : #'setup - events' }
+EDAApplication class >> createEventProducerPublishing: anEventProducerClass [
+	^ anEventProducerClass withEventAnnouncer: eventAnnouncer publisher: EDAEventStompTopicPublisher new andSerializer: EDAJsonEventSerializer new
+]
+
 { #category : #'class initialization' }
 EDAApplication class >> doInitialize [
 	self isStarted: false.
@@ -372,10 +383,7 @@ EDAApplication class >> setupEventAnnouncer [
 
 { #category : #'setup - events' }
 EDAApplication class >> setupEventProducer [
-	| eventPublisher eventSerializer |
-	eventPublisher := EDAEventStompTopicPublisher new.
-	eventSerializer := EDAJsonEventSerializer new.
-	self eventProducer: (EDAEventProducer publisher: eventPublisher serializer: eventSerializer announcer: self eventAnnouncer)
+	eventProducer := EDAEventProducerBehavior eventProducerForEDAApplication: self
 ]
 
 { #category : #'setup - events' }
@@ -387,7 +395,12 @@ EDAApplication class >> setupEventStore [
 
 { #category : #'setup - events' }
 EDAApplication class >> setupEventSubscriptions [
-	self subclassResponsibility 
+	"Use self announcer
+	e.g. self announcer when: EventClass do: [  ] "
+
+	[ self subclassResponsibility ]
+		on: Error
+		do: [ :e | self ]
 ]
 
 { #category : #setup }

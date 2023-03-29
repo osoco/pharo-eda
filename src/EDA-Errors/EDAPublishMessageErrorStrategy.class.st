@@ -50,11 +50,11 @@ EDAPublishMessageErrorStrategy >> description [
 ]
 
 { #category : #'error handling' }
-EDAPublishMessageErrorStrategy >> handleError: anError withExtraContextInformation: aDictionary [
+EDAPublishMessageErrorStrategy >> doHandleError: anException withExtraContextInformation: anExtraContextInformationDict [
 	| serializer message |
 	serializer := EDAJsonErrorSerializer
 		withContext: thisContext clone
-		andExtraContextInformation: aDictionary.
-	message := serializer serialize: anError greaseString.
+		andExtraContextInformation: anExtraContextInformationDict.
+	message := serializer serialize: anException greaseString.
 	EDAEventStompTopicPublisher new publishError: message
 ]

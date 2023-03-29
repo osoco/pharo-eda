@@ -214,6 +214,11 @@ EDAStompTopicPublisher >> client: val [
 	client := val
 ]
 
+{ #category : #lifecycle }
+EDAStompTopicPublisher >> close [
+	self client close
+]
+
 { #category : #initialization }
 EDAStompTopicPublisher >> initialize [
 	super initialize.

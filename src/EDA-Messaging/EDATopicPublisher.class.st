@@ -3,12 +3,12 @@ Class {
 	#superclass : #Object,
 	#traits : 'EDAPrintOnHelper',
 	#classTraits : 'EDAPrintOnHelper classTrait',
-	#category : 'EDA-Messaging-Topic'
+	#category : #'EDA-Messaging-Topic'
 }
 
 { #category : #lifecycle }
 EDATopicPublisher >> close [
-	self client close
+	self subclassResponsibility
 ]
 
 { #category : #writing }

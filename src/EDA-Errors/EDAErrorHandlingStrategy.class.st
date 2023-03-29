@@ -21,10 +21,14 @@ Public API and Key Messages:
 Class {
 	#name : #EDAErrorHandlingStrategy,
 	#superclass : #Object,
-	#traits : 'EDAPrintOnHelper',
-	#classTraits : 'EDAPrintOnHelper classTrait',
+	#traits : 'EDAPrintOnHelper + EDATErrorHelper',
+	#classTraits : 'EDAPrintOnHelper classTrait + EDATErrorHelper classTrait',
 	#instVars : [
 		'context'
+	],
+	#classVars : [
+		'shouldNotifyByDiscordPersistedFuel',
+		'shouldPersistFuel'
 	],
 	#category : #'EDA-Errors-Strategies'
 }
@@ -36,14 +40,61 @@ EDAErrorHandlingStrategy class >> description [
 	^ self
 ]
 
+{ #category : #'notification helpers' }
+EDAErrorHandlingStrategy class >> messageForExtraContextInformation: extraContextInformationDict [
+	extraContextInformationDict
+		at: #message
+		ifPresent: [ :message | ^ message ].
+	extraContextInformationDict
+		at: #command
+		ifPresent: [ :command | ^ command ].
+	extraContextInformationDict
+		at: #event
+		ifPresent: [ :event | ^ event ].
+	extraContextInformationDict ifEmpty: [ ^ nil ].
+	^ nil
+]
+
 { #category : #accessing }
 EDAErrorHandlingStrategy class >> priority [ 
 	^ 100
 ]
 
 { #category : #accessing }
+EDAErrorHandlingStrategy class >> shouldNotifyByDiscordPersistedFuel [
+	^ shouldNotifyByDiscordPersistedFuel
+]
+
+{ #category : #accessing }
+EDAErrorHandlingStrategy class >> shouldNotifyByDiscordPersistedFuel: anObject [
+	shouldNotifyByDiscordPersistedFuel := anObject
+]
+
+{ #category : #accessing }
 EDAErrorHandlingStrategy class >> shouldPersistFuel [
-	^ true
+	^ shouldPersistFuel
+]
+
+{ #category : #accessing }
+EDAErrorHandlingStrategy class >> shouldPersistFuel: aBoolean [
+	shouldPersistFuel := aBoolean
+]
+
+{ #category : #'notification helpers' }
+EDAErrorHandlingStrategy class >> titleForExtraContextInformation: extraContextInformationDict [
+	extraContextInformationDict
+		at: #message
+		ifPresent: [ :message | ^ 'Error processing message' ].
+	extraContextInformationDict
+		at: #command
+		ifPresent: [ :command | 
+			^ 'Error processing command ' , command class name , ' for tenant '
+				, command tenant ].
+	extraContextInformationDict
+		at: #event
+		ifPresent: [ :event | ^ 'Error projecting an event' ].
+	extraContextInformationDict ifEmpty: [ ^ 'Error detected' ].
+	^ 'Error detected'
 ]
 
 { #category : #accessing }
@@ -66,9 +117,55 @@ EDAErrorHandlingStrategy >> description [
 ]
 
 { #category : #'error handling' }
-EDAErrorHandlingStrategy >> handleError: env withExtraContextInformation: aDictionary [
+EDAErrorHandlingStrategy >> doHandleError: anException withExtraContextInformation: anExtraContextInformationDict [
+	^ self subclassResponsibility
+]
+
+{ #category : #'error handling' }
+EDAErrorHandlingStrategy >> handleContextForException: anException withExtraContextInformation: extraContextInformationDict [
+	| basename fuelContextFileReference |
+	self class shouldPersistFuel
+		ifFalse: [ ^ self ].
+	basename := self class basename.
+	fuelContextFileReference := self
+		writeFuelContext: context
+		named: anException class greaseString
+		withBasename: basename.
+	extraContextInformationDict
+		at: #command
+		ifPresent: [ :command | self writeCommand: command withBasename: basename ].
+	extraContextInformationDict
+		at: #event
+		ifPresent: [ :event | self writeEvent: event withBasename: basename ].
+	extraContextInformationDict
+		at: #message
+		ifPresent: [ :message | self writeMessage: message withBasename: basename ].
+	self class shouldNotifyByDiscordPersistedFuel
+		ifFalse: [ ^ self ].
+	self
+		notify: anException
+		withExtraContextInformation: extraContextInformationDict
+		andFuelContext: fuelContextFileReference.
+]
+
+{ #category : #'error handling' }
+EDAErrorHandlingStrategy >> handleError: anException withExtraContextInformation: anExtraContextInformationDict [
 	"Handles the error"
 
-	self subclassResponsibility.
-	^ self
+	self
+		handleContextForException: anException
+		withExtraContextInformation: anExtraContextInformationDict.
+	^ self doHandleError: anException withExtraContextInformation: anExtraContextInformationDict
+]
+
+{ #category : #'error handling' }
+EDAErrorHandlingStrategy >> notify: anException withExtraContextInformation: extraContextInformationDict andFuelContext: fuelContextFileReference [
+	| title message |
+	title := self class titleForExtraContextInformation: extraContextInformationDict.
+	message := self class messageForExtraContextInformation: extraContextInformationDict.
+	self
+		notifyError: anException
+		withTitle: title
+		andProcessingMessage: message
+		andFuelContext: fuelContextFileReference
 ]
