@@ -89,7 +89,7 @@ EDATLanguageHelper classSide >> nounInSingular: aNoun [
 
 { #category : #removing }
 EDATLanguageHelper classSide >> removePrefix: prefix from: value [
-	^ ('^' , prefix copyReplaceAll: ':' with: '\:') asRegexIgnoringCase copy: value replacingMatchesWith: ''
+	^ ('^' , prefix copyReplaceAll: ':' with: '\:') asRegexIgnoringCase copy: value greaseString replacingMatchesWith: ''
 ]
 
 { #category : #removing }
