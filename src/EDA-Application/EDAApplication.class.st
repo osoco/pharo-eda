@@ -155,7 +155,7 @@ EDAApplication class >> configFromEnvironmentVars [
 			s truncate.
 			s nextPutAll: configJsonText ].
 	self
-		logDebugMessage: 'Created ' , configFile greaseString , ' with ' , configFile contents
+		logDebugMessage: 'Created ' , configFile greaseString , ' with ' , configFile contents.
 ]
 
 { #category : #'configuration building' }
@@ -197,6 +197,7 @@ EDAApplication class >> doInitialize [
 { #category : #setup }
 EDAApplication class >> doSetup [
 	self configFromEnvironmentVars.
+	EDASettings withAllSubclassesDo: [ :settingsClass | settingsClass resetSettings ].
 	SettingBrowser open delete.
 	self setupLogging.
 	self setupEventAnnouncer.

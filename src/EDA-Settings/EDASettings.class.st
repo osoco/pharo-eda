@@ -34,6 +34,9 @@ EDASettings class >> classesToInitialize [
 		add: EDAProjector;
 		add: EDACompositeProjector;
 		add: EDAProjectionMongoRepository;
+		add: EDAEventProducerBehavior;
+		add: EDAErrorHandlingStrategy;
+		add: EDAErrorNotificationsDiscordConfig;
 		yourself
 ]
 
