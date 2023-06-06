@@ -21,6 +21,7 @@ Public API and Key Messages:
 Trait {
 	#name : #EDATErrorHelper,
 	#traits : 'EDATLogging',
+	#classTraits : 'EDATLogging classTrait',
 	#category : #'EDA-Traits'
 }
 
@@ -143,11 +144,11 @@ EDATErrorHelper >> writeCommand: aCommand withBasename: aBasename [
 ]
 
 { #category : #handling }
-EDATErrorHelper >> writeEvent: aString withBasename: aBasename [
+EDATErrorHelper >> writeEvent: anEvent withBasename: aBasename [
 	| result |
 	result := (self class errorFolderFor: aBasename) / 'event.txt'.
 	result writeStream
-		nextPutAll: aString;
+		nextPutAll: anEvent printString;
 		close.
 	^ result
 ]

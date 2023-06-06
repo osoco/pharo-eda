@@ -20,6 +20,11 @@ EDAEventProducerBehavior class >> eventProducerForEDAApplication: anEDAApplicati
 	^ self eventProducerClass forEDAApplication: anEDAApplication
 ]
 
+{ #category : #'class initialization' }
+EDAEventProducerBehavior class >> initialize [
+	self strategy: nil
+]
+
 { #category : #accessing }
 EDAEventProducerBehavior class >> strategy [
 	^ strategy

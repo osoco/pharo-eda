@@ -100,6 +100,71 @@ EDAApplication class >> commandListenerClientDebug: aBoolean [
 	commandListenerClientDebug := aBoolean
 ]
 
+{ #category : #'configuration building' }
+EDAApplication class >> configFromEnvironmentIsNecessary [
+	| nonNecessaryConfigCreationEnvironments |
+	nonNecessaryConfigCreationEnvironments :=
+		OrderedCollection
+			with: 'development'
+			with: 'integration-tests'
+			with: 'prueba_mails_DEMO'
+			with: 'prueba_mails_PRO'.
+	^ (nonNecessaryConfigCreationEnvironments anySatisfy: [ :env | env = EDADUEnvironment currentEnvironment ]) not
+]
+
+{ #category : #'configuration building' }
+EDAApplication class >> configFromEnvironmentVars [
+	"Create a config/XXX.json if neccesary placing environment vars values to config/dynamic.json"
+
+	""
+
+	| envVarNotFoundsMessage newDynamicConfigText configJsonText configFile |
+	self configFromEnvironmentIsNecessary
+		ifFalse: [ ^ self ].
+	envVarNotFoundsMessage := WriteStream on: String new.
+	newDynamicConfigText := './config/dynamic.json' asFileReference
+		contents asString deepCopy.
+	configJsonText := '\"\|([^|]*)\|\"' asRegex
+		copy: newDynamicConfigText
+		translatingMatchesUsing: [ :match | 
+			| envVar value |
+			envVar := (match onlyLetters
+				copyWithRegex: '[A-Z]'
+				matchesTranslatedUsing: [ :each | '_' , each asLowercase ])
+				asUppercase.
+			value := OSProcess thisOSProcess environment
+				at: envVar
+				ifAbsent: [ envVarNotFoundsMessage
+						nextPutAll: 'Missing environment variable: ';
+						nextPutAll: envVar;
+						nextPutAll: ' . '.
+					'' ].
+			self configValueFromEnvVarValue: value ].
+	envVarNotFoundsMessage close.
+	envVarNotFoundsMessage contents
+		ifNotEmpty: [ :errorMessage | 
+			self
+				logErrorMessage: errorMessage
+				andThrow: EDAMissingEnvironmentVariables ].
+	configFile := ('./config/' , EDADUEnvironment currentEnvironment
+		, '.json') asFileReference.
+	configFile exists
+		ifFalse: [ configFile createFile ].
+	configFile
+		writeStreamDo: [ :s | 
+			s truncate.
+			s nextPutAll: configJsonText ].
+	self
+		logDebugMessage: 'Created ' , configFile greaseString , ' with ' , configFile contents.
+]
+
+{ #category : #'configuration building' }
+EDAApplication class >> configValueFromEnvVarValue: value [
+	(self mustNotBeStringOnJsonAValue: value)
+		ifTrue: [ ^ value greaseString ].
+	^ '"' , value , '"'
+]
+
 { #category : #'setup - events' }
 EDAApplication class >> configureEventStoreAuthentication [
 		EDAMongoEventStore authenticationMechanism beDefault
@@ -131,6 +196,8 @@ EDAApplication class >> doInitialize [
 
 { #category : #setup }
 EDAApplication class >> doSetup [
+	self configFromEnvironmentVars.
+	EDASettings withAllSubclassesDo: [ :settingsClass | settingsClass resetSettings ].
 	SettingBrowser open delete.
 	self setupLogging.
 	self setupEventAnnouncer.
@@ -222,6 +289,15 @@ EDAApplication class >> logSettings [
 				, self projectionSynchronizationEnabled greaseString.
 	self
 		logDebugMessage: 'Projectors: ' , self projectorsByTenant greaseString
+]
+
+{ #category : #'configuration building' }
+EDAApplication class >> mustNotBeStringOnJsonAValue: value [
+	"Values are always string but on config json integers and booleans must be represented without double quotes characteres (no strings)"
+	"Regex for value starting with 0 must be string"
+	^ (value matchesRegex: '^([1-9])\d+$')
+		or: [ (OrderedCollection with: 'true' with: 'false')
+				anySatisfy: [ :booleanString | booleanString = value ] ]
 ]
 
 { #category : #accessing }

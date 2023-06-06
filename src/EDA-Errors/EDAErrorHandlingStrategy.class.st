@@ -40,6 +40,13 @@ EDAErrorHandlingStrategy class >> description [
 	^ self
 ]
 
+{ #category : #'class initialization' }
+EDAErrorHandlingStrategy class >> initialize [
+	self shouldPersistFuel: nil.
+	self shouldNotifyByDiscordPersistedFuel: nil
+	
+]
+
 { #category : #'notification helpers' }
 EDAErrorHandlingStrategy class >> messageForExtraContextInformation: extraContextInformationDict [
 	extraContextInformationDict

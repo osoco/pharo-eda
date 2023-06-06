@@ -27,6 +27,13 @@ EDAErrorNotificationsDiscordConfig class >> createClient [
 		avatarUrl: avatarUrl
 ]
 
+{ #category : #'class initialization' }
+EDAErrorNotificationsDiscordConfig class >> initialize [
+	self avatarUrl: nil.
+	self username: nil.
+	self webhookUrl: nil
+]
+
 { #category : #accessing }
 EDAErrorNotificationsDiscordConfig class >> username [
 	^ username
