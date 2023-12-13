@@ -122,7 +122,7 @@ EDAApplication class >> configFromEnvironmentVars [
 	self configFromEnvironmentIsNecessary
 		ifFalse: [ ^ self ].
 	envVarNotFoundsMessage := WriteStream on: String new.
-	newDynamicConfigText := './config/dynamic.json' asFileReference
+	newDynamicConfigText := (SmalltalkImage current imageDirectory / 'config/dynamic.json')
 		contents asString deepCopy.
 	configJsonText := '\"\|([^|]*)\|\"' asRegex
 		copy: newDynamicConfigText
