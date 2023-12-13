@@ -9,7 +9,7 @@ EDATMongoHelper classSide >> configReplicationOnRepository: mongoRepository [
 	self enableReplication
 		ifNotNil: [ :replication | 
 			| replicationDebugMessage |
-			self logDebugMessage: 'Enable replication of type ' , replication className , ' and value ' , replication greaseString.
+			self logInfoMessage: 'Enable replication of type ' , replication className , ' and value ' , replication greaseString.
 			replicationDebugMessage := 'Non-configurable replication.'.
 			replication
 				ifTrue: [ [ mongoRepository enableReplication ]
