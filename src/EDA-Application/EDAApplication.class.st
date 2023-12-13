@@ -122,11 +122,11 @@ EDAApplication class >> configFromEnvironmentVars [
 	self configFromEnvironmentIsNecessary
 		ifFalse: [ ^ self ].
 	envVarNotFoundsMessage := WriteStream on: String new.
-	imageDirectoryPath := SmalltalkImage current imageDirectory.
-	self logInfoMessage: 'Image path: ' , imageDirectoryPath.
+	imageDirectoryPath := SmalltalkImage current imageDirectory absolutePath.
+	self logInfoMessage: 'Image path: ' , imageDirectoryPath greaseString.
 	dinamicJsonPath := imageDirectoryPath / 'config/dynamic.json'.
-	self logInfoMessage: 'Dynamic json path: ' , dinamicJsonPath.
-	newDynamicConfigText := dinamicJsonPath
+	self logInfoMessage: 'Dynamic json path: ' , dinamicJsonPath greaseString.
+	newDynamicConfigText := dinamicJsonPath asFileReference
 		contents asString deepCopy.
 	configJsonText := '\"\|([^|]*)\|\"' asRegex
 		copy: newDynamicConfigText
