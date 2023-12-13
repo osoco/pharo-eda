@@ -118,13 +118,13 @@ EDAApplication class >> configFromEnvironmentVars [
 
 	""
 
-	| envVarNotFoundsMessage newDynamicConfigText configJsonText configFile imageDirectoryPath dinamicJsonPath |
+	| envVarNotFoundsMessage newDynamicConfigText configJsonText configFile configDirectoryPath dinamicJsonPath configFilePath |
 	self configFromEnvironmentIsNecessary
 		ifFalse: [ ^ self ].
 	envVarNotFoundsMessage := WriteStream on: String new.
-	imageDirectoryPath := SmalltalkImage current imageDirectory absolutePath.
-	self logInfoMessage: 'Image path: ' , imageDirectoryPath greaseString.
-	dinamicJsonPath := imageDirectoryPath / 'config/dynamic.json'.
+	configDirectoryPath := SmalltalkImage current imageDirectory absolutePath / 'config'.
+	self logInfoMessage: 'Image path: ' , configDirectoryPath greaseString.
+	dinamicJsonPath := configDirectoryPath / 'dynamic.json'.
 	self logInfoMessage: 'Dynamic json path: ' , dinamicJsonPath greaseString.
 	newDynamicConfigText := dinamicJsonPath asFileReference
 		contents asString deepCopy.
@@ -150,8 +150,9 @@ EDAApplication class >> configFromEnvironmentVars [
 			self
 				logErrorMessage: errorMessage
 				andThrow: EDAMissingEnvironmentVariables ].
-	configFile := ('./config/' , EDADUEnvironment currentEnvironment
-		, '.json') asFileReference.
+	configFilePath := configDirectoryPath / (EDADUEnvironment currentEnvironment , '.json').
+	self logInfoMessage: 'Config file paht: ' , configFilePath greaseString.
+	configFile := configFilePath asFileReference.
 	configFile exists
 		ifFalse: [ configFile createFile ].
 	configFile
@@ -159,7 +160,7 @@ EDAApplication class >> configFromEnvironmentVars [
 			s truncate.
 			s nextPutAll: configJsonText ].
 	self
-		logDebugMessage: 'Created ' , configFile greaseString , ' with ' , configFile contents.
+		logInfoMessage: 'Using configuration ' , configFile greaseString , ' with ' , configFile contents.
 ]
 
 { #category : #'configuration building' }
