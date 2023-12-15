@@ -1,6 +1,7 @@
 Trait {
 	#name : #EDATMongoHelper,
-	#traits : 'EDATCollectionHelper',
+	#traits : 'EDATCollectionHelper + EDATLogging',
+	#classTraits : 'EDATCollectionHelper classTrait + EDATLogging classTrait',
 	#category : #'EDA-Traits'
 }
 
