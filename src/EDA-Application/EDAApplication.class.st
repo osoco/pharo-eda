@@ -40,7 +40,8 @@ Class {
 		'isStarted',
 		'projectors',
 		'projectorsByTenant',
-		'tenants'
+		'tenants',
+		'circuitBreakers'
 	],
 	#category : #'EDA-Application'
 }
@@ -196,7 +197,8 @@ EDAApplication class >> doInitialize [
 	self isStarted: false.
 	self isConfigured: false.
 	self projectorsByTenant: Dictionary new.
-	tenants := Set empty
+	tenants := Set empty.
+	circuitBreakers := OrderedCollection empty.
 ]
 
 { #category : #setup }
@@ -215,7 +217,8 @@ EDAApplication class >> doSetup [
 		ifTrue: [ self synchronizeProjections ].
 	self setupCommandDispatcher.
 	self setupCommandConsumer.
-	self setupEventSubscriptions
+	self setupEventSubscriptions.
+	self setupCircuitBreakers.
 ]
 
 { #category : #accessing }
@@ -337,6 +340,7 @@ EDAApplication class >> removeAllProjections [
 
 { #category : #reset }
 EDAApplication class >> reset [
+	self resetCircuitBreakers.
 	self resetEventSubscriptions.
 	self resetCommandConsumer.
 	self resetCommandDispatcher.
@@ -349,6 +353,12 @@ EDAApplication class >> reset [
 	self resetTenants.
 	self resetLogging.
 	self isConfigured: false
+]
+
+{ #category : #'reset - commands' }
+EDAApplication class >> resetCircuitBreakers [
+	self stopCircuitBreakers.
+	circuitBreakers := OrderedCollection empty.
 ]
 
 { #category : #'reset - commands' }
@@ -431,6 +441,13 @@ EDAApplication class >> setup [
 	self isConfigured ifTrue: [ ^ self ].
 	self doSetup.
 	self isConfigured: true
+]
+
+{ #category : #'setup - circuit breakers' }
+EDAApplication class >> setupCircuitBreakers [
+	circuitBreakers := EDAApplicationCircuitBreaker allSubclasses
+		collect: [ :circuitBreakerClass | 
+			circuitBreakers forEDAApplication: self ]
 ]
 
 { #category : #'setup - commands' }
@@ -544,9 +561,15 @@ EDAApplication class >> start [
 		ifTrue: [ ^ self ].
 	self commandConsumer
 		ifNotNil: [ :c | 
-			c start.
-			self isStarted: true ].
+			c start ].
+	self startCircuitBreakers.
+	self isStarted: true.
 	self logInfoMessage: self applicationName , ' started'
+]
+
+{ #category : #'private - circuit breakers' }
+EDAApplication class >> startCircuitBreakers [
+	circuitBreakers do: [ :circuitBreaker | circuitBreaker start ]
 ]
 
 { #category : #api }
@@ -554,9 +577,15 @@ EDAApplication class >> stop [
 	self isStarted ifNil: [ self isStarted: false ].
 	self isStarted
 		ifFalse: [ ^ self ].
+	self stopCircuitBreakers.
 	self commandConsumer ifNotNil: [ :arg | arg stop ].
 	self isStarted: false.
 	self logInfoMessage: self applicationName , ' stopped'
+]
+
+{ #category : #'private - circuit breakers' }
+EDAApplication class >> stopCircuitBreakers [
+	circuitBreakers do: [ :circuitBreaker | circuitBreaker stop ]
 ]
 
 { #category : #'setup - projections' }
