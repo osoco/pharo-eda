@@ -12,8 +12,8 @@ EDAEventStoreCircuitBreaker class >> checkResourceBlockForApplication: anEDAAppl
 ]
 
 { #category : #'instance variables' }
-EDAEventStoreCircuitBreaker class >> circuitBreakerProcessName [
-	^ 'Event Store Circuit Breaker Loop'
+EDAEventStoreCircuitBreaker class >> circuitBreakerName [
+	^ 'Event Store Circuit Breaker'
 ]
 
 { #category : #'instance variables' }
