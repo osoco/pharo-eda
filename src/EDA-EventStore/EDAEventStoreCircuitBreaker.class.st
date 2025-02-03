@@ -18,7 +18,7 @@ EDAEventStoreCircuitBreaker class >> circuitBreakerProcessName [
 
 { #category : #'instance variables' }
 EDAEventStoreCircuitBreaker class >> closeCircuitBlockForApplication: anEDAApplication [
-	^ anEDAApplication openCommandConsumerBlock
+	^ anEDAApplication startCommandConsumerBlock
 ]
 
 { #category : #'instance variables' }
@@ -38,7 +38,7 @@ EDAEventStoreCircuitBreaker class >> monitoredResourceForApplication: anEDAAppli
 
 { #category : #'instance variables' }
 EDAEventStoreCircuitBreaker class >> openCircuitBlockForApplication: anEDAApplication [
-	^ anEDAApplication closeCommandConsumerBlock
+	^ anEDAApplication stopCommandConsumerBlock
 ]
 
 { #category : #'instance variables' }
