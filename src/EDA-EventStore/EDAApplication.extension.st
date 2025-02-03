@@ -4,9 +4,12 @@ Extension { #name : #EDAApplication }
 EDAApplication class >> eventStoreCheckBlock [
 	self flag: #TODO.	"Obtain from settings"
 	^ [ :monitoredEventStore | 
-		monitoredEventStore
+		| check |
+		check := true.
+		[ monitoredEventStore
 			findEventsOfAggregate: 'nonExistent'
-			whereId: 'nonExistent' ]
+			whereId: 'nonExistent' ] on: Error do: [ check := false ].
+		check ]
 ]
 
 { #category : #'*EDA-EventStore' }
