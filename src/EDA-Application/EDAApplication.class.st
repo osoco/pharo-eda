@@ -447,7 +447,7 @@ EDAApplication class >> setup [
 EDAApplication class >> setupCircuitBreakers [
 	circuitBreakers := EDAApplicationCircuitBreaker allSubclasses
 		collect: [ :circuitBreakerClass | 
-			circuitBreakers forEDAApplication: self ]
+			circuitBreakerClass forEDAApplication: self ]
 ]
 
 { #category : #'setup - commands' }
