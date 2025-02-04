@@ -95,7 +95,6 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec requires: #('EDA-Domain' 'EDA-Serializers' 'ObjectDiff') ];
 		package: #'EDA-Commands-Tests-Tests'
 			with: [ spec requires: #('EDA-Commands-Tests') ];
-		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits' 'EDA-Application') ];
 		package: #'EDA-Messaging' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-SMTP' with: [ spec requires: #('EDA-Traits') ];
 		package: #'EDA-Events'
@@ -123,6 +122,7 @@ BaselineOfPharoEDA >> declarePackagesIn: spec [
 			with: [ spec
 				requires:
 					#('EDA-Events' 'EDA-Domain' 'EDA-Commands' 'EDA-Voyage-EventStore' 'EDA-Projections' 'EDA-StompMessaging') ];
+		package: #'EDA-EventStore' with: [ spec requires: #('EDA-Traits' 'EDA-Application') ];
 		package: #'EDA-Settings'
 			with: [ spec requires: #('DeployUtils' 'EDA-Traits' 'EDA-Application') ];
 		package: #'EDA-Commands-Tests'
