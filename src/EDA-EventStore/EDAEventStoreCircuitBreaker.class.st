@@ -11,9 +11,19 @@ EDAEventStoreCircuitBreaker class >> checkResourceBlockForApplication: anEDAAppl
 	^ anEDAApplication eventStoreCheckBlock
 ]
 
+{ #category : #constants }
+EDAEventStoreCircuitBreaker class >> circuitBreakerClosedExceptionClass [
+	^ EDAEventStoreCircuitBreakerClosed
+]
+
 { #category : #'instance variables' }
 EDAEventStoreCircuitBreaker class >> circuitBreakerName [
 	^ 'Event Store Circuit Breaker'
+]
+
+{ #category : #constants }
+EDAEventStoreCircuitBreaker class >> circuitBreakerOpenedExceptionClass [
+	^ EDAEventStoreCircuitBreakerOpened
 ]
 
 { #category : #'instance variables' }

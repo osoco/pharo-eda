@@ -1,8 +1,8 @@
 Class {
 	#name : #EDAApplicationCircuitBreaker,
 	#superclass : #Object,
-	#traits : 'EDATLogging',
-	#classTraits : 'EDATLogging classTrait',
+	#traits : 'EDATLogging + EDATErrorHelper',
+	#classTraits : 'EDATLogging classTrait + EDATErrorHelper classTrait',
 	#instVars : [
 		'circuitBreakerProcess',
 		'monitoredResource',
@@ -25,10 +25,20 @@ EDAApplicationCircuitBreaker class >> checkResourceBlockForApplication: anEDAApp
 	self subclassResponsibility
 ]
 
+{ #category : #constants }
+EDAApplicationCircuitBreaker class >> circuitBreakerClosedExceptionClass [
+	^ [ self subclassResponsibility ] on: Exception do: [ EDACircuitBreakerClosed ] 
+]
+
 { #category : #'instance variables' }
 EDAApplicationCircuitBreaker class >> circuitBreakerName [
 	"Return circuit breaker name"
 	self subclassResponsibility
+]
+
+{ #category : #constants }
+EDAApplicationCircuitBreaker class >> circuitBreakerOpenedExceptionClass [
+	^ [ self subclassResponsibility ] on: Exception do: [ EDACircuitBreakerOpened ] 
 ]
 
 { #category : #'instance variables' }
@@ -130,6 +140,7 @@ EDAApplicationCircuitBreaker >> closeCircuit [
 	self resetConsecutiveResourceCheckSuccesses.
 	self circuitState: self class closedState .
 	closeCircuitBlock value.
+	self class circuitBreakerClosedExceptionClass signal: self class circuitBreakerName
 ]
 
 { #category : #accessing }
@@ -147,8 +158,14 @@ EDAApplicationCircuitBreaker >> createCircuitBreakerProcess [
 
 { #category : #'monitoring loop' }
 EDAApplicationCircuitBreaker >> createMonitoringLoopTask [
-	^ [ [ self updateCircuit.
-	self waitCheckingPeriod ] repeat ]
+	self flag: #TODO. "Error strategy from settings"
+	^ [ 
+		[
+			[ self updateCircuit ]
+				on: EDACircuitBreakerException
+				do: [ :error | self manageError: error usingErrorStrategy: EDACommandConsumingErrorBehavior strategy ]. 
+			self waitCheckingPeriod
+		] repeat ]
 ]
 
 { #category : #'private - updating' }
@@ -161,6 +178,12 @@ EDAApplicationCircuitBreaker >> increaseConsecutiveResourceCheckFailures [
 EDAApplicationCircuitBreaker >> increaseConsecutiveResourceCheckSuccesses [
 	consecutiveResourceCheckSuccesses := consecutiveResourceCheckSuccesses + 1.
 	self logDebugMessage: self class circuitBreakerName , ': Increased consecutive resource check successes: ' , consecutiveResourceCheckSuccesses greaseString , '/' , minConsecutiveResourceCheckSuccesses greaseString.
+]
+
+{ #category : #initialization }
+EDAApplicationCircuitBreaker >> initialize [
+	self resetConsecutiveResourceCheckFailures.
+	self resetConsecutiveResourceCheckSuccesses
 ]
 
 { #category : #lifecycle }
@@ -197,7 +220,8 @@ EDAApplicationCircuitBreaker >> monitoredResource: anObject [
 EDAApplicationCircuitBreaker >> openCircuit [
 	self resetConsecutiveResourceCheckFailures.
 	self circuitState: self class openedState.
-	openCircuitBlock value
+	openCircuitBlock value.
+	self class circuitBreakerOpenedExceptionClass signal: self class circuitBreakerName
 ]
 
 { #category : #accessing }
