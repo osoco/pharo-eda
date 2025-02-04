@@ -1,6 +1,6 @@
 Extension { #name : #EDAApplication }
 
-{ #category : #'*EDA-EventStore' }
+{ #category : #'*EDA-Circuit-Breaker' }
 EDAApplication class >> eventStoreCheckBlock [
 	self flag: #TODO.	"Obtain from settings"
 	^ [ :monitoredEventStore | 
@@ -12,31 +12,31 @@ EDAApplication class >> eventStoreCheckBlock [
 		check ]
 ]
 
-{ #category : #'*EDA-EventStore' }
+{ #category : #'*EDA-Circuit-Breaker' }
 EDAApplication class >> eventStoreCheckingPeriod [
 	self flag: #TODO. "Obtain from settings"
-	^ 1 minute
+	^ 10 seconds 
 ]
 
-{ #category : #'*EDA-EventStore' }
+{ #category : #'*EDA-Circuit-Breaker' }
 EDAApplication class >> eventStoreMaxConsecutiveCheckFailures [
 	self flag: #TODO.	"Obtain from settings"
 	^ 5
 ]
 
-{ #category : #'*EDA-EventStore' }
+{ #category : #'*EDA-Circuit-Breaker' }
 EDAApplication class >> eventStoreMinConsecutiveCheckSuccesses [
 	self flag: #TODO.	"Obtain from settings"
 	^ 5
 ]
 
-{ #category : #'*EDA-EventStore' }
+{ #category : #'*EDA-Circuit-Breaker' }
 EDAApplication class >> startCommandConsumerBlock [
 	self flag: #TODO.	"Obtain from settings"
 	^ [ commandConsumer start ]
 ]
 
-{ #category : #'*EDA-EventStore' }
+{ #category : #'*EDA-Circuit-Breaker' }
 EDAApplication class >> stopCommandConsumerBlock [
 	self flag: #TODO.	"Obtain from settings"
 	^ [ commandConsumer stop ]

@@ -3,7 +3,7 @@ Class {
 	#superclass : #EDAApplicationCircuitBreaker,
 	#traits : 'EDAPrintOnHelper',
 	#classTraits : 'EDAPrintOnHelper classTrait',
-	#category : #'EDA-EventStore'
+	#category : #'EDA-Circuit-Breaker'
 }
 
 { #category : #'instance variables' }

@@ -1,5 +1,5 @@
 Class {
 	#name : #EDAEventStoreCircuitBreakerClosed,
 	#superclass : #EDACircuitBreakerClosed,
-	#category : #'EDA-EventStore'
+	#category : #'EDA-Circuit-Breaker'
 }

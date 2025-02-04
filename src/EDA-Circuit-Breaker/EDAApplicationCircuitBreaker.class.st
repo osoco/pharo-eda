@@ -16,7 +16,7 @@ Class {
 		'minConsecutiveResourceCheckSuccesses',
 		'closeCircuitBlock'
 	],
-	#category : #'EDA-Application'
+	#category : #'EDA-Circuit-Breaker'
 }
 
 { #category : #'instance variables' }
