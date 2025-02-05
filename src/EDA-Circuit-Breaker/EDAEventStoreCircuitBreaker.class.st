@@ -32,16 +32,6 @@ EDAEventStoreCircuitBreaker class >> closeCircuitBlockForApplication: anEDAAppli
 ]
 
 { #category : #'instance variables' }
-EDAEventStoreCircuitBreaker class >> maxConsecutiveResourceCheckFailuresForApplication: anEDAApplication [
-	^ anEDAApplication eventStoreMaxConsecutiveCheckFailures
-]
-
-{ #category : #'instance variables' }
-EDAEventStoreCircuitBreaker class >> minConsecutiveResourceCheckSuccessesForApplication: anEDAApplication [
-	^ anEDAApplication eventStoreMinConsecutiveCheckSuccesses
-]
-
-{ #category : #'instance variables' }
 EDAEventStoreCircuitBreaker class >> monitoredResourceForApplication: anEDAApplication [
 	^ anEDAApplication eventStore
 ]
@@ -49,9 +39,4 @@ EDAEventStoreCircuitBreaker class >> monitoredResourceForApplication: anEDAAppli
 { #category : #'instance variables' }
 EDAEventStoreCircuitBreaker class >> openCircuitBlockForApplication: anEDAApplication [
 	^ anEDAApplication stopCommandConsumerBlock
-]
-
-{ #category : #'instance variables' }
-EDAEventStoreCircuitBreaker class >> resourceCheckingPeriodForApplication: anEDAApplication [
-	^ anEDAApplication eventStoreCheckingPeriod
 ]

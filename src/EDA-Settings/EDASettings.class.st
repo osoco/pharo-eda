@@ -37,6 +37,7 @@ EDASettings class >> classesToInitialize [
 		add: EDAEventProducerBehavior;
 		add: EDAErrorHandlingStrategy;
 		add: EDAErrorNotificationsDiscordConfig;
+		add: EDAEventStoreCircuitBreaker;
 		yourself
 ]
 
@@ -142,6 +143,7 @@ EDASettings class >> edaSettingsOn: aBuilder [
 		domainValues:
 			(EDADUEnvironment environments
 				collect: [ :level | level translated -> level greaseString ]).
+	self eventStoreCircuitBreakerSettingsOn: aBuilder under: #eda.
 	self errorHandlingSettingsOn: aBuilder under: #eda.
 	self commandListenerSettingsOn: aBuilder under: #eda.
 	self eventProducerSettingsOn: aBuilder under: #eda.
@@ -218,6 +220,38 @@ EDASettings class >> eventPublisherSettingsOn: aBuilder under: parent [
 		withConfig: EDAEventStompTopicPublisher
 		under: #eventPublisher
 		populatedWithValuesFrom: 'eventPublisher'
+]
+
+{ #category : #setting }
+EDASettings class >> eventStoreCircuitBreakerSettingsOn: aBuilder under: parent [
+	| group eventStoreCircuitBreakerConfig |
+	group := #eventStoreCircuitBreaker.
+	(aBuilder group: group)
+		label: 'Event Store Circuit Breaker' translated;
+		description: 'Retries configuration data for Event Store Circuit Breaker';
+		parent: parent.
+	eventStoreCircuitBreakerConfig := self retrieveSettingAsDict: group.
+	(aBuilder setting: #checkingPeriod)
+		parent: group;
+		target: EDAEventStoreCircuitBreaker;
+		label: 'Checking perior (seconds)' translated;
+		description: 'Duration between circuit breaker checks in seconds';
+		order: 1;
+		default: (eventStoreCircuitBreakerConfig at: 'checkingPeriod' ifAbsent: '60').
+	(aBuilder setting: #maxConsecutiveResourceCheckFailures)
+		parent: group;
+		target: EDAEventStoreCircuitBreaker;
+		label: 'Max consecutive failures' translated;
+		description: 'Maximum consecutive monitored resource check failures';
+		order: 2;
+		default: (eventStoreCircuitBreakerConfig at: 'maxConsecutiveResourceCheckFailures' ifAbsent: '5').
+	(aBuilder setting: #minConsecutiveResourceCheckSuccesses)
+		parent: group;
+		target: EDAEventStoreCircuitBreaker;
+		label: 'Max consecutive failures' translated;
+		description: 'Min consecutive monitored resource check successes';
+		order: 3;
+		default: (eventStoreCircuitBreakerConfig at: 'minConsecutiveResourceCheckSuccesses' ifAbsent: '5')
 ]
 
 { #category : #settings }

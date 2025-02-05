@@ -16,6 +16,11 @@ Class {
 		'minConsecutiveResourceCheckSuccesses',
 		'closeCircuitBlock'
 	],
+	#classInstVars : [
+		'checkingPeriod',
+		'maxConsecutiveResourceCheckFailures',
+		'minConsecutiveResourceCheckSuccesses'
+	],
 	#category : #'EDA-Circuit-Breaker'
 }
 
@@ -23,6 +28,16 @@ Class {
 EDAApplicationCircuitBreaker class >> checkResourceBlockForApplication: anEDAApplication [
 	"Return a one argument block that check if the resouce is healthy. Argument is the monitored resource"
 	self subclassResponsibility
+]
+
+{ #category : #accessing }
+EDAApplicationCircuitBreaker class >> checkingPeriod [
+	^ checkingPeriod
+]
+
+{ #category : #accessing }
+EDAApplicationCircuitBreaker class >> checkingPeriod: anInteger [
+	checkingPeriod := anInteger seconds
 ]
 
 { #category : #constants }
@@ -61,26 +76,40 @@ EDAApplicationCircuitBreaker class >> closedState [
 EDAApplicationCircuitBreaker class >> forEDAApplication: anEDAApplication [
 	^ self new
 		monitoredResource: (self monitoredResourceForApplication: anEDAApplication);
-		checkingPeriod: (self resourceCheckingPeriodForApplication: anEDAApplication);
 		checkResourceBlock: (self checkResourceBlockForApplication: anEDAApplication);
-		maxConsecutiveResourceCheckFailures: (self maxConsecutiveResourceCheckFailuresForApplication: anEDAApplication);
-		minConsecutiveResourceCheckSuccesses: (self minConsecutiveResourceCheckSuccessesForApplication: anEDAApplication);
 		openCircuitBlock: (self openCircuitBlockForApplication: anEDAApplication);
 		closeCircuitBlock: (self closeCircuitBlockForApplication: anEDAApplication);
 		circuitState: self closedState;
 		yourself
 ]
 
-{ #category : #'instance variables' }
-EDAApplicationCircuitBreaker class >> maxConsecutiveResourceCheckFailuresForApplication: anEDAApplication [
-	"Return an integer, that is the maximun number of consecutive resource check failures to consider it unhealthy"
-	self subclassResponsibility
+{ #category : #'class initialization' }
+EDAApplicationCircuitBreaker class >> initialize [
+	super initialize.
+	checkingPeriod := nil.
+	maxConsecutiveResourceCheckFailures := nil.
+	minConsecutiveResourceCheckSuccesses := nil
+	
 ]
 
-{ #category : #'instance variables' }
-EDAApplicationCircuitBreaker class >> minConsecutiveResourceCheckSuccessesForApplication: anEDAApplication [
-	"Return an integer, that is the minimun number of consecutive resource check successes to consider it healthy"
-	self subclassResponsibility
+{ #category : #accessing }
+EDAApplicationCircuitBreaker class >> maxConsecutiveResourceCheckFailures [
+	^ maxConsecutiveResourceCheckFailures
+]
+
+{ #category : #accessing }
+EDAApplicationCircuitBreaker class >> maxConsecutiveResourceCheckFailures: anInteger [
+	maxConsecutiveResourceCheckFailures := anInteger
+]
+
+{ #category : #accessing }
+EDAApplicationCircuitBreaker class >> minConsecutiveResourceCheckSuccesses [
+	^ minConsecutiveResourceCheckSuccesses
+]
+
+{ #category : #accessing }
+EDAApplicationCircuitBreaker class >> minConsecutiveResourceCheckSuccesses: anInteger [
+	minConsecutiveResourceCheckSuccesses := anInteger
 ]
 
 { #category : #'instance variables' }
@@ -100,12 +129,6 @@ EDAApplicationCircuitBreaker class >> openedState [
 	^ 'opened'
 ]
 
-{ #category : #'instance variables' }
-EDAApplicationCircuitBreaker class >> resourceCheckingPeriodForApplication: anEDAApplication [
-	"Return period between resource checkings of the application"
-	self subclassResponsibility
-]
-
 { #category : #checking }
 EDAApplicationCircuitBreaker >> checkResource [
 	| check |
@@ -117,6 +140,11 @@ EDAApplicationCircuitBreaker >> checkResource [
 { #category : #accessing }
 EDAApplicationCircuitBreaker >> checkResourceBlock: anObject [
 	checkResourceBlock := anObject
+]
+
+{ #category : #accessing }
+EDAApplicationCircuitBreaker >> checkingPeriod [
+	^ checkingPeriod ifNil: [ checkingPeriod := self class checkingPeriod ]
 ]
 
 { #category : #accessing }
@@ -171,13 +199,13 @@ EDAApplicationCircuitBreaker >> createMonitoringLoopTask [
 { #category : #'private - updating' }
 EDAApplicationCircuitBreaker >> increaseConsecutiveResourceCheckFailures [
 	consecutiveResourceCheckFailures := consecutiveResourceCheckFailures + 1.
-	self logDebugMessage: self class circuitBreakerName , ': Increased consecutive resource check failures ' , consecutiveResourceCheckFailures greaseString , '/' , maxConsecutiveResourceCheckFailures greaseString.
+	self logDebugMessage: self class circuitBreakerName , ': Increased consecutive resource check failures ' , consecutiveResourceCheckFailures greaseString , '/' , self maxConsecutiveResourceCheckFailures greaseString.
 ]
 
 { #category : #'private - updating' }
 EDAApplicationCircuitBreaker >> increaseConsecutiveResourceCheckSuccesses [
 	consecutiveResourceCheckSuccesses := consecutiveResourceCheckSuccesses + 1.
-	self logDebugMessage: self class circuitBreakerName , ': Increased consecutive resource check successes: ' , consecutiveResourceCheckSuccesses greaseString , '/' , minConsecutiveResourceCheckSuccesses greaseString.
+	self logDebugMessage: self class circuitBreakerName , ': Increased consecutive resource check successes: ' , consecutiveResourceCheckSuccesses greaseString , '/' , self minConsecutiveResourceCheckSuccesses greaseString.
 ]
 
 { #category : #initialization }
@@ -192,13 +220,23 @@ EDAApplicationCircuitBreaker >> isRunning [
 ]
 
 { #category : #accessing }
+EDAApplicationCircuitBreaker >> maxConsecutiveResourceCheckFailures [
+	^ maxConsecutiveResourceCheckFailures ifNil: [ maxConsecutiveResourceCheckFailures := self class maxConsecutiveResourceCheckFailures ]
+]
+
+{ #category : #accessing }
 EDAApplicationCircuitBreaker >> maxConsecutiveResourceCheckFailures: anInteger [
 	maxConsecutiveResourceCheckFailures := anInteger
 ]
 
 { #category : #private }
 EDAApplicationCircuitBreaker >> maxConsecutiveResourceCheckFailuresAchieved [
-	^ consecutiveResourceCheckFailures = maxConsecutiveResourceCheckFailures
+	^ consecutiveResourceCheckFailures = self maxConsecutiveResourceCheckFailures
+]
+
+{ #category : #accessing }
+EDAApplicationCircuitBreaker >> minConsecutiveResourceCheckSuccesses [
+	^ minConsecutiveResourceCheckSuccesses ifNil: [ minConsecutiveResourceCheckSuccesses := self class minConsecutiveResourceCheckSuccesses ]
 ]
 
 { #category : #accessing }
@@ -208,7 +246,7 @@ EDAApplicationCircuitBreaker >> minConsecutiveResourceCheckSuccesses: anInteger 
 
 { #category : #private }
 EDAApplicationCircuitBreaker >> minConsecutiveResourceCheckSuccessesAchieved [
-	^ consecutiveResourceCheckSuccesses = minConsecutiveResourceCheckSuccesses
+	^ consecutiveResourceCheckSuccesses = self minConsecutiveResourceCheckSuccesses
 ]
 
 { #category : #accessing }
@@ -306,5 +344,5 @@ EDAApplicationCircuitBreaker >> updateOpenedCircuit [
 
 { #category : #'monitoring loop' }
 EDAApplicationCircuitBreaker >> waitCheckingPeriod [
-	checkingPeriod wait
+	self checkingPeriod wait
 ]
