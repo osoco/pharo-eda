@@ -221,8 +221,8 @@ EDAApplicationCircuitBreaker >> increaseConsecutiveResourceCheckSuccesses [
 
 { #category : #'private - updating' }
 EDAApplicationCircuitBreaker >> increaseInitialChecks [
-	initialChecks < minConsecutiveResourceCheckSuccesses
-		ifFalse: [ ^ self ].
+	self totalInitialChecksAchieved
+		ifTrue: [ ^ self ].
 	initialChecks := initialChecks + 1.
 	self
 		logDebugMessage:
@@ -327,6 +327,12 @@ EDAApplicationCircuitBreaker >> stop [
 	circuitBreakerProcess := nil.
 	currentProcess terminate.
 	self circuitState: self class closedState
+]
+
+{ #category : #private }
+EDAApplicationCircuitBreaker >> totalInitialChecksAchieved [
+	"Until the checks done are equals to 'minConsecut' is the initiating state"
+	^ initialChecks = self minConsecutiveResourceCheckSuccesses
 ]
 
 { #category : #updating }
