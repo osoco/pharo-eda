@@ -303,7 +303,7 @@ EDAApplication class >> logSettings [
 EDAApplication class >> mustNotBeStringOnJsonAValue: value [
 	"Values are always string but on config json integers and booleans must be represented without double quotes characteres (no strings)"
 	"Regex for value starting with 0 must be string"
-	^ (value matchesRegex: '^([1-9])\d+$')
+	^ (value matchesRegex: '^([1-9])\d*$')
 		or: [ (OrderedCollection with: 'true' with: 'false')
 				anySatisfy: [ :booleanString | booleanString = value ] ]
 ]
