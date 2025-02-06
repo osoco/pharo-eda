@@ -356,16 +356,17 @@ EDAApplicationCircuitBreaker >> updateClosedCircuit [
 { #category : #updating }
 EDAApplicationCircuitBreaker >> updateOpenedOrInitiatingCircuit [
 	self
-		logDebugMessage: self class circuitBreakerName , ': Updating opened circuit breaker'.
+		logDebugMessage: self class circuitBreakerName , ': Updating ' , circuitState , ' circuit breaker'.
 	self increaseInitialChecks.
 	self checkResource
-		ifFalse: [ self resetConsecutiveResourceCheckSuccesses.
-			(initialChecks = minConsecutiveResourceCheckSuccesses
-				and: [ self circuitBreakerIsInitiating ])
-				ifTrue: [ self openCircuit ] ]
+		ifFalse: [ self resetConsecutiveResourceCheckSuccesses ]
 		ifTrue: [ self increaseConsecutiveResourceCheckSuccesses.
 			self minConsecutiveResourceCheckSuccessesAchieved
-				ifTrue: [ self closeCircuit ] ]
+				ifTrue: [ self closeCircuit ] ].
+	"If is the last of initial checks and the circuit state dont change to closed, must change to opened"
+	(self circuitBreakerIsInitiating
+		and: [ self totalInitialChecksAchieved ])
+		ifTrue: [ self openCircuit ]
 ]
 
 { #category : #'monitoring loop' }
