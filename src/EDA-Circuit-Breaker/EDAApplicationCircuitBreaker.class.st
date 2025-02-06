@@ -14,7 +14,8 @@ Class {
 		'maxConsecutiveResourceCheckFailures',
 		'consecutiveResourceCheckSuccesses',
 		'minConsecutiveResourceCheckSuccesses',
-		'closeCircuitBlock'
+		'closeCircuitBlock',
+		'initialChecks'
 	],
 	#classInstVars : [
 		'checkingPeriod',
@@ -79,8 +80,13 @@ EDAApplicationCircuitBreaker class >> forEDAApplication: anEDAApplication [
 		checkResourceBlock: (self checkResourceBlockForApplication: anEDAApplication);
 		openCircuitBlock: (self openCircuitBlockForApplication: anEDAApplication);
 		closeCircuitBlock: (self closeCircuitBlockForApplication: anEDAApplication);
-		circuitState: self closedState;
 		yourself
+]
+
+{ #category : #constants }
+EDAApplicationCircuitBreaker class >> initialState [
+	"Is when the circuit breaker is deciding its state. Until the checks done are equals to 'minConsecutiveResourceCheckSuccesses' value"
+	^ 'initiating'
 ]
 
 { #category : #'class initialization' }
@@ -157,6 +163,11 @@ EDAApplicationCircuitBreaker >> circuitBreakerIsClosed [
 	^ circuitState = self class closedState
 ]
 
+{ #category : #updating }
+EDAApplicationCircuitBreaker >> circuitBreakerIsInitiating [
+	^ circuitState = self class initialState
+]
+
 { #category : #accessing }
 EDAApplicationCircuitBreaker >> circuitState: aCircuitState [
 	self logDebugMessage: self class circuitBreakerName , ': Set state to ', aCircuitState.
@@ -208,10 +219,28 @@ EDAApplicationCircuitBreaker >> increaseConsecutiveResourceCheckSuccesses [
 	self logDebugMessage: self class circuitBreakerName , ': Increased consecutive resource check successes: ' , consecutiveResourceCheckSuccesses greaseString , '/' , self minConsecutiveResourceCheckSuccesses greaseString.
 ]
 
+{ #category : #'private - updating' }
+EDAApplicationCircuitBreaker >> increaseInitialChecks [
+	initialChecks < minConsecutiveResourceCheckSuccesses
+		ifFalse: [ ^ self ].
+	initialChecks := initialChecks + 1.
+	self
+		logDebugMessage:
+			self class circuitBreakerName , ': Increased initial checks '
+				, initialChecks greaseString , '/'
+				, self minConsecutiveResourceCheckSuccesses greaseString
+]
+
 { #category : #initialization }
 EDAApplicationCircuitBreaker >> initialize [
 	self resetConsecutiveResourceCheckFailures.
-	self resetConsecutiveResourceCheckSuccesses
+	self resetConsecutiveResourceCheckSuccesses.
+	self circuitState: self class initialState
+]
+
+{ #category : #lifecycle }
+EDAApplicationCircuitBreaker >> isHealthy [
+	^ self circuitBreakerIsInitiating or: [ self circuitBreakerIsClosed ]
 ]
 
 { #category : #lifecycle }
@@ -304,22 +333,7 @@ EDAApplicationCircuitBreaker >> updateCircuit [
 	self logDebugMessage: self class circuitBreakerName , ': Updating circuit breaker status'.
 	self circuitBreakerIsClosed
 		ifTrue: [ self updateClosedCircuit ]
-		ifFalse: [ self updateOpenedCircuit ]
-"
-	chequear resource
-	Si Circuito Cerrado
-		Si chequeo fallido
-			incrementar número de fallos
-			si número de fallos >= número máximo de fallos
-				abrir circuito
-				resetear número de fallos
-	Si circuito abierto
-		Si chequeo exitoso
-			incrementar número de éxitos
-			si número de éxitos >= número mínimo de éxitos
-				cerrar circuito
-				resetear número de éxitos
-"
+		ifFalse: [ self updateOpenedOrInitiatingCircuit ]
 ]
 
 { #category : #updating }
@@ -333,10 +347,15 @@ EDAApplicationCircuitBreaker >> updateClosedCircuit [
 ]
 
 { #category : #updating }
-EDAApplicationCircuitBreaker >> updateOpenedCircuit [
-	self logDebugMessage: self class circuitBreakerName , ': Updating opened circuit breaker'.
+EDAApplicationCircuitBreaker >> updateOpenedOrInitiatingCircuit [
+	self
+		logDebugMessage: self class circuitBreakerName , ': Updating opened circuit breaker'.
+	self increaseInitialChecks.
 	self checkResource
-		ifFalse: [ self resetConsecutiveResourceCheckSuccesses ]
+		ifFalse: [ self resetConsecutiveResourceCheckSuccesses.
+			(initialChecks = minConsecutiveResourceCheckSuccesses
+				and: [ self circuitBreakerIsInitiating ])
+				ifTrue: [ self openCircuit ] ]
 		ifTrue: [ self increaseConsecutiveResourceCheckSuccesses.
 			self minConsecutiveResourceCheckSuccessesAchieved
 				ifTrue: [ self closeCircuit ] ]

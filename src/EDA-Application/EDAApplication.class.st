@@ -559,9 +559,6 @@ EDAApplication class >> start [
 	self isStarted ifNil: [ self isStarted: false ].
 	self isStarted
 		ifTrue: [ ^ self ].
-	self commandConsumer
-		ifNotNil: [ :c | 
-			c start ].
 	self startCircuitBreakers.
 	self isStarted: true.
 	self logInfoMessage: self applicationName , ' started'
