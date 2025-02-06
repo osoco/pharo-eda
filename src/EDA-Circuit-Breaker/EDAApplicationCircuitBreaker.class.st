@@ -37,7 +37,7 @@ EDAApplicationCircuitBreaker class >> checkingPeriod [
 
 { #category : #accessing }
 EDAApplicationCircuitBreaker class >> checkingPeriod: anInteger [
-	checkingPeriod := anInteger seconds
+	checkingPeriod := anInteger
 ]
 
 { #category : #constants }
@@ -144,7 +144,7 @@ EDAApplicationCircuitBreaker >> checkResourceBlock: anObject [
 
 { #category : #accessing }
 EDAApplicationCircuitBreaker >> checkingPeriod [
-	^ checkingPeriod ifNil: [ checkingPeriod := self class checkingPeriod ]
+	^ checkingPeriod ifNil: [ checkingPeriod := self class checkingPeriod seconds ]
 ]
 
 { #category : #accessing }
