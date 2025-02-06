@@ -235,7 +235,8 @@ EDAApplicationCircuitBreaker >> increaseInitialChecks [
 EDAApplicationCircuitBreaker >> initialize [
 	self resetConsecutiveResourceCheckFailures.
 	self resetConsecutiveResourceCheckSuccesses.
-	self circuitState: self class initialState
+	self circuitState: self class initialState.
+	initialChecks := 0
 ]
 
 { #category : #lifecycle }
