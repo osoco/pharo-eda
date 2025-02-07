@@ -27,7 +27,9 @@ Class {
 
 { #category : #'instance variables' }
 EDAApplicationCircuitBreaker class >> checkResourceBlockForApplication: anEDAApplication [
-	"Return a one argument block that check if the resouce is healthy. Argument is the monitored resource"
+	"Return a one argument block that check if the resouce is healthy.
+	Argument is the monitored resource.
+	Value this block with monitored resource must return true if it is healthy or false if unhealthy"
 	self subclassResponsibility
 ]
 
@@ -166,6 +168,11 @@ EDAApplicationCircuitBreaker >> circuitBreakerIsClosed [
 { #category : #updating }
 EDAApplicationCircuitBreaker >> circuitBreakerIsInitiating [
 	^ circuitState = self class initialState
+]
+
+{ #category : #updating }
+EDAApplicationCircuitBreaker >> circuitBreakerIsOpened [
+	^ circuitState = self class openedState
 ]
 
 { #category : #accessing }

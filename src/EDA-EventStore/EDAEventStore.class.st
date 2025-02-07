@@ -9,6 +9,14 @@ Class {
 	#category : #'EDA-EventStore'
 }
 
+{ #category : #'health check' }
+EDAEventStore class >> healthCheckBlock [
+	^ [ :anEventStore | 
+			anEventStore
+				findEventsOfAggregate: 'nonExistent'
+				whereId: 'nonExistent' ]
+]
+
 { #category : #persistence }
 EDAEventStore >> doInitialize [
 	self repository: self initBackendRepository

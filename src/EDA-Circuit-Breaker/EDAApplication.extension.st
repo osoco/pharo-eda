@@ -5,9 +5,9 @@ EDAApplication class >> eventStoreCheckBlock [
 	^ [ :monitoredEventStore | 
 		| check |
 		check := true.
-		[ monitoredEventStore
-			findEventsOfAggregate: 'nonExistent'
-			whereId: 'nonExistent' ] on: Error do: [ check := false ].
+		[ EDAEventStore healthCheckBlock value: monitoredEventStore ]
+			on: Error
+			do: [ :error | check := false ].
 		check ]
 ]
 
